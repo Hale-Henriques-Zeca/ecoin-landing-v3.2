@@ -22,7 +22,6 @@ import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { useDisconnect } from "wagmi";
 import StreamingAdminPanel from "@/components/StreamingAdminPanel";
 import { useStreamingStaking } from "@/hooks/useStreamingStaking";
-import StreamingStatsCard from "@/components/StreamingStatsCard";
 import { controllerAbi } from "@/lib/abis/controllerAbi";
 import { CONTRACTS } from "@/lib/contracts";
 import { erc20Abi } from "viem";
@@ -205,7 +204,6 @@ useEffect(() => {
               className="space-y-5 text-left"
             >
 
-<StreamingStatsCard />
 <LiveRewardCounter
  pending={Number(staking.pending ?? 0)}
 />
@@ -223,25 +221,7 @@ useEffect(() => {
  pending={Number(staking.pending ?? 0)}
 />
 
-              {/* AMOUNT */}
-              <div className="bg-black/50 border border-gray-700 rounded-xl p-4">
-                {address && (
-  <p className="text-xd text-red-400 text-center">
-    Conectado: {address.slice(0, 6)}…{address.slice(-4)}
-  </p>
-)}
-
-                <label className="text-xs text-gray-300">
-                  Amount to Stake (E-Coin)
-                </label>
-                <input
-                  type="number"
-                  value={stakeAmount}
-                  onChange={(e) => setStakeAmount(e.target.value)}
-                  placeholder="Enter amount"
-                  className="w-full mt-2 bg-transparent outline-none text-2xl text-white"
-                />
-              </div>
+             
 
              {/* STREAMING INFO */}
 <div className="bg-black/50 border border-gray-700 rounded-xl p-4 space-y-4">
@@ -375,22 +355,8 @@ useEffect(() => {
  
 </div>
 
-
-              {/* ACTIONS */}
-              <div className="flex flex-col gap-3 pt-2">
-                <button
-  onClick={async () => {
-    try {
-      await staking.stake(stakeAmount);
-    } catch (e:any) {
-      alert(e?.message || "Erro no stake");
-    }
-  }}
-  className="w-full py-2.5 rounded-full font-bold bg-gradient-to-r from-[#D4AF37] to-[#3B82F6]"
->
-  STAKE
-</button>
 <ClaimGasNotice />
+
 <button
   disabled={Number(staking.pending) === 0}
   onClick={staking.claim}
@@ -410,6 +376,43 @@ useEffect(() => {
   </p>
   
 )}
+
+ {/* AMOUNT */}
+              <div className="bg-black/50 border border-gray-700 rounded-xl p-4">
+                {address && (
+  <p className="text-xd text-red-400 text-center">
+    Conectado: {address.slice(0, 6)}…{address.slice(-4)}
+  </p>
+)}
+
+                <label className="text-xs text-gray-300">
+                  Amount to Stake (E-Coin)
+                </label>
+                <input
+                  type="number"
+                  value={stakeAmount}
+                  onChange={(e) => setStakeAmount(e.target.value)}
+                  placeholder="Enter amount"
+                  className="w-full mt-2 bg-transparent outline-none text-2xl text-white"
+                />
+              </div>
+
+
+              {/* ACTIONS */}
+              <div className="flex flex-col gap-3 pt-2">
+                <button
+  onClick={async () => {
+    try {
+      await staking.stake(stakeAmount);
+    } catch (e:any) {
+      alert(e?.message || "Erro no stake");
+    }
+  }}
+  className="w-full py-2.5 rounded-full font-bold bg-gradient-to-r from-[#D4AF37] to-[#3B82F6]"
+>
+  STAKE
+</button>
+
 <EcoinWalletDashboard />
 
 <button

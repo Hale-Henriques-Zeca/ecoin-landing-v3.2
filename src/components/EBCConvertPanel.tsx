@@ -430,7 +430,7 @@ const previewAllowed = allowed === true
   </p>
 )}
 
-<ProtocolHealth />
+<ProtocolSafety />
 
 {/* ================= MINI DASHBOARD WALLET ================= */}
 {!isConnected ? (
@@ -457,11 +457,12 @@ const previewAllowed = allowed === true
     <div className="text-sm text-gray-400 space-y-1 mt-4 text-left">
        <EcoinWalletDashboard />
     </div>
-<ProtocolSafety />
+
     {/* ADMIN PANEL */}
     {isOwner && (
       <div className="mt-10">
         <ConverterAdminPanel />
+        <ProtocolHealth />
       </div>
     )}
   </>

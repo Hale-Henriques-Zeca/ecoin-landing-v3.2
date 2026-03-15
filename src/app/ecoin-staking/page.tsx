@@ -682,6 +682,319 @@ export default function Page() {
 
 </section>
 
+<section className="py-24 px-6 bg-gray-50 text-center">
+
+  <div className="max-w-3xl mx-auto">
+
+    <span className="text-xs tracking-[0.3em] uppercase text-[#D4AF37] block mb-4">
+      Opportunity
+    </span>
+
+    <h2 className="text-3xl md:text-4xl font-semibold mb-8">
+      ⏱️ ATTENTION NETWORK MARKETERS — <span className="text-[#D4AF37]">A GLOBAL CRYPTO OPPORTUNITY</span>
+    </h2>
+
+    <div className="space-y-6 text-gray-600 text-sm md:text-base leading-relaxed">
+
+      <p>
+        <strong>⏱️ ATTENTION NETWORK MARKETERS — A GLOBAL CRYPTO OPPORTUNITY</strong>
+      </p>
+
+      <p>
+        If you are already a <strong>Network Marketing professional</strong>, then this opportunity can become one of the <strong>most powerful income engines</strong> you have ever promoted.
+      </p>
+
+      <p>
+        Why?
+      </p>
+
+      <p>
+        Because <strong>E-Coin combines two powerful systems in one ecosystem</strong>:
+      </p>
+
+      <p>• <strong>Real-time crypto reward generation</strong></p>
+      <p>• <strong>Network marketing commissions</strong></p>
+
+      <p>
+        This means you don’t only earn from your own participation — <strong>you also earn from the activity of your entire network.</strong>
+      </p>
+
+      <p>---</p>
+
+      <p className="font-semibold text-black">
+        ⏱️ Earn Every Second with E-Coin
+      </p>
+
+      <p>
+        In most platforms, rewards are distributed <strong>once every 24 hours</strong>.
+        You wait… and wait… hoping that tomorrow your earnings will appear.
+      </p>
+
+      <p>
+        <strong>E-Coin changes that completely.</strong>
+      </p>
+
+      <p>
+        With E-Coin, rewards are <strong>not delayed</strong>. They are generated <strong>every time activity happens in the ecosystem</strong>, meaning rewards can be distributed <strong>continuously in real time.</strong>
+      </p>
+
+      <p>
+        Here’s how the power of the system works.
+      </p>
+
+      <p>
+        Whenever someone converts <strong>USDT into E-Coin</strong>, a <strong>0.5% entry fee</strong> is applied.
+      </p>
+
+      <p>
+        From that fee:
+      </p>
+
+      <p>• <strong>10% goes into the staking reward pool</strong></p>
+      <p>• Participants receive a <strong>share participation from that pool</strong></p>
+
+      <p className="font-semibold text-black">
+        Example
+      </p>
+
+      <p>
+        If someone converts <strong>1,000 USDT</strong>:
+      </p>
+
+      <p>• Entry fee (0.5%) = <strong>5 USDT</strong></p>
+
+      <p>• 10% of that fee = <strong>0.5 USDT added to the reward distribution pool</strong></p>
+
+      <p>
+        • Participants receive a <strong>percentage share of that pool</strong> (for example 1%, 0.1%, 0.01% depending on their participation level)
+      </p>
+
+      <p>
+        And this distribution happens <strong>immediately</strong>, not after 24 hours.
+      </p>
+
+      <p>---</p>
+
+      <p className="font-semibold text-black">
+        Reverse Conversion
+      </p>
+
+      <p>
+        When users convert <strong>E-Coin back to USDT</strong>, the system applies a <strong>2.5% conversion fee.</strong>
+      </p>
+
+      <p>
+        Example:
+      </p>
+
+      <p>
+        If someone converts <strong>1,000 USDT worth of E-Coin</strong>:
+      </p>
+
+      <p>• Conversion fee (2.5%) = <strong>25 USDT</strong></p>
+
+      <p>• 10% of this fee = <strong>2.5 USDT added to the reward pool</strong></p>
+
+      <p>• That reward is <strong>instantly distributed among staking participants</strong></p>
+
+      <p>---</p>
+
+      <p className="font-semibold text-black">
+        Reward Events Happen When:
+      </p>
+
+      <p>• Someone converts <strong>USDT → E-Coin</strong></p>
+      <p>• Someone converts <strong>E-Coin → USDT</strong></p>
+      <p>• Someone <strong>claims staking rewards</strong></p>
+
+      <p>
+        Every one of these actions <strong>generates reward distribution events.</strong>
+      </p>
+
+      <p>Not tomorrow.</p>
+      <p>Not once per day.</p>
+
+      <p className="text-[#D4AF37] font-semibold">
+        <strong>But continuously — every moment the network is active.</strong>
+      </p>
+
+      <p>---</p>
+
+      <p className="font-semibold text-black">
+        Now Imagine the Scale
+      </p>
+
+      <p>
+        Crypto is <strong>global</strong>.
+      </p>
+
+      <p>
+        Millions of people transact <strong>every minute around the world</strong>.
+        Every conversion, every reward claim, every transaction inside the ecosystem creates <strong>new reward events.</strong>
+      </p>
+
+      <p>
+        That means your earnings are not limited to a single payout cycle.
+      </p>
+
+      <p>
+        They grow <strong>second by second</strong>, powered by the activity of the entire ecosystem.
+      </p>
+
+      <p>
+        The more the ecosystem grows → the more transactions happen.
+      </p>
+
+      <p>
+        The more transactions happen → the more rewards are generated.
+      </p>
+
+      <p>
+        The more rewards are generated → <strong>the more participants earn.</strong>
+      </p>
+
+      <p>
+        Your downline participants may accumulate <strong>significant daily reward percentages</strong> depending on network activity and staking participation.
+      </p>
+
+      <p>---</p>
+
+      <p className="font-semibold text-black">
+        💼 The Network Marketing Power
+      </p>
+
+      <p>
+        Now comes the <strong>network marketing advantage.</strong>
+      </p>
+
+      <p>
+        Every time someone <strong>claims or withdraws rewards from the staking smart contract</strong>, a <strong>1% claim fee</strong> is applied by the blockchain contract.
+      </p>
+
+      <p>
+        From that <strong>1% claim fee</strong>:
+      </p>
+
+      <p className="text-[#D4AF37] font-semibold">
+        <strong>30% goes directly to the upline (referrer).</strong>
+      </p>
+
+      <p>
+        That means <strong>every time your direct referral claims rewards, you earn a commission automatically.</strong>
+      </p>
+
+      <p className="font-semibold text-black">
+        Example
+      </p>
+
+      <p>
+        If someone claims <strong>100 USDT in staking rewards</strong>:
+      </p>
+
+      <p>• Claim fee (1%) = <strong>1 USDT</strong></p>
+
+      <p>• <strong>30% of that fee goes to the referrer</strong></p>
+
+      <p>• The upline receives <strong>0.30 USDT automatically</strong></p>
+
+      <p>
+        Now imagine this happening with:
+      </p>
+
+      <p>• <strong>10 people in your network</strong></p>
+      <p>• <strong>50 people in your network</strong></p>
+      <p>• <strong>100+ active participants</strong></p>
+
+      <p>
+        Every time they claim rewards, <strong>you earn a percentage from that activity.</strong>
+      </p>
+
+      <p>
+        This creates a <strong>powerful network effect</strong>, where income can grow through:
+      </p>
+
+      <p>• Your own staking participation</p>
+      <p>• Global ecosystem transactions</p>
+      <p>• Network reward claim commissions</p>
+
+      <p>---</p>
+
+      <p className="font-semibold text-black">
+        🌍 A Complete Crypto Business Ecosystem
+      </p>
+
+      <p>
+        E-Coin offers a <strong>full digital economy structure</strong> including:
+      </p>
+
+      <p>• Blockchain staking rewards</p>
+      <p>• Real-time transaction-based reward pools</p>
+      <p>• Global crypto conversion activity</p>
+      <p>• Automated referral commissions</p>
+      <p>• Network marketing expansion</p>
+
+      <p>
+        This creates a <strong>compounding ecosystem</strong> where technology, blockchain activity, and network growth work together.
+      </p>
+
+      <p>---</p>
+
+      <p className="font-semibold text-black">
+        🚀 Explore the E-Coin Business
+      </p>
+
+      <p>
+        <strong>Start Here — E-Coin Staking</strong><br/>
+        https://ecoin.edenkingdom.org/ecoin-staking
+      </p>
+
+      <p>
+        <strong>Leadership Board (Referral Commission System)</strong><br/>
+        https://ecoin.edenkingdom.org/equipes
+      </p>
+
+      <p>---</p>
+
+      <p className="font-semibold text-black">
+        Learn More About E-Coin
+      </p>
+
+      <p><strong>E-Coin Benefits</strong><br/>https://ecoin.edenkingdom.org/ecoin-benefits</p>
+      <p><strong>E-Coin Converter</strong><br/>https://ecoin.edenkingdom.org/ecoin-converter</p>
+      <p><strong>Information About Staking</strong><br/>https://ecoin.edenkingdom.org/ecoin-staking</p>
+      <p><strong>Rewards Page</strong><br/>https://ecoin.edenkingdom.org/ecoin-rewards</p>
+      <p><strong>Leadership / Referral Structure</strong><br/>https://ecoin.edenkingdom.org/equipes</p>
+      <p><strong>Token Whitepaper / Business Presentation</strong><br/>https://ecoin.edenkingdom.org/EcoinBusinessPresentation</p>
+      <p><strong>E-Coin Smart Contract Interpretation</strong><br/>https://ecoin.edenkingdom.org/ECoinSolidity</p>
+      <p><strong>Official E-Coin Business Presentation</strong><br/>https://ecoin.edenkingdom.org/EcoinBusinessPresentation</p>
+
+      <p>---</p>
+
+      <p className="font-semibold text-black">
+        Crypto is global.
+      </p>
+
+      <p className="font-semibold text-black">
+        Networks multiply growth.
+      </p>
+
+      <p>
+        And when both are combined inside one ecosystem, <strong>the potential becomes extremely powerful.</strong>
+      </p>
+
+      <p className="text-[#D4AF37] font-semibold text-lg">
+        Welcome to <strong>E-Coin</strong>.
+      </p>
+
+      <p>
+        A blockchain ecosystem designed for <strong>continuous rewards and network-driven growth.</strong>
+      </p>
+
+    </div>
+
+  </div>
+
+</section>
 
 {/* ================= ECONOMIC INFRASTRUCTURE SECTION ================= */}
 
@@ -882,7 +1195,7 @@ export default function Page() {
       </p>
 
       <p className="text-[#D4AF37] font-semibold text-lg">
-        E-Coin — Building a real economy before price discovery.
+        E-Coin — Building a real economy before price discovery in the market.
       </p>
 
     </div>
