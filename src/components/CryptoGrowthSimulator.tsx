@@ -6,7 +6,7 @@ import { useReadContract } from "wagmi";
 import { priceEngineAbi } from "@/lib/abis/priceEngineAbi";
 import { CONTRACTS } from "@/lib/contracts";
 import { formatUnits } from "viem";
-import EcoinFutureSimulator from "@/components/EcoinFutureSimulator"
+
 import {
 Chart as ChartJS,
 CategoryScale,
@@ -407,7 +407,7 @@ y:{ticks:{color:"#aaa"}}
 
 )}
 
-<EcoinFutureSimulator />
+
 </div>
 
 </div>

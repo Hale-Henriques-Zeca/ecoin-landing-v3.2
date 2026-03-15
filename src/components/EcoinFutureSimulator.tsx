@@ -37,7 +37,9 @@ return(
 <div className="text-center space-y-3">
 
 <h2 className="text-3xl font-bold text-[#D4AF37]">
-💎 What if you invested in E-Coin today?
+
+💎 E-Coin Future Investment Simulator
+
 </h2>
 
 <p className="text-gray-400 max-w-xl mx-auto">
