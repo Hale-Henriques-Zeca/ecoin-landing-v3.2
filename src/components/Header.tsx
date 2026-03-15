@@ -15,7 +15,7 @@ export default function Header() {
 
   return (
     <header className="w-full fixed top-0 z-50 bg-black/40 backdrop-blur-xl">
-      <div className="mx-auto max-w-7xl h-16 px-6 grid grid-cols-3 items-center">
+      <div className="mx-auto max-w-4xl h-16 px-6 grid grid-cols-3 items-center">
 
         {/* LEFT — LOGO */}
         <div className="flex items-center">
@@ -25,7 +25,7 @@ export default function Header() {
               alt="E-Coin"
               className="h-8 w-auto"
             />
-            <span className="font-semibold text-[#F9D13E]">
+            <span className="text-sm font-semibold text-[#F9D13E]">
               E-Coin
             </span>
           </Link>
