@@ -4,90 +4,16 @@ import { useEffect, useState } from "react";
 import { useAccount, useConnect } from "wagmi";
 import { BrowserProvider, Contract, parseUnits } from "ethers";
 import { motion } from "framer-motion";
-import { fetchECoinPrice } from "@/utils/fetchECoinPrice";
 
-import { Line } from "react-chartjs-2";
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  LineElement,
-  PointElement,
-  Filler,
-  Tooltip,
-} from "chart.js";
 
-ChartJS.register(CategoryScale, LinearScale, LineElement, PointElement, Filler, Tooltip);
 
 export default function BuyBackSmartPool() {
   const { isConnected } = useAccount();
   const { connect, connectors } = useConnect();
 
-  const [amount, setAmount] = useState("");
-  const [timeLock, setTimeLock] = useState("3");
-  const [txHash, setTxHash] = useState("");
-  const [locks, setLocks] = useState<any[]>([]);
-  const [growths, setGrowths] = useState<any[]>([]);
-  const [loading, setLoading] = useState(false);
-const [subscribed, setSubscribed] = useState(false);
-const [contactMethod, setContactMethod] = useState("email"); // se estiver usando o painel de alertas
-  const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
 
-  // função para inscrição do painel de alertas (email / sms)
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setSubscribed(true); // ativa a mensagem de confirmação
-  };
 
-  const CONTRACT_ADDRESS = "0xYourContractAddress";
-  const ABI = [
-    "function buyBack(uint256 _amount, uint256 _hours) external",
-  ];
-
-  async function handleBuyBack() {
-    if (!isConnected) return alert("Conecte a carteira primeiro!");
-    if (typeof window === "undefined" || !("ethereum" in window)) {
-  return alert("Carteira não encontrada");
-}
-
-    try {
-      setLoading(true);
-
-      const provider = new BrowserProvider(window.ethereum);
-const signer = await provider.getSigner();
-
-const contract = new Contract(CONTRACT_ADDRESS, ABI, signer);
-
-const amountInWei = parseUnits(amount || "0", 18);
-const tx = await contract.buyBack(amountInWei, Number(timeLock));
-const receipt = await tx.wait();
-
-      setTxHash(receipt.hash);
-      setLocks([...locks, { amount, timeLock, hash: receipt.hash }]);
-      setLoading(false);
-    } catch (e) {
-      console.error(e);
-      setLoading(false);
-      alert("Erro ao executar Buy-Back");
-    }
-  }
-
-  const [price, setPrice] = useState<number | null>(null);
-const [lastUpdate, setLastUpdate] = useState<string>("");
-
-useEffect(() => {
-  async function loadPrice() {
-    const res = await fetchECoinPrice();
-    if (res) {
-      setPrice(res.price);
-      setLastUpdate(new Date().toLocaleTimeString());
-    }
-  }
-  loadPrice();
-  const interval = setInterval(loadPrice, 30000);
-  return () => clearInterval(interval);
-}, []);
+  
 
 
   return (
