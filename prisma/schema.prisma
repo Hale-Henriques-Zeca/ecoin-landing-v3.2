@@ -1,14 +1,15 @@
-datasource db {
- provider = "sqlite"
- url      = "file:./dev.db"
+generator client {
+  provider = "prisma-client-js"
 }
 
-generator client {
- provider = "prisma-client-js"
+datasource db {
+  provider  = "postgresql"
+  url       = env("POSTGRES_PRISMA_URL")
+  directUrl = env("POSTGRES_URL_NON_POOLING")
 }
 
 model Price {
- id        Int      @id @default(autoincrement())
- price     Float
- timestamp DateTime @default(now())
+  id        Int      @id @default(autoincrement())
+  price     Float
+  timestamp DateTime @default(now())
 }
