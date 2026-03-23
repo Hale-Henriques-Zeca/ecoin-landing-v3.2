@@ -102,7 +102,7 @@ export default function Hero() {
 
           {/* LOGO */}
 <Image
-  src="/images/ecoin-logo.png"
+  src="/ecoin-logo.png"
   alt="E-Coin Logo"
   width={300}
   height={300}
