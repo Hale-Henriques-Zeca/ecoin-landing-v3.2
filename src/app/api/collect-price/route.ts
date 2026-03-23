@@ -1,15 +1,15 @@
-// src/app/api/collect-price/route.ts
 import { NextResponse } from "next/server"
-import { collect } from "../../../../scripts/priceCollector"
-
-// Esta linha abaixo resolve o erro do build da Vercel!
+// Importação dinâmica para evitar que o Prisma seja chamado no build-time
 export const dynamic = 'force-dynamic';
 
 export async function GET() {
   try {
+    // Importamos o script apenas quando a função for realmente chamada
+    const { collect } = await import("../../../../scripts/priceCollector")
     await collect()
     return NextResponse.json({ ok: true })
   } catch (error) {
-    return NextResponse.json({ ok: false, error: "Falha na coleta" }, { status: 500 })
+    console.error("Erro na coleta:", error)
+    return NextResponse.json({ ok: false }, { status: 500 })
   }
 }
