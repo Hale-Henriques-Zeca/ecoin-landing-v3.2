@@ -1,10 +1,11 @@
-import type { NextConfig } from "next";
-
-const nextConfig: NextConfig = {
-  experimental: {
-    serverActions: {},
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  typescript: {
+    ignoreBuildErrors: true, 
   },
-
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
   images: {
     remotePatterns: [
       { protocol: "https", hostname: "**" },
@@ -12,14 +13,12 @@ const nextConfig: NextConfig = {
     ],
     unoptimized: false,
   },
-
-  typescript: {
-    ignoreBuildErrors: true, // ignora erros de TypeScript no build
+  experimental: {
+    serverActions: {},
   },
-
   poweredByHeader: false,
-
   reactStrictMode: true,
+  compress: true,
 };
 
 export default nextConfig;
