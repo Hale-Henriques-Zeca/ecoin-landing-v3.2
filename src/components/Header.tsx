@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useEffect, useState } from "react";
 import LanguageSelector from "@/components/LanguageSelector";
 
@@ -35,7 +36,14 @@ export default function Header() {
         {/* LEFT — LOGO */}
         <div className="flex items-center min-w-fit">
           <Link href="/" className="flex items-center gap-2">
-            <img src="/ecoin-logo.png" alt="E-Coin" className="h-8 w-auto" />
+            <Image 
+  src="/ecoin-logo.png" 
+  alt="E-Coin" 
+  width={32} 
+  height={32} 
+  className="h-8 w-auto"
+  priority 
+/>
             <span className="text-sm font-semibold text-[#F9D13E]">E-Coin</span>
           </Link>
         </div>
