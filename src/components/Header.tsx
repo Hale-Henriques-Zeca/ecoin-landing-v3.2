@@ -25,6 +25,7 @@ export default function Header() {
     { name: "Restaurante", href: "https://efc.edenkingdom.org", external: true },
     { name: "Marketing", href: "https://emarketing.edenkingdom.org", external: true },
     { name: "Agricultura", href: "https://efarm.edenkingdom.org", external: true },
+    { name: "Exchange", href: "https://efte.edenkingdom.org/", external: true },
   ];
 
   return (
