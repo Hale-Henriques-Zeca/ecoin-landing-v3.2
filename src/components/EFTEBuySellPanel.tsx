@@ -37,24 +37,32 @@ useEffect(() => {
   return (
     <div className="relative overflow-hidden bg-gradient-to-b from-black via-[#0A0A0A] to-[#1A1A1A] text-gray-300 py-20 px-6 rounded-3xl border border-[#D4AF37]/20 shadow-lg mb-16">
       
-{/* TÍTULO */}
+{/* LOGO */}
           <motion.div
-        className="text-center mb-10 relative"
-        initial="hidden"
-        animate="visible"
-        variants={fadeUp}
-      >
-        <div className="flex justify-center items-center gap-3 text-[#D4AF37] text-1xl font-bold">
-          <Link href="/" className="flex items-center gap-2">
-          <img src="/logo-ebc.png" alt="" className="h-20 w-auto" />
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.2, duration: 0.8 }}
+            className="flex justify-center mb-6"
+          >
+            <img
+              src="/logo-ebc.png"
+              alt="EBC Logo"
+              className="h-32 md:h-40"
+            />
+          </motion.div>
+
+          {/* TÍTULO */}
+<motion.h1
+  initial={{ opacity: 0, y: -30 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.6, delay: 0.3 }}
+  className="text-4xl md:text-6xl font-extrabold text-center mb-8"
+>
   <span style={{ color: "#1FA971" }}>EdenKingDom </span>
   <span style={{ color: "#D4AF37" }}>Financial </span>
   <span style={{ color: "#FFFFFF" }}>Tools </span>
   <span style={{ color: "#0B5ED7" }}>Empire</span>
-            
-            </Link>
-            </div>
-          </motion.div>
+</motion.h1>
 
           {/* SUBTÍTULO */}
           <motion.div

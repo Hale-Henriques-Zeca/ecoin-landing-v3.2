@@ -32,16 +32,16 @@ export default function Hero() {
     <section className="
   relative
   w-full
-  min-h-[90vh]
-  sm:h-[95vh]
-  overflow-hidden
+  min-h-screen
   flex
   flex-col
   items-center
   justify-start
   bg-black
   pt-safe
+  pb-20
 ">
+
 
 
       {/* Fundo Radial */}
