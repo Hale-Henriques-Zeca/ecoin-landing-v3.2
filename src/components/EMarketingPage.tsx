@@ -60,7 +60,7 @@ export default function EMarketingPage() {
           </p>
 
           <p>
-            Você também ganha ao investir dentro da plataforma, e igualmente o público ganha ao assistir, partilhar e interagir com conteúdos — especialmente dentro da nossa futura rede social Socialização (S), com monetização integrada.
+             Você também ganha ao investir dentro da plataforma, para dar um boost nas percentagens de ganhos por visualização e igualmente o público ganha ao assistir, partilhar e interagir com conteúdos — especialmente dentro da nossa futura rede social (S), com monetização integrada.
           </p>
 
           <p className="text-ekd-pink font-semibold">

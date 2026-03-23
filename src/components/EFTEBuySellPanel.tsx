@@ -44,9 +44,9 @@ useEffect(() => {
         animate="visible"
         variants={fadeUp}
       >
-        <div className="flex justify-center items-center gap-3 text-[#D4AF37] text-4xl font-bold">
+        <div className="flex justify-center items-center gap-3 text-[#D4AF37] text-1xl font-bold">
           <Link href="/" className="flex items-center gap-2">
-          <img src="/logo-ebc.png" alt="" className="h-12 w-auto" />
+          <img src="/logo-ebc.png" alt="" className="h-20 w-auto" />
   <span style={{ color: "#1FA971" }}>EdenKingDom </span>
   <span style={{ color: "#D4AF37" }}>Financial </span>
   <span style={{ color: "#FFFFFF" }}>Tools </span>
@@ -63,7 +63,7 @@ useEffect(() => {
         animate="visible"
         variants={fadeUp}
       >
-        <div className="flex justify-center items-center gap-3 text-[#D4AF37] text-2xl font-bold">
+        <div className="flex justify-center items-center gap-3 text-[#D4AF37] text-1xl font-bold">
              <span style={{ color: "#0B5ED7" }}>
                 O teu portal para a liberdade digital.
             </span>
@@ -139,34 +139,25 @@ useEffect(() => {
         )}
       </motion.div>
 
-      {/* 🎁 Rodapé Social */}
-      <motion.div
-        className="mt-12 flex flex-col items-center gap-3 text-[#D4AF37]"
-        initial="hidden"
-        animate="visible"
-        variants={fadeUp}
-      >
-        <p className="text-sm mb-2 text-gray-400">Conecte-se à comunidade E-Coin</p>
-       <div className="flex gap-5 text-2xl">
-                     <a href="https://t.me/ecoin2026" target="_blank" rel="noopener noreferrer">
-                       <FaTelegramPlane className="hover:text-white transition" />
-                     </a>
-                     <a href="https://x.com/CoinE28810?t=Dm9BWORAfzh5YcuqHYIUwQ&s=09" target="_blank" rel="noopener noreferrer">
-                       <FaTwitter className="hover:text-white transition" />
-                     </a>
-                     <a href="https://discord.com/users/1443996675638300834" target="_blank" rel="noopener noreferrer">
-                       <FaDiscord className="hover:text-white transition" />
-                     </a>
-                     <a href="https://t.me/ecoin2025" target="_blank" rel="noopener noreferrer">
-                                 <FaTelegram className="hover:text-white transition" />
-                               </a>
-                     <a href="https://chat.whatsapp.com/G1F6USX5NrrLKikm7yiXXQ" target="_blank" rel="noopener noreferrer">
-                       <FaWhatsapp className="hover:text-white transition" />
-                     </a>          
-                   </div>
-        
-        <BsStars className="text-3xl mt-4 animate-pulse text-[#D4AF37]" />
-      </motion.div>
+      {/* 🌐 FOOTER */}
+<motion.div
+  initial={{ opacity: 0 }}
+  animate={{ opacity: 1 }}
+  transition={{ duration: 1, delay: 0.4 }}
+ className="mt-12 flex flex-col items-center gap-3 text-[#D4AF37]"
+>
+  <p className="text-sm mb-3 text-gray-400">
+    Conecte-se à comunidade EFTE
+  </p>
+
+  <div className="flex justify-center gap-5 text-2xl text-gray-300">
+    <a href="https://t.me/EdenKingDomBuyCrypto" target="_blank"><FaTelegramPlane /></a>
+    <a href="https://t.me/edenkingdomexchange" target="_blank"><FaTelegram /></a>
+    <a href="https://chat.whatsapp.com/Ge733s4ekK7IQrOWluwZlq" target="_blank"><FaWhatsapp /></a>
+  </div>
+
+  <BsStars className="text-3xl mt-5 animate-pulse text-[#D4AF37]" />
+</motion.div>
     </div>
   );
 }

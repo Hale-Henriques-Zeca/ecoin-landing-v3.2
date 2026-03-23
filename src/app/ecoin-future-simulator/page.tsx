@@ -48,85 +48,131 @@ typeof ecoinPriceRaw === "bigint"
 
 const [investment,setInvestment] = useState(100)
 const [futurePrice,setFuturePrice] = useState(10)
-const [startYear,setStartYear] = useState(2025)
-const [endYear,setEndYear] = useState(2030)
 const [marketMode,setMarketMode] = useState("balanced")
+const [timeMode,setTimeMode] = useState("year")
+const [duration,setDuration] = useState(5)
+
+
+
+const timeMultipliers:any = {
+second: 1,
+minute: 60,
+hour: 3600,
+day: 86400,
+week: 604800,
+month: 2592000,
+sixMonths: 15552000,
+year: 31536000
+}
 
 /* CALCULATIONS */
 
 const coins =
 ecoinPrice ? investment / ecoinPrice : 0
 
-const futureValue =
-coins * futurePrice
+
+/* PRICE PROJECTION */
+
+const steps = []
+
+for(let i=1; i<=duration; i++){
+steps.push(i)
+}
+
+const secondsTotal =
+timeMultipliers[timeMode] * duration
+
+const growthData = steps.map(step => {
+
+const elapsedTime =
+(timeMultipliers[timeMode] * step)
+
+const timeProgress =
+elapsedTime / secondsTotal
+
+let curve = timeProgress
+
+// Ajuste baseado no tempo
+if(timeMode === "second" || timeMode === "minute"){
+  curve = Math.pow(timeProgress, 0.3) // crescimento rápido
+}
+
+if(timeMode === "hour"){
+  curve = Math.pow(timeProgress, 0.5)
+}
+
+if(timeMode === "day"){
+  curve = Math.pow(timeProgress, 0.7)
+}
+
+// depois aplica cenário
+if(marketMode === "conservative"){
+  curve = Math.pow(curve, 1.5)
+}
+
+if(marketMode === "aggressive"){
+  curve = Math.pow(curve, 0.7)
+}
+
+if(marketMode === "conservative"){
+curve = Math.pow(timeProgress, 2)
+}
+
+if(marketMode === "balanced"){
+curve = timeProgress
+}
+
+if(marketMode === "aggressive"){
+curve = Math.pow(timeProgress, 0.5)
+}
+
+const simulatedPrice =
+ecoinPrice * Math.pow(
+(futurePrice / ecoinPrice),
+curve
+)
+
+const coins = investment / ecoinPrice
+
+return coins * simulatedPrice
+})
+
+/* ✅ AGORA SIM PODES USAR */
+
+const finalValue =
+growthData[growthData.length - 1] || 0
 
 
 /* ROI */
 
 const roi =
 investment > 0
-? ((futureValue - investment) / investment) * 100
+? ((finalValue - investment) / investment) * 100
 : 0
 
 
-/* PRICE PROJECTION */
-
-const years = []
-
-for(let y=startYear; y<=endYear; y++){
-years.push(String(y))
-}
-
-const priceGrowth = years.map((_,i)=>{
-
-const progress = (i+1)/years.length
-
-let curve = progress
-
-if(marketMode==="conservative"){
-
-curve = Math.pow(progress,1.8)
-
-}
-
-if(marketMode==="balanced"){
-
-curve = progress
-
-}
-
-if(marketMode==="aggressive"){
-
-curve = Math.pow(progress,0.6)
-
-}
-
-return ecoinPrice +
-(futurePrice - ecoinPrice) * curve
-
-})
-
-
 const chartData = {
+labels: steps.map(s => {
+  const unit =
+    timeMode === "second" ? "sec" :
+    timeMode === "minute" ? "min" :
+    timeMode === "hour" ? "hr" :
+    timeMode === "day" ? "day" :
+    timeMode === "week" ? "wk" :
+    timeMode === "month" ? "mo" :
+    timeMode === "sixMonths" ? "6mo" :
+    "yr"
 
-labels: years,
-
+  return `${s}${unit}`
+}),
 datasets:[{
-
-label:"E-Coin Price Projection",
-
-data: priceGrowth,
-
+label:"Investment Growth",
+data: growthData,
 borderColor:"#D4AF37",
-
 backgroundColor:"rgba(212,175,55,0.15)",
-
 fill:true,
-
 tension:0.4
-
 }]
-
 }
 
 
@@ -221,39 +267,50 @@ className="w-full bg-black border border-gray-700 rounded-lg p-3 text-white"
 
 </div>
 
-<div className="grid md:grid-cols-3 gap-6">
+
+
+
+
+
+<div className="grid md:grid-cols-2 gap-6">
 
 <div>
-
 <label className="text-gray-400 text-sm">
-Start Year
+Duration
 </label>
 
 <input
 type="number"
-value={startYear}
-onChange={(e)=>setStartYear(Number(e.target.value))}
+value={duration}
+onChange={(e)=>setDuration(Number(e.target.value))}
 className="w-full bg-black border border-gray-700 rounded-lg p-3 text-white"
 />
-
 </div>
-
 
 <div>
-
 <label className="text-gray-400 text-sm">
-End Year
+Time Unit
 </label>
 
-<input
-type="number"
-value={endYear}
-onChange={(e)=>setEndYear(Number(e.target.value))}
+<select
+value={timeMode}
+onChange={(e)=>setTimeMode(e.target.value)}
 className="w-full bg-black border border-gray-700 rounded-lg p-3 text-white"
-/>
+>
 
+<option value="second">Seconds</option>
+<option value="minute">Minutes</option>
+<option value="hour">Hours</option>
+<option value="day">Days</option>
+<option value="week">Weeks</option>
+<option value="month">Months</option>
+<option value="sixMonths">6 Months</option>
+<option value="year">Years</option>
+
+</select>
 </div>
 
+</div>
 
 <div>
 
@@ -275,7 +332,7 @@ className="w-full bg-black border border-gray-700 rounded-lg p-3 text-white"
 
 </div>
 
-</div>
+
 
 {/* RESULTS */}
 
@@ -308,7 +365,7 @@ Future Value
 
 <p className="text-green-400 text-2xl font-bold">
 
-${futureValue.toLocaleString()}
+${finalValue.toLocaleString()}
 
 </p>
 
@@ -340,7 +397,7 @@ ROI
 
 <p className="text-gray-400 text-center mb-4">
 
-E-Coin Price Projection ({startYear} → {endYear})
+E-Coin Growth Projection ({duration} {timeMode})
 
 </p>
 
