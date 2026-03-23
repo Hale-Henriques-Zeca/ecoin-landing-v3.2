@@ -19,8 +19,8 @@ export default function Hero() {
 
   useEffect(() => {
     const p = Array.from({ length: 45 }).map(() => ({
-      x: Math.random() * 1400,
-      y: Math.random() * 800,
+      x: Math.random() * 100,
+      y: Math.random() * 100,
       size: Math.random() * 6 + 2,
       duration: 6 + Math.random() * 5,
       delay: Math.random() * 5,
@@ -51,14 +51,14 @@ export default function Hero() {
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
         {particles.map((p, i) => (
           <motion.div
-            key={i}
-            className="absolute bg-[#D4AF37] rounded-full"
-            initial={{
-              opacity: 0,
-              scale: 0,
-              x: p.x,
-              y: p.y,
-            }}
+  key={i}
+  className="absolute bg-[#D4AF37] rounded-full"
+  initial={{
+    opacity: 0,
+    scale: 0,
+    left: `${p.x}%`, 
+    top: `${p.y}%`,  
+  }}
             animate={{
               opacity: [0, 1, 0],
               scale: [0, 1.3, 0],

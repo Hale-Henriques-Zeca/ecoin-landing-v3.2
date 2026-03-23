@@ -20,12 +20,18 @@
 }
 
 /* >>> Background cinematográfico */
-body {
+html, body {
+  max-width: 100vw;
+  overflow-x: hidden;
+  position: relative;
   background-color: #000 !important;
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
   top: 0 !important;
+  margin: 0;
+  padding: 0;
 }
+
 
 /* >>> Remover lixo do Google Translate caso tenha sobrado */
 .goog-te-banner-frame,
