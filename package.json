@@ -7,7 +7,7 @@
     "build": "prisma generate && next build",
     "postbuild": "next-sitemap",
     "start": "next start",
-    "lint": "eslint",
+    "lint": "next lint",
     "collect-price": "ts-node -P tsconfig.scripts.json -r tsconfig-paths/register scripts/priceCollector.ts"
   },
   "dependencies": {
