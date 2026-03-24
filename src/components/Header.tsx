@@ -18,6 +18,7 @@ export default function Header() {
 
   const navLinks = [
     { name: "Home", href: "/" },
+    { name: "MozP2P", href: "https://efte.edenkingdom.org/p2p", external: true },
     { name: "Converter E-Coin", href: "/ecoin-converter" },
     { name: "Investir E-Coin", href: "/ecoin-rewards" },
     { name: "Acionistas", href: "https://eshare.edenkingdom.org", external: true },
