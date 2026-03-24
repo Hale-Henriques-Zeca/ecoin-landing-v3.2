@@ -299,6 +299,34 @@ deployment on PancakeSwap</strong>.
         </Link>
 
       </section>
+      {/* LINK */}
+
+{/* ================= PANCAKESWAP PANEL ================= */}
+
+<div className="bg-black text-white p-8 rounded-xl mt-10 text-center">
+
+<h3 className="text-1xl text-[#D4AF37] font-semibold mb-4">
+E-Coin / USDT Pair — PancakeSwap
+</h3>
+
+<p className="mb-6">
+
+The E-Coin pair is already pre-listed on PancakeSwap and waiting for
+sustainable liquidity before entering full market activity.
+
+</p>
+
+<a
+href="https://pancakeswap.finance/swap?chain=bsc&inputCurrency=0xDf69235019cc416dd5Be75dfc0eDc922aB4b5964&outputCurrency=0x55d398326f99059fF775485246999027B3197955"
+target="_blank"
+className="inline-block px-8 py-4 bg-[#D4AF37] text-black font-semibold rounded-full hover:bg-white transition"
+>
+
+Access E-Coin / USDT Pair →
+
+</a>
+
+</div>
     </main>
   );
 }

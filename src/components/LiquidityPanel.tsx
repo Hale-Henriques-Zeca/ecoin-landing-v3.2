@@ -97,6 +97,16 @@ E-Coin Liquidity Reserve & Holders
 LIQUIDITY
 </p>
 
+
+<a
+href={`https://bscscan.com/address/${CONTRACTS.LIQUIDITY_VAULT}`}
+target="_blank"
+className="mt-6 inline-block px-6 py-3 bg-[#D4AF37] text-black rounded-xl"
+>
+
+View Liquidity on Blockchain
+
+</a>
 <div className="text-9xl font-bold text-[#4ade80]">
 {holders}
 </div>
@@ -108,14 +118,14 @@ HOLDERS
 </div>
 
 <a
-href={`https://bscscan.com/address/${CONTRACTS.LIQUIDITY_VAULT}`}
-target="_blank"
-className="mt-6 inline-block px-6 py-3 bg-[#D4AF37] text-black rounded-xl"
+  href="https://bscscan.com/token/0xDf69235019cc416dd5Be75dfc0eDc922aB4b5964"
+  target="_blank"
+  rel="noopener noreferrer"
+  className="mt-6 inline-block px-6 py-3 bg-[#D4AF37] text-black rounded-xl font-bold hover:bg-[#b8952e] transition-colors"
 >
-
-View on Blockchain
-
+  View Holders on Blockchain
 </a>
+
 {isOwner && (
   <div className="mt-16">
     <LiquidityAdminPanel />

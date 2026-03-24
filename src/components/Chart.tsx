@@ -206,7 +206,7 @@ className="rounded-xl border border-gray-200 bg-gray-50 py-3 px-4"
 
 <div className="bg-black text-white p-8 rounded-xl mt-10 text-center">
 
-<h3 className="text-2xl font-semibold mb-4">
+<h3 className="text-1xl text-[#D4AF37] font-semibold mb-4">
 E-Coin / USDT Pair — PancakeSwap
 </h3>
 

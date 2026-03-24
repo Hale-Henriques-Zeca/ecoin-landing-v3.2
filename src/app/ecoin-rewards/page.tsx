@@ -153,6 +153,13 @@ useEffect(() => {
           <p className="text-gray-300 text-xs">
             Stake direto na blockchain (Binance Smart Chain).
           </p>
+          <div>
+      <p className="text-xl text-gray-400">Total Value Locked On Stake</p>
+      <p className="text-xl font-bold text-white">
+        {staking.total} E-Coin
+      </p>
+    </div>
+
 <p className="text-[20px] text-yellow-400 mt-6 text-center">
   Rewards are calculated on-chain in cashflow stream continuously.
   No fixed returns. No epochs. No guaranteed APY.
@@ -318,7 +325,7 @@ useEffect(() => {
   <div className="grid grid-cols-2 gap-4">
     <div>
       <p className="text-xs text-gray-400">Total Value Locked</p>
-      <p className="text-xm font-bold text-white">
+      <p className="text-xl font-bold text-white">
         {staking.total} E-Coin
       </p>
     </div>
