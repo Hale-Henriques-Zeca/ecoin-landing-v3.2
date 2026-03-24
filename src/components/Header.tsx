@@ -18,7 +18,8 @@ export default function Header() {
 
   const navLinks = [
     { name: "Home", href: "/" },
-    { name: "Líder de equipes", href: "/equipes" },
+    { name: "Converter E-Coin", href: "/ecoin-converter" },
+    { name: "Investir E-Coin", href: "/ecoin-rewards" },
     { name: "Acionistas", href: "https://eshare.edenkingdom.org", external: true },
     { name: "Lei", href: "https://elaw.edenkingdom.org", external: true },
     { name: "Doações", href: "https://esocial.edenkingdom.org", external: true },
@@ -27,6 +28,7 @@ export default function Header() {
     { name: "Marketing", href: "https://emarketing.edenkingdom.org", external: true },
     { name: "Agricultura", href: "https://efarm.edenkingdom.org", external: true },
     { name: "Exchange", href: "https://efte.edenkingdom.org/", external: true },
+    { name: "Líder de equipes", href: "/equipes" },
   ];
 
   return (
