@@ -20,6 +20,7 @@ export default function Header() {
     { name: "Home", href: "/" },
     { name: "MozP2P", href: "https://efte.edenkingdom.org/p2p", external: true },
     { name: "Converter E-Coin", href: "/ecoin-converter" },
+    { name: "E-Coin Trading AI", href: "/ecoin-ai-trading" },
     { name: "Investir E-Coin", href: "/ecoin-rewards" },
     { name: "Acionistas", href: "https://eshare.edenkingdom.org", external: true },
     { name: "Lei", href: "https://elaw.edenkingdom.org", external: true },
@@ -34,7 +35,7 @@ export default function Header() {
 
   return (
     <header className="w-full fixed top-0 z-50 bg-black/80 backdrop-blur-xl border-b border-white/10">
-      <div className="mx-auto max-w-7xl h-16 px-6 flex items-center justify-between">
+      <div className="mx-auto max-w-[1400px] xl:max-w-[1600px] h-16 px-6 flex items-center justify-center gap-10">
         
         {/* LEFT — LOGO */}
         <div className="flex items-center min-w-fit">
