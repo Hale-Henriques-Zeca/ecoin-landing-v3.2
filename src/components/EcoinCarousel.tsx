@@ -4,6 +4,7 @@ import Image from "next/image";
 import { motion, useAnimation } from "framer-motion";
 import { useEffect, useMemo, useRef, useState } from "react";
 import ECoinContractInfo from "@/components/ECoinContractInfo";
+import AITradingCard from "@/components/AITradingCard"
 
 
 type Slide = { title: string; desc: string; img: string };
@@ -146,6 +147,7 @@ export default function ECoinSafeguardRingCarousel() {
         </p>
         {/* Contract + Whitepaper */}
   <ECoinContractInfo />
+   
       </div>
 
       {/* Ring stage */}

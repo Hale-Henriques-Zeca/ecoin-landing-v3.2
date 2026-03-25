@@ -41,7 +41,7 @@ export default function Header() {
         <div className="flex items-center min-w-fit">
           <Link href="/" className="flex items-center gap-2">
             <Image 
-  src="/ecoin-logo.png" 
+  src="/AI-E-Coin-Logo.PNG" 
   alt="E-Coin" 
   width={32} 
   height={32} 
