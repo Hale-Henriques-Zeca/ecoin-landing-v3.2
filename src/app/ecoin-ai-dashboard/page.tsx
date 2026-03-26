@@ -65,7 +65,7 @@ const [upline, setUpline] = useState("");
         <div className="flex flex-col md:flex-row justify-between items-center mb-12 gap-8">
           <div>
             <h1 className="text-3xl font-black tracking-tighter italic flex items-center gap-3">
-              <Cpu className="text-yellow-500" /> E-COIN NEURAL TERMINAL
+              <Cpu className="text-yellow-500" /> E-COIN NEURAL TRADING AI ROBOT TERMINAL
             </h1>
             <p className="text-gray-500 text-sm font-mono uppercase tracking-widest mt-1">Hybrid Trading & Yield Infrastructure</p>
           </div>
