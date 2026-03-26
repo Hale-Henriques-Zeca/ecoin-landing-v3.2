@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -161,12 +162,36 @@ export default function Page() {
           </div>
         </div>
 
-        {/* BUTTON */}
-        <div className="mt-12 text-center">
-          <button className="bg-[#D4AF37] text-black px-10 py-4 rounded-2xl font-bold">
-           EXPLORE O SISTEMA DE RESGATE DE LUCROS DE TRADING
-          </button>
+        {/* CARD DE ATIVAÇÃO NEURAL BOT */}
+        <div className="mt-12 flex justify-center">
+          <div className="w-[380px] bg-black/60 backdrop-blur-xl border border-blue-500/30 p-8 rounded-[32px] shadow-[0_0_40px_rgba(0,210,255,0.15)] text-center transition-all hover:border-yellow-500/50 group">
+            
+            <h3 className="text-blue-400 font-mono text-[10px] tracking-[0.4em] uppercase mb-3 opacity-70">
+              Neural Link: Stable
+            </h3>
+            <h2 className="text-white text-2xl font-bold mb-8 tracking-tight">
+              Ativar Neural Bot 🤖
+            </h2>
+
+            <Link 
+              href="/ecoin-ai-dashboard" 
+              className="w-full bg-[#D4AF37] hover:bg-[#F3BA2F] text-black font-black py-5 rounded-2xl shadow-[0_8px_20px_rgba(212,175,55,0.2)] transition-all hover:scale-[1.03] active:scale-95 flex items-center justify-center gap-3 uppercase tracking-widest no-underline"
+            >
+              <span>Acessar Terminal</span>
+              <svg xmlns="http://www.w3.org" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M5 12h14m-7-7 7 7-7 7" />
+              </svg>
+            </Link>
+
+            <div className="mt-6 flex justify-center items-center gap-2">
+              <div className="w-1.5 h-1.5 bg-blue-500 rounded-full animate-ping"></div>
+              <p className="text-[9px] text-white/30 font-mono uppercase tracking-[0.2em]">
+                Secure AI Protocol v3.0
+              </p>
+            </div>
+          </div>
         </div>
+        
       </div>
     </div>
   );

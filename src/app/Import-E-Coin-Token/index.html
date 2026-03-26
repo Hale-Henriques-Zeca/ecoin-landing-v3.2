@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Importar E-COIN - EdenKingDom Coin</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #0b0e11; color: white; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .container { background: #1e2329; padding: 30px; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); text-align: center; max-width: 400px; border: 1px solid #f3ba2f; }
+        img { width: 100px; margin-bottom: 20px; }
+        h1 { font-size: 24px; color: #f3ba2f; margin-bottom: 10px; }
+        p { color: #848e9c; font-size: 14px; margin-bottom: 25px; }
+        .btn-import { background-color: #f3ba2f; color: #000; border: none; padding: 15px 30px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 16px; width: 100%; transition: 0.3s; }
+        .btn-import:hover { background-color: #db9e1b; transform: scale(1.02); }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- COLOQUE O LINK DA LOGO ABAIXO -->
+    <img src="https://teusite.com" alt="E-COIN Logo">
+    <h1>EdenKingDom Coin</h1>
+    <p>Clique abaixo para adicionar a <b>E-COIN</b> e configurar a rede <b>BSC</b> na sua carteira automaticamente.</p>
+    <button class="btn-import" onclick="importECoin()">Adicionar à Carteira</button>
+</div>
+
+<script>
+const BSC_CHAIN_ID = '0x38'; 
+
+async function importECoin() {
+  if (!window.ethereum) {
+    alert("Por favor, abra este link dentro da sua carteira Web3 (MetaMask, Trust Wallet ou Binance Wallet).");
+    return;
+  }
+
+  try {
+    // 1. Garante que está na Binance Smart Chain
+    try {
+      await window.ethereum.request({
+        method: 'wallet_switchEthereumChain',
+        params: [{ chainId: BSC_CHAIN_ID }],
+      });
+    } catch (switchError) {
+      if (switchError.code === 4902) {
+        await window.ethereum.request({
+          method: 'wallet_addEthereumChain',
+          params: [{
+            chainId: BSC_CHAIN_ID,
+            chainName: 'BNB Smart Chain',
+            nativeCurrency: { name: 'BNB', symbol: 'BNB', decimals: 18 },
+            rpcUrls: ['https://bsc-dataseed.binance.org'],
+            blockExplorerUrls: ['https://bscscan.com'],
+          }],
+        });
+      } else {
+        throw switchError;
+      }
+    }
+
+    // 2. Sugere o Token E-COIN
+    await window.ethereum.request({
+      method: 'wallet_watchAsset',
+      params: {
+        type: 'ERC20',
+        options: {
+          address: '0xDf69235019cc416dd5Be75dfc0eDc922aB4b5964', 
+          symbol: 'E-COIN',
+          decimals: 18,
+          image: 'https://teusite.com', // MESMO LINK DA LOGO ACIMA
+        },
+      },
+    });
+
+  } catch (error) {
+    console.error("Erro na operação:", error);
+  }
+}
+</script>
+
+</body>
+</html>
