@@ -60,7 +60,7 @@ export default function ImportECoinPage() {
           address: CONTRACT,
           symbol: "E-Coin", 
           decimals: 18,
-          image: "https://teu-dominio.com/logo.png",
+          image: "https://github.com/Hale-Henriques-Zeca/ecoin-landing-v3.2/blob/main/public/ecoinAilogo.png",
         },
       },
     });
@@ -102,7 +102,7 @@ export default function ImportECoinPage() {
             <div className="absolute -inset-2 bg-gradient-to-r from-blue-500 to-yellow-500 rounded-full blur-xl opacity-20 group-hover:opacity-40 transition duration-1000"></div>
             <img src="/AI-E-Coin-Logo.PNG" alt="E-Coin" className="relative w-28 h-28 drop-shadow-[0_0_15px_rgba(243,186,47,0.4)]" />
           </div>
-          <h1 className="mt-6 text-2xl font-bold tracking-widest bg-gradient-to-r from-white via-gray-300 to-gray-500 bg-clip-text text-transparent">
+          <h1 className="mt-6 text-1xl font-bold tracking-widest bg-gradient-to-r from-white via-gray-300 to-gray-500 bg-clip-text text-transparent">
             EDENKINGDOM COIN
           </h1>
            <h1 className="mt-6 text-2xl font-bold tracking-widest bg-gradient-to-r from-white via-gray-300 to-gray-500 bg-clip-text text-transparent">
