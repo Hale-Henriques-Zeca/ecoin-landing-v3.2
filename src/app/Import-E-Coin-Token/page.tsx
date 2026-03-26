@@ -58,7 +58,7 @@ export default function ImportECoinPage() {
         type: "ERC20",
         options: {
           address: CONTRACT,
-          symbol: "ECOIN", // ⚠️ IMPORTANTE (sem hífen)
+          symbol: "E-Coin", 
           decimals: 18,
           image: "https://teu-dominio.com/logo.png",
         },
