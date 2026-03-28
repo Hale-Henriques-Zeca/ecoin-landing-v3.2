@@ -16,7 +16,7 @@ const PHASES = [
   "Expansion",
   "Externalization",
   "Price Discovery",
-  "Market Only"
+  "Market Only = (E-Coin Listed on Pancaswap at whatever price we reached in the preparation phase if it's $1000 then it's going to be listed at also $1000 on PANCAKESWAP, then Come Binance, etc)"
 ];
 
 const PHASE_DURATIONS = [

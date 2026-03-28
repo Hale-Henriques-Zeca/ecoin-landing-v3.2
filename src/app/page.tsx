@@ -44,6 +44,9 @@ export default function Home() {
        <EcoinCarousel />
       <AITradingCard />
        <ECoinDevelopmentNotice />
+       <LiquidityPanel />
+<ECoinTreasuryFlowInfo />
+<Chart /> 
        <div className="relative z-10 mt-14 mb-10 flex items-center gap-4">
   <div className="h-px flex-1 bg-gradient-to-r from-transparent via-[#D4AF37]/40 to-transparent" />
   <span className="text-[11px] sm:text-xs uppercase tracking-[0.35em] text-[#D4AF37]/80">
@@ -53,9 +56,6 @@ export default function Home() {
 </div>
         <ECoinBenefitsInfo />
       <EBCConvertSection />
-      <ECoinRewardsInfo />
-      <ECoinOnChainStaking />
-      <Chart /> 
       {/* SEPARADOR*/}
 <div className="relative z-10 mt-14 mb-10 flex items-center gap-4">
   <div className="h-px flex-1 bg-gradient-to-r from-transparent via-[#D4AF37]/40 to-transparent" />
@@ -65,14 +65,17 @@ export default function Home() {
   <div className="h-px flex-1 bg-gradient-to-r from-transparent via-[#D4AF37]/40 to-transparent" />
 </div>
       <EFTEBuySellPanel />
+      <ECoinRewardsInfo />
+      <ECoinOnChainStaking />
+      
+      
       <ECoinHubPage />
       <EcoinAISection />
       
       
 <EKDSmartFinanceTool />
 <ECoinCashOutInfo />
-<LiquidityPanel />
-<ECoinTreasuryFlowInfo />
+
 {/* SEPARADOR*/}
 <div className="relative z-10 mt-14 mb-10 flex items-center gap-4">
   <div className="h-px flex-1 bg-gradient-to-r from-transparent via-[#D4AF37]/40 to-transparent" />

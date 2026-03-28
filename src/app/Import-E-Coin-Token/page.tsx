@@ -3,7 +3,10 @@
 import { useState } from "react";
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { useAccount, useDisconnect, useSwitchChain } from "wagmi";
-import { erc20Abi } from "viem";
+import CompatibilityBadge from "@/components/CompatibilityBadge"
+
+
+
 
 const CONTRACT = "0xDf69235019cc416dd5Be75dfc0eDc922aB4b5964";
 const BSC_ID = 56; // ID numérico para BNB Chain
@@ -142,6 +145,8 @@ await addToken({
             AI-Verified Asset
           </span>
         </div>
+
+        <CompatibilityBadge /> 
 
         {/* ÁREA DE BOTÕES */}
         <div className="flex flex-col gap-6 items-center">
