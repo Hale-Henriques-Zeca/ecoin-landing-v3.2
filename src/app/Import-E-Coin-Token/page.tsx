@@ -18,27 +18,25 @@ export default function ImportECoinPage() {
       // 2. Importar Token
     const importToken = async () => {
   const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+  const walletType = getWalletType();
 
-  // 🔴 CASO NÃO TENHA WALLET (mobile ou desktop)
+  // ❌ SEM WALLET
   if (!window.ethereum) {
-
-    // 📱 MOBILE → abrir Trust Wallet
     if (isMobile) {
-      window.location.href =
-        "https://link.trustwallet.com/open_url?url=" +
-        encodeURIComponent(window.location.href);
+      alert("Abra este site dentro da sua wallet (MetaMask / Trust Wallet)");
+
+      navigator.clipboard.writeText(CONTRACT);
       return;
     }
 
-    // 💻 DESKTOP sem wallet
-    alert("Instale MetaMask ou outra wallet Web3");
+    alert("Instale uma wallet Web3");
     return;
   }
 
   setLoading(true);
 
   try {
-    // 🔄 FORÇAR BNB CHAIN
+    // 🔄 SWITCH NETWORK
     try {
       await window.ethereum.request({
         method: "wallet_switchEthereumChain",
@@ -67,28 +65,31 @@ export default function ImportECoinPage() {
       }
     }
 
-    // ➕ IMPORTAR TOKEN
-    const wasAdded = await window.ethereum.request({
-      method: "wallet_watchAsset",
-      params: {
-        type: "ERC20",
-        options: {
-          address: CONTRACT,
-          symbol: "E-Coin", 
-          decimals: 18,
-          image: "https://ecoin.edenkingdom.org/ecoinAilogo.png".replace(/\s/g,''), // ⚠️ usa URL real do teu site
+    // 🧠 COMPORTAMENTO POR WALLET
+    if (walletType === "metamask") {
+      await window.ethereum.request({
+        method: "wallet_watchAsset",
+        params: {
+          type: "ERC20",
+          options: {
+            address: CONTRACT,
+            symbol: "E-Coin",
+            decimals: 18,
+            image: "https://ecoin.edenkingdom.org/ecoinAilogo.png",
+          },
         },
-      },
-    });
-
-    if (wasAdded) {
-      alert("E-COIN adicionada 🚀");
+      });
     } else {
-      alert("Utilizador cancelou.");
+      // ⚠️ fallback para outras wallets
+      await navigator.clipboard.writeText(CONTRACT);
+
+      alert(
+        "Token copiado!\n\nCole manualmente na sua wallet:\n" + CONTRACT
+      );
     }
 
   } catch (err: any) {
-    console.error("ERRO REAL:", err);
+    console.error("ERRO:", err);
     alert(err?.message || "Erro ao importar token");
   } finally {
     setLoading(false);
