@@ -19,18 +19,21 @@ export default function ImportECoinPage() {
     const importToken = async () => {
   const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
-  // 🔍 DETECTAR WALLET
-const getWalletType = () => {
-  const eth = window.ethereum;
+  // 🔴 CASO NÃO TENHA WALLET (mobile ou desktop)
+  if (!window.ethereum) {
 
-  if (!eth) return "none";
+    // 📱 MOBILE → abrir Trust Wallet
+    if (isMobile) {
+      window.location.href =
+        "https://link.trustwallet.com/open_url?url=" +
+        encodeURIComponent(window.location.href);
+      return;
+    }
 
-  if (eth.isMetaMask) return "metamask";
-  if (eth.isTrust) return "trust";
-  if (eth.isCoinbaseWallet) return "coinbase";
-
-  return "unknown";
-};
+    // 💻 DESKTOP sem wallet
+    alert("Instale MetaMask ou outra wallet Web3");
+    return;
+  }
 
   setLoading(true);
 
