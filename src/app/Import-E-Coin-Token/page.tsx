@@ -14,7 +14,7 @@ export default function ImportECoinPage() {
   const { switchChain } = useSwitchChain();
   const [loading, setLoading] = useState(false);
 
-
+const USDT_BSC = "0x55d398326f99059fF775485246999027B3197955";
       // 2. Importar Token
     const importToken = async () => {
   const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
@@ -37,6 +37,7 @@ export default function ImportECoinPage() {
 
   setLoading(true);
 
+  let results: string[] = [];
   try {
     // 🔄 FORÇAR BNB CHAIN
     try {
@@ -67,25 +68,42 @@ export default function ImportECoinPage() {
       }
     }
 
+    // 🪙 FUNÇÃO GENÉRICA
+    const addToken = async (token: any) => {
+      try {
+        const added = await window.ethereum.request({
+          method: "wallet_watchAsset",
+          params: {
+            type: "ERC20",
+            options: token,
+          },
+        });
+
+        if (added) results.push(`✅ ${token.symbol} adicionada`);
+      } catch {
+        results.push(`⚠️ ${token.symbol} ignorada`);
+      }
+    };
+
     // ➕ IMPORTAR TOKEN
-    const wasAdded = await window.ethereum.request({
-      method: "wallet_watchAsset",
-      params: {
-        type: "ERC20",
-        options: {
-          address: CONTRACT,
-          symbol: "E-Coin", 
-          decimals: 18,
-          image: "https://ecoin.edenkingdom.org/ecoinAilogo.png".replace(/\s/g,''), // ⚠️ usa URL real do teu site
-        },
-      },
+    // 🥇 E-COIN
+await addToken({
+  address: CONTRACT,
+  symbol: "E-Coin",
+  decimals: 18,
+  image: "https://ecoin.edenkingdom.org/ecoinAilogo.png",
+});
+
+    // 🥈 USDT
+    await addToken({
+      address: USDT_BSC,
+      symbol: "USDT",
+      decimals: 18,
+      image: "https://cryptologos.cc/logos/tether-usdt-logo.png",
     });
 
-    if (wasAdded) {
-      alert("E-COIN adicionada 🚀");
-    } else {
-      alert("Utilizador cancelou.");
-    }
+    // 🧾 RESULTADO FINAL
+    alert(results.join("\n"));
 
   } catch (err: any) {
     console.error("ERRO REAL:", err);
