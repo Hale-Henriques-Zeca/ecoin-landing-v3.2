@@ -17,12 +17,28 @@ export default function ImportECoinPage() {
 
       // 2. Importar Token
     const importToken = async () => {
-  if (!window.ethereum) return;
+  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
+  // 🔴 CASO NÃO TENHA WALLET (mobile ou desktop)
+  if (!window.ethereum) {
+
+    // 📱 MOBILE → abrir Trust Wallet
+    if (isMobile) {
+      window.location.href =
+        "https://link.trustwallet.com/open_url?url=" +
+        encodeURIComponent(window.location.href);
+      return;
+    }
+
+    // 💻 DESKTOP sem wallet
+    alert("Instale MetaMask ou outra wallet Web3");
+    return;
+  }
 
   setLoading(true);
 
   try {
-    // 🔄 FORÇAR BNB CHAIN (FORMA SEGURA)
+    // 🔄 FORÇAR BNB CHAIN
     try {
       await window.ethereum.request({
         method: "wallet_switchEthereumChain",
@@ -60,7 +76,7 @@ export default function ImportECoinPage() {
           address: CONTRACT,
           symbol: "E-Coin", 
           decimals: 18,
-          image: "https://github.com/Hale-Henriques-Zeca/ecoin-landing-v3.2/blob/main/public/ecoinAilogo.png",
+          image: "https://ecoin.edenkingdom.org/ecoinAilogo.png".replace(/\s/g,''), // ⚠️ usa URL real do teu site
         },
       },
     });
@@ -73,11 +89,7 @@ export default function ImportECoinPage() {
 
   } catch (err: any) {
     console.error("ERRO REAL:", err);
-
-    alert(
-      err?.message ||
-      "Erro ao importar token. Verifique a wallet."
-    );
+    alert(err?.message || "Erro ao importar token");
   } finally {
     setLoading(false);
   }
