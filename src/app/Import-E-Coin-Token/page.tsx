@@ -114,7 +114,7 @@ await addToken({
 };
 
   return (
-    <div className="min-h-screen bg-black text-white flex items-center justify-center p-6 relative font-sans">
+    <div className="min-h-screen bg-black text-white flex items-start justify-center pt-24 md:pt-32 pb-10 px-6 relative font-sans">
       
       {/* IMAGEM DE FUNDO IA COM OVERLAY ESCURO */}
       <div 
@@ -158,7 +158,7 @@ await addToken({
               disabled={loading}
               className="w-full py-4 mt-4 rounded-2xl font-bold bg-gradient-to-r from-yellow-500 to-yellow-600 text-black shadow-[0_0_25px_rgba(243,186,47,0.3)] hover:shadow-[0_0_40px_rgba(243,186,47,0.6)] hover:scale-[1.02] active:scale-95 transition-all animate-in fade-in slide-in-from-bottom-4 duration-700"
             >
-              {loading ? "Sincronizando..." : "➕ 2. Importar E-COIN"}
+              {loading ? "Sincronizando..." : "➕ 2. Importar E-COIN & USDT"}
             </button>
           )}
 
