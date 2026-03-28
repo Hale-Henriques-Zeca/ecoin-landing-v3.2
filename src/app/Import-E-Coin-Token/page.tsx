@@ -18,25 +18,24 @@ export default function ImportECoinPage() {
       // 2. Importar Token
     const importToken = async () => {
   const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-  const walletType = getWalletType();
 
-  // ❌ SEM WALLET
-  if (!window.ethereum) {
-    if (isMobile) {
-      alert("Abra este site dentro da sua wallet (MetaMask / Trust Wallet)");
+  // 🔍 DETECTAR WALLET
+const getWalletType = () => {
+  const eth = window.ethereum;
 
-      navigator.clipboard.writeText(CONTRACT);
-      return;
-    }
+  if (!eth) return "none";
 
-    alert("Instale uma wallet Web3");
-    return;
-  }
+  if (eth.isMetaMask) return "metamask";
+  if (eth.isTrust) return "trust";
+  if (eth.isCoinbaseWallet) return "coinbase";
+
+  return "unknown";
+};
 
   setLoading(true);
 
   try {
-    // 🔄 SWITCH NETWORK
+    // 🔄 FORÇAR BNB CHAIN
     try {
       await window.ethereum.request({
         method: "wallet_switchEthereumChain",
@@ -65,31 +64,28 @@ export default function ImportECoinPage() {
       }
     }
 
-    // 🧠 COMPORTAMENTO POR WALLET
-    if (walletType === "metamask") {
-      await window.ethereum.request({
-        method: "wallet_watchAsset",
-        params: {
-          type: "ERC20",
-          options: {
-            address: CONTRACT,
-            symbol: "E-Coin",
-            decimals: 18,
-            image: "https://ecoin.edenkingdom.org/ecoinAilogo.png",
-          },
+    // ➕ IMPORTAR TOKEN
+    const wasAdded = await window.ethereum.request({
+      method: "wallet_watchAsset",
+      params: {
+        type: "ERC20",
+        options: {
+          address: CONTRACT,
+          symbol: "E-Coin", 
+          decimals: 18,
+          image: "https://ecoin.edenkingdom.org/ecoinAilogo.png".replace(/\s/g,''), // ⚠️ usa URL real do teu site
         },
-      });
-    } else {
-      // ⚠️ fallback para outras wallets
-      await navigator.clipboard.writeText(CONTRACT);
+      },
+    });
 
-      alert(
-        "Token copiado!\n\nCole manualmente na sua wallet:\n" + CONTRACT
-      );
+    if (wasAdded) {
+      alert("E-COIN adicionada 🚀");
+    } else {
+      alert("Utilizador cancelou.");
     }
 
   } catch (err: any) {
-    console.error("ERRO:", err);
+    console.error("ERRO REAL:", err);
     alert(err?.message || "Erro ao importar token");
   } finally {
     setLoading(false);
