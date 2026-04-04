@@ -20,7 +20,7 @@ const StatCard = ({ title, value, unit, color }: any) => (
 );
 
 export default function AIDashboard() {
-  const [mode, setMode] = useState<"yield" | "bot">("yield");
+  const [mode, setMode] = useState<"forex" | "crypto">("forex");
   const [isBotRunning, setIsBotRunning] = useState(false);
   const [logs, setLogs] = useState<string[]>([]);
 
@@ -28,6 +28,27 @@ export default function AIDashboard() {
 const [secretKey, setSecretKey] = useState("");
 const [saved, setSaved] = useState(false);
 const [upline, setUpline] = useState("");
+
+// --- FOREX BROKER STATE ---
+const [broker, setBroker] = useState<"exness" | "deriv" | "icmarkets">("exness");
+
+const [accountId, setAccountId] = useState("");
+const [password, setPassword] = useState("");
+const [server, setServer] = useState("");
+const [apiToken, setApiToken] = useState("");
+
+const [brokerSaved, setBrokerSaved] = useState(false);
+
+// LOAD STORAGE
+useEffect(() => {
+  const savedBroker = localStorage.getItem("FOREX_BROKER") as any;
+  if (savedBroker) setBroker(savedBroker);
+
+  setAccountId(localStorage.getItem("FOREX_ACCOUNT_ID") || "");
+  setPassword(localStorage.getItem("FOREX_PASSWORD") || "");
+  setServer(localStorage.getItem("FOREX_SERVER") || "");
+  setApiToken(localStorage.getItem("FOREX_API_TOKEN") || "");
+}, []);
 
   // Simulação de Logs do Bot
   useEffect(() => {
@@ -67,104 +88,250 @@ const [upline, setUpline] = useState("");
             <h1 className="text-3xl font-black tracking-tighter italic flex items-center gap-3">
               <Cpu className="text-yellow-500" /> E-COIN NEURAL TRADING AI ROBOT TERMINAL
             </h1>
-            <p className="text-gray-500 text-sm font-mono uppercase tracking-widest mt-1">Hybrid Trading & Yield Infrastructure</p>
+            <p className="text-gray-500 text-sm font-mono uppercase tracking-widest mt-1">Hybrid: Forex & Crypto AI Trading Robot</p>
           </div>
 
           <div className="bg-black/40 border border-white/10 p-1.5 rounded-2xl flex gap-2 backdrop-blur-xl">
             <button 
-              onClick={() => setMode("yield")}
-              className={`px-8 py-3 rounded-xl text-xs font-bold transition-all ${mode === "yield" ? "bg-yellow-500 text-black shadow-lg shadow-yellow-500/20" : "text-gray-500 hover:text-white"}`}
+              onClick={() => setMode("forex")}
+              className={`px-8 py-3 rounded-xl text-xs font-bold transition-all ${mode === "forex" ? "bg-yellow-500 text-black shadow-lg shadow-yellow-500/20" : "text-gray-500 hover:text-white"}`}
             >
-              YIELD ENGINE
+              FOREX AI TRADING BOT
             </button>
             <button 
-              onClick={() => setMode("bot")}
-              className={`px-8 py-3 rounded-xl text-xs font-bold transition-all ${mode === "bot" ? "bg-blue-600 text-white shadow-lg shadow-blue-600/20" : "text-gray-500 hover:text-white"}`}
+              onClick={() => setMode("crypto")}
+              className={`px-8 py-3 rounded-xl text-xs font-bold transition-all ${mode === "crypto" ? "bg-blue-600 text-white shadow-lg shadow-blue-600/20" : "text-gray-500 hover:text-white"}`}
             >
-              AI TRADING BOT
+              CRYPTO AI TRADING BOT
             </button>
           </div>
         </div>
 
         {/* CONTENT RENDERING */}
-        <AnimatePresence mode="wait">
-          {mode === "yield" ? (
-            <motion.div 
-              key="yield" 
-              initial={{ opacity: 0, y: 20 }} 
-              animate={{ opacity: 1, y: 0 }} 
-              exit={{ opacity: 0, y: -20 }}
-              className="grid grid-cols-1 lg:grid-cols-3 gap-8"
-            >
-              {/* YIELD LEFT: STAKING CONTROLS */}
-              <div className="lg:col-span-2 space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <StatCard title="Staked Balance" value="1,250,000" unit="EKD" color="text-yellow-500" />
-                  <StatCard title="Pending Rewards" value="12,450" unit="EKD" color="text-green-500" />
-                  <StatCard title="Global APR" value="24.5" unit="%" color="text-blue-400" />
-                </div>
+<AnimatePresence mode="wait">
+  {mode === "forex" ? (
+    <motion.div 
+      key="forex" 
+      initial={{ opacity: 0, y: 20 }} 
+      animate={{ opacity: 1, y: 0 }} 
+      exit={{ opacity: 0, y: -20 }}
+      className="grid grid-cols-1 lg:grid-cols-3 gap-8"
+    >
 
-                <div className="bg-white/5 border border-white/10 p-8 rounded-[32px]">
-                  <h3 className="text-sm font-bold mb-6 flex items-center gap-2 uppercase tracking-widest"><RefreshCw size={16}/> E-Coin Auto Trading Management</h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <button className="py-5 bg-white/10 hover:bg-white/20 rounded-2xl font-bold transition-all">DEPOSIT E-COIN</button>
-                    <button className="py-5 bg-white/10 hover:bg-white/20 rounded-2xl font-bold transition-all">WITHDRAW E-COIN</button>
-                    <button className="py-5 bg-yellow-500 text-black hover:bg-yellow-400 rounded-2xl font-bold transition-all">CLAIM REWARDS</button>
-                    <button className="py-5 bg-yellow-500 text-black hover:bg-yellow-400 rounded-2xl font-bold transition-all">CLAIM REFERRAL COMMISSION</button>
-                  </div>
-                </div>
-              </div>
+      {/* LEFT SIDE */}
+      <div className="lg:col-span-2 space-y-6">
 
-              {/* YIELD RIGHT: REFERRAL INFO */}
-              <div className="bg-gradient-to-b from-yellow-500/10 to-transparent border border-yellow-500/20 p-8 rounded-[32px]">
-                <h3 className="text-yellow-500 text-xs font-bold mb-4 uppercase tracking-[0.2em]">Referral Node</h3>
-                <div className="space-y-4">
-                    <div className="p-4 bg-black/40 rounded-xl border border-white/5">
-                        <p className="text-[10px] text-gray-500">Your E-Coin Commission</p>
-                        <p className="text-xl font-mono">2,400 E-Coin</p>
-                    </div>
-                    <p className="text-[11px] text-gray-400 leading-relaxed italic">Ganhe 10% de todo o gás consumido pelos seus referidos no modo AI Bot.</p>
-                    <div className="bg-yellow-500/10 border border-yellow-500/20 p-5 rounded-2xl mb-6">
-  
-  <h3 className="text-xs text-yellow-500 font-bold mb-3 uppercase tracking-widest">
-    Referral Leader Node
+        {/* STATS */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <StatCard title="Account Balance" value="2,450" unit="USD" color="text-green-400" />
+          <StatCard title="Active Trades" value="3" unit="Positions" color="text-blue-400" />
+          <StatCard title="AI Profit" value="+128.4" unit="USD" color="text-emerald-400" />
+        </div>
+
+        {/* BROKER CONNECTION */}
+        <div className="bg-white/5 border border-white/10 p-6 rounded-[32px]">
+
+  <h3 className="text-xs font-bold uppercase tracking-widest mb-4">
+    Select Broker
   </h3>
 
-  <input
-    value={upline}
-    onChange={(e) => setUpline(e.target.value)}
-    placeholder="Inserir Upline Address"
-    className="w-full mb-3 p-3 bg-black border border-white/10 rounded text-xs"
-  />
+  <div className="grid grid-cols-3 gap-3 mb-6">
 
-  <div className="flex gap-3">
     <button
-      onClick={() => {
-        localStorage.setItem("EKD_UPLINE", upline);
-      }}
-      className="flex-1 py-2 bg-yellow-500 text-black rounded-xl text-xs font-bold"
+      onClick={() => setBroker("exness")}
+      className={`p-3 rounded-xl text-xs font-bold ${
+        broker === "exness"
+          ? "bg-yellow-500 text-black"
+          : "bg-white/10 text-white/60"
+      }`}
     >
-      Bind Upline
+      Exness
     </button>
 
     <button
-      className="flex-1 py-2 border border-yellow-500 text-yellow-500 rounded-xl text-xs font-bold"
+      onClick={() => setBroker("deriv")}
+      className={`p-3 rounded-xl text-xs font-bold ${
+        broker === "deriv"
+          ? "bg-blue-600 text-white"
+          : "bg-white/10 text-white/60"
+      }`}
     >
-      Claim Referral
+      Deriv
     </button>
+
+    <button
+      onClick={() => setBroker("icmarkets")}
+      className={`p-3 rounded-xl text-xs font-bold ${
+        broker === "icmarkets"
+          ? "bg-purple-600 text-white"
+          : "bg-white/10 text-white/60"
+      }`}
+    >
+      IC Markets
+    </button>
+
   </div>
 
-  <p className="text-[10px] text-white/40 mt-3">
-    Earn 10% from your network gas usage
-  </p>
+  {/* DYNAMIC FIELDS */}
+
+  {broker === "exness" || broker === "icmarkets" ? (
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+      <input
+        value={accountId}
+        onChange={(e) => setAccountId(e.target.value)}
+        placeholder="Account ID"
+        className="p-3 bg-black border border-white/10 rounded text-xs"
+      />
+
+      <input
+        value={server}
+        onChange={(e) => setServer(e.target.value)}
+        placeholder="Broker Server (Ex: Exness-MT5Real)"
+        className="p-3 bg-black border border-white/10 rounded text-xs"
+      />
+
+      <input
+        type="password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        placeholder="Password"
+        className="p-3 bg-black border border-white/10 rounded text-xs col-span-2"
+      />
+
+    </div>
+  ) : null}
+
+  {broker === "deriv" ? (
+    <div className="grid grid-cols-1 gap-4">
+      <input
+        value={apiToken}
+        onChange={(e) => setApiToken(e.target.value)}
+        placeholder="Deriv API Token"
+        className="p-3 bg-black border border-white/10 rounded text-xs"
+      />
+    </div>
+  ) : null}
+
+  {/* SAVE BUTTON */}
+
+  <button
+    onClick={() => {
+      localStorage.setItem("FOREX_BROKER", broker);
+      localStorage.setItem("FOREX_ACCOUNT_ID", accountId);
+      localStorage.setItem("FOREX_PASSWORD", password);
+      localStorage.setItem("FOREX_SERVER", server);
+      localStorage.setItem("FOREX_API_TOKEN", apiToken);
+      setBrokerSaved(true);
+    }}
+    className="mt-6 w-full py-3 bg-green-600 rounded-xl text-xs font-bold hover:bg-green-500"
+  >
+    CONNECT BROKER
+  </button>
+
+  {brokerSaved && (
+    <p className="text-green-400 text-xs mt-3">
+      ✔ Broker conectado com sucesso
+    </p>
+  )}
 
 </div>
-                </div>
-              </div>
-            </motion.div>
-          ) : (
+
+        {/* BOT SELECTOR */}
+        <div className="bg-white/5 border border-white/10 p-6 rounded-[32px]">
+          <h3 className="text-xs font-bold uppercase tracking-widest mb-6">
+            Select AI Trading Mode
+          </h3>
+
+          <div className="grid md:grid-cols-3 gap-4">
+
+            {/* HYBRID BOT */}
+            <button className="p-5 bg-blue-600/20 border border-blue-500/30 rounded-2xl hover:bg-blue-600/30 transition">
+              <p className="text-xs font-bold text-blue-400 mb-2">AI HYBRID BOT</p>
+              <p className="text-[10px] text-gray-400">Trend + Liquidity + Volatility + AI</p>
+            </button>
+
+            {/* LIQUIDITY BOT */}
+            <button className="p-5 bg-purple-600/20 border border-purple-500/30 rounded-2xl hover:bg-purple-600/30 transition">
+              <p className="text-xs font-bold text-purple-400 mb-2">LIQUIDITY SWEEP</p>
+              <p className="text-[10px] text-gray-400">Smart Money / Stop Hunt Detection</p>
+            </button>
+
+            {/* COPY TRADE */}
+            <button className="p-5 bg-yellow-500/20 border border-yellow-500/30 rounded-2xl hover:bg-yellow-500/30 transition">
+              <p className="text-xs font-bold text-yellow-400 mb-2">COPY TRADING AI</p>
+              <p className="text-[10px] text-gray-400">AI + Social + Multi Strategy</p>
+            </button>
+
+          </div>
+        </div>
+
+        {/* COPY MODES (DYNAMIC PANEL STYLE) */}
+        <div className="bg-black/40 border border-yellow-500/20 p-6 rounded-[32px]">
+          <h3 className="text-yellow-500 text-xs font-bold mb-4 uppercase tracking-widest">
+            Copy Trading Modes
+          </h3>
+
+          <div className="grid md:grid-cols-2 gap-4">
+
+            <div className="p-4 border border-white/10 rounded-xl">
+              <p className="text-xs font-bold">AI Master Trader</p>
+              <p className="text-[10px] text-gray-400">Single AI → All users copy</p>
+            </div>
+
+            <div className="p-4 border border-white/10 rounded-xl">
+              <p className="text-xs font-bold">Multi Strategy Pool</p>
+              <p className="text-[10px] text-gray-400">Scalping / Swing / News</p>
+            </div>
+
+            <div className="p-4 border border-white/10 rounded-xl">
+              <p className="text-xs font-bold">Risk Based Copy</p>
+              <p className="text-[10px] text-gray-400">Auto lot sizing per user</p>
+            </div>
+
+            <div className="p-4 border border-white/10 rounded-xl">
+              <p className="text-xs font-bold">Social + AI</p>
+              <p className="text-[10px] text-gray-400">Humans + AI combined</p>
+            </div>
+
+          </div>
+        </div>
+
+        {/* START BUTTON */}
+        <button 
+          onClick={() => setIsBotRunning(!isBotRunning)}
+          className={`w-full py-5 rounded-2xl font-black uppercase ${
+            isBotRunning ? "bg-red-600" : "bg-yellow-500 text-black"
+          }`}
+        >
+          {isBotRunning ? "STOP FOREX AI" : "START FOREX AI"}
+        </button>
+
+      </div>
+
+      {/* RIGHT SIDE */}
+      <div className="bg-black border border-white/10 p-6 rounded-[32px] h-[580px] flex flex-col">
+
+        <h3 className="text-[10px] text-gray-400 uppercase mb-4">
+          Forex Neural Console
+        </h3>
+
+        <div className="flex-1 text-[10px] font-mono space-y-2 overflow-y-auto">
+          {!isBotRunning && (
+            <p className="text-gray-600">Bot em standby...</p>
+          )}
+          {logs.map((log, i) => (
+            <p key={i} className="text-yellow-400">{log}</p>
+          ))}
+        </div>
+
+      </div>
+
+    </motion.div>
+  ) : (
+             
             <motion.div 
-  key="bot" 
+  key="crypto" 
   initial={{ opacity: 0, y: 20 }} 
   animate={{ opacity: 1, y: 0 }} 
   exit={{ opacity: 0, y: -20 }}
@@ -324,7 +491,7 @@ const [upline, setUpline] = useState("");
   </div>
 
 
-  {/* BOT RIGHT: LIVE CONSOLE */}
+  {/* CRYPTO RIGHT: LIVE CONSOLE */}
   <div className="bg-black border border-white/10 p-6 rounded-[32px] flex flex-col h-[580px] shadow-2xl relative overflow-hidden">
     <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-blue-500 to-transparent opacity-50"></div>
     
@@ -356,7 +523,7 @@ const [upline, setUpline] = useState("");
         <p className="text-[9px] text-orange-500 flex items-center gap-2 font-bold uppercase tracking-tighter">
             <ShieldCheck size={12}/> Protocolo: 10% Referral Leader / 90% Treasury
         </p>
-        {/* YIELD RIGHT: REFERRAL INFO */}
+        {/* FOREX RIGHT: REFERRAL INFO */}
               <div className="bg-gradient-to-b from-yellow-500/10 to-transparent border border-yellow-500/20 p-8 rounded-[32px]">
                 <h3 className="text-yellow-500 text-xs font-bold mb-4 uppercase tracking-[0.2em]">Referral Node</h3>
                 <div className="space-y-4">
