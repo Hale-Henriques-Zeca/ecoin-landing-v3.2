@@ -1,5 +1,35 @@
 "use client";
 
+
+import { motion, AnimatePresence } from "framer-motion";
+import { 
+  Cpu, BarChart3, Wallet, 
+  ArrowUpRight, RefreshCw, Settings, Database, 
+   Activity, Play, Square, Fuel
+} from "lucide-react";
+
+import {
+  FaTelegramPlane,
+  FaTelegram,
+  FaWhatsapp,
+  FaTwitter,
+  FaDiscord,
+} from "react-icons/fa";
+import {
+  useAccount,
+  useReadContract,
+  useWriteContract,
+  useWaitForTransactionReceipt,
+} from "wagmi";
+import { BsStars } from "react-icons/bs";
+import { Snowfall } from "react-snowfall";
+import ReferralModalContent from "@/components/ReferralModalContent";
+import { ConnectButton } from '@rainbow-me/rainbowkit';
+import { useDisconnect } from "wagmi";
+import { CONTRACTS } from "@/lib/contracts";
+import { erc20Abi } from "viem";
+import EcoinWalletDashboard from "@/components/EcoinWalletDashboard";
+
 import { useState, useEffect } from "react";
 import { 
   Zap, 
@@ -12,6 +42,7 @@ import {
   Gift,
   AlertCircle
 } from "lucide-react";
+
 
 // Componente de Card de Estatística
 const StatCard = ({ label, value, icon: Icon, color }: any) => (
@@ -27,6 +58,29 @@ const StatCard = ({ label, value, icon: Icon, color }: any) => (
 );
 
 export default function MiningPage() {
+
+  const { isConnected, address } = useAccount();
+      const { disconnect } = useDisconnect();
+    
+      const TRADINGGASVAULT_OWNER =
+      process.env.NEXT_PUBLIC_TRADINGGASVAULT_OWNER?.toLowerCase();
+    
+    
+      /* 🔐 WALLET */
+      const [panelOpen, setPanelOpen] = useState(false);
+    
+    
+       const [showModal, setShowModal] = useState(false);
+      const fadeUp = {
+        hidden: { opacity: 0, y: 30 },
+        visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
+      };
+    
+      /* ⛔ HYDRATION */
+      const [mounted, setMounted] = useState(false);
+
+
+
   const [amount, setAmount] = useState("");
   const [isMining, setIsMining] = useState(false);
 
@@ -38,6 +92,29 @@ export default function MiningPage() {
     totalStakers: "842",
     apy: "24.5% dia"
   };
+
+  // quando a wallet conectar, abre o painel automaticamente
+  useEffect(() => {
+    if (isConnected) {
+      setPanelOpen(true);
+    } else {
+      setPanelOpen(false);
+    }
+  }, [isConnected]);
+  
+  
+  
+    useEffect(() => {
+      setMounted(true);
+    }, []);
+  
+    if (!mounted) return null;
+  
+    const isOwner =
+    isConnected &&
+    address &&
+    TRADINGGASVAULT_OWNER &&
+    address.toLowerCase() === TRADINGGASVAULT_OWNER;
 
   return (
     <main className="min-h-screen bg-black pt-24 pb-12 px-6">
@@ -154,7 +231,67 @@ export default function MiningPage() {
             </div>
           </div>
 
+        
         </div>
+        {/* INVITE */}
+                    <div className="text-center mt-16">
+                      <button
+                        onClick={() => setShowModal(true)}
+                        className="bg-gradient-to-r from-[#00FF9C] to-[#00C3FF] text-black font-bold py-3 px-10 rounded-full"
+                      >
+                        🎁 Convidar Amigos
+                      </button>
+                    </div>
+              
+                    {showModal && (
+                      <div
+                        onClick={() => setShowModal(false)}
+                        className="fixed inset-0 bg-black/70 flex items-center justify-center z-50"
+                      >
+                        <div
+                          onClick={(e) => e.stopPropagation()}
+                          className="bg-[#0a0a0a] p-8 rounded-2xl border border-[#00FF9C]/30 w-[360px]"
+                        >
+                          <h3 className="text-[#00FF9C] text-xl mb-4">
+                            Referral System Dashboard
+                          </h3>
+              
+                          <ReferralModalContent />
+                        </div>
+                      </div>
+                    )}
+        
+                   {/* 🌐 FOOTER */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1, delay: 0.4 }}
+         className="mt-12 flex flex-col items-center gap-3 text-[#D4AF37]"
+        >
+          <p className="text-sm mb-3 text-gray-400">
+             Conecte-se à comunidade E-Coin
+          </p>
+        
+          <div className="flex justify-center gap-5 text-2xl">
+                    <a href="https://t.me/ecoin2026" target="_blank" rel="noopener noreferrer">
+                      <FaTelegramPlane />
+                    </a>
+                    <a href="https://x.com/CoinE28810" target="_blank" rel="noopener noreferrer">
+                      <FaTwitter />
+                    </a>
+                    <a href="https://discord.com" target="_blank" rel="noopener noreferrer">
+                      <FaDiscord />
+                    </a>
+                    <a href="https://t.me/ecoin2025" target="_blank" rel="noopener noreferrer">
+                      <FaTelegram />
+                    </a>
+                    <a href="https://chat.whatsapp.com/G1F6USX5NrrLKikm7yiXXQ" target="_blank" rel="noopener noreferrer">
+                      <FaWhatsapp />
+                    </a>
+                  </div>
+        
+          <BsStars className="text-3xl mt-5 animate-pulse text-[#D4AF37]" />
+        </motion.div>
       </div>
     </main>
   );

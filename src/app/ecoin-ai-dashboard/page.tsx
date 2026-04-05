@@ -8,6 +8,30 @@ import {
   TrendingUp, Activity, Play, Square, Fuel
 } from "lucide-react";
 
+import {
+  FaTelegramPlane,
+  FaTelegram,
+  FaWhatsapp,
+  FaTwitter,
+  FaDiscord,
+} from "react-icons/fa";
+import {
+  useAccount,
+  useReadContract,
+  useWriteContract,
+  useWaitForTransactionReceipt,
+} from "wagmi";
+import { BsStars } from "react-icons/bs";
+import { Snowfall } from "react-snowfall";
+import ReferralModalContent from "@/components/ReferralModalContent";
+import { ConnectButton } from '@rainbow-me/rainbowkit';
+import { useDisconnect } from "wagmi";
+import { CONTRACTS } from "@/lib/contracts";
+import { erc20Abi } from "viem";
+import EcoinWalletDashboard from "@/components/EcoinWalletDashboard";
+import { useTradingGas } from "@/hooks/useTradingGas";
+
+
 // --- COMPONENTES DE INTERFACE ---
 const StatCard = ({ title, value, unit, color }: any) => (
   <div className="bg-white/5 border border-white/10 p-5 rounded-2xl backdrop-blur-md">
@@ -20,6 +44,35 @@ const StatCard = ({ title, value, unit, color }: any) => (
 );
 
 export default function AIDashboard() {
+
+   const { isConnected, address } = useAccount();
+    const { disconnect } = useDisconnect();
+    const gas = useTradingGas();
+    
+  
+    const TRADINGGASVAULT_OWNER =
+    process.env.NEXT_PUBLIC_TRADINGGASVAULT_OWNER?.toLowerCase();
+  
+  
+    /* 🔐 WALLET */
+    const [panelOpen, setPanelOpen] = useState(false);
+  
+  
+     const [showModal, setShowModal] = useState(false);
+    const fadeUp = {
+      hidden: { opacity: 0, y: 30 },
+      visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
+    };
+  
+    /* ⛔ HYDRATION */
+    const [mounted, setMounted] = useState(false);
+  
+   /* 📊 STAKING STATES */
+     const [stakeAmount, setStakeAmount] = useState("");
+   
+    
+   
+
   const [mode, setMode] = useState<"forex" | "crypto">("forex");
   const [isBotRunning, setIsBotRunning] = useState(false);
   const [logs, setLogs] = useState<string[]>([]);
@@ -53,7 +106,7 @@ useEffect(() => {
   // Simulação de Logs do Bot
   useEffect(() => {
     if (!isBotRunning) return;
-    const messages = ["Scanning Binance liquidity...", "Order matched: BTC/USDT", "Profit: +0.02%", "Deducting Gas: 2 EKD"];
+    const messages = ["Scanning Binance liquidity...", "Order matched: BTC/USDT", "Profit: +0.02%", "Deducting Gas: 2 ecGas"];
     const interval = setInterval(() => {
       const msg = `[${new Date().toLocaleTimeString()}] ${messages[Math.floor(Math.random() * messages.length)]}`;
       setLogs(prev => [msg, ...prev].slice(0, 8));
@@ -72,6 +125,30 @@ useEffect(() => {
   }
 }, []);
 
+
+// quando a wallet conectar, abre o painel automaticamente
+useEffect(() => {
+  if (isConnected) {
+    setPanelOpen(true);
+  } else {
+    setPanelOpen(false);
+  }
+}, [isConnected]);
+
+
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) return null;
+
+  const isOwner =
+  isConnected &&
+  address &&
+  TRADINGGASVAULT_OWNER &&
+  address.toLowerCase() === TRADINGGASVAULT_OWNER;
+
   return (
 
   <div className="min-h-screen bg-[#020617] text-white pt-32 lg:pt-40 p-6 lg:p-12 font-sans selection:bg-yellow-500/30">
@@ -88,7 +165,7 @@ useEffect(() => {
             <h1 className="text-3xl font-black tracking-tighter italic flex items-center gap-3">
               <Cpu className="text-yellow-500" /> E-COIN NEURAL TRADING AI ROBOT TERMINAL
             </h1>
-            <p className="text-gray-500 text-sm font-mono uppercase tracking-widest mt-1">Hybrid: Forex & Crypto AI Trading Robot</p>
+            <p className="text-gray-500 text-sm font-mono uppercase tracking-widest mt-1">Hybrid Neural: Forex & Crypto AI Trading Robot</p>
           </div>
 
           <div className="bg-black/40 border border-white/10 p-1.5 rounded-2xl flex gap-2 backdrop-blur-xl">
@@ -309,23 +386,41 @@ useEffect(() => {
 
       </div>
 
-      {/* RIGHT SIDE */}
-      <div className="bg-black border border-white/10 p-6 rounded-[32px] h-[580px] flex flex-col">
 
-        <h3 className="text-[10px] text-gray-400 uppercase mb-4">
-          Forex Neural Console
-        </h3>
-
-        <div className="flex-1 text-[10px] font-mono space-y-2 overflow-y-auto">
-          {!isBotRunning && (
-            <p className="text-gray-600">Bot em standby...</p>
-          )}
-          {logs.map((log, i) => (
-            <p key={i} className="text-yellow-400">{log}</p>
-          ))}
+      {/* FOREX RIGHT: LIVE CONSOLE */}
+  <div className="bg-black border border-white/10 p-6 rounded-[32px] flex flex-col h-[580px] shadow-2xl relative overflow-hidden">
+    <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-blue-500 to-transparent opacity-50"></div>
+    
+    <div className="flex items-center justify-between mb-6 border-b border-white/5 pb-4">
+        <div className="flex items-center gap-2">
+            <div className={`w-2 h-2 rounded-full ${isBotRunning ? 'bg-blue-500 animate-ping' : 'bg-gray-600'}`} />
+            <h3 className="text-[10px] font-mono text-gray-400 uppercase tracking-widest italic">Forex Neural Link Console</h3>
         </div>
+        <span className="text-[9px] font-mono text-blue-500/50">LATENCY: 12ms</span>
+    </div>
 
-      </div>
+    <div className="flex-1 overflow-y-auto space-y-3 font-mono text-[10px]">
+        {!isBotRunning && (
+            <div className="flex flex-col items-center justify-center h-full text-center p-6 space-y-4">
+                <Cpu size={40} className="text-white/10" />
+                <p className="text-gray-600 italic">Sistema em Standby.<br/>Aguardando ativação do Neural Bot.</p>
+            </div>
+        )}
+        {logs.map((log, i) => (
+            <div key={i} className="flex flex-col gap-1 border-l-2 border-blue-500/20 pl-3 py-1">
+                <span className="text-blue-400/90">{log}</span>
+                <span className="text-[8px] text-orange-500/60 uppercase font-bold">Gas Deducted: 0.05% E-Coin Per Trade Perform amount</span>
+            </div>
+        ))}
+    </div>
+    
+
+    <div className="mt-4 p-3 bg-orange-500/10 border border-orange-500/20 rounded-xl">
+        <p className="text-[9px] text-orange-500 flex items-center gap-2 font-bold uppercase tracking-tighter">
+            <ShieldCheck size={12}/> Protocolo: 30% Referral Leader / 20% Pool de Mineração Neural da E-coin / 50% Treasury
+        </p>
+    </div>
+  </div>
 
     </motion.div>
   ) : (
@@ -410,49 +505,7 @@ useEffect(() => {
   </p>
 )}
 
-<div className="bg-yellow-500/10 border border-yellow-500/20 p-5 rounded-2xl mb-6">
-  
-  <h3 className="text-xs text-yellow-500 font-bold mb-3 uppercase tracking-widest">
-    Referral Leader Node
-  </h3>
-
-  <input
-    value={upline}
-    onChange={(e) => setUpline(e.target.value)}
-    placeholder="Inserir Upline Address"
-    className="w-full mb-3 p-3 bg-black border border-white/10 rounded text-xs"
-  />
-
-  <div className="flex gap-3">
-    <button
-      onClick={() => {
-        localStorage.setItem("EKD_UPLINE", upline);
-      }}
-      className="flex-1 py-2 bg-yellow-500 text-black rounded-xl text-xs font-bold"
-    >
-      Bind Upline
-    </button>
-
-    <button
-      className="flex-1 py-2 border border-yellow-500 text-yellow-500 rounded-xl text-xs font-bold"
-    >
-      Claim Referral
-    </button>
-  </div>
-
-  <p className="text-[10px] text-white/40 mt-3">
-    Earn 10% from your network gas usage
-  </p>
-
-</div>
-        <div className="grid grid-cols-2 gap-4 mb-6">
-            <button className="flex items-center justify-center gap-2 py-3 bg-orange-500/10 border border-orange-500/30 text-orange-500 rounded-xl text-xs font-bold hover:bg-orange-500/20 transition-all">
-                <ArrowUpRight size={14}/> DEPOSIT GAS
-            </button>
-            <button className="flex items-center justify-center gap-2 py-3 bg-white/5 border border-white/10 text-white/60 rounded-xl text-xs font-bold hover:bg-white/10 transition-all">
-                <RefreshCw size={14}/> WITHDRAW GAS
-            </button>
-        </div>
+        
 
         <button 
             onClick={() => setIsBotRunning(!isBotRunning)}
@@ -498,7 +551,7 @@ useEffect(() => {
     <div className="flex items-center justify-between mb-6 border-b border-white/5 pb-4">
         <div className="flex items-center gap-2">
             <div className={`w-2 h-2 rounded-full ${isBotRunning ? 'bg-blue-500 animate-ping' : 'bg-gray-600'}`} />
-            <h3 className="text-[10px] font-mono text-gray-400 uppercase tracking-widest italic">Neural Link Console</h3>
+            <h3 className="text-[10px] font-mono text-gray-400 uppercase tracking-widest italic">Crypto Neural Link Console</h3>
         </div>
         <span className="text-[9px] font-mono text-blue-500/50">LATENCY: 12ms</span>
     </div>
@@ -513,7 +566,7 @@ useEffect(() => {
         {logs.map((log, i) => (
             <div key={i} className="flex flex-col gap-1 border-l-2 border-blue-500/20 pl-3 py-1">
                 <span className="text-blue-400/90">{log}</span>
-                <span className="text-[8px] text-orange-500/60 uppercase font-bold">Gas Deducted: 0.05% E-Coin Per Perform amount</span>
+                <span className="text-[8px] text-orange-500/60 uppercase font-bold">Gas Deducted: 0.05% E-Coin Per Trade Perform amount</span>
             </div>
         ))}
     </div>
@@ -521,45 +574,153 @@ useEffect(() => {
 
     <div className="mt-4 p-3 bg-orange-500/10 border border-orange-500/20 rounded-xl">
         <p className="text-[9px] text-orange-500 flex items-center gap-2 font-bold uppercase tracking-tighter">
-            <ShieldCheck size={12}/> Protocolo: 10% Referral Leader / 90% Treasury
+            <ShieldCheck size={12}/> Protocolo: 30% Referral Leader / 20% Pool de Mineração Neural da E-coin / 50% Treasury
         </p>
-        {/* FOREX RIGHT: REFERRAL INFO */}
-              <div className="bg-gradient-to-b from-yellow-500/10 to-transparent border border-yellow-500/20 p-8 rounded-[32px]">
-                <h3 className="text-yellow-500 text-xs font-bold mb-4 uppercase tracking-[0.2em]">Referral Node</h3>
-                <div className="space-y-4">
-                    <div className="p-4 bg-black/40 rounded-xl border border-white/5">
-                        <p className="text-[10px] text-gray-500">Your E-Coin Commission</p>
-                        <p className="text-xl font-mono">2,400 E-Coin</p>
-                    </div>
-                    <p className="text-[11px] text-gray-400 leading-relaxed italic">Ganhe 10% de todo o gás consumido pelos seus referidos no modo AI Bot.</p>
-                </div>
-              </div>
     </div>
   </div>
 </motion.div>
 
           )}
+
+{/* ================= GAS + BOT + PORTFOLIO STACK ================= */}
+<div className="space-y-8 mt-8">
+
+  {/* START BOT BUTTON (já existe acima, só garantir spacing) */}
+  {/* Se quiseres podes mover o botão para aqui também */}
+
+  {/* ================= ECGAS CONTROL ================= */}
+  <div className="bg-[#0f172a]/80 border border-blue-500/20 rounded-[28px] p-6 backdrop-blur-xl">
+
+    <div className="flex items-center justify-between mb-4">
+      <p className="text-[10px] font-mono text-blue-400 uppercase tracking-widest">
+        GAS VAULT (USDT ⇄ ecGas)
+      </p>
+
+      {address && (
+        <span className="text-[9px] font-mono text-white/30">
+          {address.slice(0, 6)}…{address.slice(-4)}
+        </span>
+      )}
+    </div>
+
+    <input
+      type="number"
+      value={stakeAmount}
+      onChange={(e) => setStakeAmount(e.target.value)}
+      placeholder="Enter USDT or ecGas..."
+      className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-xl text-white outline-none mb-5 font-mono placeholder:text-white/20"
+    />
+
+    <div className="grid grid-cols-2 gap-4">
+      <button
+        onClick={async () => {
+          try {
+            if (!stakeAmount) return alert("Enter amount");
+            await gas.deposit(stakeAmount);
+          } catch (e: any) {
+            alert(e?.message || "Deposit error");
+          }
+        }}
+        className="py-4 rounded-2xl font-black text-black bg-gradient-to-r from-[#D4AF37] to-[#F3BA2F]"
+      >
+        DEPOSIT (USDT → GAS)
+      </button>
+
+      <button
+        onClick={async () => {
+          try {
+            if (!stakeAmount) return alert("Enter amount");
+            await gas.redeem(stakeAmount);
+          } catch (e: any) {
+            alert(e?.message || "Redeem error");
+          }
+        }}
+        className="py-4 rounded-2xl font-black text-red-400 border border-red-500/30"
+      >
+        REDEEM (GAS → ECOIN)
+      </button>
+    </div>
+
+    <div className="mt-4 text-[10px] text-white/40 font-mono">
+      1 USDT = 1000 ecGas • Gas usado pelo bot por trade
+    </div>
+  </div>
+
+  {/* ================= PORTFOLIO ================= */}
+  <div className="bg-white/5 border border-white/10 rounded-[28px] p-6">
+    <EcoinWalletDashboard />
+  </div>
+
+</div>
+
+
         </AnimatePresence>
 
-        {/* GLOBAL INFRA DATA */}
-        <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-6 opacity-40 hover:opacity-100 transition-opacity">
-            <div className="text-center">
-                <p className="text-[9px] text-gray-500 uppercase mb-1 font-mono">Node Latency</p>
-                <p className="text-xs font-bold text-blue-400">12ms</p>
-            </div>
-            <div className="text-center">
-                <p className="text-[9px] text-gray-500 uppercase mb-1 font-mono">E-Coin Burn Rate</p>
-                <p className="text-xs font-bold text-orange-400">1.2K / HR</p>
-            </div>
-            <div className="text-center">
-                <p className="text-[9px] text-gray-500 uppercase mb-1 font-mono">Total TVL</p>
-                <p className="text-xs font-bold text-green-400">$2.4M</p>
-            </div>
-            <div className="text-center">
-                <p className="text-[9px] text-gray-500 uppercase mb-1 font-mono">AI Confidence</p>
-                <p className="text-xs font-bold text-purple-400">98.4%</p>
-            </div>
-        </div>
+        {/* INVITE */}
+                    <div className="text-center mt-16">
+                      <button
+                        onClick={() => setShowModal(true)}
+                        className="bg-gradient-to-r from-[#00FF9C] to-[#00C3FF] text-black font-bold py-3 px-10 rounded-full"
+                      >
+                        🎁 Convidar Amigos
+                      </button>
+                    </div>
+              
+                    {showModal && (
+                      <div
+                        onClick={() => setShowModal(false)}
+                        className="fixed inset-0 bg-black/70 flex items-center justify-center z-50"
+                      >
+                        <div
+                          onClick={(e) => e.stopPropagation()}
+                          className="bg-[#0a0a0a] p-8 rounded-2xl border border-[#00FF9C]/30 w-[360px]"
+                        >
+                          <h3 className="text-[#00FF9C] text-xl mb-4">
+                            Referral System Dashboard
+                          </h3>
+              
+                          <ReferralModalContent />
+                        </div>
+                      </div>
+                    )}
+        
+                   {/* 🌐 FOOTER */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1, delay: 0.4 }}
+         className="mt-12 flex flex-col items-center gap-3 text-[#D4AF37]"
+        >
+          <p className="text-sm mb-3 text-gray-400">
+             Conecte-se à comunidade E-Coin
+          </p>
+        
+          <div className="flex justify-center gap-5 text-2xl">
+                    <a href="https://t.me/ecoin2026" target="_blank" rel="noopener noreferrer">
+                      <FaTelegramPlane />
+                    </a>
+                    <a href="https://x.com/CoinE28810" target="_blank" rel="noopener noreferrer">
+                      <FaTwitter />
+                    </a>
+                    <a href="https://discord.com" target="_blank" rel="noopener noreferrer">
+                      <FaDiscord />
+                    </a>
+                    <a href="https://t.me/ecoin2025" target="_blank" rel="noopener noreferrer">
+                      <FaTelegram />
+                    </a>
+                    <a href="https://chat.whatsapp.com/G1F6USX5NrrLKikm7yiXXQ" target="_blank" rel="noopener noreferrer">
+                      <FaWhatsapp />
+                    </a>
+                  </div>
+        
+          <BsStars className="text-3xl mt-5 animate-pulse text-[#D4AF37]" />
+        </motion.div>
+        
+                
+        
+                
+             
+        
 
       </div>
     </div>
