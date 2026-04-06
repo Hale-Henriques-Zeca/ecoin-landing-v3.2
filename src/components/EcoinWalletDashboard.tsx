@@ -15,7 +15,7 @@ export default function EcoinWalletDashboard() {
       symbol: "ECOIN",
       balance: balances.ecoin,
       decimals: 18,
-      icon: "/crypto/ecoin.png",
+      icon: "/crypto/ecoin1.png",
       price: 1,
     },
     {

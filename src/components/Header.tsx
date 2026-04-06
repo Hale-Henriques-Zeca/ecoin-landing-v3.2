@@ -29,7 +29,7 @@ import {
 
 const navLinks = [
   { name: "Home", href: "/", icon: Home },
-  { name: "Importar E-Coin", href: "/Import-E-Coin-Token", icon: Download },
+  { name: "Importar E-Coin", href: "/import-guide", icon: Download },
   { name: "MozP2P", href: "https://efte.edenkingdom.org/p2p", external: true, icon: Repeat2 },
   { name: "Poupança", href: "/poupanca", icon: PiggyBank },
   { name: "Converter", href: "/ecoin-converter", icon: ArrowLeftRight },
@@ -111,7 +111,7 @@ export default function Header() {
                   E-COIN
                 </span>
                 <span className="text-[8px] font-mono text-white/30 uppercase tracking-[0.25em]">
-                  Neural · Web3
+                  E-Coin Neural Web3
                 </span>
               </div>
             </Link>

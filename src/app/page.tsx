@@ -33,6 +33,8 @@ import ECoinRewardsInfo from "@/components/ECoinRewardsInfo";
 import ECoinFutureSimulatorInfo from "@/components/ECoinFutureSimulatorInfo"
 import ECoinTreasuryFlowInfo from "@/components/ECoinTreasuryFlowInfo"
 import AITradingCard from "@/components/AITradingCard"
+import BlockchainDeviceAlert from "@/components/BlockchainDeviceAlert";
+
 
 
 
@@ -40,7 +42,7 @@ export default function Home() {
   return (
     <>
       <Hero />
-      
+       <BlockchainDeviceAlert />
        <EcoinCarousel />
       <AITradingCard />
        <ECoinDevelopmentNotice />
