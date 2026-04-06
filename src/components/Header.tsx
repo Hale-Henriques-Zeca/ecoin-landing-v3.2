@@ -111,7 +111,7 @@ export default function Header() {
                   E-COIN
                 </span>
                 <span className="text-[8px] font-mono text-white/30 uppercase tracking-[0.25em]">
-                  E-Coin Neural Web3
+                  Neural Web3
                 </span>
               </div>
             </Link>
