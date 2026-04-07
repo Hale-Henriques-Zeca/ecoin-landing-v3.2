@@ -7,6 +7,7 @@ import {
   ChevronRight, Info, ExternalLink, ShieldCheck, Database, Cpu
 } from "lucide-react";
 import TrustWalletNeuralImporter from "@/components/TrustWalletNeuralImporter";
+import BlockchainDeviceAlert from "@/components/BlockchainDeviceAlert";
 
 const ECOIN = "0xDf69235019cc416dd5Be75dfc0eDc922aB4b5964";
 const USDT = "0x55d398326f99059fF775485246999027B3197955";
@@ -42,14 +43,14 @@ export default function ImportGuide() {
         >
           <ShieldCheck size={14} /> Centro de Suporte Oficial E-Coin
         </motion.div>
-        <h1 className="text-4xl md:text-5xl font-black tracking-tighter italic">
+        <h1 className="text-3xl md:text-5xl font-black tracking-tighter italic">
           CONFIGURAÇÃO <span className="text-[#D4AF37]"> E-COIN NEURAL WEB3</span>
         </h1>
         <p className="text-gray-400 max-w-2xl mx-auto text-sm md:text-base leading-relaxed">
           Siga este guia profissional para integrar os ativos da EdenKingdom na sua carteira preferida via <span className="text-yellow-500 font-bold">BNB Smart Chain</span>.
         </p>
       </div>
-
+<BlockchainDeviceAlert />
       {/* 📋 CONTRATOS DE ELITE */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {[

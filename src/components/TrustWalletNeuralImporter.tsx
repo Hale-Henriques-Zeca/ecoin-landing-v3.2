@@ -48,7 +48,7 @@ export default function TrustWalletGuide() {
 
             <div className="space-y-4 text-xs md:text-sm text-gray-300 leading-relaxed">
               <p>
-                O nosso motor de **Automação Web3** foi desenhado para as elites. Enquanto a Metamask domina o Desktop, a **Trust Wallet** é a nossa escolha oficial para dispositivos móveis (Android/iOS). Siga os passos abaixo para mapear os 3 tokens do ecossistema:
+                O nosso motor de **Automação Web3** foi desenhado para as elites. Enquanto a Metamask domina o Desktop, a **Trust Wallet** é a nossa escolha oficial para dispositivos móveis (Android/iOS). Siga os passos abaixo para mapear os 4 tokens do ecossistema:
               </p>
 
               {/* STEPS PANEL */}

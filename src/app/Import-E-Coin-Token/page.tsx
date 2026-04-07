@@ -7,6 +7,7 @@ import CompatibilityBadge from "@/components/CompatibilityBadge";
 import { Wallet, ChevronRight, TrendingUp } from "lucide-react";
 import EcoinWalletDashboard from "@/components/EcoinWalletDashboard";
 
+
 const CONTRACT_ECOIN = "0xDf69235019cc416dd5Be75dfc0eDc922aB4b5964";
 const CONTRACT_EUSD = "0xF7543E5B4735C58a176269202847360aaDfA83C1";
 const USDT_BSC = "0x55d398326f99059fF775485246999027B3197955";

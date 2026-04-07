@@ -12,6 +12,7 @@ import {
   BarChart3,
   ShieldCheck,
 } from "lucide-react";
+import BlockchainDeviceAlert from "@/components/BlockchainDeviceAlert";
 
 // --- COMPONENTES AUXILIARES ---
 const StatusBadge = ({ status }: { status: string }) => (
@@ -161,7 +162,7 @@ export default function Page() {
             </div>
           </div>
         </div>
-
+<BlockchainDeviceAlert />
         {/* CARD DE ATIVAÇÃO NEURAL BOT */}
         <div className="mt-12 flex justify-center">
           <div className="w-[380px] bg-black/60 backdrop-blur-xl border border-blue-500/30 p-8 rounded-[32px] shadow-[0_0_40px_rgba(0,210,255,0.15)] text-center transition-all hover:border-yellow-500/50 group">

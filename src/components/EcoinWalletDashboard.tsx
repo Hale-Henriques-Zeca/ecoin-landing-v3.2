@@ -31,7 +31,7 @@ export default function EcoinWalletDashboard() {
       symbol: "USDT",
       balance: balances.usdt,
       decimals: 18,
-      icon: "/crypto/usdt.png",
+      icon: "/crypto/usdt2.png",
       price: 1,
     },
     {
@@ -39,7 +39,7 @@ export default function EcoinWalletDashboard() {
       symbol: "BNB",
       balance: balances.bnb,
       decimals: 18,
-      icon: "/crypto/bnb.png",
+      icon: "/crypto/bnb1.png",
       price: 600,
     },
   ];

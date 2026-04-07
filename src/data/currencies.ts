@@ -188,10 +188,10 @@ export const currencies = [
 
 /* CRYPTO */
 
-{ code:"BTC", name:"Bitcoin", flag:"/crypto/btc.png" },
+{ code:"BTC", name:"Bitcoin", flag:"/crypto/btc1.png" },
 { code:"ETH", name:"Ethereum", flag:"/crypto/eth.png" },
 { code:"BNB", name:"BNB", flag:"/crypto/bnb.png" },
-{ code:"USDT", name:"Tether", flag:"/crypto/usdt.png" },
-{ code:"E-COIN", name:"EdenKingDom Coin", flag:"/crypto/ecoin.png" }
+{ code:"USDT", name:"Tether", flag:"/crypto/usdt2.png" },
+{ code:"E-COIN", name:"EdenKingDom Coin", flag:"/crypto/ecoin1.png" }
 
 ]
