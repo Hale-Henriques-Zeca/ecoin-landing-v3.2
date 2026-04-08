@@ -143,7 +143,7 @@ export default function ImportECoinPage() {
 
             <EcoinWalletDashboard />
 
-            <button onClick={() => window.location.href='/poupanca'} className="w-full mt-6 py-3 border border-white/10 rounded-xl text-[10px] font-bold uppercase tracking-widest text-gray-400 hover:text-white hover:border-[#D4AF37] transition-all flex items-center justify-center gap-2">
+            <button onClick={() => window.location.href='/Savings'} className="w-full mt-6 py-3 border border-white/10 rounded-xl text-[10px] font-bold uppercase tracking-widest text-gray-400 hover:text-white hover:border-[#D4AF37] transition-all flex items-center justify-center gap-2">
               Aceder ao Terminal de Mineração <ChevronRight size={14} />
             </button>
           </div>

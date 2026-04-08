@@ -31,7 +31,7 @@ const navLinks = [
   { name: "Home", href: "/", icon: Home },
   { name: "Importar E-Coin", href: "/import-guide", icon: Download },
   { name: "MozP2P", href: "https://efte.edenkingdom.org/p2p", external: true, icon: Repeat2 },
-  { name: "Poupança", href: "/poupanca", icon: PiggyBank },
+  { name: "Poupança", href: "/Savings", icon: PiggyBank },
   { name: "Converter", href: "/ecoin-converter", icon: ArrowLeftRight },
   { name: "Trading AI", href: "/ecoin-ai-trading", icon: Bot },
   { name: "Investir", href: "/ecoin-rewards", icon: TrendingUp },

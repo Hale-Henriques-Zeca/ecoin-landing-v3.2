@@ -7,7 +7,7 @@ export function useTradingGas() {
   const { address } = useAccount();
   const { writeContractAsync } = useWriteContract();
 
-  // 🔥 BALANCE REAL
+  // 🔥 GAS
   const { data: gasBalance } = useReadContract({
     address: CONTRACTS.TRADING_GAS_VAULT,
     abi: TradingGasVaultAbi,
@@ -16,10 +16,17 @@ export function useTradingGas() {
     query: { enabled: !!address }
   });
 
-  // 🔥 DEPOSIT
-  async function deposit(amount: string) {
-    const parsed = parseUnits(amount, 18);
+  // 🔥 USDT VALUE
+  const { data: usdtBalance } = useReadContract({
+    address: CONTRACTS.TRADING_GAS_VAULT,
+    abi: TradingGasVaultAbi,
+    functionName: "usdtEquivalent",
+    args: [address],
+    query: { enabled: !!address }
+  });
 
+  async function deposit(amount: string) {
+    const parsed = parseUnits(amount, 6); // USDT
     await writeContractAsync({
       address: CONTRACTS.TRADING_GAS_VAULT,
       abi: TradingGasVaultAbi,
@@ -28,10 +35,8 @@ export function useTradingGas() {
     });
   }
 
-  // 🔥 REDEEM
   async function redeem(amount: string) {
-    const parsed = parseUnits(amount, 18);
-
+    const parsed = parseUnits(amount, 0); // GAS
     await writeContractAsync({
       address: CONTRACTS.TRADING_GAS_VAULT,
       abi: TradingGasVaultAbi,
@@ -41,7 +46,8 @@ export function useTradingGas() {
   }
 
   return {
-    gas: gasBalance ? Number(formatUnits(gasBalance, 0)) : 0,
+    gasBalance: gasBalance ? Number(formatUnits(gasBalance, 0)) : 0,
+    usdtValue: usdtBalance ? Number(formatUnits(usdtBalance, 6)) : 0,
     deposit,
     redeem
   };

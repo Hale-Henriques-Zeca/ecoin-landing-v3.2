@@ -50,7 +50,7 @@ const [loading, setLoading] = useState(false);
 
    const { isConnected, address } = useAccount();
     const { disconnect } = useDisconnect();
-     const gas = useTradingGas(isConnected ? address : undefined);
+     const gas = useTradingGas();
 
    
   
@@ -461,14 +461,31 @@ if (!mounted) return null;
   {/* BOT LEFT: CONFIG, GAS & STATS */}
   <div className="lg:col-span-2 space-y-6">
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-      <StatCard title="Gas Balance" value="1,250" unit="E-Coin" color="text-orange-500" />
-      <StatCard title="Binance Balance" value="1,240" unit="USDT" color="text-green-500" />
-      <StatCard title="Total Profit" value="+142.50" unit="USDT" color="text-emerald-400" />
+      <StatCard
+  title="Gas Balance"
+  value={(gas?.gasBalance ?? 0).toLocaleString()}
+  unit="ecGas"
+  color="text-orange-500"
+/>
+
+<StatCard
+  title="Vault Value"
+  value={(gas?.usdtValue ?? 0).toFixed(2)}
+  unit="USDT"
+  color="text-green-500"
+/>
+
+<StatCard
+  title="Bot Status"
+  value={isBotRunning ? "ON" : "OFF"}
+  unit=""
+  color={isBotRunning ? "text-green-400" : "text-red-400"}
+/>
     </div>
 
     <div className="bg-[#0f172a]/80 border border-blue-500/20 p-8 rounded-[32px] backdrop-blur-xl">
         <div className="flex justify-between items-center mb-8">
-            <h3 className="text-sm font-bold uppercase tracking-widest flex items-center gap-2 text-blue-400"><Settings size={18}/> API & Gas Control</h3>
+            <h3 className="text-sm font-bold uppercase tracking-widest flex items-center gap-2 text-blue-400"><Settings size={18}/> API Control</h3>
             <div className={`px-3 py-1 rounded-full text-[10px] font-bold ${isBotRunning ? 'bg-green-500/20 text-green-500 border border-green-500/30' : 'bg-red-500/20 text-red-500 border border-red-500/30'}`}>
                 {isBotRunning ? '• BOT ACTIVE' : '• BOT STANDBY'}
             </div>

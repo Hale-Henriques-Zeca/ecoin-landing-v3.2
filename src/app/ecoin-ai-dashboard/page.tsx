@@ -59,7 +59,7 @@ export default function AIDashboard() {
                 TRADING ROBOT TERMINAL
               </h1>
               <p className="text-gray-400 text-sm md:text-base max-w-lg mx-auto leading-relaxed">
-                O robô de negociação triangular de alta frequência mais rápido da Binance Spot, agora totalmente migrado para a infraestrutura Web3.
+                O robô de negociação triangular de alta frequência mais rápido da Binance Spot Market, agora totalmente migrado para a infraestrutura Web3.
               </p>
             </motion.div>
 
@@ -125,7 +125,7 @@ export default function AIDashboard() {
       {isConnected && panelOpen && (
         <div className="pt-32 lg:pt-40 p-6 lg:p-12 max-w-[1400px] mx-auto">
           {/* WALLET INDICATOR */}
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[10px] font-mono mb-8">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[10px] font-mono mb-0.5">
             <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
             WALLET ID: {address}
           </div>

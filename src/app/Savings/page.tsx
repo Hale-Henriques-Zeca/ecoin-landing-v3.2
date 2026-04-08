@@ -4,8 +4,10 @@ import React, { useState, useEffect } from "react";
 import { useAccount, useDisconnect } from "wagmi";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { motion } from "framer-motion";
-import { Pickaxe, ShieldCheck, Wallet, Zap, Coins } from "lucide-react";
+import { Pickaxe, ShieldCheck, Wallet, Zap, ChevronRight,  Network, ArrowRightLeft,  Activity,  Cpu, Coins } from "lucide-react";
 import Link from "next/link";
+
+
 
 // O componente que você já tem com o design da imagem
 import MiningPage from "@/components/MiningPage";
@@ -13,9 +15,20 @@ import MiningPage from "@/components/MiningPage";
 export default function MiningPortal() {
   const { isConnected, address } = useAccount();
   const { disconnect } = useDisconnect();
+ 
 
   const [mounted, setMounted] = useState(false);
   const [panelOpen, setPanelOpen] = useState(false);
+
+   const [earnings, setEarnings] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setEarnings((prev) => prev + Math.random() * 0.002);
+    }, 100); // simula milissegundos
+
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     setMounted(true);
@@ -30,6 +43,12 @@ export default function MiningPortal() {
   }, [isConnected]);
 
   if (!mounted) return null;
+
+
+
+  
+
+  
 
   return (
     <div className="min-h-screen bg-[#020617] text-white">
@@ -63,6 +82,83 @@ export default function MiningPortal() {
                 Participe na distribuição global de taxas. Minere E-Coin em tempo real através da prova de participação (Staking) no ecossistema da E-Coin Neural Web3.
               </p>
             </motion.div>
+
+            {/* LIVE COUNTER */}
+          <div className="bg-white/5 border border-white/10 rounded-2xl p-6 inline-block">
+            <p className="text-xs text-gray-400 mb-2 uppercase tracking-widest">
+              Live Earnings Simulation
+            </p>
+
+            <motion.div
+              key={earnings}
+              initial={{ scale: 0.9 }}
+              animate={{ scale: 1 }}
+              className="text-3xl font-bold text-[#D4AF37]"
+            >
+              ${earnings.toFixed(4)}
+            </motion.div>
+          </div>
+       
+      
+      {/* ================= DASHBOARD ================= */}
+      
+
+        <div className="max-w-5xl mx-auto">
+
+          <h2 className="text-3xl font-semibold mb-12 text-center">
+            📊 Ecosystem Metrics
+          </h2>
+
+          <div className="grid md:grid-cols-4 gap-6">
+
+            {[
+              { label: "Trading Volume", value: "$1.2M+" },
+              { label: "Fees Generated", value: "$18,400" },
+              { label: "Mining Pool", value: "$240,000" },
+              { label: "Active Miners", value: "3,842" },
+            ].map((item, i) => (
+              <motion.div
+                key={i}
+                whileHover={{ scale: 1.05 }}
+                className="bg-black/40 border border-white/10 p-6 rounded-2xl text-center"
+              >
+                <p className="text-xs text-gray-400 mb-2 uppercase">
+                  {item.label}
+                </p>
+                <p className="text-xl font-bold text-[#D4AF37]">
+                  {item.value}
+                </p>
+              </motion.div>
+            ))}
+
+          </div>
+        </div>
+     
+
+            {/* 🚀 BOTÃO DE ACESSO AO GUIA COMPLETO */}
+      <div className="w-full max-w-xl mx-auto mt-10">
+  <Link href="/Savings-Rewards-Flow-Info" className="group block">
+    
+    <motion.div 
+      whileHover={{ x: 5 }}
+      className="flex items-center justify-between bg-gradient-to-r from-black/40 to-black/20 border border-white/5 p-4 rounded-2xl hover:border-[#D4AF37]/30 transition-all cursor-pointer"
+    >
+      <div className="flex flex-col text-left">
+        <span className="text-[10px] text-white/40 uppercase font-bold tracking-widest">
+          Entenda de onde vêm os fundos pagos na poupança neural da E-Coin
+        </span>
+        <span className="text-xs text-[#F5F5F5] font-semibold">
+          Guia Completo de mineração
+        </span>
+      </div>
+
+      <div className="bg-[#D4AF37]/10 p-2 rounded-full text-[#D4AF37] group-hover:bg-[#D4AF37] group-hover:text-black transition-all">
+        <ChevronRight size={16} />
+      </div>
+    </motion.div>
+
+  </Link>
+</div>
 
             {/* ÁREA DE CONEXÃO */}
             <div className="flex flex-col items-center gap-6">
@@ -111,7 +207,7 @@ export default function MiningPortal() {
                 "
               >
                 <Wallet size={18} className="text-[#D4AF37]" />
-                OBTER CARTEIRA DE MINERAÇÃO 🔐
+                OBTER CARTEIRA WEB3🔐
               </Link>
 
               <p className="text-[9px] text-gray-600 font-mono uppercase tracking-[0.3em]">
