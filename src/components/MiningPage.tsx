@@ -50,6 +50,7 @@ import { RewardsChart } from "@/components/RewardsChart";
 import { useMiningStaking } from "@/hooks/useMiningStaking";
 
 
+
 // Componente de Card de Estatística
 const StatCard = ({ label, value, icon: Icon, color }: any) => (
   <div className="bg-white/5 border border-white/10 backdrop-blur-md p-6 rounded-2xl flex items-center gap-4 hover:border-[#D4AF37]/30 transition-all">
@@ -267,6 +268,44 @@ useEffect(() => {
   <RewardsChart data={chartData} />
 </div>
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+
+          {/* PAINEL DE RECOMPENSAS (CLAIM) */}
+          <div className="lg:col-span-5">
+            <div className="bg-gradient-to-b from-[#D4AF37]/20 to-transparent border border-[#D4AF37]/30 rounded-3xl p-8 backdrop-blur-xl h-full flex flex-col justify-between">
+              <div>
+                <div className="flex items-center justify-between mb-8">
+                  <h2 className="text-xl font-bold text-white flex items-center gap-2">
+                    <Gift size={20} className="text-[#D4AF37]" /> Recompensas da Mineração
+                  </h2>
+                  <Clock size={16} className="text-white/30" />
+                </div>
+
+                <div className="text-center py-10 border-y border-white/5 mb-8">
+                  <span className="text-xs text-white/40 uppercase tracking-widest block mb-2">Disponível para Saque</span>
+                  <div className="text-5xl font-black text-[#D4AF37] mb-1">{stats.pendingRewards}</div>
+                  <span className="text-xs font-mono text-white/20">E-COIN TOKEN</span>
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                <button
+  onClick={mining.claim}
+  disabled={!mining.canClaim || mining.pending === 0}
+  className={`w-full py-5 rounded-2xl font-black uppercase text-sm tracking-[0.2em] transition-all
+    ${
+      !mining.canClaim || mining.pending === 0
+        ? "bg-gray-700 text-gray-400 cursor-not-allowed"
+        : "bg-white text-black hover:scale-[1.02]"
+    }`}
+>
+  RECOLHER LUCROS
+</button>
+                <div className="flex items-center justify-center gap-2 text-white/30 text-[10px] uppercase font-bold">
+                  <span>Cooldown: 10 Minutos</span>
+                </div>
+              </div>
+            </div>
+          </div>
           
           {/* PAINEL DE AÇÃO (STAKE/UNSTAKE) */}
           <div className="lg:col-span-7 space-y-6">
@@ -329,43 +368,14 @@ useEffect(() => {
             </div>
           </div>
 
-          {/* PAINEL DE RECOMPENSAS (CLAIM) */}
-          <div className="lg:col-span-5">
-            <div className="bg-gradient-to-b from-[#D4AF37]/20 to-transparent border border-[#D4AF37]/30 rounded-3xl p-8 backdrop-blur-xl h-full flex flex-col justify-between">
-              <div>
-                <div className="flex items-center justify-between mb-8">
-                  <h2 className="text-xl font-bold text-white flex items-center gap-2">
-                    <Gift size={20} className="text-[#D4AF37]" /> Recompensas da Mineração
-                  </h2>
-                  <Clock size={16} className="text-white/30" />
-                </div>
 
-                <div className="text-center py-10 border-y border-white/5 mb-8">
-                  <span className="text-xs text-white/40 uppercase tracking-widest block mb-2">Disponível para Saque</span>
-                  <div className="text-5xl font-black text-[#D4AF37] mb-1">{stats.pendingRewards}</div>
-                  <span className="text-xs font-mono text-white/20">E-COIN TOKEN</span>
-                </div>
-              </div>
 
-              <div className="space-y-4">
-                <button
-  onClick={mining.claim}
-  disabled={!mining.canClaim || mining.pending === 0}
-  className={`w-full py-5 rounded-2xl font-black uppercase text-sm tracking-[0.2em] transition-all
-    ${
-      !mining.canClaim || mining.pending === 0
-        ? "bg-gray-700 text-gray-400 cursor-not-allowed"
-        : "bg-white text-black hover:scale-[1.02]"
-    }`}
->
-  RECOLHER LUCROS
-</button>
-                <div className="flex items-center justify-center gap-2 text-white/30 text-[10px] uppercase font-bold">
-                  <span>Cooldown: 10 Minutos</span>
-                </div>
-              </div>
-            </div>
-          </div>
+{/* WALLET DASHBOARD */}
+  <div className="lg:col-span-12">
+    <div className="bg-white/5 border border-white/10 rounded-3xl p-6 backdrop-blur-xl">
+      <EcoinWalletDashboard />
+    </div>
+  </div>
 
         
         </div>

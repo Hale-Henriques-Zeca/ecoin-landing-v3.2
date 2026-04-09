@@ -7,6 +7,9 @@ import {
   ArrowUpRight, RefreshCw, Settings, Database, 
   TrendingUp, Activity, Play, Square, Fuel
 } from "lucide-react";
+import useSWR from "swr";
+
+import { parseUnits } from "viem";
 
 import {
   FaTelegramPlane,
@@ -21,15 +24,14 @@ import {
   useWriteContract,
   useWaitForTransactionReceipt,
 } from "wagmi";
+import { TradingGasVaultAbi } from "@/lib/abis/TradingGasVaultAbi";
 import { BsStars } from "react-icons/bs";
 import { Snowfall } from "react-snowfall";
 import ReferralModalContent from "@/components/ReferralModalContent";
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { useDisconnect } from "wagmi";
-import { CONTRACTS } from "@/lib/contracts";
 import { erc20Abi } from "viem";
 import EcoinWalletDashboard from "@/components/EcoinWalletDashboard";
-import { useTradingGas } from "@/hooks/useTradingGas";
 import BlockchainDeviceAlert from "@/components/BlockchainDeviceAlert";
 
 
@@ -50,9 +52,23 @@ const [loading, setLoading] = useState(false);
 
    const { isConnected, address } = useAccount();
     const { disconnect } = useDisconnect();
-     const gas = useTradingGas();
+    const { data: user } = useSWR(
+  address ? `http://localhost:4000/api/user/${address}` : null
+);
 
-   
+   const toggleBot = async () => {
+  if (!address) return;
+
+  const endpoint = user?.botActive ? "stop" : "start";
+
+  await fetch(`http://localhost:4000/api/user/${endpoint}`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ wallet: address })
+  });
+};
   
     const TRADINGGASVAULT_OWNER =
     process.env.NEXT_PUBLIC_TRADINGGASVAULT_OWNER?.toLowerCase();
@@ -78,7 +94,7 @@ const [loading, setLoading] = useState(false);
    
 
   const [mode, setMode] = useState<"forex" | "crypto">("forex");
-  const [isBotRunning, setIsBotRunning] = useState(false);
+  const isBotRunning = user?.botActive;
   const [logs, setLogs] = useState<string[]>([]);
 
   const [apiKey, setApiKey] = useState("");
@@ -153,11 +169,54 @@ useEffect(() => {
   TRADINGGASVAULT_OWNER &&
   address.toLowerCase() === TRADINGGASVAULT_OWNER;
 
-  const gasLevel = gas?.gasBalance
-  ? Math.min((gas.gasBalance / 10000) * 100, 100)
+  const gasLevel = user?.ecGas
+  ? Math.min((user.ecGas / 100000) * 100, 100)
   : 0;
+
+
+
+const CONTRACT_ADDRESS = "0x056E2a5a99582C4d6Cc3F604e119BdcE87B465a2"; // vault
+const USDT_ADDRESS = "0x3392AA85e9F4153142c9558D317D882A81B82130"; // testnet USDT
+const VAULT_ABI = [/* teu ABI */];
+
+const { writeContractAsync } = useWriteContract();
+
+const handleDeposit = async () => {
+  try {
+    if (!stakeAmount) return alert("Enter amount");
+
+    setLoading(true);
+
+    const amount = parseUnits(stakeAmount, 6);
+
+    // 1. APPROVE
+    await writeContractAsync({
+      address: USDT_ADDRESS,
+      abi: erc20Abi,
+      functionName: "approve",
+      args: [CONTRACT_ADDRESS, amount],
+    });
+
+    // 2. DEPOSIT
+    await writeContractAsync({
+      address: CONTRACT_ADDRESS,
+      abi: TradingGasVaultAbi,
+      functionName: "deposit",
+      args: [amount],
+    });
+
+  } catch (e: any) {
+    alert(e.message);
+  } finally {
+    setLoading(false);
+  }
+};
+  
+
   
 if (!mounted) return null;
+
+
   return (
 
   <div className="min-h-screen bg-[#020617] text-white pt-32 lg:pt-40 p-6 lg:p-12 font-sans selection:bg-yellow-500/30">
@@ -209,25 +268,21 @@ if (!mounted) return null;
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
 
   <StatCard
-    title="Gas Balance"
-    value={(gas?.gasBalance ?? 0).toLocaleString()}
-    unit="ecGas"
-    color="text-orange-500"
-  />
+  title="Gas Balance"
+  value={(user?.ecGas ?? 0).toLocaleString()}
+  unit="ecGas"
+/>
 
-  <StatCard
-    title="Gas Value"
-    value={(gas?.usdtValue ?? 0).toFixed(2)}
-    unit="USDT"
-    color="text-green-400"
-  />
+<StatCard
+  title="Gas Value"
+  value={((user?.ecGas ?? 0) / 1000).toFixed(2)}
+  unit="USDT"
+/>
 
-  <StatCard
-    title="Bot Status"
-    value={isBotRunning ? "ON" : "OFF"}
-    unit=""
-    color={isBotRunning ? "text-green-400" : "text-red-400"}
-  />
+<StatCard
+  title="Bot Status"
+  value={user?.botActive ? "ON" : "OFF"}
+/>
 
 </div>
 
@@ -402,7 +457,7 @@ if (!mounted) return null;
 
         {/* START BUTTON */}
         <button 
-          onClick={() => setIsBotRunning(!isBotRunning)}
+          onClick={toggleBot}
           className={`w-full py-5 rounded-2xl font-black uppercase ${
             isBotRunning ? "bg-red-600" : "bg-yellow-500 text-black"
           }`}
@@ -463,23 +518,19 @@ if (!mounted) return null;
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
       <StatCard
   title="Gas Balance"
-  value={(gas?.gasBalance ?? 0).toLocaleString()}
+  value={(user?.ecGas ?? 0).toLocaleString()}
   unit="ecGas"
-  color="text-orange-500"
 />
 
 <StatCard
-  title="Vault Value"
-  value={(gas?.usdtValue ?? 0).toFixed(2)}
+  title="Gas Value"
+  value={((user?.ecGas ?? 0) / 1000).toFixed(2)}
   unit="USDT"
-  color="text-green-500"
 />
 
 <StatCard
   title="Bot Status"
-  value={isBotRunning ? "ON" : "OFF"}
-  unit=""
-  color={isBotRunning ? "text-green-400" : "text-red-400"}
+  value={user?.botActive ? "ON" : "OFF"}
 />
     </div>
 
@@ -551,7 +602,7 @@ if (!mounted) return null;
         
 
         <button 
-            onClick={() => setIsBotRunning(!isBotRunning)}
+            onClick={toggleBot}
             className={`w-full py-5 rounded-2xl font-black flex items-center justify-center gap-3 transition-all uppercase tracking-widest ${isBotRunning ? 'bg-red-600 hover:bg-red-500 shadow-lg shadow-red-600/20' : 'bg-blue-600 hover:bg-blue-500 shadow-lg shadow-blue-600/20'}`}
         >
             {isBotRunning ? (
@@ -746,12 +797,12 @@ if (!mounted) return null;
   <div className="mt-3 flex justify-between text-xs font-mono">
 
     <span className="text-blue-400">
-      {(gas?.gasBalance ?? 0).toLocaleString()} ecGas
-    </span>
+  {(user?.ecGas ?? 0).toLocaleString()} ecGas
+</span>
 
-    <span className="text-green-400">
-      {(gas?.usdtValue ?? 0).toFixed(2)} USDT
-    </span>
+<span className="text-green-400">
+  {((user?.ecGas ?? 0) / 1000).toFixed(2)} USDT
+</span>
 
   </div>
 
@@ -838,13 +889,7 @@ if (!mounted) return null;
         
           <BsStars className="text-3xl mt-5 animate-pulse text-[#D4AF37]" />
         </motion.div>
-        
-                
-        
-                
-             
-        
-
+    
       </div>
     </div>
   );

@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { useAccount, useDisconnect } from "wagmi";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { motion } from "framer-motion";
-import { Cpu, ShieldCheck, Wallet, ArrowRight } from "lucide-react";
+import { Cpu, ShieldCheck, Wallet, ChevronRight, Bot, ArrowRight } from "lucide-react";
 import Link from "next/link";
 
 import AIDashboardContent from "@/components/AIDashboardContent";
@@ -63,6 +63,41 @@ export default function AIDashboard() {
               </p>
             </motion.div>
 
+{/* 🤖 BOTÃO DE ACESSO AO TERMINAL NEURAL AI */}
+<div className="w-full max-w-xl mx-auto mt-10">
+  <Link href="/ecnTradingAi-Robot-Profit-Flow-Info" className="group block">
+    
+    <motion.div 
+      whileHover={{ scale: 1.02, x: 5 }}
+      whileTap={{ scale: 0.98 }}
+      className="flex items-center justify-between bg-gradient-to-r from-[#D4AF37]/5 to-black/40 border border-[#D4AF37]/20 p-5 rounded-2xl hover:border-[#D4AF37]/60 transition-all cursor-pointer shadow-[0_0_20px_rgba(212,175,55,0.05)]"
+    >
+      <div className="flex items-center gap-4 text-left">
+        {/* Ícone de destaque */}
+        <div className="bg-[#D4AF37]/10 p-3 rounded-xl border border-[#D4AF37]/20 group-hover:scale-110 transition-transform">
+          <Bot size={24} className="text-[#D4AF37]" />
+        </div>
+
+        <div className="flex flex-col">
+          <span className="text-[10px] text-[#D4AF37] uppercase font-bold tracking-[0.2em]">
+            E-COIN NEURAL TRADING AI ROBOT
+          </span>
+          <span className="text-sm text-white font-semibold tracking-tight">
+            Descubra o poder da Arbitragem Triangular Interna
+          </span>
+          <span className="text-[11px] text-white/40 mt-1 italic">
+            Veja como lucrar na Binance, OKX, KuCoin, Bybit, Bitget, Kraken, CoinBase, Huobi, MEXC, etc em milissegundos
+          </span>
+        </div>
+      </div>
+
+      <div className="bg-[#D4AF37]/10 p-3 rounded-full text-[#D4AF37] group-hover:bg-[#D4AF37] group-hover:text-black group-hover:shadow-[0_0_15px_#D4AF37] transition-all">
+        <ChevronRight size={20} />
+      </div>
+    </motion.div>
+
+  </Link>
+</div>
             {/* BOTÃO CONECTAR */}
             <div className="flex flex-col items-center gap-6">
               <ConnectButton.Custom>

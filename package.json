@@ -52,6 +52,7 @@
     "react-simple-maps": "^3.0.0",
     "react-snowfall": "^2.4.0",
     "recharts": "^3.6.0",
+    "swr": "^2.4.1",
     "three": "^0.182.0",
     "viem": "^2.8.9",
     "wagmi": "^2.5.4",
