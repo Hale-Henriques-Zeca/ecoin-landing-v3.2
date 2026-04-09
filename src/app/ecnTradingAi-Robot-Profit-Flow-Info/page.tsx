@@ -12,6 +12,9 @@ import {
   ShieldCheck,
   Activity,
   Bot,
+  Users,
+  Target,
+  UserCheck,
   TrendingUp,
   BarChart3
 } from "lucide-react";
@@ -47,7 +50,7 @@ export default function NeuralTradingTerminal() {
             E-COIN NEURAL TRADING AI ROBOT TERMINAL
           </span>
           <h1 className="text-4xl md:text-7xl font-bold leading-tight mb-8">
-            Hybrid Neural: <span className="text-[#D4AF37]">Forex & Crypto</span> AI Trading Robot
+            Hybrid Neural: <span className="text-[#D4AF37]"> Crypto & Forex </span> AI Trading Robot
           </h1>
           <p className="text-gray-400 max-w-3xl mx-auto text-lg">
             A equipa de desenvolvimento da Moeda E-Coin tem o prazer de anunciar que está oficialmente em fase de estudo de viabilidade para o lançamento de uma ferramenta revolucionária de trading.
@@ -57,10 +60,36 @@ export default function NeuralTradingTerminal() {
 
       {/* ================= PROJETO EXPLICAÇÃO ================= */}
       <section className="px-6 py-20 bg-white/[0.02]">
+      {/* ================= HEADER: ANATOMIA CRYPTO ARBITRAGE ================= */}
+<div className="text-center mb-16">
+  <motion.h2 
+    initial={{ opacity: 0, y: 20 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    className="text-3xl md:text-5xl font-black mb-6 uppercase tracking-tighter italic"
+  >
+    A ANATOMIA DO NOSSO <span className="text-[#4ade80]">CRYPTO NEURAL ARBITRAGE BOT</span> DE ELITE
+  </motion.h2>
+  
+  <div className="max-w-4xl mx-auto space-y-6">
+    <p className="text-gray-400 leading-relaxed">
+      Diferente do Forex, o nosso motor de Crypto foca na <span className="text-white font-bold">Arbitragem Triangular Interna</span> dentro das maiores exchanges do mundo, como a <span className="text-white font-bold underline decoration-[#4ade80]">Binance</span>. 
+      O que tens em mãos é um sistema que elimina o risco direcional do mercado, lucrando com a ineficiência matemática entre pares de ativos.
+    </p>
+
+    <div className="p-6 bg-white/[0.03] border border-white/5 rounded-2xl">
+      <p className="text-sm text-gray-300 leading-relaxed">
+        A nossa IA realiza o escaneamento de mais de <span className="text-[#4ade80] font-bold">1000 oportunidades de arbitragem</span> a cada milissegundo, mas com um filtro de elite: ela ignora qualquer lucro abaixo de <span className="text-white font-bold">$0.1</span> para garantir que as taxas de trading sejam cobertas e o lucro líquido seja real e garantido para os nossos <span className="text-[#4ade80] font-bold">E-Coiners</span>.
+      </p>
+    </div>
+
+    <div className="h-1 w-24 bg-[#4ade80] mx-auto rounded-full mt-8" />
+  </div>
+</div>
+
         <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 items-center">
           <div>
             <h2 className="text-3xl font-bold mb-6 flex items-center gap-3">
-              <Bot className="text-[#D4AF37]" /> Projeto: AI Arbitrage Bot
+              <Bot className="text-[#D4AF37]" /> Projeto: Crypto AI Arbitrage Bot
             </h2>
             <p className="text-[#D4AF37] font-semibold mb-4 underline decoration-white/20">Arbitragem Triangular Interna</p>
             <p className="text-gray-300 leading-relaxed mb-6">
@@ -68,7 +97,7 @@ export default function NeuralTradingTerminal() {
               A lógica é simples, mas poderosa: a IA identifica discrepâncias de preço entre três pares de ativos em frações de segundo. Ao executar operações em ciclo, o robô garante que o valor final seja superior ao inicial, já descontando as taxas operacionais.
             </p>
             <div className="bg-black/40 p-6 rounded-2xl border border-white/10 space-y-4">
-              <h4 className="text-sm font-bold uppercase tracking-widest text-gray-500">Exemplo de Ciclo Operacional:</h4>
+              <h4 className="text-sm font-bold uppercase tracking-widest text-gray-500">Exemplo de Ciclo Operacional a velocidade da Luz:</h4>
               <div className="flex flex-col gap-2 font-mono text-sm">
                 <p className="flex justify-between border-b border-white/5 pb-1"><span>Início:</span> <span className="text-green-400 underline">Converte USDT para BTC</span></p>
                 <p className="flex justify-between border-b border-white/5 pb-1"><span>Fluxo:</span> <span className="text-green-400 underline">Converte BTC para ETH</span></p>
@@ -175,6 +204,143 @@ export default function NeuralTradingTerminal() {
         </div>
       </section>
 
+<section className="px-6 py-24 bg-gradient-to-b from-black to-[#050505] text-white">
+      <div className="max-w-6xl mx-auto">
+        
+        {/* CABEÇALHO DA SEÇÃO */}
+        <div className="text-center mb-16">
+          <motion.h2 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            className="text-3xl md:text-5xl font-black mb-6 uppercase tracking-tighter italic"
+          >
+            A ANATOMIA DO NOSSO <span className="text-[#D4AF37]">FOREX NEURAL TRADING AI ROBOT DE ELITE</span>
+          </motion.h2>
+          <p className="text-gray-400 max-w-3xl mx-auto leading-relaxed border-b border-[#D4AF37]/20 pb-8">
+            O que temos aqui em mãos é uma infraestrutura de trading de três pilares que cobre desde a análise algorítmica pura até à inteligência social. Aqui está a explicação detalhada para os nossos <span className="text-white font-bold">E-Coiners</span>:
+          </p>
+        </div>
+
+        {/* 🦾 OS DOIS PILARES MESTRES */}
+        <div className="mb-20">
+          <h3 className="text-[#D4AF37] font-black text-xl mb-10 flex items-center gap-3 uppercase italic">
+            <Zap className="fill-[#D4AF37]" size={24} /> 🦾 Os Dois Pilares Mestres: Eficiência e Segurança do nosso E-Coin Neural Forex Trading AI Robot - Modality
+          </h3>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            
+            {/* 1. AI HYBRID BOT */}
+            <div className="bg-blue-600/5 border border-blue-500/20 p-8 rounded-[2.5rem] hover:border-blue-500/40 transition-all group relative overflow-hidden">
+              <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                <Cpu size={80} />
+              </div>
+              <div className="p-3 bg-blue-500/10 rounded-xl w-fit mb-6 text-blue-400 group-hover:scale-110 transition-transform">
+                <Cpu size={32} />
+              </div>
+              <h4 className="text-2xl font-bold text-blue-400 mb-4 uppercase italic tracking-tighter">1. AI HYBRID BOT (O Motor de Tendência)</h4>
+              <p className="text-sm text-gray-300 leading-relaxed space-y-4">
+                <span className="block mb-2 text-white font-semibold underline decoration-blue-500/50">Este é o "Cérebro" do sistema. Ele não olha apenas para o preço; ele cruza Tendência + Liquidez + Volatilidade.</span>
+                <span className="block"><strong>Como funciona:</strong> Ele identifica para onde a massa está a ir e usa IA para prever a exaustão do movimento. Se o mercado está volátil, ele ajusta a frequência de ordens em milissegundos.</span>
+                <span className="block"><strong>Lucratividade:</strong> Alta constância. É ideal para mercados em tendência (Bull ou Bear Run).</span>
+                <span className="block text-blue-300"><strong>Segurança:</strong> Usa Stop-Loss dinâmico baseado em volatilidade, protegendo o capital de movimentos bruscos.</span>
+              </p>
+            </div>
+
+            {/* 2. LIQUIDITY SWEEP */}
+            <div className="bg-purple-600/5 border border-purple-500/20 p-8 rounded-[2.5rem] hover:border-purple-500/40 transition-all group relative overflow-hidden">
+              <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                <Target size={80} />
+              </div>
+              <div className="p-3 bg-purple-500/10 rounded-xl w-fit mb-6 text-purple-400 group-hover:scale-110 transition-transform">
+                <Target size={32} />
+              </div>
+              <h4 className="text-2xl font-bold text-purple-400 mb-4 uppercase italic tracking-tighter">2. LIQUIDITY SWEEP (O Caçador de Smart Money)</h4>
+              <p className="text-sm text-gray-300 leading-relaxed space-y-4">
+                <span className="block mb-2 text-white font-semibold underline decoration-purple-500/50">Este modo é desenhado para bater as "Baleias". Ele foca em Smart Money & Stop Hunt Detection.</span>
+                <span className="block"><strong>Como funciona:</strong> O robô identifica zonas onde grandes instituições estão a tentar "limpar" as ordens dos pequenos traders (Stop Hunt). Ele entra exatamente quando a liquidez é capturada, operando a favor do dinheiro inteligente.</span>
+                <span className="block"><strong>Lucratividade:</strong> Ganhos explosivos em curtos intervalos (Scalping de precisão).</span>
+                <span className="block text-purple-300"><strong>Segurança:</strong> Extremamente alta, pois ele só entra no mercado quando o risco de "armadilha" já passou.</span>
+              </p>
+            </div>
+
+          </div>
+        </div>
+
+        {/* ⚡ 3. COPY TRADING AI */}
+        <div className="bg-[#D4AF37]/5 border border-[#D4AF37]/20 rounded-[3rem] p-8 md:p-12 relative overflow-hidden">
+          <div className="relative z-10">
+            <h3 className="text-3xl font-black text-[#D4AF37] mb-6 uppercase italic flex items-center gap-4">
+              <Users size={32} /> ⚡ 3. COPY TRADING AI: A Democracia do Lucro Neural
+            </h3>
+            <p className="text-gray-300 mb-12 max-w-4xl italic">
+              A terceira modalidade é o <strong>Copy Trading AI</strong>, onde a inteligência é partilhada. Aqui, o sistema replica estratégias vencedoras automaticamente para a tua conta. Dentro dele, temos 4 sub-modalidades de elite:
+            </p>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              {[
+                { 
+                  name: "🏆 AI Master Trader (O Líder Único)", 
+                  logic: "Uma única IA de performance ultra-comprovada dita o ritmo. Todos os utilizadores copiam exatamente as mesmas entradas deste \"Mestre Central\".",
+                  advantage: "Unificação de lucros. Se o Master ganha, a comunidade inteira ganha em sincronia.",
+                  icon: UserCheck 
+                },
+                { 
+                  name: "📊 Multi Strategy Pool (O Fundo Diversificado)", 
+                  logic: "Não coloca todos os ovos na mesma cesta. Este modo combina Scalping (curto prazo), Swing (médio prazo) e News Trading (análise de notícias) num único pool.",
+                  advantage: "Estabilidade extrema. Se o Scalping estiver calmo, o Swing compensa. É a segurança da diversificação automática.",
+                  icon: Layers 
+                },
+                { 
+                  name: "🛡️ Risk Based Copy (Gestão de Risco Neural)", 
+                  logic: "O sistema analisa o saldo de cada utilizador individualmente e faz o Auto Lot Sizing. Ele não copia o valor da ordem, mas sim a percentagem de risco.",
+                  advantage: "Segurança personalizada. Um utilizador com 100 USDT e um com 10.000 USDT operam com a mesma segurança proporcional. Proteção total contra quebra de banca.",
+                  icon: ShieldCheck 
+                },
+                { 
+                  name: "🤝 Social + AI (O Híbrido Humano-Máquina)", 
+                  logic: "Onde o instinto humano encontra a precisão da máquina. Traders veteranos (Humans) validam os sinais da IA antes da execução final.",
+                  advantage: "O \"Toque de Mestre\". Evita erros que máquinas puras podem cometer em eventos geopolíticos imprevisíveis, unindo o melhor dos dois mundos.",
+                  icon: Activity 
+                }
+              ].map((item, i) => (
+                <div key={i} className="bg-black/60 p-6 rounded-3xl border border-white/5 hover:border-[#D4AF37]/40 transition-all flex flex-col h-full">
+                  <item.icon size={28} className="text-[#D4AF37] mb-4" />
+                  <h5 className="text-sm font-black text-white mb-3 uppercase tracking-tight leading-snug">{item.name}</h5>
+                  <div className="space-y-3 flex-grow">
+                    <p className="text-[11px] text-gray-400 leading-relaxed"><strong>A Lógica:</strong> {item.logic}</p>
+                    <p className="text-[11px] text-[#D4AF37] leading-relaxed"><strong>Vantagem:</strong> {item.advantage}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* CONCLUSÃO */}
+        <div className="mt-16 text-center bg-white/[0.02] p-10 rounded-[2.5rem] border border-white/5">
+          <h3 className="text-2xl font-bold mb-6 italic uppercase tracking-widest text-[#D4AF37]">Conclusão: O Quão Lucrativo e Seguro é?</h3>
+          <p className="text-gray-400 mb-8 max-w-4xl mx-auto">
+            O ecossistema <strong>E-Coin Neural</strong> é desenhado para <span className="text-white font-bold">Independência Financeira Permanente.</span>
+          </p>
+          <div className="grid md:grid-cols-3 gap-8 text-left">
+            <div className="space-y-2">
+              <span className="text-[#D4AF37] font-bold text-xs uppercase">Eficiência:</span>
+              <p className="text-xs text-gray-500">Operações em milissegundos que humanos jamais conseguiriam replicar.</p>
+            </div>
+            <div className="space-y-2">
+              <span className="text-[#D4AF37] font-bold text-xs uppercase">Lucratividade:</span>
+              <p className="text-xs text-gray-500">Escalável através das taxas de rede e da precisão algorítmica.</p>
+            </div>
+            <div className="space-y-2">
+              <span className="text-[#D4AF37] font-bold text-xs uppercase">Segurança:</span>
+              <p className="text-xs text-gray-500">Web3 Native. O teu capital está na tua custódia ou em contratos auditados, sem "senhas" hackeáveis, apenas o poder da tua chave privada, frases de recuperação da sua carteira bem guardados contigo ai.</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
       {/* ================= FINAL ================= */}
       <section className="px-6 py-24 text-center">
         <div className="max-w-3xl mx-auto space-y-8">
@@ -184,7 +350,7 @@ export default function NeuralTradingTerminal() {
           </p>
           
           <Link
-            href="/ecnTradingAi-Robot-Profit-Flow-Info"
+            href="/ecoin-ai-dashboard"
             className="inline-flex items-center gap-4 px-12 py-5 rounded-full
             bg-[#D4AF37] text-black font-black text-xl
             hover:bg-white hover:scale-105 transition-all shadow-[0_0_50px_rgba(212,175,55,0.4)]"
