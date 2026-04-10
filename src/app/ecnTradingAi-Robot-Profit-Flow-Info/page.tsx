@@ -221,7 +221,7 @@ export default function NeuralTradingTerminal() {
           </div>
 
           <div className="bg-black text-white p-8 rounded-3xl border border-white/20 text-left">
-            <h3 className="text-[#D4AF37] text-2xl font-bold mb-4">Capital 100% sob seu controle dentro da sua corretora Não envies para ninguém e nenhuma plataforma ou CEO.</h3>
+            <h3 className="text-[#D4AF37] text-2xl font-bold mb-4">O seu Capital 100% sob seu controle dentro da sua corretora Não envies para ninguém e nenhuma plataforma ou CEO.</h3>
             <p className="leading-relaxed">
               O que o bot produz fica dentro da SUA corretora. A cada lucro produzido com sucesso, o valor vai ao seu <strong>Saldo Principal</strong>, permitindo o re-uso imediato (Juro Composto Instantâneo). 
               Se na primeira execução o capital foi de $100 e lucrou $1, na próxima o bot opera com <strong>$101</strong>, produzindo lucros progressivamente maiores como $1.1 e assim por diante.
