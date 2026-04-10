@@ -133,7 +133,7 @@ export default function NeuralTradingTerminal() {
         </div>
       </section>
 
-      {/* ================= LOGICA TECNICA 100% ================= */}
+      {/* ================= LOGICA TECNICA 100% : ecGas & LUCRATIVIDADE ================= */}
       <section className="px-6 py-24 text-center">
         <div className="max-w-4xl mx-auto">
           <h2 className="text-4xl font-bold mb-12">Como funciona a <span className="text-[#D4AF37]">Lucratividade?</span></h2>
@@ -168,11 +168,37 @@ export default function NeuralTradingTerminal() {
             <div className="grid md:grid-cols-3 gap-4 text-center font-bold">
               <div className="bg-[#D4AF37]/10 p-4 rounded-xl border border-[#D4AF37]/30">1º Lucro: $0.1 (Ficas com 930 ecGas)</div>
               <div className="bg-[#D4AF37]/10 p-4 rounded-xl border border-[#D4AF37]/30">2º Lucro: +$0.2 (Ficas com 860 ecGas)</div>
-              <div className="bg-[#D4AF37]/10 p-4 rounded-xl border border-[#D4AF37]/30">3º Lucro: Variação de +$0.05 a +$0.3</div>
+              <div className="bg-[#D4AF37]/10 p-4 rounded-xl border border-[#D4AF37]/30">3º Lucro: Variação de +$0.05 a +$0.3 (Ficas com 790 ecGas)</div>
             </div>
+            
+            
+            {/* BLOCO INOVADO: ecGas SUSTAINABILITY SYSTEM */}
+      <div className="relative group">
+        <div className="absolute -inset-1 bg-gradient-to-r from-[#D4AF37]/20 to-transparent rounded-2xl blur opacity-25 group-hover:opacity-50 transition duration-1000"></div>
+        <div className="relative bg-black/60 border border-white/10 p-8 rounded-2xl">
+          <div className="flex items-center gap-4 mb-4">
+            <div className="p-3 bg-[#D4AF37] rounded-lg text-black">
+              <Zap size={24} fill="black" />
+            </div>
+            <h4 className="text-xl font-black italic tracking-tighter text-white uppercase">
+              Escalabilidade de Lucro e ecGas
+            </h4>
+          </div>
+          
+          <p className="text-gray-300 leading-relaxed italic">
+            Podendo Lucrar de (<strong>$2 mínimo a $5 com apenas ecGas de apenas $1</strong>) independentemente de capital em uso, mas a deducoa de ecGas e por igual por cada ordem executada com sucesso <strong>70 do total de 1000 ecGas</strong> Mas aconselhamos sempre que coloque mais ecGas e trading capital para mais lucros porque assim o bot mais usa o capital grande para executar ordens e assim os lucros serao bons.
+          </p>
+
+          <div className="mt-6 flex items-center gap-2 text-[#D4AF37] text-[10px] font-bold uppercase tracking-[0.2em]">
+            <TrendingUp size={14} /> 
+            Eficiência Máxima Detectada: +500% sobre o valor do ecGas
+          </div>
+        </div>
+      </div>
           </div>
         </div>
       </section>
+
 
       {/* ================= VELOCIDADE E CORRETORAS ================= */}
       <section className="px-6 py-24 bg-[#D4AF37] text-black">
@@ -340,6 +366,128 @@ export default function NeuralTradingTerminal() {
 
       </div>
     </section>
+
+    {/* ================= SEÇÃO: PROJEÇÃO DE PERFORMANCE NEURAL ================= */}
+<section className="px-6 py-24 bg-black">
+  <div className="max-w-6xl mx-auto">
+    
+    <div className="text-center mb-16">
+      <h2 className="text-3xl md:text-5xl font-black mb-4 uppercase tracking-tighter italic">
+        POTENCIAL DE <span className="text-[#D4AF37]">LUCRO LÍQUIDO</span>
+      </h2>
+      <p className="text-gray-500 max-w-2xl mx-auto text-sm">
+        Projeção baseada em ciclos de alta constância. Diferente de investimentos comuns, 
+        aqui o lucro é reaplicado instantaneamente pelo motor neural.
+      </p>
+    </div>
+
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      
+      {/* CARD 1: FOREX AI HYBRID */}
+      <div className="bg-white/[0.02] border border-blue-500/20 p-8 rounded-[2.5rem] flex flex-col">
+        <div className="flex justify-between items-start mb-6">
+          <div className="p-3 bg-blue-500/10 rounded-2xl text-blue-400">
+            <Cpu size={24} />
+          </div>
+          <span className="text-[10px] bg-blue-500/20 text-blue-300 px-3 py-1 rounded-full font-bold uppercase">Tendência</span>
+        </div>
+        <h3 className="text-xl font-bold mb-2">AI HYBRID BOT</h3>
+        <p className="text-xs text-gray-500 mb-6">Foco em consistência diária e proteção de capital.</p>
+        
+        <div className="space-y-3 font-mono text-sm border-t border-white/5 pt-6">
+          <div className="flex justify-between text-gray-400"><span>Média por Ciclo:</span> <span className="text-white">0.5% a 1.2%</span></div>
+          <div className="flex justify-between text-gray-400"><span>Risco:</span> <span className="text-blue-400">Baixo (AI Guard)</span></div>
+          <div className="flex justify-between text-[#D4AF37] font-bold pt-2"><span>Projeção Mensal:</span> <span>+15% a 35%</span></div>
+        </div>
+      </div>
+
+      {/* CARD 2: LIQUIDITY SWEEP (O MAIS AGRESSIVO) */}
+      <div className="bg-[#D4AF37]/5 border border-[#D4AF37]/30 p-8 rounded-[3rem] flex flex-col scale-105 shadow-[0_0_50px_rgba(212,175,55,0.1)] z-10">
+        <div className="flex justify-between items-start mb-6">
+          <div className="p-3 bg-[#D4AF37]/10 rounded-2xl text-[#D4AF37]">
+            <Target size={24} />
+          </div>
+          <span className="text-[10px] bg-[#D4AF37] text-black px-3 py-1 rounded-full font-bold uppercase">Alta Performance</span>
+        </div>
+        <h3 className="text-xl font-bold mb-2 text-[#D4AF37]">LIQUIDITY SWEEP</h3>
+        <p className="text-xs text-gray-400 mb-6">Captura de explosões institucionais (Scalping).</p>
+        
+        <div className="space-y-3 font-mono text-sm border-t border-[#D4AF37]/10 pt-6">
+          <div className="flex justify-between text-gray-400"><span>Média por Ciclo:</span> <span className="text-white">2.0% a 5.0%</span></div>
+          <div className="flex justify-between text-gray-400"><span>Risco:</span> <span className="text-[#D4AF37]">Moderado (Sniper)</span></div>
+          <div className="flex justify-between text-green-400 font-bold pt-2 text-lg"><span>Projeção Mensal:</span> <span>+40% a 80%</span></div>
+        </div>
+      </div>
+
+      {/* CARD 3: COPY TRADING POOL */}
+      <div className="bg-white/[0.02] border border-purple-500/20 p-8 rounded-[2.5rem] flex flex-col">
+        <div className="flex justify-between items-start mb-6">
+          <div className="p-3 bg-purple-500/10 rounded-2xl text-purple-400">
+            <Users size={24} />
+          </div>
+          <span className="text-[10px] bg-purple-500/20 text-purple-300 px-3 py-1 rounded-full font-bold uppercase">Diversificado</span>
+        </div>
+        <h3 className="text-xl font-bold mb-2">COPY TRADING POOL</h3>
+        <p className="text-xs text-gray-500 mb-6">Equilíbrio automático entre as 4 sub-estratégias.</p>
+        
+        <div className="space-y-3 font-mono text-sm border-t border-white/5 pt-6">
+          <div className="flex justify-between text-gray-400"><span>Média por Ciclo:</span> <span className="text-white">Diversificada</span></div>
+          <div className="flex justify-between text-gray-400"><span>Risco:</span> <span className="text-purple-400">Neural Risk Control</span></div>
+          <div className="flex justify-between text-[#D4AF37] font-bold pt-2"><span>Projeção Mensal:</span> <span>+20% a 50%</span></div>
+        </div>
+      </div>
+
+    </div>
+
+    {/* TABELA DE COMPARAÇÃO DE CRESCIMENTO (MODELO COMPOUND) */}
+    <div className="mt-20 bg-black border border-white/10 rounded-[2.5rem] overflow-hidden">
+      <div className="bg-white/5 p-6 border-b border-white/10 text-center">
+        <h4 className="text-[#D4AF37] font-bold uppercase tracking-widest text-xs">Simulação de Escala Neural (Juros Compostos Reais)</h4>
+      </div>
+      <div className="overflow-x-auto">
+        <table className="w-full text-left text-sm font-mono">
+          <thead>
+            <tr className="text-gray-500 border-b border-white/5 text-[10px] uppercase">
+              <th className="p-6">Capital Inicial</th>
+              <th className="p-6">Após 10 Ciclos</th>
+              <th className="p-6">Após 20 Ciclos</th>
+              <th className="p-6">Após 30 Ciclos</th>
+              <th className="p-6 text-green-400">Potencial Final</th>
+            </tr>
+          </thead>
+          <tbody className="text-gray-300">
+            <tr className="border-b border-white/5 hover:bg-white/[0.02] transition-colors">
+              <td className="p-6 font-bold text-white">$100</td>
+              <td className="p-6">$259</td>
+              <td className="p-6">$672</td>
+              <td className="p-6">$1,744</td>
+              <td className="p-6 text-[#D4AF37] font-bold italic">Crescimento Exponencial</td>
+            </tr>
+            <tr className="border-b border-white/5 hover:bg-white/[0.02] transition-colors">
+              <td className="p-6 font-bold text-white">$1,000</td>
+              <td className="p-6">$2,593</td>
+              <td className="p-6">$6,727</td>
+              <td className="p-6">$17,449</td>
+              <td className="p-6 text-[#D4AF37] font-bold italic">Crescimento Exponencial</td>
+            </tr>
+            <tr className="hover:bg-white/[0.02] transition-colors">
+              <td className="p-6 font-bold text-white">$10,000</td>
+              <td className="p-6">$25,937</td>
+              <td className="p-6">$67,274</td>
+              <td className="p-6">$174,494</td>
+              <td className="p-6 text-[#D4AF37] font-bold italic">Crescimento Exponencial</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div className="p-4 bg-[#D4AF37]/10 text-center">
+        <p className="text-[10px] text-[#D4AF37] uppercase font-bold tracking-[0.2em]">
+          Nota: O bot de forex não funciona por sorte. Ele opera por volume de ciclos milimétricos. Portanto, a produtividade que se espera como projetada acima, pode ser mais menor que o esperado ou estipulado como normadia, certo? - Nem sempre será ou crescimento exponencial, mas também pode ser matemático e sircunstancial assim como seu capital em uso nas negociações, porque o bot diferente de investimento garantido, ele não usa todo o seu capital para executar as ordens dentro de sua corretora. Por vezes 30 a 50% Máximo e o resto cobertura das ordens em execução.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
 
       {/* ================= FINAL ================= */}
       <section className="px-6 py-24 text-center">
