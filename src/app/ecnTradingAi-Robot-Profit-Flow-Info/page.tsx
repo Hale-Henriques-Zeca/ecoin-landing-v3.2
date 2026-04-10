@@ -205,7 +205,7 @@ export default function NeuralTradingTerminal() {
         <div className="max-w-5xl mx-auto text-center">
           <h2 className="text-4xl font-black mb-8">A PRÓXIMA MARAVILHA DO MUNDO</h2>
           <p className="text-xl font-bold mb-12 max-w-3xl mx-auto">
-            Veja o poder: enquanto a tabela mostra o acúmulo de $0.1 por dia, o nosso <strong>E-Coin Neural Trading AI Robot faz isso por cada MILISEGUNDO por ti</strong>. Não em minutos, nem horas. Imagine o poder desse Bot.
+            Veja o poder: enquanto a tabela mostra o acúmulo de $0.01 por dia, o nosso <strong>E-Coin Neural Trading AI Robot faz $0.1 por cada MILISEGUNDO por ti</strong>. Não em segundos, minutos, nem horas. Imagine o poder desse Bot.
           </p>
           
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-16 opacity-80">
