@@ -202,9 +202,9 @@ export default function Page() {
 
             <Link 
               href="/ecoin-ai-dashboard" 
-              className="w-full bg-[#D4AF37] hover:bg-[#F3BA2F] text-black font-black py-5 rounded-2xl shadow-[0_8px_20px_rgba(212,175,55,0.2)] transition-all hover:scale-[1.03] active:scale-95 flex items-center justify-center gap-3 uppercase tracking-widest no-underline"
+              className="w-full bg-[#D4AF37] hover:bg-[#F3BA2F] text-black font-black py-5 rounded-1xl shadow-[0_8px_20px_rgba(212,175,55,0.2)] transition-all hover:scale-[1.03] active:scale-95 flex items-center justify-center gap-3 uppercase tracking-widest no-underline"
             >
-              <span>Acessar o Painel do Bot</span>
+              <span>Acessar o Painel</span>
               <svg xmlns="http://www.w3.org" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M5 12h14m-7-7 7 7-7 7" />
               </svg>
