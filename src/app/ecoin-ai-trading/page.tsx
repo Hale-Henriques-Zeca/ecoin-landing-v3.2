@@ -85,6 +85,13 @@ export default function Page() {
       </h1>
     </div>
 
+<div className="flex flex-col items-end gap-2">
+            <StatusBadge status="Activo & Scanniando" />
+            <div className="text-[10px] font-mono text-white/30">
+              ID DO MOTOR: EdenKingDom_V3_Arbitragem Triangular Interna
+            </div>
+          </div>
+          
     {/* DESCRIÇÃO DO SISTEMA */}
     <div className="space-y-4 border-l-2 border-[#D4AF37]/30 pl-4">
       <div className="flex gap-3">
@@ -112,12 +119,6 @@ export default function Page() {
 
 
 
-          <div className="flex flex-col items-end gap-2">
-            <StatusBadge status="Activo & Scanniando" />
-            <div className="text-[10px] font-mono text-white/30">
-              ID DO MOTOR: EdenKingDom_V3_Arbitragem Triangular Interna
-            </div>
-          </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
