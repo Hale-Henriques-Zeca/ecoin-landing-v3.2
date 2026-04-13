@@ -4,6 +4,8 @@ import cors from "cors";
 import dotenv from "dotenv";
 import { connectDB } from "./db/connect";
 import userRoutes from "./routes/user.routes";
+import redeemRoute from "./routes/redeem";
+import { startListener } from "./blockchain/listener";
 
 import "./engine/runner";
 import "./blockchain/listener";
@@ -15,6 +17,8 @@ app.use(cors());
 app.use(express.json());
 
 app.use("/api/user", userRoutes);
+app.use("/api", redeemRoute);
+startListener();
 
 connectDB();
 

@@ -8,6 +8,9 @@ import {
   TrendingUp, Activity, Play, Square, Fuel
 } from "lucide-react";
 import useSWR from "swr";
+import { useSwitchChain } from "wagmi";
+import { useChainId } from "wagmi";
+import { usePublicClient } from "wagmi";
 
 import { parseUnits } from "viem";
 
@@ -46,12 +49,14 @@ const StatCard = ({ title, value, unit, color }: any) => (
   </div>
 );
 
-export default function AIDashboardContent() {
+export default function AIDashboardContent () {
+const { switchChain } = useSwitchChain();
+const chainId = useChainId();
+const publicClient = usePublicClient();
 
 const [loading, setLoading] = useState(false); 
 
    const { isConnected, address } = useAccount();
-    const { disconnect } = useDisconnect();
     const { data: user } = useSWR(
   address ? `http://localhost:4000/api/user/${address}` : null
 );
@@ -73,20 +78,15 @@ const [loading, setLoading] = useState(false);
     const TRADINGGASVAULT_OWNER =
     process.env.NEXT_PUBLIC_TRADINGGASVAULT_OWNER?.toLowerCase();
   
-  
-    /* 🔐 WALLET */
-    const [panelOpen, setPanelOpen] = useState(false);
-  
-  
-     const [showModal, setShowModal] = useState(false);
-    const fadeUp = {
-      hidden: { opacity: 0, y: 30 },
-      visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
-    };
-  
-    /* ⛔ HYDRATION */
+  const [showModal, setShowModal] = useState(false);
+        const fadeUp = {
+          hidden: { opacity: 0, y: 30 },
+          visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
+        };
+    
+  /* ⛔ HYDRATION */
     const [mounted, setMounted] = useState(false);
-  
+
    /* 📊 STAKING STATES */
      const [stakeAmount, setStakeAmount] = useState("");
    
@@ -146,20 +146,6 @@ useEffect(() => {
 }, []);
 
 
-// quando a wallet conectar, abre o painel automaticamente
-useEffect(() => {
-  if (isConnected) {
-    setPanelOpen(true);
-  } else {
-    setPanelOpen(false);
-  }
-}, [isConnected]);
-
-
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   
 
@@ -175,34 +161,55 @@ useEffect(() => {
 
 
 
-const CONTRACT_ADDRESS = "0x056E2a5a99582C4d6Cc3F604e119BdcE87B465a2"; // vault
-const USDT_ADDRESS = "0x3392AA85e9F4153142c9558D317D882A81B82130"; // testnet USDT
-const VAULT_ABI = [/* teu ABI */];
+const CONTRACT_ADDRESS = "0x3241C6DdB16Edb447a100b2251B58f6F15d68c03"; // vault
+const USDT_ADDRESS = "0x07E7DC0b28448F67C3c349C8A83C5165dB8A29E6"; // testnet USDT
+
 
 const { writeContractAsync } = useWriteContract();
 
 const handleDeposit = async () => {
+  if (chainId !== 97) {
+    alert("⚠️ Switch to BSC Testnet");
+    return;
+  }
+
   try {
     if (!stakeAmount) return alert("Enter amount");
 
     setLoading(true);
 
-    const amount = parseUnits(stakeAmount, 6);
+    const amount = parseUnits(stakeAmount, 18);
 
-    // 1. APPROVE
-    await writeContractAsync({
+    // 🔥 1. LER ALLOWANCE (DENTRO DA FUNÇÃO)
+    const allowance = await publicClient.readContract({
       address: USDT_ADDRESS,
       abi: erc20Abi,
-      functionName: "approve",
-      args: [CONTRACT_ADDRESS, amount],
+      functionName: "allowance",
+      args: [address!, CONTRACT_ADDRESS],
     });
 
-    // 2. DEPOSIT
+    // 🔥 2. SÓ FAZ APPROVE SE PRECISAR
+    if (allowance < amount) {
+      const approveTx = await writeContractAsync({
+        address: USDT_ADDRESS,
+        abi: erc20Abi,
+        functionName: "approve",
+        args: [CONTRACT_ADDRESS, amount],
+      });
+
+      // esperar confirmação
+      await publicClient.waitForTransactionReceipt({
+        hash: approveTx,
+      });
+    }
+
+    // 🔥 3. DEPOSIT DIRETO
     await writeContractAsync({
       address: CONTRACT_ADDRESS,
       abi: TradingGasVaultAbi,
       functionName: "deposit",
       args: [amount],
+      gas: BigInt(500000),
     });
 
   } catch (e: any) {
@@ -211,9 +218,52 @@ const handleDeposit = async () => {
     setLoading(false);
   }
 };
-  
+
+const handleRedeem = async () => {
+  try {
+    if (!stakeAmount) return alert("Enter amount");
+
+    setLoading(true);
+
+    const amount = Number(stakeAmount);
+
+    const res = await fetch("http://localhost:4000/api/redeem", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        wallet: address,
+        amount, // ecGas
+      }),
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      throw new Error(data.error);
+    }
+
+    alert(`✅ Redeemed: ${data.ecoinAmount} E-Coin`);
+
+  } catch (e: any) {
+    alert(e.message);
+  } finally {
+    setLoading(false);
+  }
+};
+
+useEffect(() => {
+  if (!isConnected) return;
+
+  switchChain({ chainId: 97 });
+}, [isConnected]);
 
   
+useEffect(() => {
+  setMounted(true);
+}, []);
+
 if (!mounted) return null;
 
 
@@ -229,7 +279,7 @@ if (!mounted) return null;
         <div className="flex flex-col md:flex-row justify-between items-center mb-12 gap-8">
           <div>
             <h1 className="text-3xl font-black tracking-tighter italic flex items-center gap-3">
-              <Cpu className="text-yellow-500" /> E-COIN NEURAL TRADING AI ROBOT TERMINAL
+              <Cpu className="text-yellow-500" /> E-COIN NEURAL TRADING AI ROBOT <span className="text-[#D4AF37]">(ecnTrading)</span>
             </h1>
             <p className="text-gray-500 text-sm font-mono uppercase tracking-widest mt-1">Hybrid Neural: Forex & Crypto AI Trading Robot</p>
           </div>
@@ -735,39 +785,18 @@ if (!mounted) return null;
     <div className="grid grid-cols-2 gap-4 relative z-10">
       <button
   disabled={loading}
-  onClick={async () => {
-    try {
-      if (!stakeAmount) return alert("Enter amount");
-
-      setLoading(true);
-
-      await approve.approve(stakeAmount);
-      await gas.deposit(stakeAmount);
-
-    } catch (e: any) {
-      alert(e?.message || "Deposit error");
-    } finally {
-      setLoading(false);
-    }
-  }}
+  onClick={handleDeposit}
   className="py-4 rounded-2xl font-black bg-gradient-to-r from-[#D4AF37] to-[#F3BA2F]"
 >
   {loading ? "Processing..." : "DEPOSIT (USDT → GAS)"}
 </button>
 
       <button
-        onClick={async () => {
-          try {
-            if (!stakeAmount) return alert("Enter amount");
-            await gas.redeem(stakeAmount);
-          } catch (e: any) {
-            alert(e?.message || "Redeem error");
-          }
-        }}
-        className="py-4 rounded-2xl font-black text-red-400 border border-red-500/30 hover:bg-red-500/10 transition"
-      >
-        REDEEM (GAS → ECOIN)
-      </button>
+  onClick={handleRedeem}
+  className="py-4 rounded-2xl font-black text-red-400 border border-red-500/30"
+>
+  REDEEM (GAS → E-Coin)
+</button>
     </div>
 
     {/* 🔋 GAS BAR + REAL DATA */}

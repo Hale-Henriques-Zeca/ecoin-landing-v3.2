@@ -7,14 +7,24 @@ import { motion } from "framer-motion";
 import { Cpu, ShieldCheck, Wallet, ChevronRight, Bot, ArrowRight } from "lucide-react";
 import Link from "next/link";
 
+import TestnetProvider from "@/components/TestnetProvider";
 import AIDashboardContent from "@/components/AIDashboardContent";
 
-export default function AIDashboard() {
+export default function AIDashboard () {
   const { isConnected, address } = useAccount();
   const { disconnect } = useDisconnect();
 
+  
+       const [showModal, setShowModal] = useState(false);
+      const fadeUp = {
+        hidden: { opacity: 0, y: 30 },
+        visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
+      };
+    
+      /* ⛔ HYDRATION */
   const [mounted, setMounted] = useState(false);
-  const [panelOpen, setPanelOpen] = useState(false);
+  /* 🔐 WALLET */
+      const [panelOpen, setPanelOpen] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -55,8 +65,8 @@ export default function AIDashboard() {
                 <Cpu size={14} className="animate-pulse" /> High-Frequency AI Engine
               </div>
               <h1 className="text-3xl md:text-5xl font-black tracking-tighter leading-tight">
-                E-COIN <span className="text-[#D4AF37]">WEB3 NEURAL AI</span> <br />
-                TRADING ROBOT TERMINAL
+                Painl da E-COIN <span className="text-[#D4AF37]">WEB3 NEURAL AI</span> <br />
+                TRADING ROBOT <span className="text-[#D4AF37]">(ecnTrading)</span>
               </h1>
               <p className="text-gray-400 text-sm md:text-base max-w-lg mx-auto leading-relaxed">
                 O robô de negociação triangular de alta frequência mais rápido da Binance Spot Market, agora totalmente migrado para a infraestrutura Web3.
@@ -80,7 +90,7 @@ export default function AIDashboard() {
 
         <div className="flex flex-col">
           <span className="text-[10px] text-[#D4AF37] uppercase font-bold tracking-[0.2em]">
-            E-COIN NEURAL TRADING AI ROBOT
+            E-COIN NEURAL TRADING AI ROBOT 
           </span>
           <span className="text-sm text-white font-semibold tracking-tight">
             Descubra o poder da Arbitragem Triangular Interna
@@ -107,7 +117,7 @@ export default function AIDashboard() {
                     className="group relative px-12 py-4 rounded-full font-black text-black
                     bg-gradient-to-r from-[#D4AF37] to-[#F5F5F5] hover:scale-105 transition-all duration-300 shadow-[0_0_30px_rgba(212,175,55,0.3)]"
                   >
-                    CONNECT WEB3 WALLET
+                    CONECTAR CARTEIRA WEB3
                   </button>
                 )}
               </ConnectButton.Custom>
@@ -116,7 +126,7 @@ export default function AIDashboard() {
               <div className="grid grid-cols-1 gap-3 w-full max-w-md">
                 <div className="bg-white/5 border border-white/10 p-4 rounded-2xl backdrop-blur-md text-left">
                   <p className="text-[#D4AF37] font-bold text-xs mb-2 flex items-center gap-2">
-                    <ShieldCheck size={14} /> NEURAL WEB3 NATIVE ECOSYSTEM
+                    <ShieldCheck size={14} /> ECOSSISTEMA NATIVO DA E-COIN NEURAL WEB3 
                   </p>
                   <ul className="text-[11px] text-gray-400 space-y-2">
                     <li className="flex items-center gap-2">❌ Sem login tradicional</li>
@@ -130,9 +140,11 @@ export default function AIDashboard() {
             {/* CALL TO ACTION PARA QUEM NÃO TEM CARTEIRA */}
             <div className="space-y-4 pt-6 border-t border-white/5">
               <p className="text-xs text-gray-500 italic">
-                Ainda não tens uma carteira? No ecossistema E-Coin a tua segurança vem primeiro. Crie-a agora mesmo:
+                Ainda não tens uma carteira Web3?
               </p>
-              
+              <p className="text-xs text-gray-500 italic">
+                No ecossistema E-Coin, a tua segurança vem primeiro. Crie-a agora mesmo a sua carteira Web3:
+              </p>
               <Link
                 href="/import-guide"
                 className="
@@ -163,9 +175,13 @@ export default function AIDashboard() {
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[10px] font-mono mb-0.5">
             <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
             WALLET ID: {address}
-          </div>
+          </div> 
 
-          <AIDashboardContent address={address} />
+    
+          <TestnetProvider>
+                 <AIDashboardContent/>
+              </TestnetProvider>
+          
 
           <div className="mt-20 text-center">
             <button

@@ -1,29 +1,32 @@
 import { ethers } from "ethers";
-import User from "../models/User";
+import { db } from "../db";
 
-const provider = new ethers.JsonRpcProvider(process.env.RPC);
+const provider = new ethers.JsonRpcProvider("http://127.0.0.1:8545"); // ou tua RPC
 
-const contract = new ethers.Contract(
-  process.env.VAULT!,
-  [
-    "event Deposited(address user, uint256 amount)"
-  ],
-  provider
-);
+const CONTRACT_ADDRESS = "SEU_CONTRACT";
+const ABI = [
+  "event Deposited(address indexed user, uint256 amount)"
+];
 
-contract.on("Deposited", async (user, amount) => {
-  console.log("Deposit detected:", user, amount.toString());
+const contract = new ethers.Contract(CONTRACT_ADDRESS, ABI, provider);
 
-  const gas = Number(amount) * 1000; // 1 USDT = 1000 ecGas
+export function startListener() {
+  console.log("👂 Listening Deposits...");
 
-  await User.findOneAndUpdate(
-    { wallet: user.toLowerCase() },
-    {
-      $inc: {
-        ecGas: gas,
-        totalDeposited: Number(amount)
-      }
-    },
-    { upsert: true }
-  );
-});
+  contract.on("Deposited", async (user, amount) => {
+    try {
+      console.log("Deposit detected:", user, amount.toString());
+
+      const ecGas = Number(amount) * 1000;
+
+      await db.collection("users").updateOne(
+        { wallet: user.toLowerCase() },
+        { $inc: { ecGas } },
+        { upsert: true }
+      );
+
+    } catch (err) {
+      console.error("Listener error:", err);
+    }
+  });
+}
