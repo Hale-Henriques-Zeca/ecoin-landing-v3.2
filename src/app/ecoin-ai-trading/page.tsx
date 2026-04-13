@@ -97,7 +97,7 @@ export default function Page() {
       <div className="flex gap-3">
         <div className="mt-1"><Zap size={14} className="text-emerald-500" /></div>
         <p className="text-white/50 text-sm max-w-md leading-relaxed">
-          O <span className="text-[#D4AF37]">(ecnTrading)</span> bot, é um bot moderno, Construído por um trader Profissional para qualquer trader, o bot <span className="text-[#D4AF37]">(ecnTrading)</span>, pelo seu design, foi criado para operar <span className="text-[#D4AF37]">100% sem riscos direcionais de (queda📉) & (Subida📈) de preços no mercado 📊</span> comparados aos actuais bots existentes no mercado hoje pu seja, o nosso bot <span className="text-[#D4AF37]">(ecnTrading)</span>, para lucar, nao depende e nem responde aos movimento de precos no mercado, mas sim ao desnivel de precos entre o mesmo par das moedas Como por exemplo o preco de Bitcoin (BTC) custando: (75,300,00 dolares no par BTC/ETH) e ao mesmo tempo custando: (75,500,00 dolares no par BTC/USDT) portanto, o bot compra no primeito par e vende no segundo par e Lucro de +200 dolares tudo a velocidade da luz.
+          O <span className="text-[#D4AF37]">(ecnTrading)</span> bot, é um bot moderno, Construído por um trader Profissional para qualquer trader, o bot <span className="text-[#D4AF37]">(ecnTrading)</span>, pelo seu design, foi criado para operar <span className="text-[#D4AF37]">100% sem riscos direcionais de (queda📉) & (Subida📈) de preços no mercado 📊</span> comparados aos actuais bots existentes no mercado hoje, ou seja, o nosso bot <span className="text-[#D4AF37]">(ecnTrading)</span>, para lucar, não depende e nem responde aos movimento de preços no mercado, mas sim ao desnível de preços entre as mesmas criptomoedas em 3 pare das moedas como por exemplo o preço de Bitcoin (BTC) custando: (75,300,00 dólares no par BTC/ETH) e ao mesmo tempo custando: (75,500,00 dolares no par BTC/USDT) portanto, o bot compra no primeiro par e vende no segundo par e Lucro de +200 dólares tudo a velocidade da luz.
         </p>
       </div>
 
@@ -130,7 +130,7 @@ export default function Page() {
               <DataCard label="Latência" value={`${latency}ms`} subValue="Ultra baixa" icon={Zap} color="text-yellow-400" />
               <DataCard label="Crescimento" value={`+${spread}%`} subValue="Scanniando" icon={BarChart3} color="text-emerald-400" />
               <DataCard label="Eficiência" value="98.2%" icon={ShieldCheck} color="text-blue-400" />
-              <DataCard label="Confiança do IA" value="Alto" icon={Globe} color="text-purple-400" />
+              <DataCard label="Confiança do IA" value="Alta" icon={Globe} color="text-purple-400" />
             </div>
 
             {/* FLOW */}
