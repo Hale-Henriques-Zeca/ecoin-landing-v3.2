@@ -204,7 +204,7 @@ export default function ECoinOnChainStaking() {
             <div className="flex items-center gap-3 mb-2">
               <Cpu className="text-[#D4AF37]" size={26} />
               <h1 className="text-3xl font-black tracking-tighter italic text-white">
-               Terminal de Mineração de E-Coin
+               Terminal de Mineração de eCoin
               </h1>
             </div>
             <p className="text-gray-500 text-sm font-mono uppercase tracking-widest mt-1">
@@ -230,7 +230,7 @@ export default function ECoinOnChainStaking() {
                     onClick={openConnectModal}
                     className="flex items-center gap-2 px-6 py-2.5 rounded-xl font-bold text-sm bg-gradient-to-r from-[#22C55E] to-[#16A34A] text-black hover:brightness-110 transition"
                   >
-                    <Wallet size={14} /> CONECTAR CARTEIRA
+                    <Wallet size={14} /> CONECTAR CARTEIRA INICIAR A POUPANÇA
                   </button>
                 )}
               </ConnectButton.Custom>
@@ -258,21 +258,21 @@ export default function ECoinOnChainStaking() {
           <StatCard
             title="Investido Global"
             value={staking.total || "—"}
-            unit="E-Coin"
+            unit="eCoin"
             color="text-[#D4AF37]"
             icon={Globe}
           /> 
           <StatCard
             title="Seu investimento"
             value={isConnected ? staking.userStake || "0" : "—"}
-            unit="E-Coin"
+            unit="eCoin"
             color="text-blue-400"
             icon={TrendingUp}
           />
           <StatCard
             title="Lucros"
             value={isConnected ? staking.pending || "0" : "—"}
-            unit="E-Coin"
+            unit="eCoin"
             color="text-emerald-400"
             icon={Zap}
           />
@@ -295,10 +295,10 @@ export default function ECoinOnChainStaking() {
             {/* HERO MESSAGE */}
             <div className="bg-[#D4AF37]/5 border border-[#D4AF37]/20 rounded-[32px] p-8">
               <p className="text-[10px] font-mono text-[#D4AF37]/60 uppercase tracking-[0.3em] mb-3">
-                Protocolo de Mineração da E-Coin via WEB3
+                Protocolo de Mineração da eCoin via WEB3
               </p>
               <h2 className="text-2xl font-black text-white mb-3 leading-tight">
-                E-Coin —{" "}
+                eCoin —{" "}
                 <span className="text-[#D4AF37]">Fluxo de caixa em tempo real na blockchain🚀</span>
               </h2>
               <p className="text-sm text-gray-400 leading-relaxed">
@@ -309,7 +309,7 @@ export default function ECoinOnChainStaking() {
               </p>
               <div className="mt-4 h-px w-full bg-gradient-to-r from-[#D4AF37]/30 via-transparent to-transparent" />
               <p className="text-[10px] text-gray-500 mt-3 italic">
-                Pool de Preparação para a listagem da E-Coin nas grandes
+                Pool de Preparação para a listagem da eCoin nas grandes
                 corretoras globais.
               </p>
             </div>
@@ -368,19 +368,19 @@ export default function ECoinOnChainStaking() {
                       <div className="bg-black/40 border border-white/5 rounded-2xl p-4 space-y-2 text-xs">
                         <div className="flex justify-between text-gray-400">
                           <span>Remuneração Bruta</span>
-                          <span>{staking.pending} ECOIN</span>
+                          <span>{staking.pending} eCoin</span>
                         </div>
                         <div className="flex justify-between text-red-400">
                           <span>Taxa de Saque (1%)</span>
                           <span>
-                            -{(Number(staking.pending) * 0.01).toFixed(6)} eCOIN
+                            -{(Number(staking.pending) * 0.01).toFixed(6)} eCoin
                           </span>
                         </div>
                         <div className="h-px bg-white/5" />
                         <div className="flex justify-between text-emerald-400 font-bold">
                           <span>Você recebe</span>
                           <span>
-                            {(Number(staking.pending) * 0.99).toFixed(6)} eCOIN
+                            {(Number(staking.pending) * 0.99).toFixed(6)} eCoin
                           </span>
                         </div>
                       </div>
@@ -419,7 +419,7 @@ export default function ECoinOnChainStaking() {
                           {stakingLiquidity
                             ? Number(stakingLiquidity) / 1e18
                             : 0}{" "}
-                          E-COIN
+                          eCoin
                         </span>
                       </div>
                       <div className="flex justify-between">
@@ -469,7 +469,7 @@ export default function ECoinOnChainStaking() {
                   <div className="bg-[#0f172a]/80 border border-blue-500/20 rounded-[28px] p-6 backdrop-blur-xl">
                     <div className="flex items-center justify-between mb-4">
                       <p className="text-[10px] font-mono text-blue-400 uppercase tracking-widest">
-                        Poupar/Remover a Poupança Para a Mineração da E-Coin
+                        Poupar/Remover a Poupança Para a Mineração da eCoin
                       </p>
                       {address && (
                         <span className="text-[9px] font-mono text-white/30">
