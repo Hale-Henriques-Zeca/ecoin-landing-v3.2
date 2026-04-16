@@ -61,7 +61,7 @@ return(
 <div className="bg-black/50 border border-[#D4AF37]/20 rounded-xl p-4 space-y-3">
 
 <p className="text-xs text-gray-400">
-Next Reward Stream Distribution
+Próxima distribuição do fluxo de Lucros gerados nas taxas cobradas no uso do ecossistema
 </p>
 
 <div className="h-2 w-full bg-black/60 rounded-full overflow-hidden">

@@ -11,19 +11,19 @@ export default function EcoinWalletDashboard() {
 
   const tokens = [
     {
-      name: "E-Coin",
-      symbol: "ECOIN",
+      name: "eCoin",
+      symbol: "E-Coin",
       balance: balances.ecoin,
       decimals: 18,
       icon: "/crypto/ecoin1.png",
       price: 1,
     },
     {
-      name: "E-USD",
-      symbol: "EUSD",
+      name: "eDollar",
+      symbol: "E-USD",
       balance: balances.eusd,
       decimals: 18,
-      icon: "/crypto/eusd.png",
+      icon: "/crypto/edollar.png",
       price: 1,
     },
     {

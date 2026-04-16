@@ -136,7 +136,7 @@ useEffect(() => {
           {/* TÍTULO */}
           <h1 className="text-xl sm:text-1xl font-extrabold">
             WEB3 Streaming Staking <br />
-            <span className="text-[#D4AF37]">E-Coin — live cashflow On-Chain🚀</span>
+            <span className="text-[#D4AF37]">eCoin — live cashflow On-Chain🚀</span>
           </h1>
 
 <div className="flex justify-center mt-2">

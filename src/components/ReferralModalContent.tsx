@@ -29,7 +29,7 @@ export default function ReferralModalContent() {
               : "bg-black text-gray-400"
           }`}
         >
-          Bind Upline
+          Vincular Upline
         </button>
 
         <button
@@ -40,7 +40,7 @@ export default function ReferralModalContent() {
               : "bg-black text-gray-400"
           }`}
         >
-          Dashboard
+          Painel
         </button>
       </div>
 

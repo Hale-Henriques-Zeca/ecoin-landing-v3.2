@@ -277,11 +277,12 @@ const previewAllowed = allowed === true
 
       {/* 🧠 CONTEÚDO */}
       <motion.div
-        initial="hidden"
-        animate="visible"
-        variants={fadeUp}
-        className="relative z-10 w-full max-w-md px-4"
-      >
+  initial="hidden"
+  animate="visible"
+  variants={fadeUp}
+  translate="no"
+  className="notranslate relative z-10 w-full max-w-md px-4"
+>
         <div className="space-y-6 text-center">
 
           {/* TÍTULO */}
@@ -298,15 +299,28 @@ const previewAllowed = allowed === true
             <label className="text-xs text-gray-300">From</label>
             <div className="flex items-center justify-between mt-2">
               <input
-                value={amount}
-                onChange={(e) => setAmount(e.target.value)}
-                placeholder="0.0"
-                className="w-full bg-transparent outline-none text-2xl text-white"
-              />
+  translate="no"
+  lang="en"
+  inputMode="decimal"
+  autoComplete="off"
+  spellCheck={false}
+  value={amount}
+  onChange={(e) => {
+    const value = e.target.value.replace(",", "."); // 🔥 EURO FIX
+
+    if (/^\d*\.?\d*$/.test(value)) {
+      setAmount(value);
+    }
+  }}
+  onPaste={(e) => e.preventDefault()}
+  placeholder="0.0"
+  className="w-full bg-transparent outline-none text-2xl text-white"
+/>
               <select
+  translate="no"
+  className="notranslate ml-3 bg-transparent text-[#D4AF37] font-semibold outline-none"
   value={fromToken}
   onChange={(e) => setFromToken(e.target.value as SwapToken)}
-  className="ml-3 bg-transparent text-[#D4AF37] font-semibold outline-none"
 >
   <option value="ECOIN">E-Coin</option>
   <option value="USDT">USDT</option>
@@ -327,7 +341,7 @@ const previewAllowed = allowed === true
 
   <div className="flex items-center justify-between mt-2">
 
-    <div className="text-2xl text-white">
+    <div className="text-2xl text-white notranslate" translate="no">
       {previewAmountOut > 0n
   ? Number(
       formatUnits(
@@ -339,10 +353,11 @@ const previewAllowed = allowed === true
     </div>
 
     <select
-      value={toToken}
-      onChange={(e) => setToToken(e.target.value as SwapToken)}
-      className="ml-3 bg-transparent text-[#D4AF37] font-semibold outline-none"
-    >
+  translate="no"
+  className="notranslate ml-3 bg-transparent text-[#D4AF37] font-semibold outline-none"
+  value={toToken}
+  onChange={(e) => setToToken(e.target.value as SwapToken)}
+>
       {fromToken === "ECOIN" && (
         <>
           <option value="USDT">USDT</option>
@@ -361,7 +376,7 @@ const previewAllowed = allowed === true
           {/* PRICE */}
           <div className="flex justify-between text-xs text-gray-300">
             <span>Price</span>
-            <span className="text-[#D4AF37]">
+            <span className="text-[#D4AF37] notranslate" translate="no">
               1 E-Coin = {price} USD
             </span>
           </div>
@@ -373,17 +388,17 @@ const previewAllowed = allowed === true
 
   <div className="flex justify-between">
     <span>Gross</span>
-    <span>{calculation.gross.toFixed(6)} {fromToken}</span>
+    <span className="notranslate" translate="no">{calculation.gross.toFixed(6)} {fromToken}</span>
   </div>
 
   <div className="flex justify-between text-red-400">
     <span>Fee ({calculation.feePercent}%)</span>
-    <span>-{calculation.fee.toFixed(6)} {fromToken}</span>
+    <span className="notranslate" translate="no">-{calculation.fee.toFixed(6)} {fromToken}</span>
   </div>
 
   <div className="flex justify-between text-green-400">
     <span>Net Amount</span>
-    <span>{calculation.net.toFixed(6)} {fromToken}</span>
+    <span className="notranslate" translate="no">{calculation.net.toFixed(6)} {fromToken}</span>
   </div>
 
 </div>

@@ -108,7 +108,7 @@ export default function Header() {
 
               <div className="flex flex-col leading-none">
                 <span className="text-[13px] font-black tracking-tight text-[#D4AF37] group-hover:text-white transition-colors">
-                  E-COIN
+                  eCOIN
                 </span>
                 <span className="text-[8px] font-mono text-white/30 uppercase tracking-[0.25em]">
                   Neural Web3

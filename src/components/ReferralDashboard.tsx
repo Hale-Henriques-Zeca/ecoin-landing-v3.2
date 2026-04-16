@@ -48,7 +48,7 @@ export default function ReferralDashboard() {
       <div className="bg-black/60 border border-[#22C55E]/20 rounded-xl p-4">
         <p className="text-sm text-gray-400">Recompensas Pendentes</p>
         <p className="text-xl font-bold text-[#22C55E]">
-          {(Number(pending) / 1e18).toFixed(6)} E-COIN
+          {(Number(pending) / 1e18).toFixed(6)} eCoin
         </p>
       </div>
 

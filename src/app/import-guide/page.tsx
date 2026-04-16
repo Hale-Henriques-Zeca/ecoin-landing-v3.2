@@ -11,6 +11,7 @@ import BlockchainDeviceAlert from "@/components/BlockchainDeviceAlert";
 
 const ECOIN = "0xDf69235019cc416dd5Be75dfc0eDc922aB4b5964";
 const USDT = "0x55d398326f99059fF775485246999027B3197955";
+const EUSD = "0xF7543E5B4735C58a176269202847360aaDfA83C1";
 
 const WALLET_DIRECTORY = [
   { name: "MetaMask", url: "https://metamask.io/download/", color: "bg-orange-600" },
@@ -31,6 +32,27 @@ export default function ImportGuide() {
     setCopied(label);
     setTimeout(() => setCopied(""), 2000);
   };
+
+  const TOKENS = [
+  {
+    symbol: "ECOIN",
+    name: "E-Coin Token (BEP-20)",
+    address: ECOIN,
+    logo: "/tokens/ecoin.png",
+  },
+  {
+    symbol: "USDT",
+    name: "USDT (BEP-20)",
+    address: USDT,
+    logo: "/tokens/usdt.png",
+  },
+  {
+    symbol: "EUSD",
+    name: "E-USD (BEP-20)",
+    address: EUSD,
+    logo: "/tokens/eusd.png",
+  },
+];
 
   return (
     <div className="w-full max-w-5xl mx-auto text-white p-6 space-y-12 font-sans">
@@ -54,15 +76,20 @@ export default function ImportGuide() {
       {/* 📋 CONTRATOS DE ELITE */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {[
-          { name: "E-Coin Token (EKD)", address: ECOIN, icon: <Cpu className="text-[#D4AF37]" /> },
-          { name: "USDT (BEP-20)", address: USDT, icon: <div className="text-emerald-500 font-bold">S</div> }
+          { name: "E-Coin Token (BEP-20)", address: ECOIN, icon: <Cpu className="text-[#D4AF37]" /> },
+          { name: "USDT (BEP-20)", address: USDT, icon: <div className="text-emerald-500 font-bold">S</div> },
+           { name: "E-USD (BEP-20)", address: EUSD, icon: <div className="text-emerald-500 font-bold">S</div> }
         ].map((token) => (
           <div key={token.name} className="bg-white/5 border border-white/10 rounded-[2rem] p-6 backdrop-blur-xl relative overflow-hidden group">
             <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
               <Copy size={60} />
             </div>
             <div className="flex items-center gap-3 mb-4">
-              {token.icon}
+              <img
+  src={token.logo}
+  alt={token.symbol}
+  className="w-8 h-8 rounded-full object-contain"
+/>
               <h3 className="font-bold text-sm uppercase tracking-widest">{token.name}</h3>
             </div>
             <div className="flex flex-col gap-3">

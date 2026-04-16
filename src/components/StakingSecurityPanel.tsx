@@ -127,7 +127,7 @@ return(
 <div className="bg-black/40 backdrop-blur-md border border-[#D4AF37]/20 rounded-xl p-5 space-y-5">
 
 <h4 className="text-[#D4AF37] text-sm font-semibold">
-Staking Security Timers
+Temporizador de segurança na poupança
 </h4>
 
 {/* CLAIM COOLDOWN */}
@@ -137,7 +137,7 @@ Staking Security Timers
 <div className="flex justify-between text-xs">
 
 <span className="text-gray-400">
-Claim Cooldown
+Tempo de espera para Saque
 </span>
 
 <span className="text-yellow-400 font-semibold">
@@ -165,7 +165,7 @@ style={{width:`${claimProgress}%`}}
 <div className="flex justify-between text-xs">
 
 <span className="text-gray-400">
-Stake Warm-up
+Poupança Aquecido
 </span>
 
 <span className="text-blue-400 font-semibold">
@@ -193,7 +193,7 @@ style={{width:`${warmupProgress}%`}}
 <div className="flex justify-between text-xs">
 
 <span className="text-gray-400">
-Reward Stream
+Fluxo de Lucratividade
 </span>
 
 <span className="text-green-400 font-semibold">

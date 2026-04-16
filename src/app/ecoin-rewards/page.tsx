@@ -64,7 +64,7 @@ const StatCard = ({
     <div className="flex justify-between items-start mb-3">
       {Icon && <Icon size={16} className={color} />}
       <span className="text-[9px] text-white/30 font-mono uppercase tracking-widest ml-auto">
-        LIVE_FEED
+        TRANSMISSÃO AO VIVO
       </span>
     </div>
     <p className="text-[10px] text-white/40 uppercase tracking-widest mb-1">
@@ -204,11 +204,11 @@ export default function ECoinOnChainStaking() {
             <div className="flex items-center gap-3 mb-2">
               <Cpu className="text-[#D4AF37]" size={26} />
               <h1 className="text-3xl font-black tracking-tighter italic text-white">
-                E-COIN STREAMING STAKING TERMINAL
+               Terminal de Mineração de E-Coin
               </h1>
             </div>
             <p className="text-gray-500 text-sm font-mono uppercase tracking-widest mt-1">
-              Live Cashflow · On-Chain · Binance Smart Chain
+             Fluxo de caixa em tempo real · Na BlockChain · Via Binance Smart Chain (BNB Chain)
             </p>
           </div>
 
@@ -219,7 +219,7 @@ export default function ECoinOnChainStaking() {
               labelOff="Staking Paused"
             />
             <div className="text-[10px] font-mono text-white/30">
-              ENGINE_ID: EKD_STREAM_V1_BSC
+             ID_DO_MOTOR: EdenKingDom_MINERCore_V1_BNB Chain
             </div>
 
             {/* CONNECT / ADDRESS */}
@@ -256,32 +256,32 @@ export default function ECoinOnChainStaking() {
         {/* ── TOP STAT CARDS ── */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
           <StatCard
-            title="Total Value Locked"
+            title="Investido Global"
             value={staking.total || "—"}
             unit="E-Coin"
             color="text-[#D4AF37]"
-            icon={Database}
-          />
+            icon={Globe}
+          /> 
           <StatCard
-            title="Your Stake"
+            title="Seu investimento"
             value={isConnected ? staking.userStake || "0" : "—"}
             unit="E-Coin"
             color="text-blue-400"
             icon={TrendingUp}
           />
           <StatCard
-            title="Pending Rewards"
+            title="Lucros"
             value={isConnected ? staking.pending || "0" : "—"}
             unit="E-Coin"
             color="text-emerald-400"
             icon={Zap}
           />
           <StatCard
-            title="Your Pool Share"
+            title="Sua (%)"
             value={isConnected ? staking.share?.toFixed(2) ?? "0" : "—"}
             unit="%"
             color="text-purple-400"
-            icon={Globe}
+            icon={Database}
           />
         </div>
 
@@ -295,16 +295,16 @@ export default function ECoinOnChainStaking() {
             {/* HERO MESSAGE */}
             <div className="bg-[#D4AF37]/5 border border-[#D4AF37]/20 rounded-[32px] p-8">
               <p className="text-[10px] font-mono text-[#D4AF37]/60 uppercase tracking-[0.3em] mb-3">
-                WEB3 Streaming Staking Protocol
+                Protocolo de Mineração da E-Coin via WEB3
               </p>
               <h2 className="text-2xl font-black text-white mb-3 leading-tight">
                 E-Coin —{" "}
-                <span className="text-[#D4AF37]">live cashflow On-Chain 🚀</span>
+                <span className="text-[#D4AF37]">Fluxo de caixa em tempo real na blockchain🚀</span>
               </h2>
               <p className="text-sm text-gray-400 leading-relaxed">
-                Rewards are calculated on-chain in cashflow stream continuously.{" "}
+                As recompensas são calculadas na BlockChain no fluxo de caixa continuamente{" "}
                 <span className="text-yellow-400 font-semibold">
-                  No fixed returns. No epochs. No guaranteed APY.
+                  Sem retornos fixos. Sem períodos. Sem taxa anual efetiva (APY) garantida.
                 </span>
               </p>
               <div className="mt-4 h-px w-full bg-gradient-to-r from-[#D4AF37]/30 via-transparent to-transparent" />
@@ -343,23 +343,23 @@ export default function ECoinOnChainStaking() {
                   <div className="bg-black/60 border border-white/10 rounded-[28px] p-6 space-y-5">
                     <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-[#D4AF37]/40 to-transparent" />
                     <p className="text-[10px] font-mono text-white/40 uppercase tracking-widest">
-                      Streaming Staking · Live On-Chain
+                      Mineração ao Vivo na BlockChain
                     </p>
 
                     <div className="grid grid-cols-2 gap-4">
                       <div className="bg-white/5 border border-white/5 rounded-2xl p-4">
-                        <p className="text-[10px] text-gray-500 uppercase mb-1">Your Stake</p>
+                        <p className="text-[10px] text-gray-500 uppercase mb-1">Seu investimento</p>
                         <p className="text-xl font-bold text-white font-mono">
                           {staking.userStake}
                         </p>
-                        <p className="text-[9px] text-[#D4AF37]/60">E-Coin</p>
+                        <p className="text-[9px] text-[#D4AF37]/60">eCoin</p>
                       </div>
                       <div className="bg-white/5 border border-white/5 rounded-2xl p-4">
-                        <p className="text-[10px] text-gray-500 uppercase mb-1">Unclaimed</p>
+                        <p className="text-[10px] text-gray-500 uppercase mb-1">Por Sacar</p>
                         <p className="text-xl font-bold text-emerald-400 font-mono">
                           {staking.pending}
                         </p>
-                        <p className="text-[9px] text-emerald-400/60">E-Coin</p>
+                        <p className="text-[9px] text-emerald-400/60">eCoin</p>
                       </div>
                     </div>
 
@@ -367,20 +367,20 @@ export default function ECoinOnChainStaking() {
                     {Number(staking.pending ?? 0) > 0 && (
                       <div className="bg-black/40 border border-white/5 rounded-2xl p-4 space-y-2 text-xs">
                         <div className="flex justify-between text-gray-400">
-                          <span>Gross Reward</span>
+                          <span>Remuneração Bruta</span>
                           <span>{staking.pending} ECOIN</span>
                         </div>
                         <div className="flex justify-between text-red-400">
-                          <span>Claim Fee (1%)</span>
+                          <span>Taxa de Saque (1%)</span>
                           <span>
-                            -{(Number(staking.pending) * 0.01).toFixed(6)} E-COIN
+                            -{(Number(staking.pending) * 0.01).toFixed(6)} eCOIN
                           </span>
                         </div>
                         <div className="h-px bg-white/5" />
                         <div className="flex justify-between text-emerald-400 font-bold">
-                          <span>You Receive</span>
+                          <span>Você recebe</span>
                           <span>
-                            {(Number(staking.pending) * 0.99).toFixed(6)} E-COIN
+                            {(Number(staking.pending) * 0.99).toFixed(6)} eCOIN
                           </span>
                         </div>
                       </div>
@@ -389,7 +389,7 @@ export default function ECoinOnChainStaking() {
                     {/* Share bar */}
                     <div>
                       <div className="flex justify-between text-xs text-gray-400 mb-2">
-                        <span>Your Pool Share</span>
+                        <span>Sua Percentagem de Ganhos por segundos </span>
                         <span className="text-[#D4AF37]">
                           {staking.share.toFixed(2)}%
                         </span>
@@ -403,18 +403,18 @@ export default function ECoinOnChainStaking() {
                     </div>
 
                     <p className="text-[10px] text-yellow-400 text-center font-mono">
-                      No epochs · No fixed APY · Rewards stream continuously in live cashflow 🚀
+                     Sem períodos fixos · Sem taxa anual de juros fixa · Recompensas contínuas em fluxo de caixa em tempo real 🚀
                     </p>
                   </div>
 
                   {/* Liquidity Monitor */}
                   <div className="bg-black/40 border border-yellow-500/20 rounded-2xl p-5 space-y-3">
                     <p className="text-[10px] font-mono text-yellow-500/60 uppercase tracking-widest">
-                      Liquidity Monitor
+                     Monitor de Liquidez
                     </p>
                     <div className="space-y-2 text-xs">
                       <div className="flex justify-between">
-                        <span className="text-gray-400">Staking Liquidity</span>
+                        <span className="text-gray-400">Liquidez de Mineração na Poupança</span>
                         <span className="text-yellow-400 font-mono">
                           {stakingLiquidity
                             ? Number(stakingLiquidity) / 1e18
@@ -423,13 +423,13 @@ export default function ECoinOnChainStaking() {
                         </span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-gray-400">Your Pending</span>
+                        <span className="text-gray-400">Seu Saque pendente</span>
                         <span className="text-green-400 font-mono">
                           {staking.pending}
                         </span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-gray-400">Coverage</span>
+                        <span className="text-gray-400">lastro de Crescimento 📈</span>
                         <span className="text-white font-mono">
                           {stakingLiquidity && Number(staking.pending) > 0
                             ? (
@@ -457,11 +457,11 @@ export default function ECoinOnChainStaking() {
                         : "border border-[#D4AF37] text-[#D4AF37] hover:bg-[#D4AF37]/10 shadow-lg shadow-[#D4AF37]/5"
                     }`}
                   >
-                    CLAIM REWARD
+                    Sacar Lucros
                   </button>
                   {Number(staking.pending) === 0 && (
                     <p className="text-yellow-400 text-xs text-center font-mono">
-                      Nothing to claim yet. Rewards accruing…
+                      Nada a sacar ainda. Lucros a acumular…
                     </p>
                   )}
 
@@ -469,7 +469,7 @@ export default function ECoinOnChainStaking() {
                   <div className="bg-[#0f172a]/80 border border-blue-500/20 rounded-[28px] p-6 backdrop-blur-xl">
                     <div className="flex items-center justify-between mb-4">
                       <p className="text-[10px] font-mono text-blue-400 uppercase tracking-widest">
-                        Stake / Unstake E-Coin
+                        Poupar/Remover a Poupança Para a Mineração da E-Coin
                       </p>
                       {address && (
                         <span className="text-[9px] font-mono text-white/30">
@@ -481,7 +481,7 @@ export default function ECoinOnChainStaking() {
                       type="number"
                       value={stakeAmount}
                       onChange={(e) => setStakeAmount(e.target.value)}
-                      placeholder="Enter amount…"
+                      placeholder="Insira o valor a Poupar…"
                       className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-xl text-white outline-none mb-5 font-mono placeholder:text-white/20"
                     />
 
@@ -491,12 +491,12 @@ export default function ECoinOnChainStaking() {
                           try {
                             await staking.stake(stakeAmount);
                           } catch (e: any) {
-                            alert(e?.message || "Erro no stake");
+                            alert(e?.message || "Erro no Poupar");
                           }
                         }}
                         className="py-4 rounded-2xl font-black text-black bg-gradient-to-r from-[#D4AF37] to-[#F3BA2F] hover:brightness-110 transition uppercase tracking-wider text-xs"
                       >
-                        STAKE
+                        POUPAR
                       </button>
                       <button
                         onClick={async () => {
@@ -508,7 +508,7 @@ export default function ECoinOnChainStaking() {
                         }}
                         className="py-4 rounded-2xl font-black text-red-400 border border-red-500/30 hover:border-red-400 hover:bg-red-500/5 transition uppercase tracking-wider text-xs"
                       >
-                        UNSTAKE
+                        REMOVER POUPANÇA
                       </button>
                     </div>
                   </div>
@@ -516,7 +516,7 @@ export default function ECoinOnChainStaking() {
                   {/* WALLET DASHBOARD */}
                   <div className="bg-white/5 border border-white/10 rounded-[28px] p-6">
                     <p className="text-[10px] font-mono text-white/30 uppercase tracking-widest mb-4">
-                      Wallet Overview
+                      Visão geral da carteira
                     </p>
                     <EcoinWalletDashboard />
                   </div>
@@ -530,7 +530,7 @@ export default function ECoinOnChainStaking() {
                 onClick={() => setPanelOpen(true)}
                 className="w-full py-4 rounded-2xl font-black uppercase tracking-widest text-sm bg-gradient-to-r from-[#3B82F6] to-[#06B6D4] text-white hover:brightness-110 transition"
               >
-                ABRIR STAKING STREAM
+               ABRIR O PAINEL DE POUPANÇA
               </button>
             )}
 
@@ -553,11 +553,11 @@ export default function ECoinOnChainStaking() {
                 <div className="flex items-center gap-2">
                   <div className="w-2 h-2 rounded-full bg-[#D4AF37] animate-pulse" />
                   <span className="text-[10px] font-mono text-gray-400 uppercase tracking-widest italic">
-                    Cashflow Stream Console
+                    Console de fluxo de caixa
                   </span>
                 </div>
                 <span className="text-[9px] font-mono text-[#D4AF37]/40">
-                  BSC · CHAIN 56
+                  BNB CHAIN 56
                 </span>
               </div>
               <div className="flex-1 overflow-y-auto p-5 space-y-3 font-mono text-[10px]">
@@ -565,30 +565,30 @@ export default function ECoinOnChainStaking() {
                   <>
                     <div className="flex flex-col gap-1 border-l-2 border-[#D4AF37]/20 pl-3 py-1">
                       <span className="text-[#D4AF37]/80">
-                        [{new Date().toLocaleTimeString()}] Reward stream active…
+                        [{new Date().toLocaleTimeString()}] Fluxo de lucros ativo…
                       </span>
                       <span className="text-[8px] text-gray-600 uppercase">
-                        Continuous cashflow accrual
+                       Acumulação contínua de fluxo de caixa
                       </span>
                     </div>
                     <div className="flex flex-col gap-1 border-l-2 border-emerald-500/20 pl-3 py-1">
                       <span className="text-emerald-400/80">
-                        Staking pool verified on-chain ✓
+                        Pool de poupança verificada on-chain ✓
                       </span>
                     </div>
                     <div className="flex flex-col gap-1 border-l-2 border-blue-500/20 pl-3 py-1">
                       <span className="text-blue-400/80">
-                        BSC Node: CONNECTED · Latency: ~12ms
+                        Nó BSC: CONECTADO · Latência: ~12ms
                       </span>
                     </div>
                     <div className="flex flex-col gap-1 border-l-2 border-purple-500/20 pl-3 py-1">
                       <span className="text-purple-400/80">
-                        Neural Link: Stable · Protocol healthy
+                        Link Neural: Estável · Protocolo saudável
                       </span>
                     </div>
                     <div className="flex flex-col gap-1 border-l-2 border-white/10 pl-3 py-1">
                       <span className="text-white/40">
-                        Pending rewards: calculating…
+                        Lucros pendentes: calculando…
                       </span>
                     </div>
                   </>
@@ -598,14 +598,14 @@ export default function ECoinOnChainStaking() {
                     <p className="text-gray-600 italic text-[11px]">
                       Sistema em Standby.
                       <br />
-                      Conecte a carteira para iniciar o stream.
+                      Conecte a carteira para iniciar a Poupança.
                     </p>
                   </div>
                 )}
               </div>
               <div className="px-5 py-3 bg-[#D4AF37]/5 border-t border-[#D4AF37]/10">
                 <p className="text-[9px] text-[#D4AF37]/50 flex items-center gap-2 font-mono uppercase tracking-tighter">
-                  <ShieldCheck size={10} /> No epochs · Continuous on-chain stream
+                  <ShieldCheck size={10} /> Sem épocas · Fluxo contínuo na blockchain
                 </p>
               </div>
             </div>
@@ -613,20 +613,17 @@ export default function ECoinOnChainStaking() {
             {/* AI INSIGHT CARD */}
             <div className="bg-[#D4AF37]/5 border border-[#D4AF37]/20 rounded-3xl p-5">
               <div className="text-[10px] text-[#D4AF37] mb-2 font-mono uppercase tracking-widest">
-                AI Protocol Insight
+                Análise do Protocolo de IA
               </div>
               <p className="text-[11px] text-white/70 leading-relaxed">
-                Rewards flow continuously without lock-up. Your share
-                determines your slice of the global cashflow stream. The
-                protocol is optimized for listing preparation on global
-                exchanges.
+               Os lucros fluem continuamente, sem período de bloqueio. Sua participação determina sua fatia do fluxo de caixa global. O protocolo é otimizado para a preparação de listagem em bolsas de valores globais.
               </p>
             </div>
 
             {/* REFERRAL NODE */}
             <div className="bg-gradient-to-b from-yellow-500/10 to-transparent border border-yellow-500/20 rounded-[32px] p-6">
               <p className="text-[10px] font-bold text-[#D4AF37] uppercase tracking-[0.2em] mb-4">
-                Referral Node
+                Nó de Referência
               </p>
               <div className="space-y-3">
                 
@@ -645,10 +642,10 @@ export default function ECoinOnChainStaking() {
             {/* GLOBAL INFRA */}
             <div className="bg-white/5 border border-white/10 rounded-[28px] p-5 grid grid-cols-2 gap-4 opacity-60 hover:opacity-100 transition-opacity">
               {[
-                { label: "Node Latency", value: "12ms", color: "text-blue-400" },
+                { label: "Latência do nó", value: "12ms", color: "text-blue-400" },
                 { label: "TVL", value: "$2.4M", color: "text-green-400" },
-                { label: "Burn Rate", value: "1.2K/HR", color: "text-orange-400" },
-                { label: "AI Health", value: "98.4%", color: "text-purple-400" },
+                { label: "Taxa de queima", value: "1.2K/HR", color: "text-orange-400" },
+                { label: " Saúde do IA", value: "98.4%", color: "text-purple-400" },
               ].map((item, i) => (
                 <div key={i} className="text-center">
                   <p className="text-[8px] text-gray-600 uppercase mb-1 font-mono">
@@ -667,7 +664,7 @@ export default function ECoinOnChainStaking() {
               className="bg-black/40 border border-white/5 rounded-[28px] p-5 text-center"
             >
               <p className="text-[10px] text-gray-500 mb-4 font-mono uppercase tracking-widest">
-                Comunidade E-Coin
+                Comunidade eCoin
               </p>
               <div className="flex justify-center gap-4 text-xl text-[#D4AF37]">
                 <a
@@ -732,7 +729,7 @@ export default function ECoinOnChainStaking() {
             <div className="flex items-center gap-2 mb-6">
               <div className="w-2 h-2 rounded-full bg-[#00FF9C] animate-pulse" />
               <h3 className="text-[#00FF9C] text-lg font-bold tracking-tight">
-                Referral System Dashboard
+                Painel de controle do sistema de referências
               </h3>
             </div>
             <ReferralModalContent />

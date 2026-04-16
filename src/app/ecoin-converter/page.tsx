@@ -51,8 +51,18 @@ const StatCard = ({
     {Icon && <Icon size={14} className={`${color} opacity-70`} />}
     <p className="text-[10px] text-white/40 uppercase tracking-widest">{title}</p>
     <div className="flex items-baseline gap-2">
-      <span className="text-2xl font-mono font-bold text-white">{value}</span>
-      <span className={`text-[10px] font-bold ${color}`}>{unit}</span>
+      <span
+  translate="no"
+  className="notranslate text-2xl font-mono font-bold text-white"
+>
+  {value}
+</span>
+      <span
+  translate="no"
+  className={`notranslate text-[10px] font-bold ${color}`}
+>
+  {unit}
+</span>
     </div>
   </div>
 );
@@ -188,7 +198,7 @@ export default function EBCConvertPanel() {
                                UI
   ═══════════════════════════════════════════════════════════════ */
   return (
-    <div className="min-h-screen bg-[#020617] text-white pt-32 lg:pt-40 p-6 lg:p-12 font-sans selection:bg-yellow-500/30">
+    <div translate="no" className=" notranslate min-h-screen bg-[#020617] text-white pt-32 lg:pt-40 p-6 lg:p-12 font-sans selection:bg-yellow-500/30">
 
       {/* ── BACKGROUND ── */}
       <div className="fixed inset-0 bg-[radial-gradient(circle_at_50%_-20%,#1e1a0a,transparent)] pointer-events-none" />
@@ -217,7 +227,10 @@ export default function EBCConvertPanel() {
           <div className="flex items-center gap-3">
             <div className="bg-yellow-500/10 border border-yellow-500/30 px-5 py-3 rounded-2xl backdrop-blur-xl">
               <p className="text-[10px] text-yellow-500/60 uppercase tracking-widest font-mono mb-0.5">Live Price</p>
-              <p className="text-lg font-mono font-black text-yellow-400">
+              <p
+  translate="no"
+  className="notranslate text-lg font-mono font-black text-yellow-400"
+>
                 1 E-Coin = <span className="text-white">{price > 0 ? price.toFixed(6) : "—"}</span> USDT
               </p>
             </div>
@@ -280,17 +293,29 @@ export default function EBCConvertPanel() {
                 <div className="flex items-center justify-between mb-3">
                   <label className="text-[10px] text-white/40 uppercase tracking-widest font-mono">From</label>
                   <select
+                  translate="no"
                     value={fromToken}
                     onChange={(e) => setFromToken(e.target.value as SwapToken)}
-                    className="bg-yellow-500/10 border border-yellow-500/30 text-yellow-400 font-black text-xs px-3 py-1.5 rounded-xl outline-none cursor-pointer"
+                    className="notranslate bg-yellow-500/10 border border-yellow-500/30 text-yellow-400 font-black text-xs px-3 py-1.5 rounded-xl outline-none cursor-pointer"
                   >
                     <option value="ECOIN">E-Coin</option>
                     <option value="USDT">USDT</option>
                   </select>
                 </div>
                 <input
-                  value={amount}
-                  onChange={(e) => setAmount(e.target.value)}
+  translate="no"
+  lang="en"
+  inputMode="decimal"
+  autoComplete="off"
+  spellCheck={false}
+  value={amount}
+  onChange={(e) => {
+    const value = e.target.value.replace(",", ".");
+    if (/^\d*\.?\d*$/.test(value)) {
+      setAmount(value);
+    }
+  }}
+  onPaste={(e) => e.preventDefault()}
                   placeholder="0.000000"
                   className="w-full bg-transparent outline-none text-4xl font-mono font-black text-white placeholder:text-white/10"
                 />
@@ -311,15 +336,21 @@ export default function EBCConvertPanel() {
                 <div className="flex items-center justify-between mb-3">
                   <label className="text-[10px] text-white/40 uppercase tracking-widest font-mono">To (Estimated)</label>
                   <select
+                  translate="no"
                     value={toToken}
                     onChange={(e) => setToToken(e.target.value as SwapToken)}
-                    className="bg-white/5 border border-white/10 text-white/60 font-black text-xs px-3 py-1.5 rounded-xl outline-none cursor-pointer"
+                    className=" notranslate bg-white/5 border border-white/10 text-white/60 font-black text-xs px-3 py-1.5 rounded-xl outline-none cursor-pointer"
                   >
                     {fromToken === "ECOIN" && <option value="USDT">USDT</option>}
                     {fromToken === "USDT"  && <option value="ECOIN">E-Coin</option>}
                   </select>
                 </div>
-                <div className={`text-4xl font-mono font-black ${previewAmountOut > 0n ? "text-green-400" : "text-white/20"}`}>
+                <div
+  translate="no"
+  className={`notranslate text-4xl font-mono font-black ${
+    previewAmountOut > 0n ? "text-green-400" : "text-white/20"
+  }`}
+>
                   {previewAmountOut > 0n
                     ? Number(formatUnits(previewAmountOut, TOKEN_CONFIG[toToken].decimals)).toFixed(6)
                     : "0.000000"}
@@ -332,16 +363,23 @@ export default function EBCConvertPanel() {
               <h4 className="text-[10px] text-white/30 uppercase tracking-widest font-mono mb-4">Fee Breakdown</h4>
               <div className="flex justify-between text-sm">
                 <span className="text-white/50 font-mono">Gross</span>
-                <span className="text-white font-mono font-bold">{calculation.gross.toFixed(6)} {fromToken}</span>
+                <span
+  translate="no"
+  className="notranslate text-white font-mono font-bold"
+>
+  {calculation.gross.toFixed(6)} {fromToken}
+</span>
               </div>
               <div className="w-full h-px bg-white/5" />
               <div className="flex justify-between text-sm">
                 <span className="text-red-400/80 font-mono">Fee ({calculation.feePercent}%)</span>
-                <span className="text-red-400 font-mono font-bold">−{calculation.fee.toFixed(6)} {fromToken}</span>
+                <span translate="no"
+  className="notranslate text-red-400 font-mono font-bold">−{calculation.fee.toFixed(6)} {fromToken}</span>
               </div>
               <div className="flex justify-between text-sm">
                 <span className="text-green-400/80 font-mono">Net Amount</span>
-                <span className="text-green-400 font-mono font-bold">{calculation.net.toFixed(6)} {fromToken}</span>
+                <span translate="no"
+  className="notranslate text-green-400 font-mono font-bold">{calculation.net.toFixed(6)} {fromToken}</span>
               </div>
             </div>
 
@@ -503,7 +541,12 @@ export default function EBCConvertPanel() {
           ].map((stat) => (
             <div key={stat.label} className="text-center">
               <p className="text-[9px] text-gray-600 uppercase mb-1 font-mono tracking-widest">{stat.label}</p>
-              <p className={`text-xs font-bold font-mono ${stat.color}`}>{stat.value}</p>
+              <p
+  translate="no"
+  className={`notranslate text-xs font-bold font-mono ${stat.color}`}
+>
+  {stat.value}
+</p>
             </div>
           ))}
         </motion.div>
