@@ -275,7 +275,7 @@ export default function EBCConvertPanel() {
               <div className="flex items-center justify-between mb-8">
                 <h3 className="text-sm font-black uppercase tracking-widest flex items-center gap-2 text-yellow-400">
                   <RefreshCw size={16} />
-                  Convert E-Coin
+                  Converter eCoin
                 </h3>
                 <div className={`px-3 py-1 rounded-full text-[10px] font-bold ${
                   previewLoading
@@ -334,7 +334,7 @@ export default function EBCConvertPanel() {
               {/* TO BOX */}
               <div className="bg-black/20 border border-white/5 rounded-2xl p-5 mt-3">
                 <div className="flex items-center justify-between mb-3">
-                  <label className="text-[10px] text-white/40 uppercase tracking-widest font-mono">To (Estimated)</label>
+                  <label className="text-[10px] text-white/40 uppercase tracking-widest font-mono">To (Estimado)</label>
                   <select
                   translate="no"
                     value={toToken}
@@ -411,7 +411,7 @@ export default function EBCConvertPanel() {
                 disabled={!amount || !previewAllowed || parsedAmount === 0n}
                 className="w-full py-5 rounded-2xl font-black text-sm uppercase tracking-widest bg-gradient-to-r from-yellow-500 to-amber-600 text-black hover:brightness-110 transition-all shadow-lg shadow-yellow-500/20 disabled:opacity-30 disabled:cursor-not-allowed"
               >
-                {txMining ? "⛏️ Confirming..." : "Convert Now →"}
+                {txMining ? "⛏️ Confirming..." : "Converter Agora →"}
               </button>
             )}
 
