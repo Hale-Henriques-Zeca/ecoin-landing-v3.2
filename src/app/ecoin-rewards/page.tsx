@@ -478,11 +478,12 @@ export default function ECoinOnChainStaking() {
                       )}
                     </div>
                     <input
+                    translate="no"
                       type="number"
                       value={stakeAmount}
                       onChange={(e) => setStakeAmount(e.target.value)}
                       placeholder="Insira o valor a Poupar…"
-                      className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-xl text-white outline-none mb-5 font-mono placeholder:text-white/20"
+                      className=" notranslate w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-xl text-white outline-none mb-5 font-mono placeholder:text-white/20"
                     />
 
                     <div className="grid grid-cols-2 gap-4">

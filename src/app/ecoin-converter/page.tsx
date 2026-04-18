@@ -216,7 +216,7 @@ export default function EBCConvertPanel() {
           <div>
             <h1 className="text-3xl font-black tracking-tighter italic flex items-center gap-3">
               <Zap className="text-yellow-500" size={28} />
-              E-COIN CONVERT TERMINAL
+              eCoin Convert Terminal
             </h1>
             <p className="text-gray-500 text-sm font-mono uppercase tracking-widest mt-1">
               On-Chain Direct Conversion · Official Global Price
@@ -231,7 +231,7 @@ export default function EBCConvertPanel() {
   translate="no"
   className="notranslate text-lg font-mono font-black text-yellow-400"
 >
-                1 E-Coin = <span className="text-white">{price > 0 ? price.toFixed(6) : "—"}</span> USDT
+                1 eCoin = <span className="text-white">{price > 0 ? price.toFixed(6) : "—"}</span> USDT
               </p>
             </div>
             {isConnected && (
@@ -249,7 +249,7 @@ export default function EBCConvertPanel() {
           transition={{ duration: 0.5, delay: 0.1 }}
           className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8"
         >
-          <StatCard title="E-Coin Price" value={price > 0 ? price.toFixed(4) : "—"} unit="USDT" color="text-yellow-500" icon={TrendingUp} />
+          <StatCard title="eCoin Price" value={price > 0 ? price.toFixed(4) : "—"} unit="USDT" color="text-yellow-500" icon={TrendingUp} />
           <StatCard title="Entry Fee" value="0.5" unit="%" color="text-green-400" icon={Activity} />
           <StatCard title="Exit Fee" value="2.5" unit="%" color="text-orange-400" icon={Zap} />
           <StatCard title="Network" value="BSC" unit="Chain" color="text-blue-400" icon={Cpu} />
@@ -275,7 +275,7 @@ export default function EBCConvertPanel() {
               <div className="flex items-center justify-between mb-8">
                 <h3 className="text-sm font-black uppercase tracking-widest flex items-center gap-2 text-yellow-400">
                   <RefreshCw size={16} />
-                  Converter eCoin
+                  Convert eCoin
                 </h3>
                 <div className={`px-3 py-1 rounded-full text-[10px] font-bold ${
                   previewLoading
@@ -298,7 +298,7 @@ export default function EBCConvertPanel() {
                     onChange={(e) => setFromToken(e.target.value as SwapToken)}
                     className="notranslate bg-yellow-500/10 border border-yellow-500/30 text-yellow-400 font-black text-xs px-3 py-1.5 rounded-xl outline-none cursor-pointer"
                   >
-                    <option value="ECOIN">E-Coin</option>
+                    <option value="ECOIN">eCoin</option>
                     <option value="USDT">USDT</option>
                   </select>
                 </div>
@@ -334,7 +334,7 @@ export default function EBCConvertPanel() {
               {/* TO BOX */}
               <div className="bg-black/20 border border-white/5 rounded-2xl p-5 mt-3">
                 <div className="flex items-center justify-between mb-3">
-                  <label className="text-[10px] text-white/40 uppercase tracking-widest font-mono">To (Estimado)</label>
+                  <label className="text-[10px] text-white/40 uppercase tracking-widest font-mono">To (Estimated)</label>
                   <select
                   translate="no"
                     value={toToken}
@@ -342,7 +342,7 @@ export default function EBCConvertPanel() {
                     className=" notranslate bg-white/5 border border-white/10 text-white/60 font-black text-xs px-3 py-1.5 rounded-xl outline-none cursor-pointer"
                   >
                     {fromToken === "ECOIN" && <option value="USDT">USDT</option>}
-                    {fromToken === "USDT"  && <option value="ECOIN">E-Coin</option>}
+                    {fromToken === "USDT"  && <option value="ECOIN">eCoin</option>}
                   </select>
                 </div>
                 <div
@@ -411,7 +411,7 @@ export default function EBCConvertPanel() {
                 disabled={!amount || !previewAllowed || parsedAmount === 0n}
                 className="w-full py-5 rounded-2xl font-black text-sm uppercase tracking-widest bg-gradient-to-r from-yellow-500 to-amber-600 text-black hover:brightness-110 transition-all shadow-lg shadow-yellow-500/20 disabled:opacity-30 disabled:cursor-not-allowed"
               >
-                {txMining ? "⛏️ Confirming..." : "Converter Agora →"}
+                {txMining ? "⛏️ Confirming..." : "Convert Now →"}
               </button>
             )}
 
@@ -482,7 +482,7 @@ export default function EBCConvertPanel() {
                   <div className={`w-2 h-2 rounded-full ${isConnected ? "bg-yellow-500 animate-pulse" : "bg-gray-700"}`} />
                   <span className="text-[10px] font-mono text-gray-500 uppercase tracking-widest">Protocol Node</span>
                 </div>
-                <span className="text-[9px] font-mono text-blue-500/40">BSC MAINNET</span>
+                <span className="text-[9px] font-mono text-blue-500/40">BNB CHAIN</span>
               </div>
 
               <div className="space-y-3 font-mono text-[11px] text-gray-400">
