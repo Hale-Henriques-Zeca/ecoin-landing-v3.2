@@ -45,7 +45,7 @@ import {
 } from "lucide-react";
 import { parseUnits } from "viem";
 import { formatUnits } from "viem";
-import { useSafeNumberInput } from "@/hooks/useSafeNumberInput";
+import { useSafeNumberInput } from "../../hooks/useSafeNumberInput";
 
 
 
