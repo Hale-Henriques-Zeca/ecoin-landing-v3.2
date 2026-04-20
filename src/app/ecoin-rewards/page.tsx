@@ -43,6 +43,11 @@ import {
   Wallet,
   ArrowUpRight,
 } from "lucide-react";
+import { parseUnits } from "viem";
+import { formatUnits } from "viem";
+import { useSafeNumberInput } from "@/hooks/useSafeNumberInput";
+
+
 
 /* ─────────────────────────────────────────────
    SUB-COMPONENTS (design atoms)
@@ -102,6 +107,8 @@ const StatusBadge = ({
   </div>
 );
 
+
+
 /* ─────────────────────────────────────────────
    MAIN COMPONENT
 ───────────────────────────────────────────── */
@@ -109,6 +116,18 @@ export default function ECoinOnChainStaking() {
   /* ================= WALLET HOOKS (SEMPRE NO TOPO) ================= */
   const { isConnected, address } = useAccount();
   const { disconnect } = useDisconnect();
+
+ 
+
+
+  const setPercentage = (percent: number) => {
+  if (!balance) return;
+
+  const value = (balance * percent) / 100;
+
+  // limita a 6 casas (boa prática UX)
+  stakeInput.setValue(value.toFixed(6));
+};
 
   const STAKING_OWNER =
     process.env.NEXT_PUBLIC_STAKING_OWNER?.toLowerCase();
@@ -126,7 +145,7 @@ export default function ECoinOnChainStaking() {
   const [mounted, setMounted] = useState(false);
 
   /* 📊 STAKING STATES */
-  const [stakeAmount, setStakeAmount] = useState("");
+  const stakeInput = useSafeNumberInput();
 
   const staking = useStreamingStaking();
 
@@ -153,6 +172,17 @@ export default function ECoinOnChainStaking() {
     query: { enabled: !!address },
   });
 
+  const { data: userBalance } = useReadContract({
+  abi: erc20Abi,
+  address: CONTRACTS.ECOIN,
+  functionName: "balanceOf",
+  args: address ? [address] : undefined,
+  chainId: 56,
+  query: { enabled: !!address },
+});
+
+ const balance = userBalance ? Number(formatUnits(userBalance, 18)) : 0;
+
   useEffect(() => {
     if (isConnected) {
       setPanelOpen(true);
@@ -176,6 +206,9 @@ export default function ECoinOnChainStaking() {
   /* ─────────────────────────────────────────────
      RENDER
   ───────────────────────────────────────────── */
+
+
+  console.log("pending:", staking.pending, typeof staking.pending);
   return (
     <div className="min-h-screen bg-[#020617] text-white selection:bg-yellow-500/30 overflow-hidden">
       {/* ── BACKGROUND ── */}
@@ -325,18 +358,16 @@ export default function ECoinOnChainStaking() {
                   className="space-y-5"
                 >
                   {/* Live Components */}
-                  <LiveRewardCounter pending={Number(staking.pending ?? 0)} />
+                  <LiveRewardCounter pending={staking.pending} />
                   <StakingSecurityPanel />
                   <RewardStreamIndicator />
                   <RewardVelocity
-                    pending={Number(staking.pending ?? 0)}
-                    totalStaked={Number(staking.total ?? 0)}
+                  pending={staking.pending}
+                  totalStaked={staking.total}
                   />
                   <ProtocolHealth1
-                    liquidity={
-                      stakingLiquidity ? Number(stakingLiquidity) / 1e18 : 0
-                    }
-                    pending={Number(staking.pending ?? 0)}
+                  liquidity={stakingLiquidity ? Number(stakingLiquidity) / 1e18 : 0}
+                  pending={staking.pending}
                   />
 
                   {/* STREAMING INFO PANEL */}
@@ -364,7 +395,7 @@ export default function ECoinOnChainStaking() {
                     </div>
 
                     {/* Fee breakdown */}
-                    {Number(staking.pending ?? 0) > 0 && (
+                    {staking.pending > 0 && (
                       <div className="bg-black/40 border border-white/5 rounded-2xl p-4 space-y-2 text-xs">
                         <div className="flex justify-between text-gray-400">
                           <span>Remuneração Bruta</span>
@@ -372,15 +403,15 @@ export default function ECoinOnChainStaking() {
                         </div>
                         <div className="flex justify-between text-red-400">
                           <span>Taxa de Saque (1%)</span>
-                          <span>
-                            -{(Number(staking.pending) * 0.01).toFixed(6)} eCoin
+                         <span>
+                          -{(staking.pending * 0.01).toFixed(6)} eCoin
                           </span>
                         </div>
                         <div className="h-px bg-white/5" />
                         <div className="flex justify-between text-emerald-400 font-bold">
                           <span>Você recebe</span>
                           <span>
-                            {(Number(staking.pending) * 0.99).toFixed(6)} eCoin
+                            {(staking.pending * 0.99).toFixed(6)} eCoin
                           </span>
                         </div>
                       </div>
@@ -449,7 +480,7 @@ export default function ECoinOnChainStaking() {
 
                   {/* CLAIM */}
                   <button
-                    disabled={Number(staking.pending) === 0}
+                    disabled={staking.pending === 0}
                     onClick={staking.claim}
                     className={`w-full py-4 rounded-2xl font-black uppercase tracking-widest text-sm transition-all ${
                       Number(staking.pending) === 0
@@ -466,8 +497,8 @@ export default function ECoinOnChainStaking() {
                   )}
 
                   {/* STAKE INPUT */}
-                  <div className="bg-[#0f172a]/80 border border-blue-500/20 rounded-[28px] p-6 backdrop-blur-xl">
-                    <div className="flex items-center justify-between mb-4">
+ <div className="bg-[#0f172a]/80 border border-blue-500/20 rounded-[28px] p-6 backdrop-blur-xl">
+ <div className="flex items-center justify-between mb-4">
                       <p className="text-[10px] font-mono text-blue-400 uppercase tracking-widest">
                         Poupar/Remover a Poupança Para a Mineração da eCoin
                       </p>
@@ -476,45 +507,77 @@ export default function ECoinOnChainStaking() {
                           {address.slice(0, 6)}…{address.slice(-4)}
                         </span>
                       )}
-                    </div>
-                    <input
-                    translate="no"
-                      type="number"
-                      value={stakeAmount}
-                      onChange={(e) => setStakeAmount(e.target.value)}
-                      placeholder="Insira o valor a Poupar…"
-                      className=" notranslate w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-xl text-white outline-none mb-5 font-mono placeholder:text-white/20"
-                    />
+                      </div> 
+ <input
+  translate="no"
+  inputMode="decimal"
+  autoComplete="off"
+  autoCorrect="off"
+  spellCheck={false}
+  value={stakeInput.value}
+  onChange={(e) => stakeInput.onChange(e.target.value)}
+  placeholder="Insira o valor a Poupar…"
+  className="notranslate w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-xl text-white outline-none mb-5 font-mono placeholder:text-white/20"
+/>
 
-                    <div className="grid grid-cols-2 gap-4">
-                      <button
-                        onClick={async () => {
-                          try {
-                            await staking.stake(stakeAmount);
-                          } catch (e: any) {
-                            alert(e?.message || "Erro no Poupar");
-                          }
-                        }}
-                        className="py-4 rounded-2xl font-black text-black bg-gradient-to-r from-[#D4AF37] to-[#F3BA2F] hover:brightness-110 transition uppercase tracking-wider text-xs"
-                      >
-                        POUPAR
-                      </button>
-                      <button
-                        onClick={async () => {
-                          try {
-                            await staking.unstake(stakeAmount);
-                          } catch (e: any) {
-                            alert(e?.message || "Erro no unstake");
-                          }
-                        }}
-                        className="py-4 rounded-2xl font-black text-red-400 border border-red-500/30 hover:border-red-400 hover:bg-red-500/5 transition uppercase tracking-wider text-xs"
-                      >
-                        REMOVER POUPANÇA
-                      </button>
-                    </div>
-                  </div>
+<div className="grid grid-cols-6 gap-2 mb-4">
+  {[1, 10, 25, 50, 75, 100].map((p) => (
+    <button
+      key={p}
+      onClick={() => setPercentage(p)}
+      className="text-[10px] py-2 rounded-lg bg-white/5 border border-white/10 hover:border-[#D4AF37] hover:text-[#D4AF37] transition"
+    >
+      {p}%
+    </button>
+  ))}
+</div>
+
+<div className="grid grid-cols-2 gap-4">
+<button
+onClick={async () => {
+  try {
+    if (!stakeInput.isValid) {
+      alert("Valor inválido");
+      return;
+    }
+
+    
+
+    await staking.stake(stakeInput.value);
+  } catch (e: any) {
+    alert(e?.message || "Erro no Poupar");
+  }
+}}
+className="py-4 rounded-2xl font-black text-black bg-gradient-to-r from-[#D4AF37] to-[#F3BA2F] hover:brightness-110 transition uppercase tracking-wider text-xs"
+>
+POUPAR
+</button>
+
+
+<button
+  onClick={async () => {
+  try {
+    if (!stakeInput.isValid) {
+      alert("Valor inválido");
+      return;
+    }
+
+   
+
+    await staking.unstake(stakeInput.value);
+  } catch (e: any) {
+    alert(e?.message || "Erro no unstake");
+  }
+}}
+className="py-4 rounded-2xl font-black text-red-400 border border-red-500/30 hover:border-red-400 hover:bg-red-500/5 transition uppercase tracking-wider text-xs"
+>
+ REMOVER POUPANÇA
+</button>
+</div>
+</div>
 
                   {/* WALLET DASHBOARD */}
+
                   <div className="bg-white/5 border border-white/10 rounded-[28px] p-6">
                     <p className="text-[10px] font-mono text-white/30 uppercase tracking-widest mb-4">
                       Visão geral da carteira
