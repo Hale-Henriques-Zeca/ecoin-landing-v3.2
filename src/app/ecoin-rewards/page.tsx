@@ -332,14 +332,14 @@ const shareNum = Number(staking.share || 0);
           />
           <StatCard
             title="Lucros"
-            value={isConnected ? staking.pending || "0" : "—"}
+            value={isConnected ? pendingNum.toFixed(6) : "—"}
             unit="eCoin"
             color="text-emerald-400"
             icon={Zap}
           />
           <StatCard
             title="Sua (%)"
-            value={isConnected ? staking.share?.toFixed(2) ?? "0" : "—"}
+            value={isConnected ? shareNum.toFixed(2) : "—"}
             unit="%"
             color="text-purple-400"
             icon={Database}
@@ -417,8 +417,8 @@ const shareNum = Number(staking.share || 0);
                       <div className="bg-white/5 border border-white/5 rounded-2xl p-4">
                         <p className="text-[10px] text-gray-500 uppercase mb-1">Por Sacar</p>
                         <p className="text-xl font-bold text-emerald-400 font-mono">
-                          {staking.pending}
-                        </p>
+                          {pendingNum.toFixed(6)}
+                          </p>
                         <p className="text-[9px] text-emerald-400/60">eCoin</p>
                       </div>
                     </div>
@@ -428,7 +428,7 @@ const shareNum = Number(staking.share || 0);
                       <div className="bg-black/40 border border-white/5 rounded-2xl p-4 space-y-2 text-xs">
                         <div className="flex justify-between text-gray-400">
                           <span>Remuneração Bruta</span>
-                          <span>{staking.pending} eCoin</span>
+                          <span>{pendingNum.toFixed(6)} eCoin</span>
                         </div>
                         <div className="flex justify-between text-red-400">
                           <span>Taxa de Saque (1%)</span>
@@ -457,7 +457,7 @@ const shareNum = Number(staking.share || 0);
                       <div className="h-2 w-full rounded-full bg-white/5 border border-white/10 overflow-hidden">
                         <div
                           className="h-full bg-gradient-to-r from-[#D4AF37] to-[#3B82F6] transition-all duration-700"
-                          style={{ width: `${staking.share}%` }}
+                          style={{ width: `${shareNum}%` }}
                         />
                       </div>
                     </div>
@@ -485,16 +485,16 @@ const shareNum = Number(staking.share || 0);
                       <div className="flex justify-between">
                         <span className="text-gray-400">Seu Saque pendente</span>
                         <span className="text-green-400 font-mono">
-                          {staking.pending}
+                          {pendingNum.toFixed(6)}
                         </span>
                       </div>
                       <div className="flex justify-between">
                         <span className="text-gray-400">lastro de Crescimento 📈</span>
                         <span className="text-white font-mono">
-                          {stakingLiquidity && Number(staking.pending) > 0
+                          {stakingLiquidity && pendingNum > 0
                             ? (
                                 (Number(stakingLiquidity) /
-                                  (Number(staking.pending) * 1e18)) *
+                                  (pendingNum * 1e18)) *
                                 100
                               ).toFixed(2)
                             : "∞"}
@@ -512,7 +512,7 @@ const shareNum = Number(staking.share || 0);
                     disabled={pendingNum === 0}
                     onClick={staking.claim}
                     className={`w-full py-4 rounded-2xl font-black uppercase tracking-widest text-sm transition-all ${
-                      Number(staking.pending) === 0
+                      pendingNum === 0
                         ? "border border-gray-700 text-gray-600 cursor-not-allowed"
                         : "border border-[#D4AF37] text-[#D4AF37] hover:bg-[#D4AF37]/10 shadow-lg shadow-[#D4AF37]/5"
                     }`}
