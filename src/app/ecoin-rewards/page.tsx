@@ -45,7 +45,31 @@ import {
 } from "lucide-react";
 import { parseUnits } from "viem";
 import { formatUnits } from "viem";
-import { useSafeNumberInput } from "../../hooks/useSafeNumberInput";
+
+
+
+function useSafeNumberInput(initial = "") {
+  const [value, setValue] = useState(initial);
+
+  const onChange = (input: string) => {
+    const raw = input
+      .replace(",", ".")
+      .replace(/[^\d.]/g, "");
+
+    if (/^\d*\.?\d*$/.test(raw)) {
+      setValue(raw);
+    }
+  };
+
+  const isValid = value && !isNaN(Number(value));
+
+  return {
+    value,
+    setValue,
+    onChange,
+    isValid,
+  };
+}
 
 
 
