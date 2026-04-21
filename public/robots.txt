@@ -1,4 +1,9 @@
+# *
 User-agent: *
 Allow: /
 
+# Host
+Host: https://ecoin.edenkingdom.org
+
+# Sitemaps
 Sitemap: https://ecoin.edenkingdom.org/sitemap.xml

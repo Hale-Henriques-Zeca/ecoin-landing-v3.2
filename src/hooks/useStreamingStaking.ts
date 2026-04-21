@@ -102,9 +102,17 @@ const allowance = await publicClient.readContract({
     });
   }
 
-  const userStake = userData ? formatUnits(userData[0], 18) : "0";
-  const total = totalStaked ? formatUnits(totalStaked, 18) : "0";
-  const pendingFormatted = pending ? formatUnits(pending, 18) : "0";
+  const userStake = userData
+  ? Number(formatUnits(userData[0], 18))
+  : 0;
+
+const total = totalStaked
+  ? Number(formatUnits(totalStaked, 18))
+  : 0;
+
+const pendingFormatted = pending
+  ? Number(formatUnits(pending, 18))
+  : 0;
 
   const share =
     Number(total) > 0
@@ -112,12 +120,12 @@ const allowance = await publicClient.readContract({
       : 0;
 
   return {
-    total,
-    userStake,
-    pending: pendingFormatted,
-    share,
-    stake,
-    unstake,
-    claim,
-  };
+  total,        
+  userStake,    
+  pending: pendingFormatted, 
+  share,
+  stake,
+  unstake,
+  claim,
+};
 }

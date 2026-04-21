@@ -173,6 +173,10 @@ export default function ECoinOnChainStaking() {
 
   const staking = useStreamingStaking();
 
+const pendingNum = Number(staking.pending || 0);
+const totalNum = Number(staking.total || 0);
+const shareNum = Number(staking.share || 0);
+
   const { data: isActive } = useReadContract({
     abi: controllerAbi,
     address: CONTRACTS.PROTOCOL_CONTROLLER,
@@ -382,16 +386,17 @@ export default function ECoinOnChainStaking() {
                   className="space-y-5"
                 >
                   {/* Live Components */}
-                  <LiveRewardCounter pending={staking.pending} />
+                  <LiveRewardCounter pending={pendingNum} />
                   <StakingSecurityPanel />
                   <RewardStreamIndicator />
                   <RewardVelocity
-                  pending={staking.pending}
-                  totalStaked={staking.total}
+                  pending={pendingNum}
+                  totalStaked={totalNum}
                   />
+
                   <ProtocolHealth1
                   liquidity={stakingLiquidity ? Number(stakingLiquidity) / 1e18 : 0}
-                  pending={staking.pending}
+                  pending={pendingNum}
                   />
 
                   {/* STREAMING INFO PANEL */}
@@ -419,7 +424,7 @@ export default function ECoinOnChainStaking() {
                     </div>
 
                     {/* Fee breakdown */}
-                    {staking.pending > 0 && (
+                    {pendingNum > 0 && (
                       <div className="bg-black/40 border border-white/5 rounded-2xl p-4 space-y-2 text-xs">
                         <div className="flex justify-between text-gray-400">
                           <span>Remuneração Bruta</span>
@@ -428,14 +433,14 @@ export default function ECoinOnChainStaking() {
                         <div className="flex justify-between text-red-400">
                           <span>Taxa de Saque (1%)</span>
                          <span>
-                          -{(staking.pending * 0.01).toFixed(6)} eCoin
+                          -{(pendingNum * 0.01).toFixed(6)} eCoin
                           </span>
                         </div>
                         <div className="h-px bg-white/5" />
                         <div className="flex justify-between text-emerald-400 font-bold">
                           <span>Você recebe</span>
                           <span>
-                            {(staking.pending * 0.99).toFixed(6)} eCoin
+                            {(pendingNum * 0.99).toFixed(6)} eCoin
                           </span>
                         </div>
                       </div>
@@ -446,7 +451,7 @@ export default function ECoinOnChainStaking() {
                       <div className="flex justify-between text-xs text-gray-400 mb-2">
                         <span>Sua Percentagem de Ganhos por segundos </span>
                         <span className="text-[#D4AF37]">
-                          {staking.share.toFixed(2)}%
+                          {shareNum.toFixed(2)}%
                         </span>
                       </div>
                       <div className="h-2 w-full rounded-full bg-white/5 border border-white/10 overflow-hidden">
@@ -504,7 +509,7 @@ export default function ECoinOnChainStaking() {
 
                   {/* CLAIM */}
                   <button
-                    disabled={staking.pending === 0}
+                    disabled={pendingNum === 0}
                     onClick={staking.claim}
                     className={`w-full py-4 rounded-2xl font-black uppercase tracking-widest text-sm transition-all ${
                       Number(staking.pending) === 0
