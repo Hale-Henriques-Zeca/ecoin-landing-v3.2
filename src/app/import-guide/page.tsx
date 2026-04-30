@@ -35,22 +35,22 @@ export default function ImportGuide() {
 
   const TOKENS = [
   {
-    symbol: "ECOIN",
-    name: "E-Coin Token (BEP-20)",
+    symbol: "E-Coin",
+    name: "eCoin (BEP-20)",
     address: ECOIN,
-    logo: "/tokens/ecoin.png",
+    logo: "/crypto/ecoin1.png",
   },
   {
     symbol: "USDT",
     name: "USDT (BEP-20)",
     address: USDT,
-    logo: "/tokens/usdt.png",
+    logo: "/crypto/usdt2.png",
   },
   {
-    symbol: "EUSD",
-    name: "E-USD (BEP-20)",
+    symbol: "E-USD",
+    name: "eDollar (E-USD BEP-20)",
     address: EUSD,
-    logo: "/tokens/eusd.png",
+    logo: "/crypto/edollar.png",
   },
 ];
 
@@ -74,39 +74,52 @@ export default function ImportGuide() {
       </div>
 <BlockchainDeviceAlert />
       {/* 📋 CONTRATOS DE ELITE */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {[
-          { name: "E-Coin Token (BEP-20)", address: ECOIN, icon: <Cpu className="text-[#D4AF37]" /> },
-          { name: "USDT (BEP-20)", address: USDT, icon: <div className="text-emerald-500 font-bold">S</div> },
-           { name: "E-USD (BEP-20)", address: EUSD, icon: <div className="text-emerald-500 font-bold">S</div> }
-        ].map((token) => (
-          <div key={token.name} className="bg-white/5 border border-white/10 rounded-[2rem] p-6 backdrop-blur-xl relative overflow-hidden group">
-            <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
-              <Copy size={60} />
-            </div>
-            <div className="flex items-center gap-3 mb-4">
-              <img
-  src={token.logo}
-  alt={token.symbol}
-  className="w-8 h-8 rounded-full object-contain"
-/>
-              <h3 className="font-bold text-sm uppercase tracking-widest">{token.name}</h3>
-            </div>
-            <div className="flex flex-col gap-3">
-              <code className="bg-black/60 p-4 rounded-xl text-[10px] md:text-xs text-gray-300 border border-white/5 break-all font-mono">
-                {token.address}
-              </code>
-              <button
-                onClick={() => copyToClipboard(token.address, token.name)}
-                className="w-full py-3 bg-[#D4AF37] text-black rounded-xl font-bold text-xs flex items-center justify-center gap-2 hover:brightness-110 active:scale-95 transition-all"
-              >
-                {copied === token.name ? <Check size={16} /> : <Copy size={16} />}
-                {copied === token.name ? "Copiado!" : "Copiar Contrato"}
-              </button>
-            </div>
-          </div>
-        ))}
+<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+  {TOKENS.map((token) => (
+    <div
+      key={token.symbol}
+      className="bg-white/5 border border-white/10 rounded-[2rem] p-6 backdrop-blur-xl relative overflow-hidden group"
+    >
+      {/* efeito decorativo */}
+      <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+        <Copy size={60} />
       </div>
+
+      {/* HEADER TOKEN */}
+      <div className="flex items-center gap-3 mb-4">
+        <img
+          src={token.logo}
+          alt={token.symbol}
+          className="w-8 h-8 rounded-full object-contain"
+          onError={(e) => {
+            // fallback caso imagem falhe
+            (e.currentTarget as HTMLImageElement).src =
+              "https://via.placeholder.com/32?text=?";
+          }}
+        />
+
+        <h3 className="font-bold text-sm uppercase tracking-widest">
+          {token.name}
+        </h3>
+      </div>
+
+      {/* ADDRESS + COPY */}
+      <div className="flex flex-col gap-3">
+        <code className="bg-black/60 p-4 rounded-xl text-[10px] md:text-xs text-gray-300 border border-white/5 break-all font-mono">
+          {token.address}
+        </code>
+
+        <button
+          onClick={() => copyToClipboard(token.address, token.name)}
+          className="w-full py-3 bg-[#D4AF37] text-black rounded-xl font-bold text-xs flex items-center justify-center gap-2 hover:brightness-110 active:scale-95 transition-all"
+        >
+          {copied === token.name ? <Check size={16} /> : <Copy size={16} />}
+          {copied === token.name ? "Copiado!" : "Copiar Contrato"}
+        </button>
+      </div>
+    </div>
+  ))}
+</div>
 
       {/* 🚀 PASSO A PASSO INTERATIVO */}
       <div className="space-y-6">

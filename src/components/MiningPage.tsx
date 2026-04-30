@@ -48,6 +48,7 @@ import {
 import { formatUnits } from "viem";
 import { RewardsChart } from "@/components/RewardsChart";
 import { useMiningStaking } from "@/hooks/useMiningStaking";
+import { useEcGas } from "@/hooks/useEcGas";
 
 
 
@@ -73,6 +74,7 @@ export default function MiningPage() {
 
   const { isConnected, address } = useAccount();
       const { disconnect } = useDisconnect();
+      const gas = useEcGas(address);
     
       const TRADINGGASVAULT_OWNER =
       process.env.NEXT_PUBLIC_TRADINGGASVAULT_OWNER?.toLowerCase();
@@ -102,7 +104,63 @@ const publicClient = usePublicClient({ chainId: 56 });
 const [chartData, setChartData] = useState([]);
 
 
+const { data: gasPerUSDT } = useReadContract({
+  abi: CONTRACTS.MINING_STAKING_ABI,
+  address: CONTRACTS.MINING_STAKING,
+  functionName: "gasPerUSDT",
+});
 
+
+
+
+const gasBalance = gas.gasBalance ? Number(formatUnits(gas.gasBalance, 18)) : 0;
+
+const preview = gas.preview;
+
+const willMine = preview ? preview[4] : false;
+const gasRequired = preview ? Number(formatUnits(preview[2], 18)) : 0;
+
+const previewUSDT =
+  preview ? Number(formatUnits(preview[0], 18)) : 0;
+
+const previewEUSD =
+  preview ? Number(formatUnits(preview[1], 18)) : 0;
+
+const totalPending =
+  preview
+    ? Number(formatUnits(preview[0], 18)) +
+      Number(formatUnits(preview[1], 18))
+    : 0;
+
+// consumo por segundo (estimado)
+const gasPerSecond =
+  mining.rewardRate * gasPerUSDT;
+
+// tempo restante
+const secondsLeft =
+  gasPerSecond > 0 ? gasBalance / gasPerSecond : 0;
+
+const hoursLeft = secondsLeft / 3600;
+
+const gasRate = gasPerUSDT ? Number(gasPerUSDT) : 0;
+
+
+const isLosing = !willMine && totalPending > 0;
+
+const dailyReward =
+  mining.userStake * mining.rewardRate * 86400;
+
+const dailyGasCost = dailyReward * gasPerUSDT;
+
+useEffect(() => {
+  if (gasBalance < gasRequired && gasBalance > 0) {
+    console.warn("⚠️ Gas baixo!");
+  }
+
+  if (gasBalance === 0) {
+    console.error("⛔ Mining parado!");
+  }
+}, [gasBalance]);
 
 
   const { writeContractAsync } = useWriteContract();
@@ -184,14 +242,31 @@ const canClaim = lastClaim
   ? Date.now() / 1000 > Number(lastClaim) + 600
   : true;
 
-  // Simulação de dados do contrato
-  const stats = {
+  // 🔥 Dual rewards (novo modelo)
+const pendingUSDT =
+  pending ? Number(formatUnits(pending[0], 18)) : 0;
+
+const pendingEUSD =
+  pending ? Number(formatUnits(pending[1], 18)) : 0;
+
+
+// Simulação de dados do contrato (ALINHADO)
+const stats = {
   totalStaked: `${mining.total} E-COIN`,
   myStake: `${mining.userStake} E-COIN`,
-  pendingRewards: `${mining.pending} E-COIN`,
+
+  // 👇 AGORA SEPARADO
+  pendingUSDT: `${pendingUSDT.toFixed(4)} USDT`,
+  pendingEUSD: `${pendingEUSD.toFixed(4)} eUSD`,
+
+  // 👇 opcional (se quiseres manter total combinado)
+  pendingTotal: `${(pendingUSDT + pendingEUSD).toFixed(4)} TOTAL`,
+
   totalStakers: mining.totalStakers.toString(),
-  apy: ">=Dynamic🔥24.5% dia 🚀 "
+  apy: ">=Dynamic🔥24.5% dia 🚀 ",
 };
+
+
 
 useEffect(() => {
   async function loadChart() {
@@ -252,6 +327,7 @@ useEffect(() => {
           </div>
         </div>
 <BlockchainDeviceAlert />
+
         {/* GRID DE ESTATÍSTICAS */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
           <StatCard label="Depósitos Globais" value={stats.totalStaked} icon={ShieldCheck} color="[#D4AF37]" />
@@ -267,6 +343,79 @@ useEffect(() => {
 
   <RewardsChart data={chartData} />
 </div>
+
+<div className="bg-white/5 border border-white/10 rounded-3xl p-6 mb-8">
+
+  <h3 className="text-white font-bold mb-4 flex items-center gap-2">
+    <Fuel size={18} className="text-[#D4AF37]" />
+    Gas Vault (ecGas)
+  </h3>
+
+  {/* BALANCE */}
+  <div className="flex justify-between items-center mb-4">
+    <span className="text-white/50 text-xs uppercase">Gas Balance</span>
+    <span className="text-[#00FF9C] font-bold">
+      {gasBalance.toFixed(2)} ecGas
+    </span>
+  </div>
+
+  {/* STATUS */}
+  <div className="mb-4">
+    {willMine ? (
+      <div className="text-emerald-400 text-xs font-bold">
+        🟢 Mining ativo
+      </div>
+    ) : (
+      <div className="text-red-400 text-xs font-bold">
+        🔴 Sem gas — não estás a ganhar rewards
+      </div>
+    )}
+  </div>
+
+  {isLosing && (
+  <div className="mt-3 p-3 rounded-xl bg-red-500/10 border border-red-500/20">
+    <div className="text-red-400 text-xs font-bold">
+      ⚠️ Estás a perder rewards agora
+    </div>
+    <div className="text-[10px] text-white/50">
+      Recarrega ecGas para voltar a ganhar
+    </div>
+  </div>
+)}
+
+
+  {/* WARNING */}
+  {!willMine && (
+    <div className="text-[10px] text-yellow-400 mb-4">
+      ⚠️ Estás a perder recompensas neste momento
+    </div>
+  )}
+
+  {/* BUY INPUT */}
+  <div className="flex gap-3">
+    <input
+      type="number"
+      placeholder="USDT"
+      value={amount}
+      onChange={(e) => setAmount(e.target.value)}
+      className="flex-1 bg-black/40 border border-white/10 rounded-xl px-4 py-2 text-white"
+    />
+
+    <button
+      onClick={() => gas.buyGas(parseUnits(amount, 18))}
+      className="bg-[#D4AF37] text-black px-4 py-2 rounded-xl font-bold"
+    >
+      Comprar
+    </button>
+  </div>
+
+  <p className="text-[10px] text-white/30 mt-2">
+    1 USDT = 1000 ecGas
+  </p>
+
+</div>
+
+
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
 
           {/* PAINEL DE RECOMPENSAS (CLAIM) */}
@@ -282,15 +431,75 @@ useEffect(() => {
 
                 <div className="text-center py-10 border-y border-white/5 mb-8">
                   <span className="text-xs text-white/40 uppercase tracking-widest block mb-2">Disponível para Saque</span>
-                  <div className="text-5xl font-black text-[#D4AF37] mb-1">{stats.pendingRewards}</div>
-                  <span className="text-xs font-mono text-white/20">E-COIN TOKEN</span>
+                  <div className="space-y-2 mb-1">
+  <div className="text-3xl font-black text-green-400">
+    {pendingUSDT.toFixed(4)} USDT
+  </div>
+
+  <div className="text-2xl font-bold text-blue-400">
+    {pendingEUSD.toFixed(4)} eDollar
+  </div>
+</div>
+                  {!willMine && (
+  <div className="text-red-400 text-xs mt-2">
+    ⚠️ Sem ecGas → recompensas pausadas
+  </div>
+)}
+
+<div className="mt-4">
+  <div className="flex justify-between text-[10px] text-white/40 mb-1">
+    <span>Autonomia de Gas</span>
+    <span>{hoursLeft.toFixed(2)}h</span>
+  </div>
+
+  <div className="w-full h-2 bg-white/10 rounded-full overflow-hidden">
+    <div
+      className="h-full bg-gradient-to-r from-green-400 to-yellow-400"
+      style={{
+        width: `${Math.min((hoursLeft / 24) * 100, 100)}%`,
+      }}
+    />
+  </div>
+</div>
+
+
+<div className="text-[10px] text-white/40 mt-2">
+  Gas necessário atual: {gasRequired.toFixed(2)} ecGas
+</div>
+
+<div className="mt-4 text-[11px] text-white/50 space-y-1">
+  <div>
+    📈 Ganho estimado/dia: 
+    <span className="text-green-400 ml-1">
+      {dailyReward.toFixed(2)} USDT
+    </span>
+  </div>
+
+  <div>
+    ⛽ Gas necessário/dia:
+    <span className="text-yellow-400 ml-1">
+      {dailyGasCost.toFixed(2)} ecGas
+    </span>
+  </div>
+</div>
+
+<button
+  className={`${
+    !willMine
+      ? "bg-red-500"
+      : "bg-[#D4AF37]"
+  }`}
+>
+  {willMine ? "Mining ativo" : "Recarregar Gas"}
+</button>
+
                 </div>
               </div>
 
               <div className="space-y-4">
                 <button
   onClick={mining.claim}
-  disabled={!mining.canClaim || mining.pending === 0}
+  disabled={!mining.canClaim || (pendingUSDT === 0 && pendingEUSD === 0)}
   className={`w-full py-5 rounded-2xl font-black uppercase text-sm tracking-[0.2em] transition-all
     ${
       !mining.canClaim || mining.pending === 0
