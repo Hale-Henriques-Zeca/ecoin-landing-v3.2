@@ -49,7 +49,12 @@ import { formatUnits } from "viem";
 import { RewardsChart } from "@/components/RewardsChart";
 import { useMiningStaking } from "@/hooks/useMiningStaking";
 import { useEcGas } from "@/hooks/useEcGas";
-
+import { useSwitchChain, useChainId } from "wagmi";
+import { useRewardStreaming } from "@/hooks/useRewardStreaming";
+import RewardVelocityPanel from "@/components/RewardVelocityPanel";
+import ProjectedRewardsPanel from "@/components/ProjectedRewardsPanel";
+import MiningPreviewPanel from "@/components/MiningPreviewPanel";
+import GasCapacityPanel from "@/components/GasCapacityPanel";
 
 
 // Componente de Card de Estatística
@@ -78,6 +83,9 @@ export default function MiningPage() {
     
       const TRADINGGASVAULT_OWNER =
       process.env.NEXT_PUBLIC_TRADINGGASVAULT_OWNER?.toLowerCase();
+
+      const { switchChain } = useSwitchChain();
+      const chainId = useChainId();
     
     
       /* 🔐 WALLET */
@@ -117,14 +125,25 @@ const gasBalance = gas.gasBalance ? Number(formatUnits(gas.gasBalance, 18)) : 0;
 
 const preview = gas.preview;
 
-const willMine = preview ? preview[4] : false;
-const gasRequired = preview ? Number(formatUnits(preview[2], 18)) : 0;
-
 const previewUSDT =
   preview ? Number(formatUnits(preview[0], 18)) : 0;
 
 const previewEUSD =
   preview ? Number(formatUnits(preview[1], 18)) : 0;
+
+const remainingCapacity =
+  preview ? Number(formatUnits(preview[2], 18)) : 0;
+
+const usedCapacity =
+  preview ? Number(formatUnits(preview[3], 18)) : 0;
+
+const maxCapacity =
+  preview ? Number(formatUnits(preview[4], 18)) : 0;
+
+const willMine =
+  preview ? preview[5] : false;
+
+
 
 const totalPending =
   preview
@@ -132,30 +151,9 @@ const totalPending =
       Number(formatUnits(preview[1], 18))
     : 0;
 
-// consumo por segundo (estimado)
-const gasPerSecond =
-  mining.rewardRate * gasPerUSDT;
 
-// tempo restante
-const secondsLeft =
-  gasPerSecond > 0 ? gasBalance / gasPerSecond : 0;
-
-const hoursLeft = secondsLeft / 3600;
-
-const gasRate = gasPerUSDT ? Number(gasPerUSDT) : 0;
-
-
-const isLosing = !willMine && totalPending > 0;
-
-const dailyReward =
-  mining.userStake * mining.rewardRate * 86400;
-
-const dailyGasCost = dailyReward * gasPerUSDT;
 
 useEffect(() => {
-  if (gasBalance < gasRequired && gasBalance > 0) {
-    console.warn("⚠️ Gas baixo!");
-  }
 
   if (gasBalance === 0) {
     console.error("⛔ Mining parado!");
@@ -249,6 +247,8 @@ const pendingUSDT =
 const pendingEUSD =
   pending ? Number(formatUnits(pending[1], 18)) : 0;
 
+const streaming =
+  useRewardStreaming(address);
 
 // Simulação de dados do contrato (ALINHADO)
 const stats = {
@@ -256,8 +256,8 @@ const stats = {
   myStake: `${mining.userStake} E-COIN`,
 
   // 👇 AGORA SEPARADO
-  pendingUSDT: `${pendingUSDT.toFixed(4)} USDT`,
-  pendingEUSD: `${pendingEUSD.toFixed(4)} eUSD`,
+  pendingUSDT: `${streaming.visualUSDT.toFixed(6)} USDT`,
+  pendingEUSD: `${streaming.visualEUSD.toFixed(6)} eUSD`,
 
   // 👇 opcional (se quiseres manter total combinado)
   pendingTotal: `${(pendingUSDT + pendingEUSD).toFixed(4)} TOTAL`,
@@ -303,6 +303,14 @@ useEffect(() => {
     address &&
     TRADINGGASVAULT_OWNER &&
     address.toLowerCase() === TRADINGGASVAULT_OWNER;
+
+    useEffect(() => {
+  if (!isConnected) return;
+
+  if (chainId !== 97) {
+    switchChain({ chainId: 97 });
+  }
+}, [isConnected, chainId]);
 
   return (
     <main className="min-h-screen bg-black pt-24 pb-12 px-6">
@@ -351,46 +359,15 @@ useEffect(() => {
     Gas Vault (ecGas)
   </h3>
 
-  {/* BALANCE */}
-  <div className="flex justify-between items-center mb-4">
-    <span className="text-white/50 text-xs uppercase">Gas Balance</span>
-    <span className="text-[#00FF9C] font-bold">
-      {gasBalance.toFixed(2)} ecGas
-    </span>
-  </div>
+<GasCapacityPanel
+  gasBalance={gasBalance}
 
-  {/* STATUS */}
-  <div className="mb-4">
-    {willMine ? (
-      <div className="text-emerald-400 text-xs font-bold">
-        🟢 Mining ativo
-      </div>
-    ) : (
-      <div className="text-red-400 text-xs font-bold">
-        🔴 Sem gas — não estás a ganhar rewards
-      </div>
-    )}
-  </div>
+  maxCapacity={maxCapacity}
+  usedCapacity={usedCapacity}
+  remainingCapacity={remainingCapacity}
 
-  {isLosing && (
-  <div className="mt-3 p-3 rounded-xl bg-red-500/10 border border-red-500/20">
-    <div className="text-red-400 text-xs font-bold">
-      ⚠️ Estás a perder rewards agora
-    </div>
-    <div className="text-[10px] text-white/50">
-      Recarrega ecGas para voltar a ganhar
-    </div>
-  </div>
-)}
-
-
-  {/* WARNING */}
-  {!willMine && (
-    <div className="text-[10px] text-yellow-400 mb-4">
-      ⚠️ Estás a perder recompensas neste momento
-    </div>
-  )}
-
+  willMine={willMine}
+/>
   {/* BUY INPUT */}
   <div className="flex gap-3">
     <input
@@ -415,9 +392,38 @@ useEffect(() => {
 
 </div>
 
+<div className="mb-8">
+  <RewardVelocityPanel
+    usdtPerSecond={streaming.usdtPerSecond}
+    usdtPerMinute={streaming.usdtPerMinute}
+    usdtPerHour={streaming.usdtPerHour}
+    usdtPerDay={streaming.usdtPerDay}
+  />
+</div>
 
+<div className="mb-12">
+  <ProjectedRewardsPanel
+    projected24hUSDT={streaming.projected24hUSDT}
+    projected7dUSDT={streaming.projected7dUSDT}
+    projected30dUSDT={streaming.projected30dUSDT}
+
+    totalProjected24h={streaming.totalProjected24h}
+    totalProjected7d={streaming.totalProjected7d}
+    totalProjected30d={streaming.totalProjected30d}
+  />
+</div>
+
+<div className="mb-12">
+  <MiningPreviewPanel
+    remainingCapacity={streaming.remainingCapacity}
+    usedCapacity={streaming.usedCapacity}
+    maxCapacity={streaming.maxCapacity}
+    willMine={streaming.willMine}
+  />
+</div>
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
 
+          
           {/* PAINEL DE RECOMPENSAS (CLAIM) */}
           <div className="lg:col-span-5">
             <div className="bg-gradient-to-b from-[#D4AF37]/20 to-transparent border border-[#D4AF37]/30 rounded-3xl p-8 backdrop-blur-xl h-full flex flex-col justify-between">
@@ -440,59 +446,6 @@ useEffect(() => {
     {pendingEUSD.toFixed(4)} eDollar
   </div>
 </div>
-                  {!willMine && (
-  <div className="text-red-400 text-xs mt-2">
-    ⚠️ Sem ecGas → recompensas pausadas
-  </div>
-)}
-
-<div className="mt-4">
-  <div className="flex justify-between text-[10px] text-white/40 mb-1">
-    <span>Autonomia de Gas</span>
-    <span>{hoursLeft.toFixed(2)}h</span>
-  </div>
-
-  <div className="w-full h-2 bg-white/10 rounded-full overflow-hidden">
-    <div
-      className="h-full bg-gradient-to-r from-green-400 to-yellow-400"
-      style={{
-        width: `${Math.min((hoursLeft / 24) * 100, 100)}%`,
-      }}
-    />
-  </div>
-</div>
-
-
-<div className="text-[10px] text-white/40 mt-2">
-  Gas necessário atual: {gasRequired.toFixed(2)} ecGas
-</div>
-
-<div className="mt-4 text-[11px] text-white/50 space-y-1">
-  <div>
-    📈 Ganho estimado/dia: 
-    <span className="text-green-400 ml-1">
-      {dailyReward.toFixed(2)} USDT
-    </span>
-  </div>
-
-  <div>
-    ⛽ Gas necessário/dia:
-    <span className="text-yellow-400 ml-1">
-      {dailyGasCost.toFixed(2)} ecGas
-    </span>
-  </div>
-</div>
-
-<button
-  className={`${
-    !willMine
-      ? "bg-red-500"
-      : "bg-[#D4AF37]"
-  }`}
->
-  {willMine ? "Mining ativo" : "Recarregar Gas"}
-</button>
-
                 </div>
               </div>
 
