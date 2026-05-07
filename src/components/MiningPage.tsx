@@ -413,14 +413,6 @@ useEffect(() => {
   />
 </div>
 
-<div className="mb-12">
-  <MiningPreviewPanel
-    remainingCapacity={streaming.remainingCapacity}
-    usedCapacity={streaming.usedCapacity}
-    maxCapacity={streaming.maxCapacity}
-    willMine={streaming.willMine}
-  />
-</div>
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
 
           
