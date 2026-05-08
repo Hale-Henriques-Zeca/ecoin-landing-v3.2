@@ -59,7 +59,15 @@ export default function GasCapacityPanel({
       <div className="relative z-10">
 
         {/* HEADER */}
-        <div className="flex items-center justify-between mb-6">
+        <div className="
+  flex
+  flex-col
+  sm:flex-row
+  sm:items-center
+  sm:justify-between
+  gap-4
+  mb-6
+">
 
           <div className="flex items-center gap-3">
 
@@ -96,7 +104,7 @@ export default function GasCapacityPanel({
               items-center
               gap-2
               text-emerald-400
-              text-xs
+              text-[10px] sm:text-xs
               font-bold
             ">
               <ShieldCheck size={16} />
@@ -104,13 +112,17 @@ export default function GasCapacityPanel({
             </div>
           ) : (
             <div className="
-              flex
-              items-center
-              gap-2
-              text-red-400
-              text-xs
-              font-bold
-            ">
+  flex
+  items-center
+  gap-2
+  text-red-400
+  text-[10px]
+  sm:text-xs
+  font-bold
+  whitespace-nowrap
+  self-start
+  sm:self-auto
+">
               <AlertTriangle size={16} />
               EXHAUSTED
             </div>
