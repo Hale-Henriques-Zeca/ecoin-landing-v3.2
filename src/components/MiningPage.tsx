@@ -252,8 +252,8 @@ const streaming =
 
 // Simulação de dados do contrato (ALINHADO)
 const stats = {
-  totalStaked: `${mining.total} E-COIN`,
-  myStake: `${mining.userStake} E-COIN`,
+  totalStaked: `${mining.total} eCoin`,
+  myStake: `${mining.userStake} eCoin`,
 
   // 👇 AGORA SEPARADO
   pendingUSDT: `${streaming.visualUSDT.toFixed(6)} USDT`,
@@ -263,7 +263,7 @@ const stats = {
   pendingTotal: `${(pendingUSDT + pendingEUSD).toFixed(4)} TOTAL`,
 
   totalStakers: mining.totalStakers.toString(),
-  apy: ">=Dynamic🔥24.5% dia 🚀 ",
+  share: `${mining.share.toFixed(6)}%🚀`,
 };
 
 
@@ -341,7 +341,7 @@ useEffect(() => {
           <StatCard label="Depósitos Globais" value={stats.totalStaked} icon={ShieldCheck} color="[#D4AF37]" />
           <StatCard label="Mineradores Ativos" value={stats.totalStakers} icon={TrendingUp} color="emerald-400" />
           <StatCard label="Meu Depósito" value={stats.myStake} icon={Coins} color="blue-400" />
-          <StatCard label="Ganhos Estimados" value={stats.apy} icon={Zap} color="orange-400" />
+          <StatCard label="Ganhos Estimados" value={stats.share} icon={Zap} color="purple-400" />
         </div>
 
 <div className="bg-white/5 border border-white/10 rounded-2xl p-6 mb-8">
