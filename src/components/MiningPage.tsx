@@ -369,22 +369,45 @@ useEffect(() => {
   willMine={willMine}
 />
   {/* BUY INPUT */}
-  <div className="flex flex-col sm:flex-row gap-3">
-    <input
-      type="number"
-      placeholder="USDT"
-      value={amount}
-      onChange={(e) => setAmount(e.target.value)}
-      className="flex-1 bg-black/40 border border-white/10 rounded-xl px-4 py-2 text-white"
-    />
+<div className="flex flex-col sm:flex-row gap-3">
 
-    <button
-      onClick={() => gas.buyGas(parseUnits(amount, 18))}
-      className="bg-[#D4AF37] text-black px-4 py-2 rounded-xl font-bold"
-    >
-      Comprar
-    </button>
-  </div>
+  <input
+    type="number"
+    placeholder="USDT"
+    value={amount}
+    onChange={(e) => setAmount(e.target.value)}
+    className="
+      flex-1
+      bg-black/40
+      border
+      border-white/10
+      rounded-xl
+      px-4
+      py-3
+      text-white
+      w-full
+    "
+  />
+
+  <button
+    onClick={() => gas.buyGas(parseUnits(amount, 18))}
+    className="
+      bg-[#D4AF37]
+      text-black
+      px-6
+      py-3
+      rounded-xl
+      font-black
+      whitespace-nowrap
+      min-w-[140px]
+      hover:scale-[1.02]
+      transition-all
+    "
+  >
+    Comprar Gas
+  </button>
+
+</div>
 
   <p className="text-[10px] text-white/30 mt-2">
     1 USDT = 1000 ecGas
