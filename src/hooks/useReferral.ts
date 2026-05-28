@@ -3,7 +3,7 @@ import { publicClient } from "@/lib/publicClient";
 import { unifiedReferralAbi } from "@/lib/abis/unifiedReferralAbi";
 import { CONTRACTS } from "@/lib/contracts/contracts";
 import { isAddress } from "viem";
-import { bscTestnet} from "wagmi/chains";
+import { bsc} from "wagmi/chains";
 
 export function useReferral() {
   const { address } = useAccount();
@@ -24,7 +24,7 @@ export function useReferral() {
   abi: unifiedReferralAbi,
   functionName: "bindInviter",
   args: [upline],
-  chain: bscTestnet,
+  chain: bsc,
   account: address as `0x${string}`,
 });
   }
@@ -116,7 +116,7 @@ async function getScore(): Promise<bigint> {
     abi: unifiedReferralAbi,
     functionName: "claim",
     args: [token],
-    chain: bscTestnet,
+    chain: bsc,
     account: address as `0x${string}`,
   });
 }
