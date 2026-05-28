@@ -11,13 +11,24 @@ import {
 
 import { useReferral } from "@/hooks/useReferral";
 import { useDexWallet } from "@/contexts/DexWalletContext";
+import { CONTRACTS } from "@/lib/contracts/contracts";
 
 type Rewards = {
   usdt: bigint;
   eusd: bigint;
+  ecoin: bigint;
 };
 
 export default function ReferralDashboard() {
+
+  const USDT =
+  CONTRACTS.USDT as `0x${string}`;
+
+const EUSD =
+  CONTRACTS.EDOLLAR as `0x${string}`;
+
+  const ECOIN =
+  CONTRACTS.ECOIN as `0x${string}`;
 
   const { address, isConnected } = useDexWallet();
 
@@ -31,10 +42,11 @@ export default function ReferralDashboard() {
     useState<string | null>(null);
 
   const [pending, setPending] =
-    useState<Rewards>({
-      usdt: 0n,
-      eusd: 0n,
-    });
+  useState<Rewards>({
+    usdt: 0n,
+    eusd: 0n,
+    ecoin: 0n,
+  });
 
   const [loading, setLoading] =
     useState(false);
@@ -50,13 +62,22 @@ export default function ReferralDashboard() {
 
       setInviter(inviterData);
 
-      const rewards =
-        await getPendingRewards();
+      const usdtRewards =
+  await getPendingRewards(USDT);
 
-      setPending({
-        usdt: rewards[0],
-        eusd: rewards[1],
-      });
+const eusdRewards =
+  await getPendingRewards(EUSD);
+
+  const ecoinRewards =
+  await getPendingRewards(ECOIN);
+
+setPending({
+  usdt: usdtRewards,
+  eusd: eusdRewards,
+  ecoin: ecoinRewards,
+});
+
+
     }
 
     load();
@@ -78,8 +99,13 @@ export default function ReferralDashboard() {
   const pendingEUSD =
     Number(pending.eusd) / 1e18;
 
+  const pendingECOIN =
+  Number(pending.ecoin) / 1e18;
+
   const total =
-    pendingUSDT + pendingEUSD;
+  pendingUSDT +
+  pendingEUSD +
+  pendingECOIN;
 
   return (
 
@@ -122,17 +148,13 @@ export default function ReferralDashboard() {
 
             <div>
 
-              <h3 className="
-                text-xl
-                font-black
-                text-white
-              ">
-                Referral Vault
-              </h3>
+              <h3 className="text-lg font-bold text-white tracking-wide">
+  Referral Vault
+</h3>
 
-              <p className="text-xs text-white/40">
-                Dual reward affiliate engine
-              </p>
+<p className="text-[10px] text-white/40">
+  Neural affiliate engine
+</p>
 
             </div>
 
@@ -170,13 +192,18 @@ export default function ReferralDashboard() {
 
           </div>
 
-          <p className="
-            text-xs
-            text-white
-            break-all
-          ">
-            {address}
-          </p>
+         <p
+  translate="no"
+  title={address}
+  className="
+    notranslate
+    text-[11px]
+    text-white/70
+    truncate
+  "
+>
+  {address}
+</p>
 
         </div>
 
@@ -198,11 +225,15 @@ export default function ReferralDashboard() {
             Upline
           </p>
 
-          <p className="
-            text-xs
-            text-blue-300
-            break-all
-          ">
+          <p
+  translate="no"
+  className="
+    notranslate
+    text-xs
+    text-blue-300
+    break-all
+  "
+>
 
             {
               inviter &&
@@ -228,22 +259,30 @@ export default function ReferralDashboard() {
             p-5
           ">
 
-            <p className="
-              text-xs
-              uppercase
-              text-white/40
-              mb-2
-            ">
-              Pending USDT
-            </p>
+            <p
+  translate="no"
+  className="
+    notranslate
+    text-xs
+    uppercase
+    text-white/40
+    mb-2
+  "
+>
+  Pending USDT
+</p>
 
-            <h2 className="
-              text-2xl
-              font-black
-              text-green-400
-            ">
-              {pendingUSDT.toFixed(6)}
-            </h2>
+            <h2
+  translate="no"
+  className="
+    notranslate
+    text-xs
+    font-black
+    text-green-400
+  "
+>
+  {pendingUSDT.toFixed(6)}
+</h2>
 
           </div>
 
@@ -253,72 +292,75 @@ export default function ReferralDashboard() {
             border
             border-blue-500/10
             bg-blue-500/5
-            p-5
+            p-3
           ">
 
-            <p className="
-              text-xs
-              uppercase
-              text-white/40
-              mb-2
-            ">
-              Pending eDollar
-            </p>
+            <p
+  translate="no"
+  className="
+    notranslate
+    text-xs
+    uppercase
+    text-white/40
+    mb-2
+  "
+>
+  Pending eDollar
+</p>
 
-            <h2 className="
-              text-2xl
-              font-black
-              text-blue-400
-            ">
-              {pendingEUSD.toFixed(6)}
-            </h2>
+            <h2
+  translate="no"
+  className="
+    notranslate
+    text-xs
+    font-black
+    text-blue-400
+  "
+>
+  {pendingEUSD.toFixed(6)}
+</h2>
 
           </div>
 
         </div>
 
-        {/* TOTAL */}
-        <div className="
-          rounded-2xl
-          border
-          border-[#D4AF37]/10
-          bg-[#D4AF37]/5
-          p-5
-        ">
+        {/* eCOIN */}
+<div className="flex flex-col items-center justify-center">
+<div className="
+  rounded-2xl
+  border
+  border-[#D4AF37]/10
+  bg-[#D4AF37]/5
+  p-5
+">
 
-          <div className="
-            flex
-            items-center
-            justify-between
-          ">
+  <p
+    translate="no"
+    className="
+      notranslate
+      text-xs
+      uppercase
+      text-white/40
+      mb-2
+    "
+  >
+    Pending eCoin
+  </p>
 
-            <div className="flex items-center gap-2">
+  <h2
+    translate="no"
+    className="
+      notranslate
+      text-xl
+      font-black
+      text-[#D4AF37]
+    "
+  >
+    {pendingECOIN.toFixed(6)}
+  </h2>
 
-              <Gift
-                size={18}
-                className="text-[#D4AF37]"
-              />
-
-              <span className="
-                text-sm
-                text-white/50
-              ">
-                Total Rewards
-              </span>
-
-            </div>
-
-            <span className="
-              text-2xl
-              font-black
-              text-[#D4AF37]
-            ">
-              {total.toFixed(4)}
-            </span>
-
-          </div>
-
-        </div>
+</div>
+</div>
 
         {/* CLAIM */}
         <button
@@ -329,20 +371,33 @@ export default function ReferralDashboard() {
 
             try {
 
-              setLoading(true);
+  setLoading(true);
 
-              await claimRewards();
+  if (pendingUSDT > 0) {
 
-              setPending({
-                usdt: 0n,
-                eusd: 0n,
-              });
+    await claimRewards(USDT);
+  }
 
-            } finally {
+  if (pendingEUSD > 0) {
+  await claimRewards(EUSD);
+}
 
-              setLoading(false);
-            }
+if (pendingECOIN > 0) {
+  await claimRewards(ECOIN);
+}
+
+  setPending({
+  usdt: 0n,
+  eusd: 0n,
+  ecoin: 0n,
+});
+
+} finally {
+
+  setLoading(false);
+}
           }}
+
           className={`
             w-full
             py-4

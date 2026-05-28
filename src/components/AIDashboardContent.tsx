@@ -161,7 +161,7 @@ useEffect(() => {
 
 
 
-const CONTRACT_ADDRESS = "0x3241C6DdB16Edb447a100b2251B58f6F15d68c03"; // vault
+const CONTRACT_ADDRESS = "0x4642d050F13633D36C6dD2aCF6e68573eBE9AB84"; // vault
 const USDT_ADDRESS = "0x07E7DC0b28448F67C3c349C8A83C5165dB8A29E6"; // testnet USDT
 
 
@@ -777,7 +777,7 @@ if (!mounted) return null;
       type="number"
       value={stakeAmount}
       onChange={(e) => setStakeAmount(e.target.value)}
-      placeholder="Enter USDT or ecGas..."
+      placeholder="Enter USDT for ecGas..."
       className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-xl text-white outline-none mb-5 font-mono placeholder:text-white/20 relative z-10"
     />
 
@@ -791,12 +791,6 @@ if (!mounted) return null;
   {loading ? "Processing..." : "DEPOSIT (USDT → GAS)"}
 </button>
 
-      <button
-  onClick={handleRedeem}
-  className="py-4 rounded-2xl font-black text-red-400 border border-red-500/30"
->
-  REDEEM (GAS → E-Coin)
-</button>
     </div>
 
     {/* 🔋 GAS BAR + REAL DATA */}

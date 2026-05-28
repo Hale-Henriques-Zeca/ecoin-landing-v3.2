@@ -1,9 +1,9 @@
 import { useAccount, useWalletClient } from "wagmi";
 import { publicClient } from "@/lib/publicClient";
-import { referralAbi } from "@/lib/abis/referralAbi";
-import { CONTRACTS } from "@/lib/contracts";
+import { unifiedReferralAbi } from "@/lib/abis/unifiedReferralAbi";
+import { CONTRACTS } from "@/lib/contracts/contracts";
 import { isAddress } from "viem";
-import { bsc } from "wagmi/chains";
+import { bscTestnet} from "wagmi/chains";
 
 export function useReferral() {
   const { address } = useAccount();
@@ -21,10 +21,10 @@ export function useReferral() {
 
     await walletClient.writeContract({
   address: CONTRACTS.REFERRAL as `0x${string}`,
-  abi: referralAbi,
+  abi: unifiedReferralAbi,
   functionName: "bindInviter",
   args: [upline],
-  chain: bsc,
+  chain: bscTestnet,
   account: address as `0x${string}`,
 });
   }
@@ -33,46 +33,99 @@ export function useReferral() {
   async function getInviter(): Promise<string | null> {
   if (!address) return null;
 
-  return (await publicClient.readContract({
-    address: CONTRACTS.REFERRAL as `0x${string}`,
-    abi: referralAbi,
-    functionName: "inviterOf",
-    args: [address as `0x${string}`],
-  })) as string;
+  try {
+
+    return await publicClient.readContract({
+      address: CONTRACTS.REFERRAL as `0x${string}`,
+      abi: unifiedReferralAbi,
+      functionName: "inviterOf",
+      args: [address as `0x${string}`],
+    }) as string;
+
+  } catch (error) {
+
+    console.error("getInviter error:", error);
+
+    return null;
+  }
 }
 
-  async function getPendingRewards(): Promise<bigint> {
+async function getPendingRewards(
+  token: `0x${string}`
+): Promise<bigint> {
+
   if (!address) return 0n;
 
-  return (await publicClient.readContract({
-    address: CONTRACTS.REFERRAL as `0x${string}`,
-    abi: referralAbi,
-    functionName: "pendingRewards",
-    args: [address as `0x${string}`],
-  })) as bigint;
+  try {
+
+    return await publicClient.readContract({
+      address: CONTRACTS.REFERRAL as `0x${string}`,
+      abi: unifiedReferralAbi,
+      functionName: "pendingRewards",
+      args: [
+        address as `0x${string}`,
+        token,
+      ],
+    }) as bigint;
+
+  } catch (error) {
+
+    console.error(
+      "getPendingRewards error:",
+      error
+    );
+
+    return 0n;
+  }
 }
 
+async function getScore(): Promise<bigint> {
+
+  if (!address) return 0n;
+
+  try {
+
+    return await publicClient.readContract({
+      address: CONTRACTS.REFERRAL as `0x${string}`,
+      abi: unifiedReferralAbi,
+      functionName: "getScore",
+      args: [address as `0x${string}`],
+    }) as bigint;
+
+  } catch (error) {
+
+    console.error(
+      "getScore error:",
+      error
+    );
+
+    return 0n;
+  }
+}
 
   /* ===================== CLAIM ===================== */
-  async function claimRewards(): Promise<void> {
-    if (!walletClient || !address) {
-      throw new Error("Wallet not connected");
-    }
-
-    await walletClient.writeContract({
-  address: CONTRACTS.REFERRAL as `0x${string}`,
-  abi: referralAbi,
-  functionName: "claim",
-  args: [],
-  chain: bsc,
-  account: address as `0x${string}`,
-});
+ async function claimRewards(
+  token: `0x${string}`
+): Promise<void> {
+  if (!walletClient || !address) {
+    throw new Error("Wallet not connected");
   }
 
-  return {
-    bindInviter,        // ✅ AGORA EXISTE
-    getInviter,
-    getPendingRewards,
-    claimRewards,
-  };
+  await walletClient.writeContract({
+    address: CONTRACTS.REFERRAL as `0x${string}`,
+    abi: unifiedReferralAbi,
+    functionName: "claim",
+    args: [token],
+    chain: bscTestnet,
+    account: address as `0x${string}`,
+  });
+}
+
+ return {
+  bindInviter,
+  getInviter,
+  getPendingRewards,
+  claimRewards,
+  getScore,
+};
 }

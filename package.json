@@ -51,7 +51,7 @@
     "react-qr-code": "^2.0.18",
     "react-simple-maps": "^3.0.0",
     "react-snowfall": "^2.4.0",
-    "recharts": "^3.6.0",
+    "recharts": "^3.8.1",
     "swr": "^2.4.1",
     "three": "^0.182.0",
     "viem": "^2.8.9",

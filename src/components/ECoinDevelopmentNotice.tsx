@@ -188,11 +188,40 @@ export default function ECoinDevelopmentNotice() {
 <div className="relative z-10 mt-14 mb-10 flex items-center gap-4">
   <div className="h-px flex-1 bg-gradient-to-r from-transparent via-[#D4AF37]/40 to-transparent" />
   <span className="text-[11px] sm:text-xs uppercase tracking-[0.35em] text-[#D4AF37]/80">
-    EdenKingDom Coin (E-Coin) Market Listing Preparation
+    EdenKingDom Coin (eCoin) Market Listing
   </span>
   <div className="h-px flex-1 bg-gradient-to-r from-transparent via-[#D4AF37]/40 to-transparent" />
 </div>
-<ECoinProtocolDashboard />
+
+
+
+{/* ================= PANCAKESWAP PANEL ================= */}
+
+<div className="bg-black text-white p-8 rounded-xl mt-10 text-center">
+
+<h3 className="text-1xl text-[#D4AF37] font-semibold mb-4">
+E-Coin / USDT Pair — PancakeSwap
+</h3>
+
+<p className="mb-6">
+
+The E-Coin pair is already pre-listed on PancakeSwap.
+
+</p>
+
+<a
+href="https://pancakeswap.finance/swap?chain=bsc&inputCurrency=0xDf69235019cc416dd5Be75dfc0eDc922aB4b5964&outputCurrency=0x55d398326f99059fF775485246999027B3197955"
+target="_blank"
+className="inline-block px-8 py-4 bg-[#D4AF37] text-black font-semibold rounded-full hover:bg-white transition"
+>
+
+Access E-Coin / USDT Pair →
+
+</a>
+
+</div>
+
+
       {/* Fundo visual */}
       <div className="absolute inset-0 -z-10">
         <div className="absolute top-0 left-1/2 w-[600px] h-[600px] -translate-x-1/2 bg-[#D4AF37]/10 rounded-full blur-[160px]" />

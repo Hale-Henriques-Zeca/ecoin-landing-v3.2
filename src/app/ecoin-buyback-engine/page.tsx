@@ -1,26 +1,25 @@
 "use client";
 
 import { motion } from "framer-motion";
+import Link from "next/link";
 
-export default function ECoinBuyBackExplanation() {
+export default function ECoinSmartPoolsExplanation() {
 
 return (
 
 <section className="relative bg-black text-white py-24 px-6 overflow-hidden">
 
-{/* background */}
+{/* BACKGROUND */}
 
 <div className="absolute inset-0 -z-10">
 
-<div className="absolute top-0 left-1/2 w-[600px] h-[600px] -translate-x-1/2 bg-[#D4AF37]/10 rounded-full blur-[160px]" />
+<div className="absolute top-0 left-1/2 w-[700px] h-[700px] -translate-x-1/2 bg-cyan-500/10 rounded-full blur-[180px]" />
 
-<div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-[#1C2D5A]/30 rounded-full blur-[120px]" />
+<div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-emerald-500/10 rounded-full blur-[140px]" />
 
 </div>
 
-
 <div className="max-w-6xl mx-auto text-center">
-
 
 {/* TITLE */}
 
@@ -28,161 +27,248 @@ return (
 initial={{ opacity:0, y:-20 }}
 animate={{ opacity:1, y:0 }}
 transition={{ duration:1 }}
-className="text-3xl sm:text-4xl md:text-5xl font-bold text-[#D4AF37] mb-6"
+className="text-3xl sm:text-4xl md:text-5xl font-bold text-cyan-400 mb-6"
 >
 
-E-Coin Price Alert & Buy-Back Collective
+eCoin AI Smart Reward Infrastructure
 
 </motion.h1>
 
+<p className="text-gray-300 max-w-3xl mx-auto text-sm sm:text-base mb-16 leading-relaxed">
 
-<p className="text-gray-300 max-w-3xl mx-auto text-sm sm:text-base mb-16">
-
-Conecte-se ao <strong>ECP (EdenKingDom Coin Price)</strong> e receba
-notificações inteligentes quando surgirem oportunidades estratégicas
-de Buy-Back no ecossistema E-Coin.
+A infraestrutura inteligente da eCoin foi construída para distribuir
+liquidez, estabilidade e recompensas através de Smart Pools,
+Reward Streams e mecanismos automáticos alimentados pelas taxas
+internas do ecossistema, ecGas e roteamento dinâmico de liquidez.
 
 </p>
-
-
 
 {/* ================= EXPLANATION ================= */}
 
-<div className="mt-16 text-gray-300 max-w-4xl mx-auto text-sm sm:text-base space-y-8 text-left">
-
+<div className="mt-16 text-gray-300 max-w-4xl mx-auto text-sm sm:text-base space-y-10 text-left">
 
 <div>
 
-<h3 className="text-[#D4AF37] font-semibold text-lg mb-2">
+<h3 className="text-cyan-400 font-semibold text-lg mb-2">
 
-💡 O que é o ECP?
+⚡ O que são os AI Smart Reward Pools?
 
 </h3>
 
-<p>
+<p className="leading-relaxed">
 
-O <strong>EdenKingDom Coin Price (ECP)</strong> é o painel oficial
-de monitoramento da E-Coin. Ele acompanha o preço do ativo em tempo
-real e identifica momentos estratégicos de entrada e saída no mercado.
+Os AI Smart Reward Pools são pools inteligentes de distribuição
+de liquidez e recompensas contínuas alimentados automaticamente
+por taxas do ecossistema, reciclagem de claims, treasury routing,
+ecGas e streams de liquidez protocolar.
 
-Quando o preço apresenta quedas relevantes, o sistema envia alertas
-automáticos para a comunidade participar de campanhas sincronizadas
-de <strong>Buy-Back coletivo</strong>.
+Ao invés de depender de campanhas manuais de Buy-Back,
+o protocolo opera através de mecanismos autônomos de estabilidade
+e streaming financeiro on-chain.
 
 </p>
 
 </div>
 
+{/* SLOGAN FINAL */}
 
+<motion.div
+  initial={{ opacity: 0, y: 20 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ delay: 0.5, duration: 1 }}
+  className="mt-16 text-center text-cyan-400 font-semibold italic leading-relaxed"
+>
 
-<div>
+“Quando o mercado oscila, a infraestrutura responde.
+A E-Coin transforma participação em estabilidade,
+e estabilidade em oportunidade sustentável.”
 
-<h3 className="text-[#D4AF37] font-semibold text-lg mb-2">
+</motion.div>
 
-⚙️ Como funciona?
+<div className="mt-12 border border-cyan-500/20 bg-cyan-500/5 rounded-2xl p-6">
+
+<h3 className="text-cyan-400 font-semibold text-xl mb-4">
+
+🌍 Muito além de pagamentos e trading
 
 </h3>
 
-<p>
+<p className="text-gray-300 leading-relaxed">
 
-Após registrar-se no sistema de alertas, os participantes passam a
-receber notificações por Email ou SMS sempre que o algoritmo detectar
-uma oportunidade de Buy-Back.
+A eCoin não foi construída apenas para transferências,
+pagamentos ou especulação de mercado.
 
-Esses sinais permitem que a comunidade recompre tokens em momentos
-estratégicos, fortalecendo a liquidez do protocolo e criando pressão
-positiva de preço no mercado.
+Os AI Smart Reward Pools transformam a moeda em uma
+infraestrutura produtiva de liquidez e geração de rendimento.
+
+Isso significa que participantes do ecossistema podem:
+
+</p>
+
+<ul className="list-disc list-inside mt-4 space-y-2 text-gray-300">
+
+<li>Gerar renda passiva através de staking inteligente.</li>
+
+<li>Participar da estabilidade e retenção de liquidez do protocolo.</li>
+
+<li>Fortalecer a sustentabilidade financeira do ecossistema.</li>
+
+<li>Contribuir para a estabilidade de preço da moeda.</li>
+
+<li>Participar de pools inteligentes alimentados por atividade económica real.</li>
+
+<li>Transformar participação em rendimento sustentável.</li>
+
+</ul>
+
+<p className="mt-5 text-gray-400 italic leading-relaxed">
+
+Ao unir utilidade financeira, staking,
+reward streaming e liquidez dinâmica,
+a eCoin evolui de uma simples moeda digital
+para uma infraestrutura económica inteligente.
 
 </p>
 
 </div>
 
+<motion.div
+initial={{ opacity: 0, y: 20 }}
+animate={{ opacity: 1, y: 0 }}
+transition={{ delay: 0.5, duration: 1 }}
+className="mt-16 text-center text-cyan-400 font-semibold italic"
+>
 
+“Liquidez inteligente. Recompensas contínuas.
+Infraestrutura financeira construída para o futuro.”
+
+</motion.div>
 
 <div>
 
-<h3 className="text-[#D4AF37] font-semibold text-lg mb-2">
 
-🚀 Benefícios
+
+<h3 className="text-cyan-400 font-semibold text-lg mb-2">
+
+🧠 Como funciona a infraestrutura?
 
 </h3>
 
-<ul className="list-disc list-inside space-y-2">
+<p className="leading-relaxed">
 
-<li>Receber alertas inteligentes de preço e sinais de Buy-Back em tempo real.</li>
+As taxas geradas dentro do ecossistema são redistribuídas
+automaticamente entre treasury, reward pools,
+referral systems, staking buffers e protocolos de liquidez.
 
-<li>Participar de campanhas coletivas de recompra sincronizadas da E-Coin na baixa.</li>
+O sistema utiliza Reward Buffers inteligentes que liberam
+recompensas gradualmente através de streams contínuos,
+mantendo estabilidade, previsibilidade e sustentabilidade
+da liquidez protocolar.
 
-<li>Fortalecer a liquidez e estabilidade do ecossistema  e evite liquidações de contas de traders pequenos.</li>
+</p>
 
-<li>Obter recompensas através de mecanismos de time-lock.</li>
+</div>
 
-<li>Participar do crescimento sustentável da E-Coin.</li>
+<div>
 
-<li>Torne-se parte do movimento “De trader para trader, de holder para holder. De investidor em ativos digitais para investidor em ativos digitais”.</li>
+<h3 className="text-cyan-400 font-semibold text-lg mb-2">
+
+⛽ ecGas & Liquidity Engine
+
+</h3>
+
+<p className="leading-relaxed">
+
+As compras de ecGas alimentam diretamente a infraestrutura
+de capacidade de mineração e os Smart Reward Pools.
+
+Isso transforma atividade econômica real do ecossistema
+em geração sustentável de liquidez e recompensas
+para os participantes do protocolo.
+
+</p>
+
+</div>
+
+<div>
+
+<h3 className="text-cyan-400 font-semibold text-lg mb-2">
+
+🚀 Benefícios da Infraestrutura
+
+</h3>
+
+<ul className="list-disc list-inside space-y-2 leading-relaxed">
+
+<li>Reward Streaming contínuo alimentado pelo ecossistema.</li>
+
+<li>Liquidez dinâmica distribuída automaticamente.</li>
+
+<li>Reciclagem inteligente de taxas e claims.</li>
+
+<li>Infraestrutura sustentável de staking.</li>
+
+<li>Buffers de liquidez inteligentes com distribuição gradual.</li>
+
+<li>Integração automática com Treasury e ecGas.</li>
+
+<li>Participação em pools inteligentes de recompensas.</li>
+
+<li>Maior estabilidade protocolar e eficiência de liquidez.</li>
 
 </ul>
 
 </div>
+<p className="mt-2 text-sm sm:text-base italic text-gray-400 leading-relaxed">
 
- {/* SLOGAN FINAL */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5, duration: 1 }}
-          className="mt-16 text-center text-[#D4AF37] font-semibold italic"
-        >
-          “Quando o mercado fala, a E-Coin responde.  
-          Ganhe com o tempo — compre na baixa, cresça na alta.”
-        </motion.div>
+“De trader para trader.
+De holder para holder.
+De participante para participante.
+Construindo uma infraestrutura financeira sustentável
+para investidores em ativos digitais.”
+
+</p>
 </div>
 
 
 
-{/* ================= SEPARATOR ================= */}
+{/* SEPARATOR */}
 
 <div className="relative z-10 mt-20 mb-14 flex items-center gap-4">
 
-<div className="h-px flex-1 bg-gradient-to-r from-transparent via-[#D4AF37]/40 to-transparent" />
+<div className="h-px flex-1 bg-gradient-to-r from-transparent via-cyan-500/40 to-transparent" />
 
-<span className="text-[11px] sm:text-xs uppercase tracking-[0.35em] text-[#D4AF37]/80">
+<span className="text-[11px] sm:text-xs uppercase tracking-[0.35em] text-cyan-400/80">
 
-Smart Pool
+AI Smart Pools
 
 </span>
 
-<div className="h-px flex-1 bg-gradient-to-r from-transparent via-[#D4AF37]/40 to-transparent" />
+<div className="h-px flex-1 bg-gradient-to-r from-transparent via-cyan-500/40 to-transparent" />
 
 </div>
 
+{/* SMART POOL CARD */}
 
-
-{/* ================= SMART POOL CARD ================= */}
-
-<div className="w-full max-w-5xl mx-auto rounded-2xl border border-[#D4AF37]/25 bg-black/50 backdrop-blur-md p-8 shadow-lg">
+<div className="w-full max-w-5xl mx-auto rounded-2xl border border-cyan-500/20 bg-black/50 backdrop-blur-md p-8 shadow-lg">
 
 <div className="text-center mb-8">
 
-<h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-[#D4AF37]">
+<h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-cyan-400">
 
-E-Coin Buy-Back Smart Pool
+Streaming Liquidity Infrastructure
 
 </h3>
 
 <p className="mt-2 text-sm sm:text-base italic text-gray-400">
 
-“De trader para trader, de holder para holder, de investidor
-em ativos digitais para investidor em ativos digitais.”
+AI-powered reward distribution and autonomous liquidity routing.
 
 </p>
 
 </div>
 
-
-
-{/* TABLE */}
-
-<div className="border border-[#D4AF37]/30 rounded-xl overflow-hidden">
+<div className="border border-cyan-500/20 rounded-xl overflow-hidden">
 
 <table className="w-full text-left">
 
@@ -190,9 +276,9 @@ em ativos digitais para investidor em ativos digitais.”
 
 <tr>
 
-<th className="p-4 text-[#D4AF37] text-lg">
+<th className="p-4 text-cyan-400 text-lg">
 
-📘 Fluxo completo do Buy-Back
+📘 Fluxo da Infraestrutura Inteligente
 
 </th>
 
@@ -200,8 +286,7 @@ em ativos digitais para investidor em ativos digitais.”
 
 </thead>
 
-
-<tbody className="divide-y divide-[#D4AF37]/10 bg-black/50">
+<tbody className="divide-y divide-cyan-500/10 bg-black/50">
 
 <tr>
 
@@ -209,19 +294,19 @@ em ativos digitais para investidor em ativos digitais.”
 
 <ol className="list-decimal list-inside space-y-2">
 
-<li>O investidor conecta sua carteira digital.</li>
+<li>O utilizador conecta sua carteira Web3.</li>
 
-<li>Seleciona a quantidade de E-Coin para Buy-Back.</li>
+<li>Participa do ecossistema através de staking ou ecGas.</li>
 
-<li>Define um período de Time-Lock.</li>
+<li>As taxas do protocolo alimentam os Reward Buffers.</li>
 
-<li>O Smart Contract bloqueia os tokens temporariamente.</li>
+<li>O sistema distribui streams contínuos de liquidez.</li>
 
-<li>Durante o bloqueio ocorre geração de rendimento interno.</li>
+<li>Claims reciclados reforçam a sustentabilidade do pool.</li>
 
-<li>Parte dos tokens é direcionada ao Smart Pool.</li>
+<li>Treasury e referral systems recebem distribuição automática.</li>
 
-<li>O investidor recebe o principal + recompensas.</li>
+<li>O protocolo mantém estabilidade e liquidez dinâmica.</li>
 
 </ol>
 
@@ -233,19 +318,38 @@ em ativos digitais para investidor em ativos digitais.”
 
 </table>
 
-</div>
+<p className="mt-8 italic text-cyan-400 font-semibold text-center leading-relaxed">
 
-
-
-<p className="mt-8 italic text-[#D4AF37] font-semibold text-center">
-
-“Construído por um trader. Sustentado por holders.
+“Construído por um trader.
+Sustentado por holders.
 Empoderando investidores em ativos digitais.”
 
 </p>
+</div>
+
+<div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
+
+<Link
+href="/ecoin-hub"
+className="px-8 py-4 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white font-semibold transition-all duration-300"
+>
+
+Open eCoin Hub
+
+</Link>
+
+<Link
+href="/Savings"
+className="px-8 py-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-semibold transition-all duration-300"
+>
+
+Open Savings Pools
+
+</Link>
 
 </div>
 
+</div>
 
 </div>
 

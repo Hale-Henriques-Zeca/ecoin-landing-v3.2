@@ -6,7 +6,7 @@ import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { motion } from "framer-motion";
 import { Pickaxe, ShieldCheck, Wallet, Zap, ChevronRight,  Network, ArrowRightLeft,  Activity,  Cpu, Coins } from "lucide-react";
 import Link from "next/link";
-
+import TestnetProvider from "@/components/TestnetProvider";
 
 
 // O componente que você já tem com o design da imagem
@@ -169,7 +169,7 @@ export default function MiningPortal() {
                     className="group relative px-12 py-4 rounded-full font-black text-black
                     bg-gradient-to-r from-[#D4AF37] to-[#F5F5F5] hover:scale-105 transition-all duration-300 shadow-[0_0_40px_rgba(212,175,55,0.4)]"
                   >
-                    ATURIZAR MINERAÇÃO NEURAL WEB3
+                    COMEÇAR A MINERAÇÃO NEURAL WEB3
                   </button>
                 )}
               </ConnectButton.Custom>

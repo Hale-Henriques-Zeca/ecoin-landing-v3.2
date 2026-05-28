@@ -18,6 +18,7 @@ type Props = {
   remainingCapacity: number;
 
   willMine: boolean;
+  stakeActive: boolean;
 };
 
 export default function GasCapacityPanel({
@@ -28,6 +29,7 @@ export default function GasCapacityPanel({
   remainingCapacity,
 
   willMine,
+  stakeActive,
 }: Props) {
 
   // 🔥 ROI PROGRESS
@@ -35,6 +37,20 @@ export default function GasCapacityPanel({
     maxCapacity > 0
       ? (usedCapacity / maxCapacity) * 100
       : 0;
+
+      const formatGas = (value: number) => {
+
+  if (value >= 1000000) {
+    return `${(value / 1000000).toFixed(2)}M`;
+  }
+
+  if (value >= 1000) {
+    return `${(value / 1000).toFixed(2)}k`;
+  }
+
+  return value.toFixed(9);
+};
+
 
   return (
     <motion.div
@@ -98,36 +114,34 @@ export default function GasCapacityPanel({
 
           </div>
 
-          {willMine ? (
-            <div className="
-              flex
-              items-center
-              gap-2
-              text-emerald-400
-              text-[10px] sm:text-xs
-              font-bold
-            ">
-              <ShieldCheck size={16} />
-              ACTIVE
-            </div>
-          ) : (
-            <div className="
-  flex
-  items-center
-  gap-2
-  text-red-400
-  text-[10px]
-  sm:text-xs
-  font-bold
-  whitespace-nowrap
-  self-start
-  sm:self-auto
-">
-              <AlertTriangle size={16} />
-              EXHAUSTED
-            </div>
-          )}
+          {/* STAKE STATUS */}
+  <div
+    className={`
+      flex
+      items-center
+      gap-2
+      px-3
+      py-1
+      rounded-full
+      text-[10px]
+      sm:text-xs
+      font-bold
+      border
+      ${
+        stakeActive
+          ? "bg-blue-500/10 text-blue-400 border-blue-500/20"
+          : "bg-gray-500/10 text-gray-400 border-gray-500/20"
+      }
+    `}
+  >
+    <ShieldCheck size={14} />
 
+    {stakeActive
+      ? "STAKE ACTIVE"
+      : "STAKE INACTIVE"}
+  </div>
+
+  
         </div>
 
         {/* ecGas BALANCE */}
@@ -160,7 +174,7 @@ export default function GasCapacityPanel({
               text-lg
               font-black
             ">
-              {gasBalance.toFixed(2)}
+              {formatGas(gasBalance)}
             </span>
 
           </div>
@@ -188,7 +202,7 @@ export default function GasCapacityPanel({
               font-black
               text-[#D4AF37]
             ">
-              {maxCapacity.toFixed(2)}
+              {maxCapacity.toFixed(9)}
             </h2>
 
             <p className="text-[10px] text-white/30 mt-1">
@@ -215,7 +229,7 @@ export default function GasCapacityPanel({
               font-black
               text-red-400
             ">
-              {usedCapacity.toFixed(2)}
+              {usedCapacity.toFixed(9)}
             </h2>
 
             <p className="text-[10px] text-white/30 mt-1">
@@ -242,7 +256,7 @@ export default function GasCapacityPanel({
               font-black
               text-green-400
             ">
-              {remainingCapacity.toFixed(2)}
+              {remainingCapacity.toFixed(9)}
             </h2>
 
             <p className="text-[10px] text-white/30 mt-1">
@@ -275,7 +289,7 @@ export default function GasCapacityPanel({
               text-xs
               font-bold
             ">
-              {roiProgress.toFixed(0)}%
+              {roiProgress.toFixed(9)}%
             </span>
 
           </div>
@@ -328,10 +342,12 @@ export default function GasCapacityPanel({
             border
             p-5
             ${
-              willMine
-                ? "border-green-500/20 bg-green-500/5"
-                : "border-red-500/20 bg-red-500/5"
-            }
+  remainingCapacity <= 0
+    ? "border-red-500/20 bg-red-500/5"
+    : willMine
+      ? "border-green-500/20 bg-green-500/5"
+      : "border-red-500/20 bg-red-500/5"
+}
           `}
         >
 
@@ -344,35 +360,113 @@ export default function GasCapacityPanel({
             <div>
 
               <h3
-                className={`
-                  text-sm
-                  font-black
-                  ${
-                    willMine
-                      ? "text-green-400"
-                      : "text-red-400"
-                  }
-                `}
-              >
-                {willMine
-                  ? "🟢 Mining Active"
-                  : "🔴 Mining Paused"}
+  className={`
+    text-sm
+    font-black
+    ${
+      remainingCapacity <= 0
+        ? "text-red-400"
+        : willMine
+          ? "text-green-400"
+          : "text-red-400"
+    }
+  `}
+>
+ {willMine
+  ? "🟢 Mining Active"
+  : "🔴 Mining Paused"}
               </h3>
 
               <p className="text-[11px] text-white/40 mt-1">
 
-                {willMine
-                  ? "Capacity available for reward accumulation."
-                  : "Recharge ecGas to unlock more mining capacity."
-                }
+                {
+  remainingCapacity <= 0
+    ? "Mining rewards exceeded your ecGas capacity. Recharge ecGas to continue mining."
+    : willMine
+      ? "Mining Capacity available for reward accumulation."
+      : stakeActive
+        ? "Purchase ecGas to resume mining rewards."
+        : "Stake eCoin to activate mining."
+}
 
               </p>
 
             </div>
 
           </div>
+          
 
         </div>
+
+        {/* OVERFLOW PROTECTION */}
+<div
+  className="
+    mt-6
+    rounded-2xl
+    border
+    border-cyan-500/20
+    bg-cyan-500/5
+    p-5
+  "
+>
+
+  <div className="flex items-start gap-3">
+
+    <div
+      className="
+        w-12
+        h-12
+        rounded-xl
+        bg-cyan-500/10
+        flex
+        items-center
+        justify-center
+      "
+    >
+      ♻️
+    </div>
+
+    <div className="flex-1">
+
+      <h3 className="text-cyan-400 font-black text-sm uppercase tracking-wide">
+        Overflow Protection Active
+      </h3>
+
+      <p className="text-[11px] text-white/40 mt-1 leading-relaxed">
+        Excess mining rewards exceeding your ecGas capacity are automatically recycled back into the reward pool instead of being lost.
+      </p>
+
+      {/* OPTIONAL LIVE STATUS */}
+      {
+        remainingCapacity <= 0 && (
+          <div
+            className="
+              mt-3
+              inline-flex
+              items-center
+              gap-2
+              px-3
+              py-1
+              rounded-full
+              bg-cyan-500/10
+              border
+              border-cyan-500/20
+              text-cyan-300
+              text-[10px]
+              font-bold
+              uppercase
+            "
+          >
+            ♻ Rewards Recycling Enabled
+          </div>
+        )
+      }
+
+    </div>
+
+  </div>
+
+</div>
 
       </div>
 

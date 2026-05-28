@@ -12,7 +12,7 @@ import {
 import { erc20Abi } from "viem";
 import { CONTRACTS, GOVERNANCE_SAFE } from "@/config/dexContracts";
 import { useBalance } from "wagmi";
-import { bscMainnet } from '@/lib/chains';
+import { bsc} from '@/lib/chains';
 
 type DexWalletState = {
   address?: string;
@@ -75,7 +75,7 @@ const usdtBalance = useReadContract({
   abi: erc20Abi,
   functionName: "balanceOf",
   args: address ? [address] : undefined,
-  chainId: bscMainnet.id,
+  chainId: bsc.id,
   query: { enabled: !!address },
 });
 

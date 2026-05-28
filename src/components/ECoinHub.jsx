@@ -1,5 +1,3 @@
-"use client"
-
 import React, { useState, useEffect } from 'react';
 import { Shield, Zap, TrendingUp, Lock, Coins, Cpu, Award, RefreshCw, ChevronRight } from 'lucide-react';
 
@@ -11,6 +9,20 @@ export default function ECoinHub() {
   const [totalNetworkStake, setTotalNetworkStake] = useState(4859203);
   const [rewardsEarned, setRewardsEarned] = useState(34.82);
   const [isLive, setIsLive] = useState(true);
+
+
+
+  const [gasCapacity, setGasCapacity] =
+  useState(20000);
+
+const [gasConsumed, setGasConsumed] =
+  useState(6200);
+
+const [rewardPool, setRewardPool] =
+  useState(482000);
+
+const [dailyProjection, setDailyProjection] =
+  useState(48.2);
 
   // Simulação de recompensas subindo ao vivo (Efeito "Vivo" de PoS)
   useEffect(() => {
@@ -110,6 +122,29 @@ export default function ECoinHub() {
             </div>
           </div>
 
+
+          <div className="bg-slate-900/50 border border-slate-800 p-5 rounded-2xl transition-all duration-300 hover:border-cyan-500/40 hover:scale-[1.02]">
+
+  <div className="flex justify-between items-start mb-3">
+
+    <p className="text-xs font-medium text-slate-400 uppercase tracking-wider">
+      Mining Capacity
+    </p>
+
+    <Zap className="w-4 h-4 text-cyan-400" />
+
+  </div>
+
+  <p className="text-2xl font-bold text-cyan-400 mb-1">
+    {(gasCapacity - gasConsumed).toLocaleString()}
+  </p>
+
+  <p className="text-xs text-slate-500">
+    Remaining Neural Capacity
+  </p>
+
+</div>
+
           {/* ÁREA DE HISTÓRICO / COMPARAÇÃO RÁPIDA */}
           <div className="bg-gradient-to-b from-slate-900 to-slate-950 border border-slate-800/80 rounded-2xl p-6">
             <h3 className="text-sm font-bold text-slate-300 mb-4 uppercase tracking-wider">Métricas Globais da eCoin Network</h3>
@@ -138,6 +173,30 @@ export default function ECoinHub() {
             </div>
           </div>
         </div>
+
+        <div className="flex justify-between items-center p-5 rounded-2xl bg-slate-900/40 border border-slate-800">
+
+  <div className="flex items-center gap-4">
+
+    <Award className="w-5 h-5 text-emerald-400" />
+
+    <div>
+      <p className="font-bold">
+        Streaming Reward Pool
+      </p>
+
+      <p className="text-xs text-slate-500">
+        Live reward liquidity buffer
+      </p>
+    </div>
+
+  </div>
+
+  <p className="font-black text-emerald-400">
+    {rewardPool.toLocaleString()} eCoin
+  </p>
+
+</div>
 
         {/* CARD 2: INTERAÇÃO DE DELEGATE/STAKE (ESTILO BINANCE PREMIUM) */}
         <div className="bg-gradient-to-b from-slate-900 via-slate-900 to-slate-950 border border-slate-800 rounded-2xl p-6 flex flex-col justify-between shadow-xl relative">

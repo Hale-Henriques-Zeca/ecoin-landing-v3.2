@@ -1,7 +1,10 @@
-import { createPublicClient, http } from "viem";
-import { bscMainnet } from '@/lib/chains';
+import { createPublicClient, fallback, http } from "viem";
+import { bsc } from "viem/chains";
 
 export const publicClient = createPublicClient({
-  chain: bscMainnet,
-  transport: http(),
+  chain: bsc,
+
+  transport: fallback([
+    http("https://bsc-dataseed.bnbchain.org"),
+  ]),
 });

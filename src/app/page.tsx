@@ -20,8 +20,7 @@ import Hero from "@/sections/Hero";
 import EcoinCarousel from "@/components/EcoinCarousel";
 import LiquidityPanel from "@/components/LiquidityPanel";
 import ECoinHubPage from "@/components/ECoinHubPage";
-import BuyBackSmartPoolSection from "@/components/BuyBackSmartPoolSection";
-import ECoinBuybackInfo from "@/components/ECoinBuybackinfo";
+import NeuralArbitragePanel from "@/components/NeuralArbitragePanel";
 import BuyBackSmartPoolDashboard from "@/components/BuyBackSmartPoolDashboard";
 import ECoinPriceSyncInfo from "@/components/ECoinPriceSyncInfo";
 import EBCConvertSection from "@/components/EBCConvertSection"
@@ -47,7 +46,6 @@ export default function Home() {
       <AITradingCard />
        <ECoinDevelopmentNotice />
        <LiquidityPanel />
-<ECoinTreasuryFlowInfo />
 <Chart /> 
        <div className="relative z-10 mt-14 mb-10 flex items-center gap-4">
   <div className="h-px flex-1 bg-gradient-to-r from-transparent via-[#D4AF37]/40 to-transparent" />
@@ -57,7 +55,6 @@ export default function Home() {
   <div className="h-px flex-1 bg-gradient-to-r from-transparent via-[#D4AF37]/40 to-transparent" />
 </div>
         <ECoinBenefitsInfo />
-      <EBCConvertSection />
       {/* SEPARADOR*/}
 <div className="relative z-10 mt-14 mb-10 flex items-center gap-4">
   <div className="h-px flex-1 bg-gradient-to-r from-transparent via-[#D4AF37]/40 to-transparent" />
@@ -67,9 +64,6 @@ export default function Home() {
   <div className="h-px flex-1 bg-gradient-to-r from-transparent via-[#D4AF37]/40 to-transparent" />
 </div>
       <EFTEBuySellPanel />
-      <ECoinRewardsInfo />
-      <ECoinOnChainStaking />
-      
       
       <ECoinHubPage />
       <EcoinAISection />
@@ -118,8 +112,15 @@ export default function Home() {
       
       <BuyBackSmartPoolDashboard />
       <ECoinPriceSyncInfo />
-      <BuyBackSmartPoolSection />
-      <ECoinBuybackInfo />
+      {/* SEPARADOR*/}
+<div className="relative z-10 mt-14 mb-10 flex items-center gap-4">
+  <div className="h-px flex-1 bg-gradient-to-r from-transparent via-[#D4AF37]/40 to-transparent" />
+  <span className="text-[11px] sm:text-xs uppercase tracking-[0.35em] text-[#D4AF37]/80">
+    eCoin Neural Arbitrage Panel
+  </span>
+  <div className="h-px flex-1 bg-gradient-to-r from-transparent via-[#D4AF37]/40 to-transparent" />
+</div>
+      <NeuralArbitragePanel />
       
       <NowSection />
 <StayInLoopSection />

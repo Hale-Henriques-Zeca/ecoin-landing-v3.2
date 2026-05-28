@@ -1,6 +1,8 @@
 
 import { useReadContract, useWriteContract } from "wagmi";
-import { CONTRACTS } from "@/lib/contracts";
+import { CONTRACTS } from "@/lib/contracts/contracts";
+import { ecGasSaleAbi } from "@/lib/abis/ecGasSaleAbi";
+import { miningStakingAbi } from "@/lib/abis/miningStakingAbi";
 import { erc20Abi } from "viem";
 
 export function useEcGas(address?: `0x${string}`) {
@@ -14,24 +16,63 @@ export function useEcGas(address?: `0x${string}`) {
   });
 
   const { data: preview } = useReadContract({
-    abi: CONTRACTS.MINING_STAKING_ABI,
+    abi: miningStakingAbi,
     address: CONTRACTS.MINING_STAKING,
     functionName: "preview",
     args: address ? [address] : undefined,
   });
 
-  const buyGas = async (amount: bigint) => {
-    return writeContractAsync({
-      abi: CONTRACTS.ECGAS_SALE_ABI,
-      address: CONTRACTS.ECGAS_SALE,
-      functionName: "buy",
-      args: [amount],
-    });
-  };
+  async function buyGasUSDT(amount: bigint) {
+
+  // 🔥 APPROVE FIRST
+  await writeContractAsync({
+    address: CONTRACTS.USDT,
+    abi: erc20Abi,
+    functionName: "approve",
+    args: [
+      CONTRACTS.ECGAS_SALE,
+      amount,
+    ],
+  });
+
+  // 🔥 BUY
+  return writeContractAsync({
+    address: CONTRACTS.ECGAS_SALE,
+    abi: ecGasSaleAbi,
+    functionName: "buyUSDT",
+    args: [amount],
+
+    gas: BigInt(3_000_000),
+  });
+}
+
+async function buyGasEUSD(amount: bigint) {
+
+  // 🔥 APPROVE FIRST
+  await writeContractAsync({
+    address: CONTRACTS.EUSD,
+    abi: erc20Abi,
+    functionName: "approve",
+    args: [
+      CONTRACTS.ECGAS_SALE,
+      amount,
+    ],
+  });
+
+  return writeContractAsync({
+    address: CONTRACTS.ECGAS_SALE,
+    abi: ecGasSaleAbi,
+    functionName: "buyEUSD",
+    args: [amount],
+
+    gas: BigInt(3_000_000),
+  });
+}
 
   return {
     gasBalance,
     preview,
-    buyGas,
+    buyGasUSDT,
+    buyGasEUSD,
   };
 }

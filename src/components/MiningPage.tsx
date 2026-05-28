@@ -28,8 +28,13 @@ import { Snowfall } from "react-snowfall";
 import ReferralModalContent from "@/components/ReferralModalContent";
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { useDisconnect } from "wagmi";
-import { CONTRACTS } from "@/lib/contracts";
+import { CONTRACTS } from "@/lib/contracts/contracts";
+import { miningStakingAbi } from "@/lib/abis/miningStakingAbi";
+import { ecGasSaleAbi } from "@/lib/abis/ecGasSaleAbi";
 import { erc20Abi } from "viem";
+
+import AdminPage from "@/components/AdminPage";
+
 import EcoinWalletDashboard from "@/components/EcoinWalletDashboard";
 import BlockchainDeviceAlert from "@/components/BlockchainDeviceAlert";
 
@@ -45,7 +50,7 @@ import {
   Gift,
   AlertCircle
 } from "lucide-react";
-import { formatUnits } from "viem";
+import { formatUnits, parseUnits } from "viem";
 import { RewardsChart } from "@/components/RewardsChart";
 import { useMiningStaking } from "@/hooks/useMiningStaking";
 import { useEcGas } from "@/hooks/useEcGas";
@@ -55,6 +60,44 @@ import RewardVelocityPanel from "@/components/RewardVelocityPanel";
 import ProjectedRewardsPanel from "@/components/ProjectedRewardsPanel";
 import MiningPreviewPanel from "@/components/MiningPreviewPanel";
 import GasCapacityPanel from "@/components/GasCapacityPanel";
+import { useMiningFeeCollector } from "@/hooks/useMiningFeeCollector";
+import LiveRewardCounter from "@/app/Savings/components/LiveRewardCounter";
+import StakingSecurityPanel from "@/app/Savings/components/StakingSecurityPanel";
+import RewardStreamIndicator from "@/app/Savings/components/RewardStreamIndicator";
+import RewardVelocity from "@/app/Savings/components/RewardVelocity";
+import MiningAnalyticsPanel from "@/components/MiningAnalyticsPanel";
+import RewardVelocityGraph from "@/components/RewardVelocityGraph";
+import MiningHistoryPanel from "@/components/MiningHistoryPanel";
+import { useOverflowAnalytics } from "@/hooks/useOverflowAnalytics";
+import APRPanel from "@/components/APRPanel";
+
+
+function useSafeNumberInput(initial = "") {
+
+  const [value, setValue] = useState(initial);
+
+  const onChange = (input: string) => {
+
+    const raw = input
+      .replace(",", ".")
+      .replace(/[^\d.]/g, "");
+
+    if (/^\d*\.?\d*$/.test(raw)) {
+      setValue(raw);
+    }
+  };
+
+  const isValid =
+    value &&
+    !isNaN(Number(value));
+
+  return {
+    value,
+    setValue,
+    onChange,
+    isValid,
+  };
+}
 
 
 // Componente de Card de Estatística
@@ -81,8 +124,11 @@ export default function MiningPage() {
       const { disconnect } = useDisconnect();
       const gas = useEcGas(address);
     
-      const TRADINGGASVAULT_OWNER =
-      process.env.NEXT_PUBLIC_TRADINGGASVAULT_OWNER?.toLowerCase();
+      const MINING_OWNER =
+      process.env.NEXT_PUBLIC_MINING_OWNER?.toLowerCase();
+
+      const feeCollector =
+  useMiningFeeCollector();
 
       const { switchChain } = useSwitchChain();
       const chainId = useChainId();
@@ -102,26 +148,49 @@ export default function MiningPage() {
       const [mounted, setMounted] = useState(false);
 
 
-
-  const [amount, setAmount] = useState("");
+const overflow =
+  useOverflowAnalytics();
+  
   const [isMining, setIsMining] = useState(false);
+  const amountInput = useSafeNumberInput();
+
+  const [gasToken, setGasToken] =
+  useState<"USDT" | "EUSD">("USDT");
+
+const setStakePercentage = (percent: number) => {
+
+  const balance =
+    Number(mining.walletBalance || 0);
+
+  const value =
+    (balance * percent) / 100;
+
+  amountInput.setValue(
+    value.toFixed(6)
+  );
+};
+
+const setUnstakePercentage = (percent: number) => {
+
+  const staked =
+    Number(mining.userStake || 0);
+
+  const value =
+    (staked * percent) / 100;
+
+  amountInput.setValue(
+    value.toFixed(6)
+  );
+};
 
   const mining = useMiningStaking();
+
 const publicClient = usePublicClient({ chainId: 56 });
 
 const [chartData, setChartData] = useState([]);
 
 
-const { data: gasPerUSDT } = useReadContract({
-  abi: CONTRACTS.MINING_STAKING_ABI,
-  address: CONTRACTS.MINING_STAKING,
-  functionName: "gasPerUSDT",
-});
 
-
-
-
-const gasBalance = gas.gasBalance ? Number(formatUnits(gas.gasBalance, 18)) : 0;
 
 const preview = gas.preview;
 
@@ -140,8 +209,17 @@ const usedCapacity =
 const maxCapacity =
   preview ? Number(formatUnits(preview[4], 18)) : 0;
 
-const willMine =
-  preview ? preview[5] : false;
+const gasBalance =
+  remainingCapacity;  
+
+ const stakeActive =
+  Number(mining.userStake) > 0;  
+
+const simulatedWillMine =
+  remainingCapacity > 0 &&
+  stakeActive;
+
+ 
 
 
 
@@ -153,92 +231,52 @@ const totalPending =
 
 
 
-useEffect(() => {
-
-  if (gasBalance === 0) {
-    console.error("⛔ Mining parado!");
-  }
-}, [gasBalance]);
 
 
-  const { writeContractAsync } = useWriteContract();
+const { data: usdtEnabled } = useReadContract({
+  address: CONTRACTS.ECGAS_SALE,
+  abi: ecGasSaleAbi,
+  functionName: "usdtEnabled",
+});
+
+const { data: eusdEnabled } = useReadContract({
+  address: CONTRACTS.ECGAS_SALE,
+  abi: ecGasSaleAbi,
+  functionName: "eusdEnabled",
+});
+
 
   const { data: totalStaked } = useReadContract({
-  abi: CONTRACTS.MINING_STAKING_ABI,
+  abi: miningStakingAbi,
   address: CONTRACTS.MINING_STAKING,
   functionName: "totalStaked",
+  chainId: 56,
 });
 
 const { data: totalStakers } = useReadContract({
-  abi: CONTRACTS.MINING_STAKING_ABI,
+  abi: miningStakingAbi,
   address: CONTRACTS.MINING_STAKING,
   functionName: "totalStakers",
+  chainId: 56,
 });
 
 const { data: userInfo } = useReadContract({
-  abi: CONTRACTS.MINING_STAKING_ABI,
+  abi: miningStakingAbi,
   address: CONTRACTS.MINING_STAKING,
   functionName: "users",
+  chainId: 56,
   args: address ? [address] : undefined,
 });
 
 const { data: pending } = useReadContract({
-  abi: CONTRACTS.MINING_STAKING_ABI,
+  abi: miningStakingAbi,
   address: CONTRACTS.MINING_STAKING,
   functionName: "pendingRewards",
-  args: address ? [address] : undefined,
-});
-
-const handleApprove = async () => {
-  await writeContractAsync({
-    abi: erc20Abi,
-    address: CONTRACTS.ECOIN,
-    functionName: "approve",
-    args: [CONTRACTS.MINING_STAKING, parseUnits(amount, 18)],
-  });
-};
-
-
-const handleStake = async () => {
-  await writeContractAsync({
-    abi: CONTRACTS.MINING_STAKING_ABI,
-    address: CONTRACTS.MINING_STAKING,
-    functionName: "stake",
-    args: [parseUnits(amount, 18)],
-  });
-};
-
-
-const handleUnstake = async () => {
-  await writeContractAsync({
-    abi: CONTRACTS.MINING_STAKING_ABI,
-    address: CONTRACTS.MINING_STAKING,
-    functionName: "unstake",
-    args: [parseUnits(amount, 18)],
-  });
-};
-
-
-const handleClaim = async () => {
-  await writeContractAsync({
-    abi: CONTRACTS.MINING_STAKING_ABI,
-    address: CONTRACTS.MINING_STAKING,
-    functionName: "claim",
-  });
-};
-
-
-const { data: lastClaim } = useReadContract({
-  abi: CONTRACTS.MINING_STAKING_ABI,
-  address: CONTRACTS.MINING_STAKING,
-  functionName: "lastClaim",
+  chainId: 56,
   args: address ? [address] : undefined,
 });
 
 
-const canClaim = lastClaim
-  ? Date.now() / 1000 > Number(lastClaim) + 600
-  : true;
 
   // 🔥 Dual rewards (novo modelo)
 const pendingUSDT =
@@ -266,49 +304,18 @@ const stats = {
   share: `${mining.share.toFixed(6)}%🚀`,
 };
 
-
-
-useEffect(() => {
-  async function loadChart() {
-    if (!publicClient) return;
-
-    const days = Array.from({ length: 7 }, (_, i) =>
-      Math.floor(Date.now() / 86400000) - i
-    );
-
-    const data = await Promise.all(
-      days.map(async (d) => {
-        const value = await publicClient.readContract({
-          address: CONTRACTS.MINING_STAKING,
-          abi: CONTRACTS.MINING_STAKING_ABI,
-          functionName: "rewardsPerDay",
-          args: [d],
-        });
-
-        return {
-          day: `D-${days.indexOf(d)}`,
-          rewards: Number(formatUnits(value, 18)),
-        };
-      })
-    );
-
-    setChartData(data.reverse());
-  }
-
-  loadChart();
-}, [publicClient]);
   
     const isOwner =
     isConnected &&
     address &&
-    TRADINGGASVAULT_OWNER &&
-    address.toLowerCase() === TRADINGGASVAULT_OWNER;
+    MINING_OWNER &&
+    address.toLowerCase() === MINING_OWNER;
 
     useEffect(() => {
   if (!isConnected) return;
 
-  if (chainId !== 97) {
-    switchChain({ chainId: 97 });
+  if (chainId !== 56) {
+    switchChain({ chainId: 56 });
   }
 }, [isConnected, chainId]);
 
@@ -350,6 +357,25 @@ useEffect(() => {
   </h3>
 
   <RewardsChart data={chartData} />
+  <div className="mt-6">
+
+  <MiningAnalyticsPanel
+    totalRewards={pendingUSDT + pendingEUSD}
+    totalGasUsed={usedCapacity}
+    efficiency={
+      maxCapacity > 0
+        ? (usedCapacity / maxCapacity) * 100
+        : 0
+    }
+    sessions={5}
+    recycled={
+  overflow.totalUSDT +
+  overflow.totalEUSD
+}
+    apr={148.22}
+  />
+
+</div>
 </div>
 
 <div className="bg-white/5 border border-white/10 rounded-3xl p-6 mb-8">
@@ -366,17 +392,119 @@ useEffect(() => {
   usedCapacity={usedCapacity}
   remainingCapacity={remainingCapacity}
 
-  willMine={willMine}
+  willMine={simulatedWillMine}
+  stakeActive={stakeActive}
 />
-  {/* BUY INPUT */}
-<div className="flex flex-col sm:flex-row gap-3">
+
+
+  {/* TOKEN SWITCH */}
+
+<div
+  translate="no"
+  className="
+    notranslate
+    flex
+    items-center
+    gap-3
+    mb-4
+  "
+>
+
+  <button
+    translate="no"
+    onClick={() => setGasToken("USDT")}
+    className={`
+      notranslate
+      px-4
+      py-2
+      rounded-xl
+      font-bold
+      transition-all
+      ${
+        gasToken === "USDT"
+          ? "bg-green-500 text-black"
+          : "bg-white/5 text-white/60 border border-white/10"
+      }
+    `}
+  >
+    USDT
+  </button>
+
+  <button
+    translate="no"
+    onClick={() => setGasToken("EUSD")}
+    className={`
+      notranslate
+      px-4
+      py-2
+      rounded-xl
+      font-bold
+      transition-all
+      ${
+        gasToken === "EUSD"
+          ? "bg-blue-500 text-black"
+          : "bg-white/5 text-white/60 border border-white/10"
+      }
+    `}
+  >
+    eDollar
+  </button>
+
+  {/* STATUS */}
+
+  <div
+    translate="no"
+    className={`
+      notranslate
+      ml-auto
+      px-3
+      py-1
+      rounded-full
+      text-[10px]
+      font-black
+      uppercase
+      tracking-widest
+      ${
+        (gasToken === "USDT" && usdtEnabled) ||
+        (gasToken === "EUSD" && eusdEnabled)
+          ? "bg-green-500/20 text-green-400 border border-green-500/30"
+          : "bg-red-500/20 text-red-400 border border-red-500/30"
+      }
+    `}
+  >
+    {(gasToken === "USDT" && usdtEnabled) ||
+    (gasToken === "EUSD" && eusdEnabled)
+      ? "ACTIVE"
+      : "PAUSED"}
+  </div>
+
+</div>
+
+{/* BUY INPUT */}
+
+<div
+  translate="no"
+  className="
+    notranslate
+    flex
+    flex-col
+    sm:flex-row
+    gap-3
+  "
+>
 
   <input
-    type="number"
-    placeholder="USDT"
-    value={amount}
-    onChange={(e) => setAmount(e.target.value)}
+    translate="no"
+    inputMode="decimal"
+    autoComplete="off"
+    autoCorrect="off"
+    spellCheck={false}
+    type="text"
+    placeholder={gasToken}
+    value={amountInput.value}
+    onChange={(e) => amountInput.onChange(e.target.value)}
     className="
+      notranslate
       flex-1
       bg-black/40
       border
@@ -390,61 +518,133 @@ useEffect(() => {
   />
 
   <button
-    onClick={() => gas.buyGas(parseUnits(amount, 18))}
-    className="
-      bg-[#D4AF37]
-      text-black
+    translate="no"
+    disabled={
+      (gasToken === "USDT" && !usdtEnabled) ||
+      (gasToken === "EUSD" && !eusdEnabled)
+    }
+    onClick={() => {
+
+      if (!amountInput.isValid) {
+        alert("Valor inválido");
+        return;
+      }
+
+      const parsed =
+        parseUnits(amountInput.value, 18);
+
+      if (gasToken === "USDT") {
+
+        gas.buyGasUSDT(parsed);
+
+      } else {
+
+        gas.buyGasEUSD(parsed);
+      }
+    }}
+    className={`
+      notranslate
       px-6
       py-3
       rounded-xl
       font-black
       whitespace-nowrap
-      min-w-[140px]
-      hover:scale-[1.02]
+      min-w-[180px]
       transition-all
-    "
+      ${
+        (gasToken === "USDT" && !usdtEnabled) ||
+        (gasToken === "EUSD" && !eusdEnabled)
+          ? "bg-gray-700 text-gray-400 cursor-not-allowed"
+          : "bg-[#D4AF37] text-black hover:scale-[1.02]"
+      }
+    `}
   >
-    Comprar Gas
+    {(gasToken === "USDT" && !usdtEnabled) ||
+    (gasToken === "EUSD" && !eusdEnabled)
+      ? "PAUSED"
+      : `Comprar com ${gasToken}`}
   </button>
 
 </div>
 
   <p className="text-[10px] text-white/30 mt-2">
-    1 USDT = 1000 ecGas
+  Fuel your ecGas (mining capacity) with USDT or eDollar - ecGas powers your mining payout capacity
   </p>
 
 </div>
 
 <div className="mb-8">
-  <RewardVelocityPanel
-    usdtPerSecond={streaming.usdtPerSecond}
-    usdtPerMinute={streaming.usdtPerMinute}
-    usdtPerHour={streaming.usdtPerHour}
-    usdtPerDay={streaming.usdtPerDay}
+
+  <RewardVelocityGraph
+    pendingUSDT={pendingUSDT}
   />
+
 </div>
+
+<div className="mb-8">
+  <RewardVelocityPanel
+  pendingUSDT={pendingUSDT}
+/>
+</div>
+
+
 
 <div className="mb-12">
   <ProjectedRewardsPanel
-    projected24hUSDT={streaming.projected24hUSDT}
-    projected7dUSDT={streaming.projected7dUSDT}
-    projected30dUSDT={streaming.projected30dUSDT}
+  pendingUSDT={pendingUSDT}
+/>
+</div>
 
-    totalProjected24h={streaming.totalProjected24h}
-    totalProjected7d={streaming.totalProjected7d}
-    totalProjected30d={streaming.totalProjected30d}
+<div className="mb-8">
+
+  <APRPanel
+    yearlyRewards={
+      (pendingUSDT + pendingEUSD) * 365
+    }
+    stakedAmount={
+      Number(mining.userStake)
+    }
   />
+
 </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
 
           
+          {/* Live Components */}
+
+<div className="lg:col-span-3 space-y-6">
+
+  <LiveRewardCounter
+    pendingUSDT={pendingUSDT}
+    pendingEUSD={pendingEUSD}
+  />
+
+  <StakingSecurityPanel />
+
+  <RewardStreamIndicator />
+
+  <RewardVelocity
+    pending={
+      pendingUSDT +
+      pendingEUSD
+    }
+    totalStaked={
+      Number(formatUnits(
+        totalStaked || 0n,
+        18
+      ))
+    }
+  />
+
+</div>  
+
           {/* PAINEL DE RECOMPENSAS (CLAIM) */}
-          <div className="lg:col-span-5">
+<div className="lg:col-span-4">
             <div className="bg-gradient-to-b from-[#D4AF37]/20 to-transparent border border-[#D4AF37]/30 rounded-3xl p-8 backdrop-blur-xl h-full flex flex-col justify-between">
               <div>
                 <div className="flex items-center justify-between mb-8">
-                  <h2 className="text-xl font-bold text-white flex items-center gap-2">
+                  <h2 className="text-1xs font-bold text-white flex items-center gap-2">
                     <Gift size={20} className="text-[#D4AF37]" /> Recompensas da Mineração
                   </h2>
                   <Clock size={16} className="text-white/30" />
@@ -454,11 +654,11 @@ useEffect(() => {
                   <span className="text-xs text-white/40 uppercase tracking-widest block mb-2">Disponível para Saque</span>
                   <div className="space-y-2 mb-1">
   <div className="text-3xl font-black text-green-400">
-    {pendingUSDT.toFixed(4)} USDT
+    {pendingUSDT.toFixed(7)} USDT
   </div>
 
   <div className="text-2xl font-bold text-blue-400">
-    {pendingEUSD.toFixed(4)} eDollar
+    {pendingEUSD.toFixed(7)} eDollar
   </div>
 </div>
                 </div>
@@ -466,8 +666,25 @@ useEffect(() => {
 
               <div className="space-y-4">
                 <button
-  onClick={mining.claim}
-  disabled={!mining.canClaim || (pendingUSDT === 0 && pendingEUSD === 0)}
+  onClick={async () => {
+
+  try {
+
+    await mining.claim();
+
+    alert("Claim realizado com sucesso!");
+
+  } catch (err) {
+
+    console.error(err);
+
+    alert("Erro no claim");
+  }
+}}
+  disabled={
+  !mining.canClaim ||
+  (pendingUSDT <= 0 && pendingEUSD <= 0)
+}
   className={`w-full py-5 rounded-2xl font-black uppercase text-sm tracking-[0.2em] transition-all
     ${
       !mining.canClaim || mining.pending === 0
@@ -475,7 +692,7 @@ useEffect(() => {
         : "bg-white text-black hover:scale-[1.02]"
     }`}
 >
-  RECOLHER LUCROS
+  SACAR LUCROS
 </button>
                 <div className="flex items-center justify-center gap-2 text-white/30 text-[10px] uppercase font-bold">
                   <span>Cooldown: 10 Minutos</span>
@@ -484,8 +701,9 @@ useEffect(() => {
             </div>
           </div>
           
+        
           {/* PAINEL DE AÇÃO (STAKE/UNSTAKE) */}
-          <div className="lg:col-span-7 space-y-6">
+<div className="lg:col-span-5 space-y-6">
             <div className="bg-white/5 border border-white/10 rounded-3xl p-8 backdrop-blur-xl relative overflow-hidden">
               <div className="absolute top-0 right-0 p-4 opacity-10">
                 <ArrowUpCircle size={120} className="text-[#D4AF37]" />
@@ -497,24 +715,106 @@ useEffect(() => {
 
               <div className="space-y-4">
                 <div>
-                  <label className="text-xs text-white/40 uppercase font-bold mb-2 block">Quantia para Depositar</label>
+                  <label className="text-xs text-white/40 uppercase font-bold mb-2 block">Quantia a Gerenciar</label>
                   <div className="relative">
-                    <input 
-                      type="number"
-                      placeholder="0.00"
-                      value={amount}
-                      onChange={(e) => setAmount(e.target.value)}
-                      className="w-full bg-black/40 border border-white/10 rounded-2xl px-6 py-4 text-white text-xl font-bold focus:outline-none focus:border-[#D4AF37]/50 transition-all"
-                    />
-                    <button className="absolute right-4 top-1/2 -translate-y-1/2 text-[10px] font-bold bg-[#D4AF37] text-black px-3 py-1 rounded-md hover:bg-white transition-all">
-                      MÁX
-                    </button>
+                    <input
+  translate="no"
+  inputMode="decimal"
+  autoComplete="off"
+  autoCorrect="off"
+  spellCheck={false}
+  type="text"
+  placeholder="0.00"
+  value={amountInput.value}
+  onChange={(e) => amountInput.onChange(e.target.value)}
+  className="
+    notranslate
+    w-full
+    bg-black/40
+    border
+    border-white/10
+    rounded-2xl
+    px-6
+    py-4
+    text-white
+    text-xl
+    font-bold
+    focus:outline-none
+    focus:border-[#D4AF37]/50
+    transition-all
+  "
+/>
+                   <button
+  onClick={() => setStakePercentage(100)}
+  className="absolute right-4 top-1/2 -translate-y-1/2 text-[10px] font-bold bg-[#D4AF37] text-black px-3 py-1 rounded-md hover:bg-white transition-all"
+>
+  MÁX
+</button>
                   </div>
                 </div>
 
+<div className="space-y-3">
+
+  <div>
+
+    <p className="text-[10px] text-white/40 mb-2 uppercase">
+     % a Depositar
+    </p>
+
+    <div className="grid grid-cols-6 gap-2">
+
+      {[1, 10, 25, 50, 75, 100].map((p) => (
+
+        <button
+          key={`stake-${p}`}
+          onClick={() => setStakePercentage(p)}
+          className="text-[10px] py-2 rounded-lg bg-[#D4AF37]/10 border border-[#D4AF37]/20 hover:border-[#D4AF37] hover:text-[#D4AF37] transition"
+        >
+          {p}%
+        </button>
+
+      ))}
+
+    </div>
+
+  </div>
+
+  <div>
+
+    <p className="text-[10px] text-white/40 mb-2 uppercase">
+       % a Remover
+    </p>
+
+    <div className="grid grid-cols-6 gap-2">
+
+      {[1, 10, 25, 50, 75, 100].map((p) => (
+
+        <button
+          key={`unstake-${p}`}
+          onClick={() => setUnstakePercentage(p)}
+          className="text-[10px] py-2 rounded-lg bg-red-500/10 border border-red-500/20 hover:border-red-400 hover:text-red-400 transition"
+        >
+          {p}%
+        </button>
+
+      ))}
+
+    </div>
+
+  </div>
+
+</div>
                 <div className="grid grid-cols-2 gap-4">
                   <button
-  onClick={() => mining.stake(amount)}
+  onClick={() => {
+
+  if (!amountInput.isValid) {
+    alert("Valor inválido");
+    return;
+  }
+
+  mining.stake(amountInput.value);
+}}
   className="flex items-center justify-center gap-2 bg-[#D4AF37] hover:bg-white text-black font-black py-4 rounded-2xl transition-all uppercase text-sm tracking-widest"
 >
   <ArrowUpCircle size={18} /> Depositar
@@ -522,7 +822,15 @@ useEffect(() => {
 
 
                   <button
-  onClick={() => mining.unstake(amount)}
+  onClick={() => {
+
+  if (!amountInput.isValid) {
+    alert("Valor inválido");
+    return;
+  }
+
+  mining.unstake(amountInput.value);
+}}
   className="flex items-center justify-center gap-2 bg-white/5 hover:bg-white/10 text-white border border-white/10 font-black py-4 rounded-2xl transition-all uppercase text-sm tracking-widest"
 >
   <ArrowDownCircle size={18} /> Remover
@@ -545,7 +853,20 @@ useEffect(() => {
             </div>
           </div>
 
-
+<div className="lg:col-span-12">
+    <div className="bg-white/5 border border-white/10 rounded-3xl p-6 backdrop-blur-xl">
+      <MiningHistoryPanel />
+    </div>
+  </div>
+{/* Admin Panel */}
+{isOwner && (
+  <div className="lg:col-span-12">
+    <div className="bg-white/5 border border-white/10 rounded-3xl p-6 backdrop-blur-xl">
+      <AdminPage />
+    </div>
+  </div>
+)}
+                    
 
 {/* WALLET DASHBOARD */}
   <div className="lg:col-span-12">
@@ -555,6 +876,7 @@ useEffect(() => {
   </div>
 
         
+                  
         </div>
         {/* INVITE */}
                     <div className="text-center mt-16">

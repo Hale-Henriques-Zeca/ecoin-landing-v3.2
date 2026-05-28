@@ -1,7 +1,6 @@
 "use client";
 
 import { motion } from "framer-motion";
-
 import {
   TimerReset,
   Clock3,
@@ -9,39 +8,79 @@ import {
   Activity
 } from "lucide-react";
 
+import { useEffect, useState } from "react";
+
 type Props = {
-  usdtPerSecond: number;
-  usdtPerMinute: number;
-  usdtPerHour: number;
-  usdtPerDay: number;
+  pendingUSDT: number;
 };
 
 export default function RewardVelocityPanel({
-  usdtPerSecond,
-  usdtPerMinute,
-  usdtPerHour,
-  usdtPerDay,
+  pendingUSDT,
 }: Props) {
+
+  const [liveSecond, setLiveSecond] =
+    useState(0);
+
+  const [liveMinute, setLiveMinute] =
+    useState(0);
+
+  const [liveHour, setLiveHour] =
+    useState(0);
+
+  const [liveDay, setLiveDay] =
+    useState(0);
+
+  useEffect(() => {
+
+    const perSecond =
+      pendingUSDT * 0.0002;
+
+    const perMinute =
+      perSecond * 60;
+
+    const perHour =
+      perMinute * 60;
+
+    const perDay =
+      perHour * 24;
+
+    setLiveSecond(perSecond);
+    setLiveMinute(perMinute);
+    setLiveHour(perHour);
+    setLiveDay(perDay);
+
+    const t = setInterval(() => {
+
+      setLiveSecond(v => v + (perSecond * 0.001));
+      setLiveMinute(v => v + (perMinute * 0.001));
+      setLiveHour(v => v + (perHour * 0.001));
+      setLiveDay(v => v + (perDay * 0.001));
+
+    }, 1000);
+
+    return () => clearInterval(t);
+
+  }, [pendingUSDT]);
 
   const items = [
     {
       label: "/ SEC",
-      value: usdtPerSecond,
+      value: liveSecond,
       icon: Activity,
     },
     {
       label: "/ MIN",
-      value: usdtPerMinute,
+      value: liveMinute,
       icon: TimerReset,
     },
     {
       label: "/ HOUR",
-      value: usdtPerHour,
+      value: liveHour,
       icon: Clock3,
     },
     {
       label: "/ DAY",
-      value: usdtPerDay,
+      value: liveDay,
       icon: CalendarDays,
     },
   ];
@@ -137,7 +176,7 @@ export default function RewardVelocityPanel({
                 </motion.h2>
 
                 <p className="text-[10px] text-white/30">
-                  USDT STREAM
+                  PROFIT LIVE STREAM PROJECTION 
                 </p>
 
               </div>
@@ -151,5 +190,4 @@ export default function RewardVelocityPanel({
 
     </div>
   );
-
 }
