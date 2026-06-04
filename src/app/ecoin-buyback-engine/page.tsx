@@ -228,6 +228,17 @@ Construindo uma infraestrutura financeira sustentável
 para investidores em ativos digitais.”
 
 </p>
+
+{/* INÍCIO DO BOTÃO SAIBA MAIS */}
+<div className="mt-8 flex justify-center w-full">
+  <Link 
+    href="How-Ai-Mining-Works" 
+    className="inline-block px-6 py-2 text-sm font-semibold text-cyan-400 border border-cyan-500/40 rounded-xl bg-cyan-500/5 hover:bg-cyan-500 hover:text-white transition-all duration-300 shadow-[0_0_15px_rgba(6,182,212,0.15)] hover:shadow-[0_0_20px_rgba(6,182,212,0.4)]"
+  >
+    Saiba mais
+  </Link>
+</div>
+{/* FIM DO BOTÃO SAIBA MAIS */}
 </div>
 
 

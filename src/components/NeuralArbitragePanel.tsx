@@ -334,7 +334,7 @@ export default function NeuralArbitragePanel() {
   <p className="text-gray-500">[02:14:10] Scanning Order Books for latency disparities: Binance CEX ↔ Bybit CEX...</p>
   <p className="text-purple-400">[02:14:11] Connected to Binance WebSockets & Bybit V5 API. Latency: 12ms.</p>
   <p className="text-emerald-400">[02:14:12] Spread Disparity found: Binance ($1.2420) vs Bybit ($1.2656). Capitalizing imbalance.</p>
-  <p className="text-yellow-500">[02:14:13] Neural API Bridge locked. Execution routing: Buy Binance Spot / Sell Bybit Perpetual.</p>
+  <p className="text-yellow-500">[02:14:13] Neural API Bridge locked. Execution routing: Buy Binance Spot / Sell Bybit Spot.</p>
   <p className="text-emerald-500 font-bold">[02:14:14] Cross-Exchange Arbitrage Completed! Net Profit: +4,250 USDT. Exchange Fees Settled.</p>
 </div>
 

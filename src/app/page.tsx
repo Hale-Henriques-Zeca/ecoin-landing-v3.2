@@ -64,8 +64,7 @@ export default function Home() {
   <div className="h-px flex-1 bg-gradient-to-r from-transparent via-[#D4AF37]/40 to-transparent" />
 </div>
       <EFTEBuySellPanel />
-      
-      <ECoinHubPage />
+    
       <EcoinAISection />
       
       

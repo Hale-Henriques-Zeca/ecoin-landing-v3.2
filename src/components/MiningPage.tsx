@@ -356,8 +356,11 @@ const stats = {
     📊 Fluxo de recompensas (últimos dias)
   </h3>
 
-  <RewardsChart data={chartData} />
+  <RewardVelocityGraph
+    pendingUSDT={pendingUSDT}
+  />
   <div className="mt-6">
+
 
   <MiningAnalyticsPanel
     totalRewards={pendingUSDT + pendingEUSD}
@@ -573,13 +576,7 @@ const stats = {
 
 </div>
 
-<div className="mb-8">
 
-  <RewardVelocityGraph
-    pendingUSDT={pendingUSDT}
-  />
-
-</div>
 
 <div className="mb-8">
   <RewardVelocityPanel
