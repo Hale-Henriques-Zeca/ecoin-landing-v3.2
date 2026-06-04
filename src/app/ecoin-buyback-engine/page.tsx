@@ -233,9 +233,9 @@ para investidores em ativos digitais.”
 <div className="mt-8 flex justify-center w-full">
   <Link 
     href="How-Ai-Mining-Works" 
-    className="inline-block px-6 py-2 text-sm font-semibold text-cyan-400 border border-cyan-500/40 rounded-xl bg-cyan-500/5 hover:bg-cyan-500 hover:text-white transition-all duration-300 shadow-[0_0_15px_rgba(6,182,212,0.15)] hover:shadow-[0_0_20px_rgba(6,182,212,0.4)]"
+    className="inline-block px-6 py-2 text-sm font-semibold text-yellow-400 border border-yellow-500/40 rounded-xl bg-cyan-500/5 hover:bg-cyan-500 hover:text-white transition-all duration-300 shadow-[0_0_15px_rgba(6,182,212,0.15)] hover:shadow-[0_0_20px_rgba(6,182,212,0.4)]"
   >
-    Saiba mais
+    Saiba mais como se ganha ➡️
   </Link>
 </div>
 {/* FIM DO BOTÃO SAIBA MAIS */}

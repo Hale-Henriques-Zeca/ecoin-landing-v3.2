@@ -8,6 +8,8 @@ import {
    Activity, Play, Square, Fuel
 } from "lucide-react";
 
+import Link from "next/link";
+
 import { usePublicClient } from "wagmi";
 
 import {
@@ -351,9 +353,29 @@ const stats = {
           <StatCard label="Ganhos Estimados" value={stats.share} icon={Zap} color="purple-400" />
         </div>
 
+{/* INÍCIO DO BOTÃO SAIBA MAIS */}
+<div className="mt-8 flex justify-center w-full">
+  <Link 
+    href="ecoin-buyback-engine" 
+    className="inline-block px-6 py-2 text-sm font-semibold text-cyan-400 border border-cyan-500/40 rounded-xl bg-cyan-500/5 hover:bg-cyan-500 hover:text-white transition-all duration-300 shadow-[0_0_15px_rgba(6,182,212,0.15)] hover:shadow-[0_0_20px_rgba(6,182,212,0.4)]"
+  >
+    Saiba mais de Smart Pools
+  </Link>
+</div>
+{/* FIM DO BOTÃO SAIBA MAIS */}    
+
+{/* SEPARADOR*/}
+<div className="relative z-10 mt-14 mb-10 flex items-center gap-4">
+  <div className="h-px flex-1 bg-gradient-to-r from-transparent via-[#D4AF37]/40 to-transparent" />
+  <span className="text-[11px] sm:text-xs uppercase tracking-[0.35em] text-[#D4AF37]/80">
+    📊 Fluxo de recompensas
+  </span>
+  <div className="h-px flex-1 bg-gradient-to-r from-transparent via-[#D4AF37]/40 to-transparent" />
+</div>
+
 <div className="bg-white/5 border border-white/10 rounded-2xl p-6 mb-8">
   <h3 className="text-white mb-4 font-bold">
-    📊 Fluxo de recompensas (últimos dias)
+    📊 Fluxo de recompensas
   </h3>
 
   <RewardVelocityGraph
