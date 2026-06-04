@@ -124,11 +124,11 @@ export default function HowAiMiningWorksPage() {
                   </li>
                   <li className="flex gap-3">
                     <span className="text-[#D4AF37] mt-1">✓</span>
-                    Sistema de indicação por níveis.
+                    O sistema de indicação por níveis depende da taxa de saques (10%) e compras de ecGas.
                   </li>
                   <li className="flex gap-3">
                     <span className="text-[#D4AF37] mt-1">✓</span>
-                    Compras de ecGas realizadas pelo futuro Neural AI Trading Bot.
+                    Compras de ecGas realizadas pelo futuro Neural AI Trading Bot, igualmente é uma fonte.
                   </li>
                 </ul>
               </div>
