@@ -128,7 +128,7 @@ export default function HowAiMiningWorksPage() {
                   </li>
                   <li className="flex gap-3">
                     <span className="text-[#D4AF37] mt-1">✓</span>
-                    Compras de ecGas realizadas pelo futuro AI Trading Bot.
+                    Compras de ecGas realizadas pelo futuro Neural AI Trading Bot.
                   </li>
                 </ul>
               </div>
