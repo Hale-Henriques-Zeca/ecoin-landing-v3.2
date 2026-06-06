@@ -19,6 +19,7 @@ import {
   FaTwitter,
   FaDiscord,
 } from "react-icons/fa";
+
 import {
   useAccount,
   useReadContract,
@@ -52,6 +53,7 @@ import {
   Gift,
   AlertCircle
 } from "lucide-react";
+
 import { formatUnits, parseUnits } from "viem";
 import { RewardsChart } from "@/components/RewardsChart";
 import { useMiningStaking } from "@/hooks/useMiningStaking";

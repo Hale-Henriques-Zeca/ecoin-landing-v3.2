@@ -1,201 +1,407 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useAccount, useDisconnect } from "wagmi";
-import { ConnectButton } from "@rainbow-me/rainbowkit";
-import { motion } from "framer-motion";
-import { Cpu, ShieldCheck, Wallet, ChevronRight, Bot, ArrowRight } from "lucide-react";
-import Link from "next/link";
+import useSWR from "swr";
+import { motion, AnimatePresence } from "framer-motion";
+import { parseUnits, erc20Abi } from "viem";
 
-import TestnetProvider from "@/components/TestnetProvider";
-import AIDashboardContent from "@/components/AIDashboardContent";
+// ICONS
+import { Cpu, Fuel } from "lucide-react";
+import { FaTelegramPlane, FaTelegram, FaWhatsapp, FaTwitter, FaDiscord } from "react-icons/fa";
+import { BsStars } from "react-icons/bs";
 
-export default function AIDashboard () {
-  const { isConnected, address } = useAccount();
-  const { disconnect } = useDisconnect();
+// WAGMI & WEB3
+import { useAccount, useWriteContract, useSwitchChain, useChainId, usePublicClient } from "wagmi";
+
+// ABIS & COMPONENTS
+import { TradingGasVaultAbi } from "@/lib/abis/TradingGasVaultAbi";
+import ReferralModalContent from "@/components/ReferralModalContent";
+import EcoinWalletDashboard from "@/components/EcoinWalletDashboard";
+import BlockchainDeviceAlert from "@/components/BlockchainDeviceAlert";
+
+// NOSSOS NOVOS COMPONENTES (Certifica-te de que o caminho de importação está correto)
+import ForexAI from "@/components/ai-bots/ForexAI";
+import TriangularAI from "@/components/ai-bots/TriangularAI";
+import CrossAI from "@/components/ai-bots/CrossAI";
+
+export default function AIDashboardContent() {
+  const [mounted, setMounted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  
+  // MODO COM 3 TABS AGORA
+  const [mode, setMode] = useState<"forex" | "triangular" | "cross">("forex");
+  const [stakeAmount, setStakeAmount] = useState("");
 
   
-       const [showModal, setShowModal] = useState(false);
-      const fadeUp = {
-        hidden: { opacity: 0, y: 30 },
-        visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
-      };
-    
-      /* ⛔ HYDRATION */
-  const [mounted, setMounted] = useState(false);
-  /* 🔐 WALLET */
-      const [panelOpen, setPanelOpen] = useState(false);
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  const { isConnected, address } = useAccount();
+  const { switchChain } = useSwitchChain();
+  const chainId = useChainId();
+  const publicClient = usePublicClient();
+  const { writeContractAsync } = useWriteContract();
 
+  const { data: user } = useSWR(address ? `http://localhost:4000/api/user/${address}` : null);
+  const isBotRunning = user?.botActive;
+
+  const CONTRACT_ADDRESS = "0x4642d050F13633D36C6dD2aCF6e68573eBE9AB84"; 
+  const USDT_ADDRESS = "0x07E7DC0b28448F67C3c349C8A83C5165dB8A29E6"; 
+  const EUSD_ADDRESS = "0xf6B07aa2FfB7A52B6f7cD7508598Ccaf224c6F1B"; 
+  const gasLevel = user?.ecGas ? Math.min((user.ecGas / 100000) * 100, 100) : 0;
+
+  
+  const [gasToken, setGasToken] =
+  useState<"USDT" | "EUSD">("USDT");
+
+const [usdtEnabled, setUsdtEnabled] =
+useState(false);
+
+const [eusdEnabled, setEusdEnabled] =
+useState(false);
+  
   useEffect(() => {
-    if (isConnected) {
-      setPanelOpen(true);
-    } else {
-      setPanelOpen(false);
+
+  const loadStatus = async () => {
+
+    if (!publicClient) return;
+
+    try {
+
+      const usdt =
+        await publicClient.readContract({
+          address: CONTRACT_ADDRESS,
+          abi: TradingGasVaultAbi,
+          functionName: "usdtEnabled",
+        });
+
+      const eusd =
+        await publicClient.readContract({
+          address: CONTRACT_ADDRESS,
+          abi: TradingGasVaultAbi,
+          functionName: "eusdEnabled",
+        });
+
+      setUsdtEnabled(usdt);
+      setEusdEnabled(eusd);
+
+    } catch (err) {
+
+      console.error(err);
+
     }
-  }, [isConnected]);
+  };
+
+  loadStatus();
+
+}, [publicClient]);
+  
+  useEffect(() => { setMounted(true); }, []);
+  useEffect(() => {
+    if (!isConnected) return;
+    if (chainId !== 97) switchChain({ chainId: 97 });
+  }, [isConnected, chainId, switchChain]);
+
+  const toggleBot = async () => {
+    if (!address) return;
+    const endpoint = user?.botActive ? "stop" : "start";
+    await fetch(`http://localhost:4000/api/user/${endpoint}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ wallet: address })
+    });
+  };
+
+  const handleDeposit = async () => {
+    if (chainId !== 97) return alert("⚠️ Switch to BSC Testnet");
+    try {
+      if (!stakeAmount) return alert("Enter amount");
+      setLoading(true);
+      const amount = parseUnits(stakeAmount, 18);
+
+      const tokenAddress =
+  gasToken === "USDT"
+    ? USDT_ADDRESS
+    : EUSD_ADDRESS;
+
+      if (allowance < amount) {
+        const approveTx = await writeContractAsync({
+          address: tokenAddress, abi: erc20Abi, functionName: "approve", args: [CONTRACT_ADDRESS, amount],
+        });
+        await publicClient.waitForTransactionReceipt({ hash: approveTx });
+      }
+
+      const approveTx =
+await writeContractAsync({
+  address: tokenAddress,
+  abi: erc20Abi,
+  functionName: "approve",
+  args: [CONTRACT_ADDRESS, amount],
+});
+
+      const allowance =
+await publicClient.readContract({
+  address: tokenAddress,
+  abi: erc20Abi,
+  functionName: "allowance",
+  args: [address!, CONTRACT_ADDRESS],
+});
+
+      await writeContractAsync({
+        address: CONTRACT_ADDRESS, abi: TradingGasVaultAbi, functionName:
+gasToken === "USDT"
+? "depositUSDT"
+: "depositEUSD", args: [amount], gas: BigInt(500000),
+      });
+    } catch (e: any) { alert(e.message); } finally { setLoading(false); }
+  };
 
   if (!mounted) return null;
 
+
+
   return (
-    <div className="min-h-screen bg-[#020617] text-white">
-      {/* ================= NOT CONNECTED ================= */}
-      {!isConnected && (
-        <div className="relative flex flex-col items-center justify-center min-h-screen text-center px-6 py-20 overflow-hidden">
-          
-          {/* BACKGROUND IMAGE AI */}
-          <div
-            className="absolute inset-0 bg-cover bg-center opacity-10 grayscale"
-            style={{ backgroundImage: "url('/backgrounds/ai-bg.jpg')" }} 
-          />
-          <div className="absolute inset-0 bg-gradient-to-b from-[#020617] via-transparent to-[#020617]" />
+    <div className="min-h-screen bg-[#020617] text-white pt-32 lg:pt-40 p-6 lg:p-12 font-sans selection:bg-yellow-500/30">
+      
+      <div className="fixed inset-0 bg-[radial-gradient(circle_at_50%_-20%,#1e293b,transparent)] pointer-events-none" />
 
-          <div className="relative z-10 max-w-2xl w-full space-y-8">
-            
-            {/* TÍTULO PRINCIPAL */}
-            <motion.div 
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="space-y-4"
-            >
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-yellow-500/10 border border-yellow-500/20 text-yellow-500 text-[10px] font-black tracking-[0.3em] uppercase">
-                <Cpu size={14} className="animate-pulse" /> High-Frequency AI Engine
-              </div>
-              <h1 className="text-3xl md:text-5xl font-black tracking-tighter leading-tight">
-                Painl da E-COIN <span className="text-[#D4AF37]">WEB3 NEURAL AI</span> <br />
-                TRADING ROBOT <span className="text-[#D4AF37]">(ecnTrading)</span>
-              </h1>
-              <p className="text-gray-400 text-sm md:text-base max-w-lg mx-auto leading-relaxed">
-                O robô de negociação triangular de alta frequência mais rápido da Binance Spot Market, agora totalmente migrado para a infraestrutura Web3.
-              </p>
-            </motion.div>
-
-{/* 🤖 BOTÃO DE ACESSO AO TERMINAL NEURAL AI */}
-<div className="w-full max-w-xl mx-auto mt-10">
-  <Link href="/ecnTradingAi-Robot-Profit-Flow-Info" className="group block">
-    
-    <motion.div 
-      whileHover={{ scale: 1.02, x: 5 }}
-      whileTap={{ scale: 0.98 }}
-      className="flex items-center justify-between bg-gradient-to-r from-[#D4AF37]/5 to-black/40 border border-[#D4AF37]/20 p-5 rounded-2xl hover:border-[#D4AF37]/60 transition-all cursor-pointer shadow-[0_0_20px_rgba(212,175,55,0.05)]"
-    >
-      <div className="flex items-center gap-4 text-left">
-        {/* Ícone de destaque */}
-        <div className="bg-[#D4AF37]/10 p-3 rounded-xl border border-[#D4AF37]/20 group-hover:scale-110 transition-transform">
-          <Bot size={24} className="text-[#D4AF37]" />
-        </div>
-
-        <div className="flex flex-col">
-          <span className="text-[10px] text-[#D4AF37] uppercase font-bold tracking-[0.2em]">
-            E-COIN NEURAL TRADING AI ROBOT 
-          </span>
-          <span className="text-sm text-white font-semibold tracking-tight">
-            Descubra o poder da Arbitragem Triangular Interna
-          </span>
-          <span className="text-[11px] text-white/40 mt-1 italic">
-            Veja como lucrar na Binance, OKX, KuCoin, Bybit, Bitget, Kraken, CoinBase, Huobi, MEXC, etc em milissegundos
-          </span>
-        </div>
-      </div>
-
-      <div className="bg-[#D4AF37]/10 p-3 rounded-full text-[#D4AF37] group-hover:bg-[#D4AF37] group-hover:text-black group-hover:shadow-[0_0_15px_#D4AF37] transition-all">
-        <ChevronRight size={20} />
-      </div>
-    </motion.div>
-
-  </Link>
-</div>
-            {/* BOTÃO CONECTAR */}
-            <div className="flex flex-col items-center gap-6">
-              <ConnectButton.Custom>
-                {({ openConnectModal }) => (
-                  <button
-                    onClick={openConnectModal}
-                    className="group relative px-12 py-4 rounded-full font-black text-black
-                    bg-gradient-to-r from-[#D4AF37] to-[#F5F5F5] hover:scale-105 transition-all duration-300 shadow-[0_0_30px_rgba(212,175,55,0.3)]"
-                  >
-                    CONECTAR CARTEIRA WEB3
-                  </button>
-                )}
-              </ConnectButton.Custom>
-
-              {/* INFORMAÇÕES WEB3 NATIVE */}
-              <div className="grid grid-cols-1 gap-3 w-full max-w-md">
-                <div className="bg-white/5 border border-white/10 p-4 rounded-2xl backdrop-blur-md text-left">
-                  <p className="text-[#D4AF37] font-bold text-xs mb-2 flex items-center gap-2">
-                    <ShieldCheck size={14} /> ECOSSISTEMA NATIVO DA E-COIN NEURAL WEB3 
-                  </p>
-                  <ul className="text-[11px] text-gray-400 space-y-2">
-                    <li className="flex items-center gap-2">❌ Sem login tradicional</li>
-                    <li className="flex items-center gap-2">❌ Sem e-mail ou passwords hackeáveis</li>
-                    <li className="flex items-center gap-2 font-bold text-white">✅ Carteira = Tua Identidade Digital Única</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-
-            {/* CALL TO ACTION PARA QUEM NÃO TEM CARTEIRA */}
-            <div className="space-y-4 pt-6 border-t border-white/5">
-              <p className="text-xs text-gray-500 italic">
-                Ainda não tens uma carteira Web3?
-              </p>
-              <p className="text-xs text-gray-500 italic">
-                No ecossistema E-Coin, a tua segurança vem primeiro. Crie-a agora mesmo a sua carteira Web3:
-              </p>
-              <Link
-                href="/import-guide"
-                className="
-                  flex items-center justify-center gap-3
-                  py-5 rounded-2xl font-black text-sm
-                  bg-gradient-to-r from-[#D4AF37] to-[#F5F5F5]
-                  text-black hover:brightness-110 hover:gap-6
-                  transition-all duration-300 uppercase tracking-[0.2em]
-                  max-w-md mx-auto
-                "
-              >
-                <Wallet size={18} />
-                CRIAR & CONFIGURAR CARTEIRA 🔐
-              </Link>
-
-              <p className="text-[10px] text-gray-600 font-mono uppercase tracking-widest">
-                2025: Independência Financeira Eminente e permanente = (ganhando em mil segundos)🚀
-              </p>
-            </div>
+      <div className="max-w-6xl mx-auto relative z-10">
+        
+        {/* HEADER & SWITCH DE TABS */}
+        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-12 gap-8">
+          <div>
+            <h1 className="text-3xl font-black tracking-tighter italic flex items-center gap-3">
+              <Cpu className="text-[#D4AF37]" /> 
+              E-COIN NEURAL TRADING AI ROBOT 
+              <span className="text-[#D4AF37]">(ecnTrading)</span>
+            </h1>
+            <p className="text-gray-500 text-sm font-mono uppercase tracking-widest mt-1">
+              Hybrid Neural: Multi-Market AI Trading Robot
+            </p>
           </div>
-        </div>
-      )}
 
-      {/* ================= CONNECTED ================= */}
-      {isConnected && panelOpen && (
-        <div className="pt-32 lg:pt-40 p-6 lg:p-12 max-w-[1400px] mx-auto">
-          {/* WALLET INDICATOR */}
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[10px] font-mono mb-0.5">
-            <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-            WALLET ID: {address}
-          </div> 
-
-    
-          <TestnetProvider>
-                 <AIDashboardContent/>
-              </TestnetProvider>
-          
-
-          <div className="mt-20 text-center">
-            <button
-              onClick={() => {
-                disconnect();
-                setPanelOpen(false);
-              }}
-              className="px-8 py-3 rounded-xl border border-red-500/30 text-red-500 text-xs font-black uppercase tracking-widest hover:bg-red-500 hover:text-white transition-all"
+          <div className="bg-black/40 border border-white/10 p-1.5 rounded-2xl flex gap-1 backdrop-blur-xl overflow-x-auto w-full lg:w-auto">
+            <button 
+              onClick={() => setMode("forex")}
+              className={`px-6 py-3 rounded-xl text-xs font-bold transition-all whitespace-nowrap ${mode === "forex" ? "bg-yellow-500 text-black shadow-[0_0_15px_rgba(234,179,8,0.3)]" : "text-gray-500 hover:text-white"}`}
             >
-              Encerrar Terminal [Disconnect]
+              FOREX AI
+            </button>
+            <button 
+              onClick={() => setMode("triangular")}
+              className={`px-6 py-3 rounded-xl text-xs font-bold transition-all whitespace-nowrap ${mode === "triangular" ? "bg-blue-600 text-white shadow-[0_0_15px_rgba(37,99,235,0.3)]" : "text-gray-500 hover:text-white"}`}
+            >
+              TRIANGULAR AI
+            </button>
+            <button 
+              onClick={() => setMode("cross")}
+              className={`px-6 py-3 rounded-xl text-xs font-bold transition-all whitespace-nowrap ${mode === "cross" ? "bg-purple-600 text-white shadow-[0_0_15px_rgba(147,51,234,0.3)]" : "text-gray-500 hover:text-white"}`}
+            >
+              CROSS EXCHANGE AI 
             </button>
           </div>
         </div>
-      )}
+
+        {/* RENDERIZAÇÃO DO COMPONENTE ESCOLHIDO */}
+        <div className="mb-12">
+          {mode === "forex" && <ForexAI user={user} isBotRunning={isBotRunning} toggleBot={toggleBot} />}
+          {mode === "triangular" && <TriangularAI user={user} isBotRunning={isBotRunning} toggleBot={toggleBot} />}
+          {mode === "cross" && <CrossAI />}
+        </div>
+
+
+        {/* ================= GAS VAULT E PORTFOLIO (SHARED) ================= */}
+        <motion.div initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} className="space-y-8 mt-16">
+          <BlockchainDeviceAlert />
+
+          {/* GAS CONTROL */}
+          <div className={`relative bg-[#0f172a]/80 border rounded-[28px] p-6 backdrop-blur-xl transition-all duration-500 ${isBotRunning ? "border-emerald-400 shadow-[0_0_25px_rgba(16,185,129,0.15)]" : "border-white/10"}`}>
+            {isBotRunning && <div className="absolute inset-0 rounded-[28px] bg-emerald-500/5 blur-xl animate-pulse pointer-events-none" />}
+
+            <div className="flex items-center justify-between mb-6 relative z-10">
+              <p className="text-xs font-bold text-emerald-400 uppercase tracking-widest flex items-center gap-2">
+               <Fuel size={16} />
+                AI TRADING GAS VAULT (USDT/eDollar ⇄ ecGas)
+              </p>
+              {address && (
+                <span className="text-[10px] font-mono text-white/40 bg-black/50 px-3 py-1 rounded-full border border-white/5">
+                  {address.slice(0, 6)}…{address.slice(-4)}
+                </span>
+              )}
+            </div>
+
+            <div className="flex items-center gap-3 mb-5">
+
+<button
+onClick={() => setGasToken("USDT")}
+className={`
+px-4
+py-2
+rounded-xl
+font-bold
+transition-all
+
+${gasToken === "USDT"
+? "bg-green-500 text-black"
+: "bg-white/5 text-white/60 border border-white/10"}
+`}
+>
+USDT
+</button>
+
+<button
+onClick={() => setGasToken("EUSD")}
+className={`
+px-4
+py-2
+rounded-xl
+font-bold
+transition-all
+
+${gasToken === "EUSD"
+? "bg-blue-500 text-black"
+: "bg-white/5 text-white/60 border border-white/10"}
+`}
+>
+eDollar
+</button>
+
+<div
+className={`
+ml-auto
+px-3
+py-1
+rounded-full
+text-[10px]
+font-black
+uppercase
+
+${
+(gasToken === "USDT" && usdtEnabled) ||
+(gasToken === "EUSD" && eusdEnabled)
+? "bg-green-500/20 text-green-400 border border-green-500/30"
+: "bg-red-500/20 text-red-400 border border-red-500/30"
+}
+`}
+>
+
+{
+(gasToken === "USDT" && usdtEnabled) ||
+(gasToken === "EUSD" && eusdEnabled)
+? "ACTIVE"
+: "PAUSED"
+}
+
+</div>
+
+</div>
+
+            
+
+            <div className="flex flex-col md:flex-row gap-4 relative z-10 mb-6">
+              <input
+                type="number"
+                value={stakeAmount}
+                onChange={(e) => setStakeAmount(e.target.value)}
+                placeholder={`Enter ${gasToken} amount...`}
+                className="flex-1 bg-black/40 border border-white/10 rounded-xl px-4 py-4 text-lg text-white outline-none font-mono focus:border-[#D4AF37]/50 transition"
+              />
+              <button
+  disabled={
+    loading ||
+
+    (gasToken === "USDT" && !usdtEnabled) ||
+
+    (gasToken === "EUSD" && !eusdEnabled)
+  }
+
+  onClick={handleDeposit}
+
+  className={`
+    md:w-64
+    py-4
+    rounded-xl
+    font-black
+    shadow-lg
+    transition
+
+    ${
+      (gasToken === "USDT" && !usdtEnabled) ||
+
+      (gasToken === "EUSD" && !eusdEnabled)
+
+        ? "bg-gray-700 text-gray-400 cursor-not-allowed"
+
+        : "bg-gradient-to-r from-[#D4AF37] to-[#F3BA2F] text-black hover:scale-[1.02]"
+    }
+  `}
+>
+  {
+    loading
+
+      ? "Processing..."
+
+      : (
+          (gasToken === "USDT" && !usdtEnabled) ||
+
+          (gasToken === "EUSD" && !eusdEnabled)
+        )
+
+      ? "PAUSED"
+
+      : `BUY ecGas WITH ${gasToken}`
+  }
+</button>
+            </div>
+
+            {/* GAS BAR LEVEL */}
+            <div className="relative z-10 bg-black/20 p-5 rounded-2xl border border-white/5">
+              <div className="flex justify-between text-[10px] text-white/40 mb-2 font-mono uppercase font-bold">
+                <span>Current Gas Level</span>
+                <span className={gasLevel > 30 ? "text-green-400" : "text-red-400"}>{gasLevel.toFixed(0)}%</span>
+              </div>
+              <div className="w-full h-3 bg-black/60 rounded-full overflow-hidden mb-3">
+                <div className={`h-full transition-all duration-700 ${gasLevel > 60 ? "bg-green-500" : gasLevel > 30 ? "bg-yellow-500" : "bg-red-500"}`} style={{ width: `${gasLevel}%` }} />
+              </div>
+              <div className="flex justify-between text-sm font-mono font-bold">
+                <span className="text-blue-400">{(user?.ecGas ?? 0).toLocaleString()} ecGas</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white/5 border border-white/10 rounded-[28px] p-6 backdrop-blur-xl">
+            <EcoinWalletDashboard />
+          </div>
+        </motion.div>
+
+        {/* MODAL & FOOTER */}
+        <div className="text-center mt-16">
+          <button onClick={() => setShowModal(true)} className="bg-gradient-to-r from-[#D4AF37] to-[#F3BA2F] text-black font-black uppercase tracking-widest text-sm py-4 px-12 rounded-full shadow-[0_0_30px_rgba(212,175,55,0.3)] hover:scale-105 transition-transform">
+            🎁 Convidar Amigos
+          </button>
+        </div>
+
+        {showModal && (
+          <div onClick={() => setShowModal(false)} className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+            <div onClick={(e) => e.stopPropagation()} className="bg-[#0a0a0a] p-8 rounded-3xl border border-[#D4AF37]/30 w-full max-w-md shadow-2xl">
+              <h3 className="text-[#D4AF37] text-xl font-bold mb-6 text-center">Referral System Dashboard</h3>
+              <ReferralModalContent />
+            </div>
+          </div>
+        )}
+        
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1, delay: 0.4 }} className="mt-20 pt-10 border-t border-white/10 flex flex-col items-center gap-4 text-[#D4AF37]">
+          <p className="text-xs uppercase tracking-widest font-bold text-gray-500">Comunidade E-Coin Global</p>
+          <div className="flex justify-center gap-6 text-2xl">
+            <a href="https://t.me/ecoin2026" target="_blank" rel="noopener noreferrer" className="hover:text-white hover:scale-110 transition"><FaTelegramPlane /></a>
+            <a href="https://x.com/CoinE28810" target="_blank" rel="noopener noreferrer" className="hover:text-white hover:scale-110 transition"><FaTwitter /></a>
+            <a href="https://discord.com" target="_blank" rel="noopener noreferrer" className="hover:text-white hover:scale-110 transition"><FaDiscord /></a>
+            <a href="https://t.me/ecoin2025" target="_blank" rel="noopener noreferrer" className="hover:text-white hover:scale-110 transition"><FaTelegram /></a>
+            <a href="https://chat.whatsapp.com/G1F6USX5NrrLKikm7yiXXQ" target="_blank" rel="noopener noreferrer" className="hover:text-white hover:scale-110 transition"><FaWhatsapp /></a>
+          </div>
+          <BsStars className="text-3xl mt-4 animate-pulse text-[#D4AF37]" />
+        </motion.div>
+    
+      </div>
     </div>
   );
 }
