@@ -46,15 +46,7 @@ function EquipesContent() {
     <div className="min-h-screen bg-[#020205] text-gray-300 pt-24 pb-24 lg:pb-12 px-4 lg:px-8 font-sans selection:bg-yellow-500/30">
       <div className="fixed inset-0 bg-[radial-gradient(circle_at_50%_-20%,#0f1026,transparent)] pointer-events-none" />
 
-      {/* REPRODUTORES DE ÁUDIO NO TOPO (Acessibilidade Global) */}
-      <div className="max-w-[1600px] mx-auto mb-6 grid grid-cols-1 md:grid-cols-2 gap-4 relative z-10">
-        <div className="bg-[#090a14] border border-white/5 rounded-2xl p-2 backdrop-blur-md">
-          <AskAIAudioEngine />
-        </div>
-        <div className="bg-[#090a14] border border-white/5 rounded-2xl p-2 backdrop-blur-md">
-          <DocumentVoicePlayer />
-        </div>
-      </div>
+      
 
       <div className="max-w-[1600px] mx-auto flex flex-col lg:flex-row gap-8 relative z-10">
         
@@ -277,8 +269,6 @@ function EquipesContent() {
           {/* CONTEÚDO DA ABA 3: ESTÚDIO DE MARKETING & CONTEÚDOS AI */}
           {activeTab === "marketing" && (
             <div className="space-y-12 animate-fadeIn">
-              <EcoinPreparationPhasePanel />
-              <LeaderMarketingStudio />
               <EcoinLeaderMarketingEngine />
               <EMarketingPage />
             </div>

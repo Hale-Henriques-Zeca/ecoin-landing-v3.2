@@ -176,7 +176,7 @@ const { data: eusdEnabled } = useReadContract({
     { id: "gas", label: "Gas Vault", icon: Fuel },
     { id: "analytics", label: "Analytics", icon: BarChart3 },
     { id: "historico", label: "Histórico", icon: History },
-    { id: "carteira", label: "Carteira", icon: Wallet },
+    { id: "Portfolio", label: "Portfolio", icon: Wallet },
     { id: "config", label: "Configurações", icon: Settings },
   ];
 
@@ -273,14 +273,7 @@ const { data: eusdEnabled } = useReadContract({
       </div>
     </div>
 
-    {/* 🌟 CORREÇÃO AQUI: Mudamos de 'hidden lg:grid' para 'grid grid-cols-2 lg:grid-cols-4 gap-4' */}
-    {/* Agora os cards de status aparecem em 2 colunas no mobile e 4 colunas no desktop */}
-    <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-      <StatCard label="Depósitos Globais" value={stats.totalStaked} icon={ShieldCheck} />
-      <StatCard label="Mineradores Ativos" value={stats.totalStakers} icon={TrendingUp} />
-      <StatCard label="Meu Depósito" value={stats.myStake} icon={Coins} />
-      <StatCard label="Ganhos Estimados" value={stats.share} icon={Zap} />
-    </div>
+    
 
     {/* 🌟 CORREÇÃO AQUI: Mudamos de 'hidden lg:grid' para 'grid grid-cols-1 lg:grid-cols-12 gap-6' */}
     {/* O gráfico e o contador live vão empilhar no mobile e ficar lado a lado no desktop */}
@@ -404,14 +397,7 @@ const { data: eusdEnabled } = useReadContract({
                   <h3 className="text-sm font-bold uppercase tracking-wider mb-4 flex items-center gap-2 text-[#D4AF37]">
                     <Fuel size={18} /> Gas Vault (ecGas)
                   </h3>
-                  <GasCapacityPanel
-                    gasBalance={gasBalance}
-                    maxCapacity={maxCapacity}
-                    usedCapacity={usedCapacity}
-                    remainingCapacity={remainingCapacity}
-                    willMine={simulatedWillMine}
-                    stakeActive={stakeActive}
-                  />
+                  
                   <div className="flex gap-2 my-4">
                     {["USDT", "EUSD"].map((tk) => (
                       <button
@@ -453,6 +439,14 @@ const { data: eusdEnabled } = useReadContract({
               {/* TAB 5: ANALYTICS */}
               {activeTab === "analytics" && (
                 <div className="space-y-6">
+                  {/* 🌟 CORREÇÃO AQUI: Mudamos de 'hidden lg:grid' para 'grid grid-cols-2 lg:grid-cols-4 gap-4' */}
+    {/* Agora os cards de status aparecem em 2 colunas no mobile e 4 colunas no desktop */}
+    <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <StatCard label="Depósitos Globais" value={stats.totalStaked} icon={ShieldCheck} />
+      <StatCard label="Mineradores Ativos" value={stats.totalStakers} icon={TrendingUp} />
+      <StatCard label="Meu Depósito" value={stats.myStake} icon={Coins} />
+      <StatCard label="Ganhos Estimados" value={stats.share} icon={Zap} />
+    </div>
                   <MiningAnalyticsPanel
                     totalRewards={pendingUSDT + pendingEUSD}
                     totalGasUsed={usedCapacity}
@@ -465,6 +459,9 @@ const { data: eusdEnabled } = useReadContract({
                     <RewardVelocity pending={pendingUSDT + pendingEUSD} totalStaked={Number(formatUnits(totalStaked || 0n, 18))} />
                     <APRPanel yearlyRewards={(pendingUSDT + pendingEUSD) * 365} stakedAmount={Number(mining.userStake)} />
                   </div>
+                  <div className="bg-[#0d0d0f] border border-white/5 rounded-3xl p-6">
+                  <EcoinWalletDashboard />
+                </div>
                 </div>
               )}
 
@@ -475,10 +472,17 @@ const { data: eusdEnabled } = useReadContract({
                 </div>
               )}
 
-              {/* TAB 7: CARTEIRA */}
-              {activeTab === "carteira" && (
+              {/* TAB 7: Portfolio */}
+              {activeTab === "Portfolio" && (
                 <div className="bg-[#0d0d0f] border border-white/5 rounded-3xl p-6">
-                  <EcoinWalletDashboard />
+                  <GasCapacityPanel
+                    gasBalance={gasBalance}
+                    maxCapacity={maxCapacity}
+                    usedCapacity={usedCapacity}
+                    remainingCapacity={remainingCapacity}
+                    willMine={simulatedWillMine}
+                    stakeActive={stakeActive}
+                  />
                 </div>
               )}
 
@@ -499,12 +503,16 @@ const { data: eusdEnabled } = useReadContract({
             </motion.div>
           </AnimatePresence>
 
+          
+
           {/* SMART POOLS CALL TO ACTION */}
           <div className="mt-8 flex justify-center w-full">
             <Link href="ecoin-buyback-engine" className="inline-block px-6 py-2.5 text-xs font-semibold text-cyan-400 border border-cyan-500/20 rounded-xl bg-cyan-500/5 hover:bg-cyan-500 hover:text-white transition-all duration-300">
               Saiba mais de Smart Pools
             </Link>
           </div>
+          
+          
 
           {/* SOCIAL FOOTER */}
           <div className="mt-12 pt-6 border-t border-white/5 flex flex-col items-center gap-4 text-white/40 text-xs">
