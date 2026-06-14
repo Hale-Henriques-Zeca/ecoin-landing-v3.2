@@ -279,7 +279,7 @@ const { data: eusdEnabled } = useReadContract({
     {/* O gráfico e o contador live vão empilhar no mobile e ficar lado a lado no desktop */}
     <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
       <div className="lg:col-span-7 bg-[#0d0d0f] border border-white/5 rounded-3xl p-6">
-        <h3 className="text-sm font-bold uppercase tracking-wider text-white/80 mb-4">📊 Fluxo de Recompensas (USDT)</h3>
+        
         <RewardVelocityGraph pendingUSDT={pendingUSDT} />
       </div>
       <div className="lg:col-span-5 flex flex-col gap-4">
