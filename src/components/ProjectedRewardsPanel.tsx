@@ -198,7 +198,7 @@ export default function ProjectedRewardsPanel({
                 text-white/40
                 mt-2
               ">
-                PROJECTED LIVE STREAM
+                AI PROJECTED LIVE STREAM
               </p>
 
               {/* progress line */}
@@ -237,7 +237,7 @@ export default function ProjectedRewardsPanel({
                 <div className="flex justify-between text-xs">
 
                   <span className="text-white/40">
-                    STREAM VALUE
+                    eCOIN NEURAL AI STREAM VALUE
                   </span>
 
                   <span className="

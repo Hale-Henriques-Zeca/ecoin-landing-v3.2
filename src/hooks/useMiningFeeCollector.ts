@@ -16,7 +16,7 @@ export function useMiningFeeCollector() {
       abi: miningFeeCollectorAbi,
       address: CONTRACTS.MINING_FEE_COLLECTOR,
       functionName: "treasury",
-      chainId: 97,
+      chainId: 56,
     });
 
   return {

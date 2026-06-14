@@ -104,11 +104,11 @@ export default function GasCapacityPanel({
 
             <div>
               <h2 className="text-white text-xl font-black">
-                Gas Capacity Engine
+                eCoin AI Gas Capacity Engine
               </h2>
 
               <p className="text-xs text-white/40">
-                Neural mining capacity controller
+                AI Neural mining capacity controller
               </p>
             </div>
 
@@ -164,7 +164,7 @@ export default function GasCapacityPanel({
               />
 
               <span className="text-white/50 text-sm">
-                ecGas Balance
+                AI ecGas Balance
               </span>
 
             </div>
@@ -194,7 +194,7 @@ export default function GasCapacityPanel({
           ">
 
             <p className="text-white/40 text-xs uppercase mb-2">
-              Payout Limit
+              AI Payout Limit
             </p>
 
             <h2 className="
@@ -206,7 +206,7 @@ export default function GasCapacityPanel({
             </h2>
 
             <p className="text-[10px] text-white/30 mt-1">
-              Maximum mining payout
+              AI Maximum mining payout
             </p>
 
           </div>
@@ -281,7 +281,7 @@ export default function GasCapacityPanel({
               uppercase
             ">
               <TrendingUp size={14} />
-              ROI Progress
+              AI ROI Progress
             </div>
 
             <span className="
@@ -328,7 +328,7 @@ export default function GasCapacityPanel({
             text-white/30
           ">
             <span>0%</span>
-            <span>Mining Exhaustion</span>
+            <span>AI Mining Exhaustion</span>
             <span>100%</span>
           </div>
 
@@ -373,8 +373,8 @@ export default function GasCapacityPanel({
   `}
 >
  {willMine
-  ? "🟢 Mining Active"
-  : "🔴 Mining Paused"}
+  ? "🟢 AI Mining Active"
+  : "🔴 AI Mining Paused"}
               </h3>
 
               <p className="text-[11px] text-white/40 mt-1">
@@ -429,7 +429,7 @@ export default function GasCapacityPanel({
     <div className="flex-1">
 
       <h3 className="text-cyan-400 font-black text-sm uppercase tracking-wide">
-        Overflow Protection Active
+       AI Overflow Protection Active
       </h3>
 
       <p className="text-[11px] text-white/40 mt-1 leading-relaxed">
@@ -457,7 +457,7 @@ export default function GasCapacityPanel({
               uppercase
             "
           >
-            ♻ Rewards Recycling Enabled
+            ♻ AI Rewards Recycling Enabled
           </div>
         )
       }

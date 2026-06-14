@@ -63,7 +63,7 @@ export default function APRPanel({
               className="text-green-400"
             />
             <span className="text-white/50 text-xs uppercase">
-              Current APR
+              AI Current APR
             </span>
           </div>
 
@@ -85,7 +85,7 @@ export default function APRPanel({
               className="text-cyan-400"
             />
             <span className="text-white/50 text-xs uppercase">
-              Projected APY
+              AI Projected APY
             </span>
           </div>
 
@@ -107,7 +107,7 @@ export default function APRPanel({
               className="text-purple-400"
             />
             <span className="text-white/50 text-xs uppercase">
-              Reward Velocity
+              AI Reward Velocity
             </span>
           </div>
 

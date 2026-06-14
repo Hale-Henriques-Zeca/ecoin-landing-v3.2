@@ -176,7 +176,7 @@ export default function RewardVelocityPanel({
                 </motion.h2>
 
                 <p className="text-[10px] text-white/30">
-                  PROFIT LIVE STREAM PROJECTION 
+                  AI PROFIT LIVE STREAM PROJECTION 
                 </p>
 
               </div>

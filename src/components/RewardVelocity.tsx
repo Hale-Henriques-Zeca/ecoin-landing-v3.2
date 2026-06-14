@@ -19,13 +19,13 @@ return(
 <div className="bg-black/50 border border-gray-700 rounded-xl p-4">
 
 <p className="text-xs text-gray-400 mb-2">
-Velocidade de Lucratividade
+Velocidade de Lucratividade do IA 
 </p>
 
 <div className="flex justify-between text-sm">
 
 <span className="text-gray-400">
-Geração de Lucros
+Geração de Lucros do IA
 </span>
 
 <span className={`font-semibold ${color}`}>

@@ -1,15 +1,19 @@
-import { http, createConfig } from "wagmi";
+import {
+  http,
+  fallback,
+  createConfig,
+} from "wagmi";
 
-import { bscMainnet } from '@/lib/chains';
+import { bsc } from "@/lib/chains";
 
 import {
   walletConnect,
-  injected
+  injected,
 } from "wagmi/connectors";
 
 export const wagmiConfig = createConfig({
 
-  chains: [bscMainnet],
+  chains: [bsc],
 
   connectors: [
 
@@ -24,10 +28,22 @@ export const wagmiConfig = createConfig({
 
   transports: {
 
-    [bscMainnet.id]: http(
-      'https://bsc-dataseed.binance.org'
-    ),
+  [bsc.id]: fallback([
 
-  },
+    http("https://bsc-dataseed.binance.org"),
+
+    http("https://bsc-dataseed1.defibit.io"),
+
+    http("https://bsc-dataseed1.ninicoin.io"),
+
+    http("https://rpc.ankr.com/bsc"),
+
+    http("https://bsc-rpc.publicnode.com"),
+
+    http("https://1rpc.io/bnb"),
+
+  ]),
+
+},
 
 });

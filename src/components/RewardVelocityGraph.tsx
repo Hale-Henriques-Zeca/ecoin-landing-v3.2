@@ -91,7 +91,7 @@ export default function RewardVelocityGraph({
           text-xl
           font-black
         ">
-          Reward Velocity
+          eCoin AI Reward Velocity
         </h2>
 
         <p className="
@@ -101,7 +101,7 @@ export default function RewardVelocityGraph({
           tracking-widest
           mt-1
         ">
-          24H TELEMETRY STREAM
+          24H AI TELEMETRY STREAM
         </p>
 
       </div>

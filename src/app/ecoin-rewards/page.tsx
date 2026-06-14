@@ -237,6 +237,8 @@ const shareNum = Number(staking.share || 0);
 
 
   console.log("pending:", staking.pending, typeof staking.pending);
+
+  
   return (
     <div className="min-h-screen bg-[#020617] text-white selection:bg-yellow-500/30 overflow-hidden">
       {/* ── BACKGROUND ── */}

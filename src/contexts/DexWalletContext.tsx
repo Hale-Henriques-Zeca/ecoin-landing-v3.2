@@ -1,18 +1,11 @@
 "use client";
 
-import {
-  createContext,
-  useContext,
-  ReactNode,
-} from "react";
-import {
-  useAccount,
-  useReadContract,
-} from "wagmi";
+import { createContext, useContext, ReactNode, } from "react";
+import { useAccount, useReadContract, } from "wagmi";
 import { erc20Abi } from "viem";
 import { CONTRACTS, GOVERNANCE_SAFE } from "@/config/dexContracts";
 import { useBalance } from "wagmi";
-import { bsc} from '@/lib/chains';
+import { bsc } from '@/lib/chains';
 
 type DexWalletState = {
   address?: string;

@@ -5,13 +5,20 @@ import { useReferral } from "@/hooks/useReferral";
 import ReferralQRScanner from "@/components/ReferralQRScanner";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
+import { useReferralCodeRegistry } from "@/hooks/useReferralCodeRegistry";
+import ReferralCodePanel from "@/components/ReferralCodePanel";
+
+
 
 export default function ReferralBindPanel() {
 
   const { bindInviter } = useReferral();
   const { getInviter } = useReferral();
+  const { resolveCode } = useReferralCodeRegistry();
 
   const [upline, setUpline] = useState("");
+  
+  const [ referralCode, setReferralCode ] = useState("");
   const [loading, setLoading] = useState(false);
   const [done, setDone] = useState(false);
   const [showScanner, setShowScanner] = useState(false);
@@ -19,10 +26,40 @@ export default function ReferralBindPanel() {
   const searchParams = useSearchParams();
 
 useEffect(() => {
-  const ref = searchParams.get("ref");
+
+  const ref =
+    searchParams.get("ref");
+
+  const code =
+    searchParams.get("code");
+
   if (ref) {
     setUpline(ref);
   }
+
+  if (code) {
+
+  setReferralCode(
+    code.toUpperCase()
+  );
+
+  resolveCode(
+    code.toUpperCase()
+  ).then((owner) => {
+
+    if (
+      owner &&
+      owner !==
+      "0x0000000000000000000000000000000000000000"
+    ) {
+      setUpline(
+        owner as string
+      );
+    }
+
+  });
+}
+
 }, []);
 
 const isValidAddress = (addr: string) =>
@@ -50,6 +87,60 @@ useEffect(() => {
           ⚠️ Só pode ser feito UMA vez e não pode ser alterado.
         </span>
       </p>
+
+      
+      <input
+  value={referralCode}
+  onChange={(e) =>
+    setReferralCode(
+      e.target.value.toUpperCase()
+    )
+  }
+  placeholder="Referral Code (KING123)"
+  className="
+    w-full
+    p-3
+    bg-black
+    border
+    border-[#3B82F6]/30
+    rounded-xl
+    text-sm
+    text-white
+  "
+/>
+
+<button
+  onClick={async () => {
+
+    if (!referralCode) return;
+
+    const inviter =
+  await resolveCode(
+    referralCode
+  );
+
+    if (
+      inviter ===
+      "0x0000000000000000000000000000000000000000"
+    ) {
+      alert("Referral code not found");
+      return;
+    }
+
+    setUpline(inviter as string);
+
+  }}
+  className="
+    w-full
+    py-2
+    rounded-xl
+    border
+    border-[#3B82F6]/30
+    text-sm
+  "
+>
+  Buscar Upline por Código
+</button>
 
       <input
         value={upline}

@@ -1,50 +1,5 @@
 export const TradingGasVaultAbi = [
-  {
-    "type": "function",
-    "name": "deposit",
-    "stateMutability": "nonpayable",
-    "inputs": [{ "name": "amount", "type": "uint256" }],
-    "outputs": []
-  },
-  {
-    "type": "function",
-    "name": "redeem",
-    "stateMutability": "nonpayable",
-    "inputs": [{ "name": "gasAmount", "type": "uint256" }],
-    "outputs": []
-  },
-  {
-    "type": "function",
-    "name": "chargeFee",
-    "stateMutability": "nonpayable",
-    "inputs": [
-      { "name": "user", "type": "address" },
-      { "name": "tradeAmount", "type": "uint256" },
-      { "name": "isProfitable", "type": "bool" }
-    ],
-    "outputs": []
-  },
-  {
-    "type": "function",
-    "name": "ecGasBalance",
-    "stateMutability": "view",
-    "inputs": [{ "name": "", "type": "address" }],
-    "outputs": [{ "type": "uint256" }]
-  },
-  {
-    "type": "function",
-    "name": "usdtEquivalent",
-    "stateMutability": "view",
-    "inputs": [{ "name": "", "type": "address" }],
-    "outputs": [{ "type": "uint256" }]
-  },
-  {
-    "type": "function",
-    "name": "previewInternal",
-    "stateMutability": "view",
-    "inputs": [{ "name": "usdtAmount", "type": "uint256" }],
-    "outputs": [{ "type": "uint256" }]
-  },
+
   {
     "type": "function",
     "name": "liquidityReserve",
@@ -76,14 +31,89 @@ export const TradingGasVaultAbi = [
       { "name": "gasUsed", "type": "uint256", "indexed": false }
     ]
   },
-  {
-    "type": "event",
-    "name": "Redeemed",
-    "inputs": [
-      { "name": "user", "type": "address", "indexed": true },
-      { "name": "gas", "type": "uint256", "indexed": false },
-      { "name": "ecoinAmount", "type": "uint256", "indexed": false }
-    ]
-  }
-]
+{
+  type: "function",
+  name: "usdtEnabled",
+  stateMutability: "view",
+  inputs: [],
+  outputs: [{ type: "bool" }]
+},
+{
+  type: "function",
+  name: "eusdEnabled",
+  stateMutability: "view",
+  inputs: [],
+  outputs: [{ type: "bool" }]
+},
+{
+  type: "function",
+  name: "depositUSDT",
+  stateMutability: "nonpayable",
+  inputs: [{ name: "amount", type: "uint256" }],
+  outputs: []
+},
+{
+  type: "function",
+  name: "depositEUSD",
+  stateMutability: "nonpayable",
+  inputs: [{ name: "amount", type: "uint256" }],
+  outputs: []
+},
+{
+  type: "function",
+  name: "setUSDTEnabled",
+  stateMutability: "nonpayable",
+  inputs: [{ name: "enabled", type: "bool" }],
+  outputs: []
+},
+{
+  type: "function",
+  name: "setEUSDEnabled",
+  stateMutability: "nonpayable",
+  inputs: [{ name: "enabled", type: "bool" }],
+  outputs: []
+},
+{
+  type: "function",
+  name: "owner",
+  stateMutability: "view",
+  inputs: [],
+  outputs: [
+    {
+      type: "address"
+    }
+  ]
+},
+{
+  type: "function",
+  name: "setCollector",
+  stateMutability: "nonpayable",
+  inputs: [
+    {
+      name: "_collector",
+      type: "address"
+    }
+  ],
+  outputs: []
+},
+{
+  type: "function",
+  name: "feeCollector",
+  stateMutability: "view",
+  inputs: [],
+  outputs: [
+    {
+      type: "address"
+    }
+  ]
+},
+{
+  type: "function",
+  name: "owner",
+  stateMutability: "view",
+  inputs: [],
+  outputs: [{ type: "address" }]
+}
+
+] as const;
 

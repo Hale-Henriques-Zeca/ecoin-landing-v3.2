@@ -1,13 +1,17 @@
 "use client";
 
-import { useAccount, useReadContract, useWriteContract, usePublicClient } from "wagmi";
+import { useAccount, useReadContract, useWriteContract } from "wagmi";
 import { parseUnits, formatUnits } from "viem";
 import { CONTRACTS } from "@/lib/contracts/contracts";
 import { miningStakingAbi } from "@/lib/abis/miningStakingAbi";
 import { erc20Abi } from "viem";
-import { bsc } from "wagmi/chains";
+import { bsc, bscTestnet } from "wagmi/chains";
 import { useEffect, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
+import { maxUint256 } from "viem";
+import { useWaitForTransactionReceipt } from "wagmi";
+import { publicClient } from "@/lib/publicClient";
+
 
 const STAKING = CONTRACTS.MINING_STAKING as `0x${string}`;
 
@@ -16,13 +20,22 @@ const STAKING = CONTRACTS.MINING_STAKING as `0x${string}`;
 export function useMiningStaking() {
   const { address } = useAccount();
   const { writeContractAsync } = useWriteContract();
-  const publicClient = usePublicClient({
-  chainId: 56
-});
 
   const [now, setNow] = useState(Date.now());
 
   const queryClient = useQueryClient();
+
+  const [approveHash, setApproveHash] =
+  useState<`0x${string}`>();
+
+const [stakeHash, setStakeHash] =
+  useState<`0x${string}`>();
+
+const [claimHash, setClaimHash] =
+  useState<`0x${string}`>();
+
+const [unstakeHash, setUnstakeHash] =
+  useState<`0x${string}`>();
 
 
 
@@ -135,21 +148,23 @@ const { data: rewardBufferEUSD } = useReadContract({
 
     console.log("APPROVING...");
 
-    const approveHash =
-      await writeContractAsync({
-        address: ECOIN,
-        abi: erc20Abi,
-        functionName: "approve",
-        args: [STAKING, bn],
-        account: address,
-        chain: bsc,
-      });
+    const hash =
+  await writeContractAsync({
+    address: ECOIN,
+    abi: erc20Abi,
+    functionName: "approve",
+    args: [STAKING, maxUint256],
+    account: address,
+    chain: bsc,
+  });
+
+setApproveHash(hash);
 
     console.log("WAITING APPROVAL...");
 
-    await publicClient.waitForTransactionReceipt({
-      hash: approveHash,
-    });
+    console.log(
+ "Approval submitted"
+);
 
     console.log("APPROVE CONFIRMED");
   }
@@ -160,7 +175,8 @@ const { data: rewardBufferEUSD } = useReadContract({
 
   console.log("STAKING...");
 
-  return writeContractAsync({
+  const hash =
+  await writeContractAsync({
     abi: miningStakingAbi,
     address: STAKING,
     functionName: "stake",
@@ -168,50 +184,154 @@ const { data: rewardBufferEUSD } = useReadContract({
     account: address,
     chain: bsc,
   });
+
+setStakeHash(hash);
+
+return hash;
 }
 
   async function unstake(amount: string) {
-    const bn = parseUnits(amount, 18);
-    return writeContractAsync({
-     abi: miningStakingAbi,
+
+  if (!address)
+    return;
+
+  const bn =
+    parseUnits(amount, 18);
+
+  const hash =
+    await writeContractAsync({
+      abi: miningStakingAbi,
       address: STAKING,
       functionName: "unstake",
       args: [bn],
       account: address,
       chain: bsc,
     });
-  }
+
+  setUnstakeHash(hash);
+
+  return hash;
+}
 
  async function claim() {
 
-  if (!address || !publicClient) return;
+  if (!address)
+    return;
 
-  console.log("CLAIM STARTING...");
-
-  const hash = await writeContractAsync({
-  abi: miningStakingAbi,
-  address: STAKING,
-  functionName: "claim",
-  account: address,
-  chain: bsc,
-
-  gas: 1200000n,
-});
-
-  console.log("WAITING CLAIM RECEIPT...");
-
-  const receipt =
-    await publicClient.waitForTransactionReceipt({
-      hash,
+  const hash =
+    await writeContractAsync({
+      abi: miningStakingAbi,
+      address: STAKING,
+      functionName: "claim",
+      account: address,
+      chain: bsc,
+      gas: 1200000n,
     });
 
-  console.log("CLAIM CONFIRMED");
+  setClaimHash(hash);
 
-  // 🔥 REFRESH FRONTEND
-  await queryClient.invalidateQueries();
-
-  return receipt;
+  return hash;
 }
+
+
+
+
+
+async function getMiningSessions() {
+
+  if (!address) return [];
+
+  const totalSessions =
+    await publicClient.readContract({
+      address: STAKING,
+      abi: miningStakingAbi,
+      functionName: "miningSession",
+      args: [address],
+    });
+
+  const rows = [];
+
+  for (let i = 0; i <= Number(totalSessions); i++) {
+
+    const session =
+      await publicClient.readContract({
+        address: STAKING,
+        abi: miningStakingAbi,
+        functionName: "sessions",
+        args: [address, BigInt(i)],
+      });
+
+    rows.push({
+      id: i,
+      ...session,
+    });
+  }
+
+  return rows.reverse();
+}
+
+
+
+
+
+const approveReceipt =
+  useWaitForTransactionReceipt({
+    hash: approveHash,
+  });
+
+const stakeReceipt =
+  useWaitForTransactionReceipt({
+    hash: stakeHash,
+  });
+
+const claimReceipt =
+  useWaitForTransactionReceipt({
+    hash: claimHash,
+  });
+
+const unstakeReceipt =
+  useWaitForTransactionReceipt({
+    hash: unstakeHash,
+  });
+
+
+
+
+  useEffect(() => {
+
+  if (!stakeReceipt.isSuccess)
+    return;
+
+  queryClient.invalidateQueries();
+
+}, [
+  stakeReceipt.isSuccess
+]);
+
+
+
+useEffect(() => {
+
+  if (!claimReceipt.isSuccess)
+    return;
+
+  queryClient.invalidateQueries();
+
+}, [
+  claimReceipt.isSuccess
+]);
+
+
+useEffect(() => {
+
+  if (!unstakeReceipt.isSuccess)
+    return;
+
+  queryClient.invalidateQueries();
+
+}, [
+  unstakeReceipt.isSuccess
+]);
 
   /* ================= CALCULATIONS ================= */
 
@@ -244,17 +364,51 @@ const streamPerHour =
     : true;
 
   return {
-    total,
-    totalStakers: Number(totalStakers ?? 0),
-    walletBalance,
-    userStake,
-    pending: pendingFormatted,
-    share,
-    streamPerHour,
-    rewardBuffer: totalRewardBuffer,
-    canClaim,
-    stake,
-    unstake,
-    claim,
-  };
+
+  total,
+  totalStakers: Number(totalStakers ?? 0),
+
+  walletBalance,
+
+  userStake,
+
+  pending: pendingFormatted,
+
+  share,
+
+  streamPerHour,
+
+  rewardBuffer: totalRewardBuffer,
+
+  canClaim,
+
+  stake,
+  unstake,
+  claim,
+  getMiningSessions,
+
+  approvePending:
+    approveReceipt.isLoading,
+
+  approveConfirmed:
+    approveReceipt.isSuccess,
+
+  stakePending:
+    stakeReceipt.isLoading,
+
+  stakeConfirmed:
+    stakeReceipt.isSuccess,
+
+  claimPending:
+    claimReceipt.isLoading,
+
+  claimConfirmed:
+    claimReceipt.isSuccess,
+
+  unstakePending:
+    unstakeReceipt.isLoading,
+
+  unstakeConfirmed:
+    unstakeReceipt.isSuccess,
+};
 }

@@ -182,5 +182,119 @@ export const miningStakingAbi = [
   inputs: [],
   outputs: [{ type: "uint256" }],
 },
+{
+  type: "function",
+  name: "owner",
+  stateMutability: "view",
+  inputs: [],
+  outputs: [
+    {
+      type: "address"
+    }
+  ]
+},
+{
+  name: "miningSession",
+  type: "function",
+  stateMutability: "view",
+  inputs: [
+    {
+      name: "",
+      type: "address",
+    },
+  ],
+  outputs: [
+    {
+      type: "uint256",
+    },
+  ],
+},
+{
+  name: "sessions",
+  type: "function",
+  stateMutability: "view",
+  inputs: [
+    {
+      name: "",
+      type: "address",
+    },
+    {
+      name: "",
+      type: "uint256",
+    },
+  ],
+  outputs: [
+    {
+      name: "startedAt",
+      type: "uint256",
+    },
+    {
+      name: "endedAt",
+      type: "uint256",
+    },
+    {
+      name: "gasPurchased",
+      type: "uint256",
+    },
+    {
+      name: "gasConsumed",
+      type: "uint256",
+    },
+    {
+      name: "claimedUSDT",
+      type: "uint256",
+    },
+    {
+      name: "claimedEUSD",
+      type: "uint256",
+    },
+    {
+      name: "completed",
+      type: "bool",
+    },
+  ],
+},
+{
+  type: "event",
+  name: "MiningSessionCompleted",
+  inputs: [
+    {
+      indexed: true,
+      name: "user",
+      type: "address"
+    },
+    {
+      indexed: true,
+      name: "sessionId",
+      type: "uint256"
+    },
+    {
+      indexed: false,
+      name: "gasUsed",
+      type: "uint256"
+    },
+    {
+      indexed: false,
+      name: "usdtClaimed",
+      type: "uint256"
+    },
+    {
+      indexed: false,
+      name: "eusdClaimed",
+      type: "uint256"
+    },
+    {
+      indexed: false,
+      name: "startedAt",
+      type: "uint256"
+    },
+    {
+      indexed: false,
+      name: "endedAt",
+      type: "uint256"
+    }
+  ]
+},
+
 
 ] as const;

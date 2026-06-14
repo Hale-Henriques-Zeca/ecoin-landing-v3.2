@@ -1,54 +1,104 @@
-import { useAccount, useReadContract, useWriteContract } from "wagmi";
-import { parseUnits, formatUnits } from "viem";
-import { CONTRACTS } from "@/lib/contracts";
+import {
+  useAccount,
+  useReadContract,
+  useWriteContract,
+} from "wagmi";
+
+import { parseUnits } from "viem";
+
+import { CONTRACTS } from "@/lib/contracts/contracts";
 import { TradingGasVaultAbi } from "@/lib/abis/TradingGasVaultAbi";
 
 export function useTradingGas() {
+
   const { address } = useAccount();
-  const { writeContractAsync } = useWriteContract();
 
-  // 🔥 GAS
-  const { data: gasBalance } = useReadContract({
-    address: CONTRACTS.TRADING_GAS_VAULT,
-    abi: TradingGasVaultAbi,
-    functionName: "ecGasBalance",
-    args: [address],
-    query: { enabled: !!address }
-  });
+  const { writeContractAsync } =
+    useWriteContract();
 
-  // 🔥 USDT VALUE
-  const { data: usdtBalance } = useReadContract({
-    address: CONTRACTS.TRADING_GAS_VAULT,
-    abi: TradingGasVaultAbi,
-    functionName: "usdtEquivalent",
-    args: [address],
-    query: { enabled: !!address }
-  });
+  const { data: owner } =
+    useReadContract({
+      address: CONTRACTS.TRADING_GAS_VAULT,
+      abi: TradingGasVaultAbi,
+      functionName: "owner",
+    });
 
-  async function deposit(amount: string) {
-    const parsed = parseUnits(amount, 6); // USDT
+  const { data: feeCollector } =
+    useReadContract({
+      address: CONTRACTS.TRADING_GAS_VAULT,
+      abi: TradingGasVaultAbi,
+      functionName: "feeCollector",
+    });
+
+  const { data: liquidityReserve } =
+    useReadContract({
+      address: CONTRACTS.TRADING_GAS_VAULT,
+      abi: TradingGasVaultAbi,
+      functionName: "liquidityReserve",
+    });
+
+  const { data: usdtEnabled } =
+    useReadContract({
+      address: CONTRACTS.TRADING_GAS_VAULT,
+      abi: TradingGasVaultAbi,
+      functionName: "usdtEnabled",
+    });
+
+  const { data: eusdEnabled } =
+    useReadContract({
+      address: CONTRACTS.TRADING_GAS_VAULT,
+      abi: TradingGasVaultAbi,
+      functionName: "eusdEnabled",
+    });
+
+  async function depositUSDT(
+    amount: string
+  ) {
+
     await writeContractAsync({
       address: CONTRACTS.TRADING_GAS_VAULT,
       abi: TradingGasVaultAbi,
-      functionName: "deposit",
-      args: [parsed],
+      functionName: "depositUSDT",
+      args: [
+        parseUnits(amount, 18)
+      ],
     });
   }
 
-  async function redeem(amount: string) {
-    const parsed = parseUnits(amount, 0); // GAS
+  async function depositEUSD(
+    amount: string
+  ) {
+
     await writeContractAsync({
       address: CONTRACTS.TRADING_GAS_VAULT,
       abi: TradingGasVaultAbi,
-      functionName: "redeem",
-      args: [parsed],
+      functionName: "depositEUSD",
+      args: [
+        parseUnits(amount, 18)
+      ],
     });
   }
+
+  const isOwner =
+    typeof owner === "string" &&
+    typeof address === "string" &&
+    owner.toLowerCase() ===
+    address.toLowerCase();
 
   return {
-    gasBalance: gasBalance ? Number(formatUnits(gasBalance, 0)) : 0,
-    usdtValue: usdtBalance ? Number(formatUnits(usdtBalance, 6)) : 0,
-    deposit,
-    redeem
+    owner,
+    feeCollector,
+    liquidityReserve,
+
+    usdtEnabled:
+      usdtEnabled ?? false,
+
+    eusdEnabled:
+      eusdEnabled ?? false,
+
+    isOwner,
+
+    depositUSDT,
+    depositEUSD,
   };
 }

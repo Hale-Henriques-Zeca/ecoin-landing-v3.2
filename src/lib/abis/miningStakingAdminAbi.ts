@@ -85,6 +85,17 @@ export const miningStakingAdminAbi = [
       { name: "amount", type: "uint256" }
     ],
     outputs: [],
-  }
+  },
+  {
+  type: "function",
+  name: "owner",
+  stateMutability: "view",
+  inputs: [],
+  outputs: [
+    {
+      type: "address"
+    }
+  ]
+}
 
 ];
