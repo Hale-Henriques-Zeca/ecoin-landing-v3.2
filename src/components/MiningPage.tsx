@@ -3,7 +3,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { 
   Cpu, BarChart3, Wallet, 
-  ArrowUpRight, RefreshCw, Settings, Database, 
+  ArrowUpRight, Users2, RefreshCw, Settings, Database, 
   Activity, Play, Square, Fuel, Gift, Coins, History, TrendingUp, ShieldCheck, Zap, AlertCircle, ArrowDownCircle, ArrowUpCircle, Menu, Home, Newspaper, Users, User
 } from "lucide-react";
 
@@ -15,6 +15,9 @@ import { Snowfall } from "react-snowfall";
 // Icons
 import { FaTelegramPlane, FaTelegram, FaWhatsapp, FaTwitter, FaDiscord } from "react-icons/fa";
 import { BsStars } from "react-icons/bs";
+import { useRouter } from "next/navigation";
+
+
 
 // Wagmi & Contracts
 import { useAccount, useReadContract, useWriteContract, useWaitForTransactionReceipt, useDisconnect, useSwitchChain, useChainId } from "wagmi";
@@ -179,6 +182,14 @@ const { data: eusdEnabled } = useReadContract({
     { id: "Portfolio", label: "Portfolio", icon: Wallet },
     { id: "config", label: "Configurações", icon: Settings },
   ];
+
+const router = useRouter();
+const [isRedirecting, setIsRedirecting] = useState(false);
+
+const handleTeamsRedirect = () => {
+  setIsRedirecting(true);
+  router.push("/equipes");
+};
 
   return (
     <main className="min-h-screen bg-[#070708] text-white pt-20 pb-28 lg:pb-12 px-4 md:px-8 relative overflow-x-hidden">
@@ -487,18 +498,57 @@ const { data: eusdEnabled } = useReadContract({
               )}
 
               {/* TAB 8: CONFIGURAÇÕES */}
-              {activeTab === "config" && (
-                <div className="space-y-6">
-                  <div className="bg-[#0d0d0f] border border-white/5 rounded-3xl p-6">
-                    <ReferralCodePanel />
-                  </div>
-                  {isOwner && (
-                    <div className="bg-[#0d0d0f] border border-white/5 rounded-3xl p-6">
-                      <AdminPage />
-                    </div>
-                  )}
-                </div>
-              )}
+{activeTab === "config" && (
+  <div className="space-y-6">
+    {/* CARD PREMIUM DE REDIRECIONAMENTO PARA LÍDER DE EQUIPAS */}
+    <div className="relative overflow-hidden bg-gradient-to-br from-[#D4AF37]/10 via-[#0d0d0f] to-[#0d0d0f] border border-[#D4AF37]/20 rounded-3xl p-6 shadow-[0_4px_30px_rgba(212,175,55,0.05)]">
+      {/* Detalhe de Luz de Fundo Luxo */}
+      <div className="absolute top-0 right-0 w-32 h-32 bg-[#D4AF37]/5 rounded-full blur-3xl pointer-events-none" />
+      
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 relative z-10">
+        <div className="flex items-start gap-4">
+          <div className="p-3 rounded-2xl bg-[#D4AF37]/10 border border-[#D4AF37]/20 text-[#D4AF37]">
+            <Users2 size={24} />
+          </div>
+          <div>
+            <h3 className="text-sm font-black uppercase tracking-wider text-white">
+              Gestão de Líder de Equipas
+            </h3>
+            <p className="text-xs text-white/50 mt-1 max-w-md">
+              Aceda ao painel avançado de performance, monitorização de rede de afiliados e relatórios de comissões estruturais.
+            </p>
+          </div>
+        </div>
+
+        <button
+          onClick={handleTeamsRedirect}
+          disabled={isRedirecting}
+          className="flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-[#D4AF37] text-black text-xs font-black uppercase tracking-wider hover:bg-[#b8952e] active:scale-95 transition-all disabled:opacity-50 min-w-[160px]"
+        >
+          {isRedirecting ? (
+            <div className="w-4 h-4 border-2 border-black border-t-transparent rounded-full animate-spin" />
+          ) : (
+            <>
+              Entrar no Painel
+              <ArrowUpRight size={14} />
+            </>
+          )}
+        </button>
+      </div>
+    </div>
+
+    {/* PAINÉIS EXISTENTES */}
+    <div className="bg-[#0d0d0f] border border-white/5 rounded-3xl p-6">
+      <ReferralCodePanel />
+    </div>
+    
+    {isOwner && (
+      <div className="bg-[#0d0d0f] border border-white/5 rounded-3xl p-6">
+        <AdminPage />
+      </div>
+    )}
+  </div>
+)}
 
             </motion.div>
           </AnimatePresence>
