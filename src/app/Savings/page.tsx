@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { useAccount, useDisconnect } from "wagmi";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { motion } from "framer-motion";
-import { Pickaxe, ShieldCheck, Wallet, Zap, ChevronRight,  Network, ArrowRightLeft,  Activity,  Cpu, Coins } from "lucide-react";
+import { Pickaxe, ShieldCheck, Wallet, LogIn, Zap, ChevronRight,  Network, ArrowRightLeft,  Activity,  Cpu, Coins } from "lucide-react";
 import Link from "next/link";
 import TestnetProvider from "@/components/TestnetProvider";
 
@@ -79,7 +79,7 @@ export default function MiningPortal() {
                 MINING TERMINAL
               </h1>
               <p className="text-gray-400 text-sm md:text-base max-w-lg mx-auto leading-relaxed">
-                Participe na distribuição global de taxas. Minere E-Coin em tempo real através da prova de participação (Staking) no ecossistema da E-Coin Neural Web3.
+                Participe na distribuição global de taxas. Minere USDT e eDollar em tempo real através da prova de participação (Staking de eCoin) no ecossistema da E-Coin Neural Web3.
               </p>
             </motion.div>
 
@@ -137,7 +137,7 @@ export default function MiningPortal() {
 
             {/* 🚀 BOTÃO DE ACESSO AO GUIA COMPLETO */}
       <div className="w-full max-w-xl mx-auto mt-10">
-  <Link href="/Savings-Rewards-Flow-Info" className="group block">
+  <Link href="/ecoin-buyback-engine" className="group block">
     
     <motion.div 
       whileHover={{ x: 5 }}
@@ -161,18 +161,33 @@ export default function MiningPortal() {
 </div>
 
             {/* ÁREA DE CONEXÃO */}
-            <div className="flex flex-col items-center gap-6">
-              <ConnectButton.Custom>
-                {({ openConnectModal }) => (
-                  <button
-                    onClick={openConnectModal}
-                    className="group relative px-12 py-4 rounded-full font-black text-black
-                    bg-gradient-to-r from-[#D4AF37] to-[#F5F5F5] hover:scale-105 transition-all duration-300 shadow-[0_0_40px_rgba(212,175,55,0.4)]"
-                  >
-                    COMEÇAR A MINERAÇÃO NEURAL WEB3
-                  </button>
-                )}
-              </ConnectButton.Custom>
+           <div className="flex flex-col items-center gap-6">
+  <ConnectButton.Custom>
+    {({ openConnectModal }) => (
+      <button
+        onClick={openConnectModal}
+        className="group relative px-8 py-4 rounded-xl font-bold text-[#D4AF37] 
+                   bg-zinc-950 border border-[#D4AF37]/30 hover:border-[#D4AF37]
+                   transition-all duration-300 shadow-[0_0_20px_rgba(212,175,55,0.1)]
+                   hover:shadow-[0_0_30px_rgba(212,175,55,0.2)] hover:scale-[1.02]
+                   flex items-center gap-3 overflow-hidden"
+      >
+        {/* Efeito de brilho sutil ao passar o mouse */}
+        <div className="absolute inset-0 bg-gradient-to-r from-[#D4AF37]/0 via-[#D4AF37]/10 to-[#D4AF37]/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
+        
+        {/* Ícone */}
+        <div className="bg-[#D4AF37]/10 p-1.5 rounded-lg border border-[#D4AF37]/20">
+           <LogIn size={20} className="text-[#D4AF37]" />
+        </div>
+
+        {/* Texto do Botão */}
+        <span className="tracking-[0.2em] uppercase text-sm">
+          Login
+        </span>
+      </button>
+    )}
+  </ConnectButton.Custom>
+
 
               {/* INFO BOX */}
               <div className="grid grid-cols-1 gap-3 w-full max-w-md">

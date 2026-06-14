@@ -69,9 +69,19 @@ export function useReferralCodeRegistry() {
   });
 }
 
+async function hasCode(address: string) {
+  return publicClient.readContract({
+    address: CONTRACTS.REFERRAL_CODE_REGISTRY,
+    abi: referralCodeRegistryAbi,
+    functionName: "hasCode",
+    args: [address as `0x${string}`],
+  });
+}
+
   return {
   registerCode,
   resolveCode,
-  myCode
+  myCode,
+  hasCode
 };
 }

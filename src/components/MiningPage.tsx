@@ -404,48 +404,99 @@ const handleTeamsRedirect = () => {
 
               {/* TAB 4: GAS VAULT */}
               {activeTab === "gas" && (
-                <div className="max-w-2xl mx-auto bg-[#0d0d0f] border border-white/5 rounded-3xl p-6">
-                  <h3 className="text-sm font-bold uppercase tracking-wider mb-4 flex items-center gap-2 text-[#D4AF37]">
-                    <Fuel size={18} /> Gas Vault (ecGas)
-                  </h3>
-                  
-                  <div className="flex gap-2 my-4">
-                    {["USDT", "EUSD"].map((tk) => (
-                      <button
-                        key={tk}
-                        onClick={() => setGasToken(tk as any)}
-                        className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${gasToken === tk ? "bg-[#D4AF37] text-black" : "bg-white/5 text-white/60"}`}
-                      >
-                        {tk}
-                      </button>
-                    ))}
-                  </div>
-                  <div className="flex gap-2">
-                    <input
-                      type="text"
-                      placeholder={`Valor em ${gasToken}`}
-                      value={amountInput.value}
-                      onChange={(e) => amountInput.onChange(e.target.value)}
-                      className="flex-1 bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-xs text-white"
-                    />
-                    <TxButton
-                      state={gasTx.state}
-                      idleText="COMPRAR GAS"
-                      className="px-6 py-3 bg-[#D4AF37] text-black font-bold rounded-xl text-xs uppercase"
-                      onClick={async () => {
-                        try {
-                          if (!amountInput.isValid) return;
-                          gasTx.setState("wallet");
-                          const parsed = parseUnits(amountInput.normalizedValue, 18);
-                          if (gasToken === "USDT") { await gas.buyGasUSDT(parsed); } 
-                          else { await gas.buyGasEUSD(parsed); }
-                          gasTx.setState("submitted");
-                        } catch { gasTx.setState("error"); }
-                      }}
-                    />
-                  </div>
-                </div>
-              )}
+
+                <div className="max-w-2xl mx-auto bg-zinc-950/60 backdrop-blur-xl border border-white/5 rounded-3xl p-8 shadow-2xl">
+  {/* HEADER DO PAINEL */}
+  <div className="flex items-center justify-between mb-8">
+    <h3 className="text-sm font-bold uppercase tracking-[0.2em] flex items-center gap-2 text-[#D4AF37]">
+      <Fuel size={18} /> Compra ecGas 
+    </h3>
+    
+    {/* STATUS BADGE - Refinado */}
+    <div className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border ${
+      (gasToken === "USDT" && usdtEnabled) || (gasToken === "EUSD" && eusdEnabled)
+        ? "bg-green-500/10 text-green-500 border-green-500/20"
+        : "bg-red-500/10 text-red-500 border-red-500/20"
+    }`}>
+      {(gasToken === "USDT" && usdtEnabled) || (gasToken === "EUSD" && eusdEnabled)
+        ? "Sistema Ativo"
+        : "Sistema Pausado"}
+    </div>
+  </div>
+
+  {/* TOKEN SWITCHER - Estilo "Segmented Control" */}
+  <div className="flex bg-black/40 p-1 rounded-2xl mb-6 border border-white/5">
+    <button
+      onClick={() => setGasToken("USDT")}
+      className={`flex-1 py-3 rounded-xl font-bold transition-all duration-300 ${
+        gasToken === "USDT"
+          ? "bg-[#D4AF37] text-black shadow-lg"
+          : "text-zinc-500 hover:text-white"
+      }`}
+    >
+      USDT
+    </button>
+    <button
+      onClick={() => setGasToken("EUSD")}
+      className={`flex-1 py-3 rounded-xl font-bold transition-all duration-300 ${
+        gasToken === "EUSD"
+          ? "bg-[#D4AF37] text-black shadow-lg"
+          : "text-zinc-500 hover:text-white"
+      }`}
+    >
+      eDollar
+    </button>
+  </div>
+
+  {/* BUY INPUT AREA */}
+  <div className="flex flex-col sm:flex-row gap-3">
+    <div className="relative flex-1 group">
+      <input
+        inputMode="decimal"
+        autoComplete="off"
+        spellCheck={false}
+        type="text"
+        placeholder={`Enter ${gasToken} amount...`}
+        value={amountInput.value}
+        onChange={(e) => amountInput.onChange(e.target.value)}
+        className="w-full bg-black/40 border border-white/10 group-focus-within:border-[#D4AF37]/50 rounded-2xl px-6 py-4 text-white placeholder:text-zinc-600 outline-none transition-all duration-300"
+      />
+      <div className="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-500 text-xs font-mono">
+        {gasToken}
+      </div>
+    </div>
+
+    <TxButton
+      state={gasTx.state}
+      idleText={`Comprar Com ${gasToken}`}
+      className="px-8 py-4 rounded-2xl font-black whitespace-nowrap bg-gradient-to-r from-[#D4AF37] to-amber-600 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 text-black shadow-lg shadow-[#D4AF37]/20"
+      onClick={async () => {
+        try {
+          if (!amountInput.isValid) {
+            alert("Valor inválido");
+            return;
+          }
+          gasTx.setState("wallet");
+          const parsed = parseUnits(amountInput.normalizedValue, 18);
+          if (gasToken === "USDT") {
+            await gas.buyGasUSDT(parsed);
+          } else {
+            await gas.buyGasEUSD(parsed);
+          }
+          gasTx.setState("submitted");
+        } catch {
+          gasTx.setState("error");
+        }
+      }}
+    />
+  </div>
+
+  <p className="text-[11px] text-zinc-500 mt-4 leading-relaxed">
+    Fuel your <strong>ecGas</strong> (mining capacity) to power your mining payout capacity. 
+    Transações seguras via contrato inteligente.
+  </p>
+</div>
+)}
 
               {/* TAB 5: ANALYTICS */}
               {activeTab === "analytics" && (

@@ -10,7 +10,8 @@ import {
   Compass, 
   Timer,
   CheckCircle2,
-  XCircle
+  XCircle,
+  X
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -121,15 +122,25 @@ export default function BlockchainDeviceAlert() {
                   </div>
                 </div>
 
-                <button 
-                  onClick={() => setIsVisible(false)}
-                  className="group/btn relative overflow-hidden px-8 py-3 bg-blue-500/20 hover:bg-blue-500/30 border border-blue-500/40 rounded-xl transition-all duration-300"
-                >
-                  <span className="relative z-10 text-blue-400 font-black text-xs uppercase tracking-[0.2em] group-hover/btn:text-white transition-colors">
-                    Entendido, Proseguir ⚡
-                  </span>
-                  <div className="absolute inset-0 bg-blue-500 translate-y-full group-hover/btn:translate-y-0 transition-transform duration-300" />
-                </button>
+                <button
+  onClick={() => setIsVisible(false)}
+  className="group relative flex items-center justify-center gap-2 px-6 py-3 
+             bg-red-500/10 hover:bg-red-500/20 
+             border border-red-500/30 hover:border-red-500/60 
+             rounded-xl transition-all duration-300 
+             shadow-[0_0_15px_rgba(239,68,68,0.1)] hover:shadow-[0_0_25px_rgba(239,68,68,0.2)]"
+>
+  {/* Ícone de Fechar */}
+  <X 
+    size={18} 
+    className="text-red-500 group-hover:text-red-400 group-hover:rotate-90 transition-all duration-300" 
+  />
+  
+  {/* Texto */}
+  <span className="text-red-400 font-bold text-xs uppercase tracking-[0.2em] group-hover:text-white transition-colors">
+    Fechar
+  </span>
+</button>
               </div>
             </div>
           </div>
