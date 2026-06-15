@@ -70,34 +70,140 @@ function useSafeNumberInput(initial = "") {
 }
 
 // =========================================================================
-// 🌟 COMPONENTE STATCARD ATUALIZADO (ÍCONE NO TOPO - RESOLVE CONGESTIONAMENTO MOBILE)
+// 🌟 ULTRA PREMIUM & LUXURY STAT CARD (FINANCIAL CYBER STYLE)
 // =========================================================================
+
 interface StatCardProps {
   label: string;
   value: string | number;
   icon: React.ComponentType<{ className?: string; size?: number }>;
+  color?: "green" | "blue" | "gold" | "purple";
 }
 
-function StatCard({ label, value, icon: Icon }: StatCardProps) {
-  return (
-    <div className="relative overflow-hidden rounded-2xl border border-white/5 bg-[#0d0d0f]/80 p-5 backdrop-blur-md transition-all duration-300 hover:border-[#D4AF37]/30 hover:shadow-[0_8px_30px_rgba(0,0,0,0.5)] w-full">
-      {/* Efeito Glow sutil de fundo premium estilo Binance */}
-      <div className="absolute -right-6 -top-6 h-12 w-12 rounded-full bg-[#D4AF37]/5 blur-xl pointer-events-none" />
+function StatCard({ label, value, icon: Icon, color = "gold" }: StatCardProps) {
+  // Mapeamento de cores extremamente vivas e modernas (Estilo TradingView/Binance)
+  const colorMap = {
+    green: {
+      text: "text-emerald-400",
+      bgGlow: "from-emerald-500/10",
+      iconBg: "from-emerald-500/20 to-emerald-500/5 border-emerald-500/20",
+      hoverBorder: "hover:border-emerald-500/40",
+      shadow: "hover:shadow-[0_15px_40px_rgba(16,185,129,0.15)]",
+    },
+    blue: {
+      text: "text-cyan-400",
+      bgGlow: "from-cyan-500/10",
+      iconBg: "from-cyan-500/20 to-cyan-500/5 border-cyan-500/20",
+      hoverBorder: "hover:border-cyan-500/40",
+      shadow: "hover:shadow-[0_15px_40px_rgba(6,182,212,0.15)]",
+    },
+    gold: {
+      text: "text-[#D4AF37]",
+      bgGlow: "from-[#D4AF37]/10",
+      iconBg: "from-[#D4AF37]/20 to-[#D4AF37]/5 border-[#D4AF37]/20",
+      hoverBorder: "hover:border-[#D4AF37]/40",
+      shadow: "hover:shadow-[0_15px_40px_rgba(212,175,55,0.15)]",
+    },
+    purple: {
+      text: "text-fuchsia-400",
+      bgGlow: "from-fuchsia-500/10",
+      iconBg: "from-fuchsia-500/20 to-fuchsia-500/5 border-fuchsia-500/20",
+      hoverBorder: "hover:border-fuchsia-500/40",
+      shadow: "hover:shadow-[0_15px_40px_rgba(217,70,239,0.15)]",
+    },
+  };
 
-      <div className="flex flex-col gap-3">
-        {/* Ícone estritamente alinhado por cima dos textos */}
-        <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-white/5 text-[#D4AF37]">
-          <Icon size={18} />
+  const currentTheme = colorMap[color];
+
+  return (
+    <div
+      className={`
+        relative
+        overflow-hidden
+        rounded-3xl
+        border
+        border-white/10
+        bg-[#09090b]/60
+        backdrop-blur-xl
+        p-6
+        w-full
+        min-h-[195px]
+        transition-all
+        duration-300
+        hover:-translate-y-1.5
+        hover:bg-white/[0.04]
+        ${currentTheme.hoverBorder}
+        ${currentTheme.shadow}
+      `}
+    >
+      {/* Gradiente sutil de fundo que acende no hover baseado na cor tema */}
+      <div
+        className={`
+          absolute
+          inset-0
+          bg-gradient-to-br
+          ${currentTheme.bgGlow}
+          via-transparent
+          to-transparent
+          pointer-events-none
+        `}
+      />
+
+      <div className="relative z-10 h-full flex flex-col justify-between">
+        {/* Topo do Card */}
+        <div className="flex items-center justify-between mb-6">
+          <div
+            className={`
+              w-14
+              h-14
+              rounded-2xl
+              bg-gradient-to-br
+              ${currentTheme.iconBg}
+              flex
+              items-center
+              justify-center
+              border
+            `}
+          >
+            <Icon size={24} className={currentTheme.text} />
+          </div>
+
+          {/* Indicador de Status Ativo (Pulse) */}
+          <div className="relative flex h-2 w-2">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+            <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+          </div>
         </div>
 
-        {/* Textos empilhados verticalmente com largura total livre */}
-        <div className="space-y-1">
-          <p className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-white/40">
+        {/* Textos e Valores */}
+        <div className="mt-auto">
+          <p
+            className="
+              text-[10px]
+              uppercase
+              tracking-[0.25em]
+              text-white/40
+              font-bold
+              mb-2
+            "
+          >
             {label}
           </p>
-          <p className="font-mono text-base font-black tracking-tight text-white sm:text-lg md:text-xl break-words">
+
+          <h2
+            className={`
+              text-2xl
+              md:text-3xl
+              font-black
+              tracking-tight
+              font-mono
+              break-words
+              leading-none
+              ${currentTheme.text}
+            `}
+          >
             {value}
-          </p>
+          </h2>
         </div>
       </div>
     </div>
@@ -526,12 +632,32 @@ const handleTeamsRedirect = () => {
                 <div className="space-y-6">
                   {/* 🌟 CORREÇÃO AQUI: Mudamos de 'hidden lg:grid' para 'grid grid-cols-2 lg:grid-cols-4 gap-4' */}
     {/* Agora os cards de status aparecem em 2 colunas no mobile e 4 colunas no desktop */}
-    <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-      <StatCard label="Depósitos Globais" value={stats.totalStaked} icon={ShieldCheck} />
-      <StatCard label="Mineradores Ativos" value={stats.totalStakers} icon={TrendingUp} />
-      <StatCard label="Meu Depósito" value={stats.myStake} icon={Coins} />
-      <StatCard label="Ganhos Estimados" value={stats.share} icon={Zap} />
-    </div>
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+  <StatCard 
+    label="Depósitos Globais" 
+    value={stats.totalStaked} 
+    icon={ShieldCheck} 
+    color="green"
+  />
+  <StatCard 
+    label="Mineradores Ativos" 
+    value={stats.totalStakers} 
+    icon={TrendingUp} 
+    color="blue"
+  />
+  <StatCard 
+    label="Meu Depósito" 
+    value={stats.myStake} 
+    icon={Coins} 
+    color="gold"
+  />
+  <StatCard 
+    label="Ganhos Estimados" 
+    value={stats.share} 
+    icon={Zap} 
+    color="purple"
+  />
+</div>
                   <MiningAnalyticsPanel
                     totalRewards={pendingUSDT + pendingEUSD}
                     totalGasUsed={usedCapacity}
