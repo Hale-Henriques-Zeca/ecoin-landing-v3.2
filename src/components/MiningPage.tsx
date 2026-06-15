@@ -69,17 +69,40 @@ function useSafeNumberInput(initial = "") {
   return { value, normalizedValue, setValue, onChange, isValid };
 }
 
-const StatCard = ({ label, value, icon: Icon }: any) => (
-  <div className="bg-white/5 border border-white/10 backdrop-blur-md p-4 sm:p-6 rounded-2xl flex items-center gap-4 hover:border-[#D4AF37]/30 transition-all w-full">
-    <div className={`p-3 rounded-xl bg-white/5 text-[#D4AF37]`}>
-      <Icon size={22} />
+// =========================================================================
+// 🌟 COMPONENTE STATCARD ATUALIZADO (ÍCONE NO TOPO - RESOLVE CONGESTIONAMENTO MOBILE)
+// =========================================================================
+interface StatCardProps {
+  label: string;
+  value: string | number;
+  icon: React.ComponentType<{ className?: string; size?: number }>;
+}
+
+function StatCard({ label, value, icon: Icon }: StatCardProps) {
+  return (
+    <div className="relative overflow-hidden rounded-2xl border border-white/5 bg-[#0d0d0f]/80 p-5 backdrop-blur-md transition-all duration-300 hover:border-[#D4AF37]/30 hover:shadow-[0_8px_30px_rgba(0,0,0,0.5)] w-full">
+      {/* Efeito Glow sutil de fundo premium estilo Binance */}
+      <div className="absolute -right-6 -top-6 h-12 w-12 rounded-full bg-[#D4AF37]/5 blur-xl pointer-events-none" />
+
+      <div className="flex flex-col gap-3">
+        {/* Ícone estritamente alinhado por cima dos textos */}
+        <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-white/5 text-[#D4AF37]">
+          <Icon size={18} />
+        </div>
+
+        {/* Textos empilhados verticalmente com largura total livre */}
+        <div className="space-y-1">
+          <p className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-white/40">
+            {label}
+          </p>
+          <p className="font-mono text-base font-black tracking-tight text-white sm:text-lg md:text-xl break-words">
+            {value}
+          </p>
+        </div>
+      </div>
     </div>
-    <div>
-      <p className="text-[10px] sm:text-xs text-white/50 uppercase tracking-widest">{label}</p>
-      <p className="text-lg sm:text-xl font-black text-white">{value}</p>
-    </div>
-  </div>
-);
+  );
+}
 
 export default function MiningPage() {
   const { isConnected, address } = useAccount();
