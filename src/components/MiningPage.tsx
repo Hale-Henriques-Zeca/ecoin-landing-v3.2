@@ -179,7 +179,7 @@ function StatCard({ label, value, icon: Icon, color = "gold" }: StatCardProps) {
         <div className="mt-auto">
           <p
             className="
-              text-[10px]
+              text-[20px]
               uppercase
               tracking-[0.25em]
               text-white/40
@@ -634,6 +634,20 @@ const handleTeamsRedirect = () => {
     {/* Agora os cards de status aparecem em 2 colunas no mobile e 4 colunas no desktop */}
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
   <StatCard 
+    label="Meu Depósito" 
+    value={stats.myStake} 
+    icon={Coins} 
+    color="gold"
+  />
+
+  <StatCard 
+    label="Ganhos Estimados" 
+    value={stats.share} 
+    icon={Zap} 
+    color="purple"
+  />
+
+  <StatCard 
     label="Depósitos Globais" 
     value={stats.totalStaked} 
     icon={ShieldCheck} 
@@ -645,18 +659,7 @@ const handleTeamsRedirect = () => {
     icon={TrendingUp} 
     color="blue"
   />
-  <StatCard 
-    label="Meu Depósito" 
-    value={stats.myStake} 
-    icon={Coins} 
-    color="gold"
-  />
-  <StatCard 
-    label="Ganhos Estimados" 
-    value={stats.share} 
-    icon={Zap} 
-    color="purple"
-  />
+  
 </div>
                   <MiningAnalyticsPanel
                     totalRewards={pendingUSDT + pendingEUSD}
