@@ -175,8 +175,8 @@ const { data: eusdEnabled } = useReadContract({
   const menuItems = [
     { id: "minacao", label: "Mineração", icon: Cpu },
     { id: "recompensas", label: "Recompensas", icon: Gift },
-    { id: "stake", label: "Stake", icon: Coins },
-    { id: "gas", label: "Gas Vault", icon: Fuel },
+    { id: "stake", label: "Staking", icon: Coins },
+    { id: "gas", label: "Gas", icon: Fuel },
     { id: "analytics", label: "Analytics", icon: BarChart3 },
     { id: "historico", label: "Histórico", icon: History },
     { id: "Portfolio", label: "Portfolio", icon: Wallet },
