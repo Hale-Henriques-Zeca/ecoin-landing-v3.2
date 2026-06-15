@@ -258,7 +258,7 @@ export default function EcoinLeaderMarketingEngine() {
             <span>🏦</span> Identidade BEP20 On-Chain
           </h3>
           <p className="text-xs text-zinc-400 mb-6 self-start text-left">
-            Código QR público estruturado para transferências diretas de ecGas e interações inteligentes na rede Binance Smart Chain.
+            Código QR público estruturado para transferências diretas de BNB e interações inteligentes na rede Binance Smart Chain: scan imediato do seu upline para vincula-lo na live.
           </p>
 
           {isConnected ? (
