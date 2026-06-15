@@ -280,7 +280,7 @@ const { data: eusdEnabled } = useReadContract({
     pendingUSDT: `${streaming.visualUSDT.toFixed(6)} USDT`,
     pendingEUSD: `${streaming.visualEUSD.toFixed(6)} eUSD`,
     totalStakers: mining.totalStakers.toString(),
-    share: `${mining.share.toFixed(4)}%`,
+    share: `${mining.share.toFixed(8)}%`,
   };
 
   const isOwner = isConnected && address && MINING_OWNER && address.toLowerCase() === MINING_OWNER;
