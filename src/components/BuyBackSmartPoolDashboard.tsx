@@ -3,6 +3,7 @@
 import { useAccount, useConnect, useReadContract } from "wagmi";
 import { motion } from "framer-motion";
 import { formatUnits } from "viem";
+import Link from "next/link";
 
 import { priceEngineAbi } from "@/lib/abis/priceEngineAbi";
 import { treasuryAbi } from "@/lib/abis/treasuryAbi";
@@ -202,12 +203,25 @@ return(
       <p>[12:41:07] Chainlink Oracle atualizado: novo preço global $30.27.</p>
     </div>
   </div>
+
+  {/* CTA BUTTON */}
+
+  <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
+        <Link
+            href="/ecoin-price-sync-engine"
+            className="inline-flex items-center gap-2 px-10 py-4 rounded-full
+            bg-[#D4AF37] text-white font-semibold
+            hover:bg-[#D4AF37] hover:text-black
+            transition-all duration-300 shadow-lg"
+          >
+            Explorar o Price Sync Engine Info →
+          </Link>
+    
+</div>
 </section>
 
 
 </div>
-
-
 
 
 </section>
