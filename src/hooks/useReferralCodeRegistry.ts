@@ -1,87 +1,50 @@
 "use client";
 
 import { useWalletClient, usePublicClient } from "wagmi";
-
 import { CONTRACTS } from "@/lib/contracts/contracts";
-
-import { referralCodeRegistryAbi }
-from "@/lib/abis/referralCodeRegistryAbi";
+import { referralCodeRegistryAbi } from "@/lib/abis/referralCodeRegistryAbi";
 
 export function useReferralCodeRegistry() {
-
   const { data: walletClient } = useWalletClient();
-
   const publicClient = usePublicClient();
 
+  // Registrar um novo código
   async function registerCode(code: string) {
+    if (!walletClient) throw new Error("Wallet not connected");
 
-    if (!walletClient)
-      throw new Error("Wallet not connected");
+    const hash = await walletClient.writeContract({
+      address: CONTRACTS.REFERRAL_CODE_REGISTRY,
+      abi: referralCodeRegistryAbi,
+      functionName: "registerCode",
+      args: [code],
+    });
 
-    const hash =
-      await walletClient.writeContract({
+    return publicClient.waitForTransactionReceipt({ hash });
+  }
 
-        address:
-          CONTRACTS.REFERRAL_CODE_REGISTRY,
-
-        abi:
-          referralCodeRegistryAbi,
-
-        functionName:
-          "registerCode",
-
-        args: [code]
-      });
-
-    return publicClient.waitForTransactionReceipt({
-      hash
+  // Resolver código para endereço (para o sistema de referência)
+  async function resolveCode(code: string) {
+    return publicClient.readContract({
+      address: CONTRACTS.REFERRAL_CODE_REGISTRY,
+      abi: referralCodeRegistryAbi,
+      functionName: "resolveCode",
+      args: [code],
     });
   }
 
-  async function resolveCode(
-  code: string
-) {
-
-  return publicClient.readContract({
-
-    address:
-      CONTRACTS.REFERRAL_CODE_REGISTRY,
-
-    abi:
-      referralCodeRegistryAbi,
-
-    functionName:
-      "resolveCode",
-
-    args: [code]
-  });
-}
-
-  async function myCode() {
-
-  return publicClient.readContract({
-
-    address:
-      CONTRACTS.REFERRAL_CODE_REGISTRY,
-
-    abi:
-      referralCodeRegistryAbi,
-  });
-}
-
-async function hasCode(address: string) {
-  return publicClient.readContract({
-    address: CONTRACTS.REFERRAL_CODE_REGISTRY,
-    abi: referralCodeRegistryAbi,
-    functionName: "hasCode",
-    args: [address as `0x${string}`],
-  });
-}
+  // Obter lista completa de códigos do usuário (substitui a antiga myCode)
+  async function getMyCodes(address: `0x${string}`) {
+    return publicClient.readContract({
+      address: CONTRACTS.REFERRAL_CODE_REGISTRY,
+      abi: referralCodeRegistryAbi,
+      functionName: "getMyCodes",
+      args: [address],
+    });
+  }
 
   return {
-  registerCode,
-  resolveCode,
-  myCode,
-  hasCode
-};
+    registerCode,
+    resolveCode,
+    getMyCodes,
+  };
 }
