@@ -3,11 +3,12 @@
 import { useState, useEffect } from "react";
 import Copy from "lucide-react/dist/esm/icons/copy";
 import Check from "lucide-react/dist/esm/icons/check";
-import Tag from "lucide-react/dist/esm/icons/tag";
-import LinkIcon from "lucide-react/dist/esm/icons/link";
 import Sparkles from "lucide-react/dist/esm/icons/sparkles";
+import Star from "lucide-react/dist/esm/icons/star"; // Ícone para "Ativar"
 import { useAccount } from "wagmi";
 import { useReferralCodeRegistry } from "@/hooks/useReferralCodeRegistry";
+
+
 
 export default function ReferralCodePanel() {
   const { address } = useAccount();
@@ -16,27 +17,42 @@ export default function ReferralCodePanel() {
   const [code, setCode] = useState("");
   const [loading, setLoading] = useState(false);
   const [codes, setCodes] = useState<string[]>([]);
-  const [copiedField, setCopiedField] = useState<string | null>(null);
+  // LocalStorage para salvar qual o código que o usuário escolheu como "Principal"
+  const [activeCode, setActiveCode] = useState<string | null>(null);
 
   const fetchCodes = async () => {
     if (!address) return;
     try {
       const data = await getMyCodes(address as `0x${string}`);
       setCodes(data || []);
+      
+      // Se não tiver um código ativo definido, define o primeiro da lista
+      const savedActive = localStorage.getItem(`active_ref_${address.toLowerCase()}`);
+      if (!savedActive && data && data.length > 0) {
+        setActiveCode(data[0]);
+      } else {
+        setActiveCode(savedActive);
+      }
     } catch (e) { console.error(e); }
   };
 
-  useEffect(() => { fetchCodes(); }, [address]);
-
+  // ADICIONADA: Função que faltava
   const handleRegister = async () => {
     if (!code.trim()) return;
     setLoading(true);
     try {
       await registerCode(code);
-      await fetchCodes(); // Atualiza a lista após registrar
+      await fetchCodes(); 
       setCode("");
-    } catch (error) { alert("Erro: Código já registrado ou inválido."); }
+    } catch (error) { alert("Erro ao registrar."); }
     finally { setLoading(false); }
+  };
+
+  useEffect(() => { fetchCodes(); }, [address]);
+
+  const handleSetActive = (c: string) => {
+    setActiveCode(c);
+    localStorage.setItem(`active_ref_${address!.toLowerCase()}`, c);
   };
 
   return (
@@ -45,24 +61,31 @@ export default function ReferralCodePanel() {
         <Sparkles size={20} /> Seu Painel de Referral
       </h3>
 
-      {/* Lista de Códigos */}
-      <div className="space-y-4 mb-6">
+      {/* Exibição do Código Principal (Destaque) */}
+      {activeCode && (
+        <div className="mb-6 p-4 border border-[#D4AF37]/30 bg-[#D4AF37]/5 rounded-xl text-center">
+            <p className="text-xs text-zinc-400 uppercase">Código de Convite Ativo</p>
+            <h2 className="text-3xl font-mono font-bold text-white mt-1">{activeCode}</h2>
+        </div>
+      )}
+
+      {/* Histórico de Códigos */}
+      <div className="space-y-3 mb-6">
+        <p className="text-sm text-zinc-400">Histórico de códigos criados:</p>
         {codes.map((c, i) => (
-          <div key={i} className="flex items-center justify-between bg-black/40 p-3 rounded-lg border border-zinc-800">
-            <span className="font-mono text-[#D4AF37]">{c}</span>
-            <button onClick={() => {
-                navigator.clipboard.writeText(`https://ecoin.edenkingdom.org/Savings?ref=${c}`);
-                setCopiedField(c);
-            }}>
-              {copiedField === c ? <Check size={18} className="text-green-500" /> : <Copy size={18} />}
-            </button>
+          <div key={i} className={`flex items-center justify-between p-3 rounded-lg border ${activeCode === c ? 'border-[#D4AF37]' : 'border-zinc-800'} bg-black/40`}>
+            <span className="font-mono text-white">{c}</span>
+            <div className="flex gap-2">
+                <button onClick={() => handleSetActive(c)} title="Definir como ativo">
+                    <Star size={18} className={activeCode === c ? 'text-[#D4AF37] fill-[#D4AF37]' : 'text-zinc-600'} />
+                </button>
+            </div>
           </div>
         ))}
       </div>
 
       {/* Novo Cadastro */}
       <div className="border-t border-zinc-800 pt-4">
-        <p className="text-sm text-zinc-400 mb-2">Criar novo código:</p>
         <div className="flex gap-2">
           <input 
             value={code} 

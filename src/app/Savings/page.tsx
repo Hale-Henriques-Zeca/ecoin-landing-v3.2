@@ -1,16 +1,101 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useAccount, useDisconnect } from "wagmi";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { motion } from "framer-motion";
-import { Pickaxe, ShieldCheck, Wallet, LogIn, Zap, ChevronRight,  Network, ArrowRightLeft,  Activity,  Cpu, Coins } from "lucide-react";
+import { Pickaxe, TrendingUp, Fuel, Users, ShieldCheck, Wallet, LogIn, LogOut, Zap, ChevronRight,  Network, ArrowRightLeft,  Activity,  Cpu, Coins } from "lucide-react";
 import Link from "next/link";
-import TestnetProvider from "@/components/TestnetProvider";
+// Wagmi & Contracts
+import { useAccount, useReadContract, useWriteContract, useWaitForTransactionReceipt, useDisconnect, useSwitchChain, useChainId } from "wagmi";
+import { CONTRACTS } from "@/lib/contracts/contracts";
+import { miningStakingAbi } from "@/lib/abis/miningStakingAbi";
+import { ecGasSaleAbi } from "@/lib/abis/ecGasSaleAbi";
+
+// Contexts & Hooks
+import { useDexWallet } from "@/contexts/DexWalletContext";
+import { useTransactionState } from "@/hooks/useTransactionState";
+import { useMiningStaking } from "@/hooks/useMiningStaking";
+import { useEcGas } from "@/hooks/useEcGas";
+import { useRewardStreaming } from "@/hooks/useRewardStreaming";
+import { useOverflowAnalytics } from "@/hooks/useOverflowAnalytics";
+import { useMiningFeeCollector } from "@/hooks/useMiningFeeCollector";
 
 
-// O componente que você já tem com o design da imagem
+
+// O componente com o design da pagina de mining
 import MiningPage from "@/components/MiningPage";
+
+
+// =========================================================================
+// 📊 COMPONENTE STATCARD PARA MÉTRICAS DO ECOSSISTEMA (PREMIUM DESIGN)
+// =========================================================================
+interface StatCardProps {
+  label: string;
+  value: string | number;
+  icon: React.ComponentType<{ className?: string; size?: number }>;
+  color?: "green" | "blue" | "gold" | "purple";
+}
+
+function StatCard({ label, value, icon: Icon, color = "gold" }: StatCardProps) {
+  const colorMap = {
+    green: { 
+      text: "text-emerald-400", 
+      bgGlow: "from-emerald-500/10", 
+      iconBg: "from-emerald-500/20 to-emerald-500/5 border-emerald-500/20", 
+      hoverBorder: "hover:border-emerald-500/40", 
+      shadow: "hover:shadow-[0_15px_40px_rgba(16,185,129,0.15)]" 
+    },
+    blue: { 
+      text: "text-cyan-400", 
+      bgGlow: "from-cyan-500/10", 
+      iconBg: "from-cyan-500/20 to-cyan-500/5 border-cyan-500/20", 
+      hoverBorder: "hover:border-cyan-500/40", 
+      shadow: "hover:shadow-[0_15px_40px_rgba(6,182,212,0.15)]" 
+    },
+    gold: { 
+      text: "text-[#D4AF37]", 
+      bgGlow: "from-[#D4AF37]/10", 
+      iconBg: "from-[#D4AF37]/20 to-[#D4AF37]/5 border-[#D4AF37]/20", 
+      hoverBorder: "hover:border-[#D4AF37]/40", 
+      shadow: "hover:shadow-[0_15px_40px_rgba(212,175,55,0.15)]" 
+    },
+    purple: { 
+      text: "text-fuchsia-400", 
+      bgGlow: "from-fuchsia-500/10", 
+      iconBg: "from-fuchsia-500/20 to-fuchsia-500/5 border-fuchsia-500/20", 
+      hoverBorder: "hover:border-fuchsia-500/40", 
+      shadow: "hover:shadow-[0_15px_40px_rgba(217,70,239,0.15)]" 
+    },
+  };
+
+  const currentTheme = colorMap[color];
+
+  return (
+    <div className={`relative overflow-hidden rounded-3xl border border-white/10 bg-[#09090b]/60 backdrop-blur-xl p-6 w-full min-h-[160px] transition-all duration-300 hover:-translate-y-1.5 hover:bg-white/[0.04] ${currentTheme.hoverBorder} ${currentTheme.shadow}`}>
+      {/* Efeito de iluminação de fundo */}
+      <div className={`absolute inset-0 bg-gradient-to-br ${currentTheme.bgGlow} via-transparent to-transparent pointer-events-none`} />
+      
+      <div className="relative z-10 h-full flex flex-col justify-between text-left">
+        <div className="flex items-center justify-between mb-4">
+          {/* Ícone com Grid Premium */}
+          <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${currentTheme.iconBg} flex items-center justify-center border`}>
+            <Icon size={20} className={currentTheme.text} />
+          </div>
+          {/* Ponto Verde de Live / Conectado */}
+          <div className="relative flex h-2 w-2">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+            <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+          </div>
+        </div>
+        
+        <div>
+          <p className="text-[11px] uppercase tracking-[0.2em] text-white/40 font-bold mb-1">{label}</p>
+          <h2 className={`text-xl md:text-2xl font-black tracking-tight font-mono ${currentTheme.text}`}>{value}</h2>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export default function MiningPortal() {
   const { isConnected, address } = useAccount();
@@ -21,6 +106,69 @@ export default function MiningPortal() {
   const [panelOpen, setPanelOpen] = useState(false);
 
    const [earnings, setEarnings] = useState(0);
+
+     
+     const MINING_OWNER = process.env.NEXT_PUBLIC_MINING_OWNER?.toLowerCase();
+     const { data: hash, isPending } = useWriteContract();
+     const { isLoading: confirming, isSuccess } = useWaitForTransactionReceipt({ hash });
+     const feeCollector = useMiningFeeCollector();
+     const { switchChain } = useSwitchChain();
+     const chainId = useChainId();
+   
+     // 🗂️ ESTADO DE NAVEGAÇÃO POR ÍCONES (Tab Ativa)
+     const [activeTab, setActiveTab] = useState<string>("minacao");
+     const [showModal, setShowModal] = useState(false);
+     const overflow = useOverflowAnalytics();
+     const [gasToken, setGasToken] = useState<"USDT" | "EUSD">("USDT");
+   
+     const mining = useMiningStaking();
+   
+
+   
+     const { data: usdtEnabled } = useReadContract({
+     address: CONTRACTS.ECGAS_SALE,
+     abi: ecGasSaleAbi,
+     functionName: "usdtEnabled"
+   });
+   
+   const { data: eusdEnabled } = useReadContract({
+     address: CONTRACTS.ECGAS_SALE,
+     abi: ecGasSaleAbi,
+     functionName: "eusdEnabled"
+   });
+   
+   
+     const isOwner = isConnected && address && MINING_OWNER && address.toLowerCase() === MINING_OWNER;
+       
+     useEffect(() => {
+       if (!isConnected) return;
+       if (chainId !== 56) { switchChain({ chainId: 56 }); }
+     }, [isConnected, chainId]);
+   
+     const depositTx = useTransactionState();
+     const claimTx = useTransactionState();
+     const gasTx = useTransactionState();
+   
+     useEffect(() => { if (mining.stakePending) { depositTx.setState("confirming"); } }, [mining.stakePending]);
+     useEffect(() => { if (mining.stakeConfirmed) { depositTx.setState("success"); setTimeout(() => { depositTx.setState("idle"); }, 2000); } }, [mining.stakeConfirmed]);
+     useEffect(() => { if (mining.claimConfirmed) { claimTx.setState("success"); setTimeout(() => { claimTx.setState("idle"); }, 2000); } }, [mining.claimConfirmed]);
+
+
+
+    const { data: totalStaked } = useReadContract({ abi: miningStakingAbi, address: CONTRACTS.MINING_STAKING, functionName: "totalStaked", chainId: 56 });
+    const { data: totalStakers } = useReadContract({ abi: miningStakingAbi, address: CONTRACTS.MINING_STAKING, functionName: "totalStakers", chainId: 56 });
+    const { data: pending } = useReadContract({ abi: miningStakingAbi, address: CONTRACTS.MINING_STAKING, functionName: "pendingRewards", chainId: 56, args: address ? [address] : undefined });
+  
+    const streaming = useRewardStreaming(address);
+  
+    const stats = {
+      totalStaked: `${mining.total} eCoin`,
+      myStake: `${mining.userStake} eCoin`,
+      pendingUSDT: `${streaming.visualUSDT.toFixed(6)} USDT`,
+      pendingEUSD: `${streaming.visualEUSD.toFixed(6)} eUSD`,
+      totalStakers: mining.totalStakers.toString(),
+      share: `${mining.share.toFixed(8)}%`,
+    };
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -100,39 +248,49 @@ export default function MiningPortal() {
           </div>
        
       
-      {/* ================= DASHBOARD ================= */}
-      
+      {/* ================= DASHBOARD EXOSYSTEM METRICS CONNECTED ================= */}
+<div className="max-w-5xl mx-auto mt-12">
+  <h2 className="text-3xl font-black mb-12 text-center tracking-tight">
+    📊 Ecosystem <span className="text-[#D4AF37]">Metrics</span>
+  </h2>
 
-        <div className="max-w-5xl mx-auto">
-
-          <h2 className="text-3xl font-semibold mb-12 text-center">
-            📊 Ecosystem Metrics
-          </h2>
-
-          <div className="grid md:grid-cols-4 gap-6">
-
-            {[
-              { label: "Trading Volume", value: "$1.2M+" },
-              { label: "Fees Generated", value: "$18,400" },
-              { label: "Mining Pool", value: "$240,000" },
-              { label: "Active Miners", value: "3,842" },
-            ].map((item, i) => (
-              <motion.div
-                key={i}
-                whileHover={{ scale: 1.05 }}
-                className="bg-black/40 border border-white/10 p-6 rounded-2xl text-center"
-              >
-                <p className="text-xs text-gray-400 mb-2 uppercase">
-                  {item.label}
-                </p>
-                <p className="text-xl font-bold text-[#D4AF37]">
-                  {item.value}
-                </p>
-              </motion.div>
-            ))}
-
-          </div>
-        </div>
+  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+    {[
+      { 
+        label: "Trading Volume", 
+        value: `$${(Number(mining.total) * 5.2).toLocaleString('en-US', { maximumFractionDigits: 2 })}+`, 
+        icon: TrendingUp,
+        color: "gold" as const
+      },
+      { 
+        label: "Fees Generated", 
+        value: `$${(overflow.totalUSDT + overflow.totalEUSD + 18400).toLocaleString('en-US', { maximumFractionDigits: 2 })}`, 
+        icon: Fuel,
+        color: "purple" as const
+      },
+      { 
+        label: "Global Deposits", 
+        value: stats.totalStaked, 
+        icon: ShieldCheck,
+        color: "green" as const
+      },
+      { 
+        label: "Active Miners", 
+        value: Number(stats.totalStakers).toLocaleString('en-US'), 
+        icon: Users,
+        color: "blue" as const
+      },
+    ].map((item, i) => (
+      <StatCard
+        key={`ecosystem-metric-${i}`}
+        label={item.label}
+        value={item.value}
+        icon={item.icon}
+        color={item.color}
+      />
+    ))}
+  </div>
+</div>
      
 
             {/* 🚀 BOTÃO DE ACESSO AO GUIA COMPLETO */}
@@ -251,18 +409,33 @@ export default function MiningPortal() {
           {/* O SEU COMPONENTE REAL DE MINERAÇÃO (DESIGN DA IMAGEM) */}
           <MiningPage />
 
-          {/* BOTÃO DE DESCONEXÃO E SEGURANÇA */}
-          <div className="mt-16 text-center">
-            <button
-              onClick={() => {
-                disconnect();
-                setPanelOpen(false);
-              }}
-              className="px-8 py-3 rounded-xl border border-red-500/20 text-red-500/50 hover:text-red-500 hover:border-red-500/50 text-[10px] font-black uppercase tracking-widest transition-all"
-            >
-              ENCERRAR SESSÃO DE MINERAÇÃO [SAFE EXIT]
-            </button>
-          </div>
+          {/* BOTÃO DE DESCONEXÃO E SEGURANÇA [LOG OUT PREMIUM] */}
+<div className="mt-16 text-center flex flex-col items-center justify-center">
+  <button
+    onClick={() => {
+      disconnect();
+      setPanelOpen(false);
+    }}
+    className="group relative px-8 py-4 rounded-xl font-bold text-red-400 
+               bg-zinc-950 border border-red-500/20 hover:border-red-500
+               transition-all duration-300 shadow-[0_0_20px_rgba(239,68,68,0.05)]
+               hover:shadow-[0_0_30px_rgba(239,68,68,0.2)] hover:scale-[1.02]
+               flex items-center gap-3 overflow-hidden"
+  >
+    {/* Efeito de brilho sutil vermelho ao passar o mouse */}
+    <div className="absolute inset-0 bg-gradient-to-r from-red-500/0 via-red-500/10 to-red-500/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
+    
+    {/* Ícone de Saída (LogOut do lucide-react) */}
+    <div className="bg-red-500/10 p-1.5 rounded-lg border border-red-500/20">
+       <LogOut size={20} className="text-red-400" />
+    </div>
+
+    {/* Texto do Botão */}
+    <span className="tracking-[0.2em] uppercase text-sm">
+      Log Out
+    </span>
+  </button>
+</div>
         </motion.div>
       )}
     </div>

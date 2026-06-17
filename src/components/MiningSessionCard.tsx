@@ -137,7 +137,7 @@ ${Number(session.claimedEUSD) / 1e18}
           <div>
 
             <p className="text-white/40 text-xs mb-1">
-              Wallet
+              QR Code
             </p>
 
             <p className="text-white break-all text-sm">
@@ -146,17 +146,6 @@ ${Number(session.claimedEUSD) / 1e18}
 
           </div>
 
-          <div>
-
-            <p className="text-white/40 text-xs mb-1">
-              Upline
-            </p>
-
-            <p className="text-blue-300 break-all text-sm">
-              {session.upline}
-            </p>
-
-          </div>
 
           <div>
 
