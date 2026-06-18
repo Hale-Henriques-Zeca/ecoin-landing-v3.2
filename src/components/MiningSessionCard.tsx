@@ -134,17 +134,15 @@ ${Number(session.claimedEUSD) / 1e18}
 
         <div className="grid md:grid-cols-2 gap-4">
 
-          <div>
-
-            <p className="text-white/40 text-xs mb-1">
-              QR Code
-            </p>
-
-            <p className="text-white break-all text-sm">
-              {session.wallet}
-            </p>
-
-          </div>
+          <div className="flex justify-center">
+  <div className="bg-white p-2 rounded-xl">
+    <QRCode
+      value={session.referralCode} // Isso gera o QR Code baseado no código (ex: "KING123")
+      size={80}
+      // Opcional: Adicionar um logo no centro se quiser, mas aqui é puro.
+    />
+  </div>
+</div>
 
 
           <div>

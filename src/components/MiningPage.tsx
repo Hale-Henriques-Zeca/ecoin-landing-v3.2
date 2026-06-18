@@ -55,6 +55,11 @@ import MiningHistoryPanel from "@/components/MiningHistoryPanel";
 import APRPanel from "@/components/APRPanel";
 import EcoinWalletDashboard from "@/components/EcoinWalletDashboard";
 import ReferralCodePanel from "@/components/ReferralCodePanel";
+import ClaimCooldown from "@/components/ClaimCooldown";
+
+
+
+
 
 function useSafeNumberInput(initial = "") {
   const [value, setValue] = useState(initial);
@@ -425,8 +430,38 @@ const handleTeamsRedirect = () => {
       <div className="lg:col-span-5 flex flex-col gap-4">
         <LiveRewardCounter pendingUSDT={pendingUSDT} pendingEUSD={pendingEUSD} />
         <RewardStreamIndicator />
+        
       </div>
+      
     </div>
+
+    <div className="mb-8">
+                  
+                    <APRPanel
+                      yearlyRewards={
+                        (pendingUSDT + pendingEUSD) * 365
+                      }
+                      stakedAmount={
+                        Number(mining.userStake)
+                      }
+                    />
+                  
+                  </div>
+
+                  <div className="mb-8">
+                    <RewardVelocityPanel
+                    pendingUSDT={pendingUSDT}
+                  />
+                  </div>
+                  
+                  
+                  
+                  <div className="mb-12">
+                    <ProjectedRewardsPanel
+                    pendingUSDT={pendingUSDT}
+                  />
+                  </div>
+                  
   </>
 )}
 
@@ -459,7 +494,7 @@ const handleTeamsRedirect = () => {
                       }
                     }}
                   />
-                  <div className="text-center text-[10px] text-white/30 mt-3">Cooldown Ativo de 10 minutos.</div>
+                  <div className="text-center text-[10px] text-white/30 mt-3"><ClaimCooldown /></div>
                 </div>
               )}
 
@@ -669,10 +704,8 @@ const handleTeamsRedirect = () => {
                     recycled={overflow.totalUSDT + overflow.totalEUSD}
                     apr={148.22}
                   />
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <RewardVelocity pending={pendingUSDT + pendingEUSD} totalStaked={Number(formatUnits(totalStaked || 0n, 18))} />
-                    <APRPanel yearlyRewards={(pendingUSDT + pendingEUSD) * 365} stakedAmount={Number(mining.userStake)} />
-                  </div>
+                  
+                  
                   <div className="bg-[#0d0d0f] border border-white/5 rounded-3xl p-6">
                   <EcoinWalletDashboard />
                 </div>

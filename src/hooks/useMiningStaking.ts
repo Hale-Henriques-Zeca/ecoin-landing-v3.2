@@ -238,33 +238,35 @@ return hash;
 
 
 async function getMiningSessions() {
-
   if (!address) return [];
 
-  const totalSessions =
-    await publicClient.readContract({
-      address: STAKING,
-      abi: miningStakingAbi,
-      functionName: "miningSession",
-      args: [address],
-    });
+  // Busca o total de sessões do usuário
+  const totalSessions = await publicClient.readContract({
+    address: STAKING,
+    abi: miningStakingAbi,
+    functionName: "miningSession", // Certifique-se que no seu contrato este nome retorna o total
+    args: [address],
+  });
 
   const rows = [];
-
-  for (let i = 0; i <= Number(totalSessions); i++) {
-
-    const session =
-      await publicClient.readContract({
-        address: STAKING,
-        abi: miningStakingAbi,
-        functionName: "sessions",
-        args: [address, BigInt(i)],
-      });
-
-    rows.push({
-      id: i,
-      ...session,
+  // i < totalSessions (índice começa em 0, logo, menor que o total)
+  for (let i = 0; i < Number(totalSessions); i++) {
+    const session = await publicClient.readContract({
+      address: STAKING,
+      abi: miningStakingAbi,
+      functionName: "sessions",
+      args: [address, BigInt(i)],
     });
+
+    // Filtra apenas sessões completadas
+    if (session.completed) {
+      rows.push({
+        id: i,
+        ...session,
+        startedAt: session.startedAt ?? 0n,
+        endedAt: session.endedAt ?? 0n,
+      });
+    }
   }
 
   return rows.reverse();
