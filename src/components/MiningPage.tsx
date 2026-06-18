@@ -423,17 +423,20 @@ const handleTeamsRedirect = () => {
     {/* 🌟 CORREÇÃO AQUI: Mudamos de 'hidden lg:grid' para 'grid grid-cols-1 lg:grid-cols-12 gap-6' */}
     {/* O gráfico e o contador live vão empilhar no mobile e ficar lado a lado no desktop */}
     <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-      <div className="lg:col-span-7 bg-[#0d0d0f] border border-white/5 rounded-3xl p-6">
+      
+      
+      
+    </div>
+    <div className="lg:col-span-7 bg-[#0d0d0f] border border-white/5 rounded-3xl p-6">
         
         <RewardVelocityGraph pendingUSDT={pendingUSDT} />
       </div>
-      <div className="lg:col-span-5 flex flex-col gap-4">
+
+    <div className="lg:col-span-5 flex flex-col gap-4">
         <LiveRewardCounter pendingUSDT={pendingUSDT} pendingEUSD={pendingEUSD} />
         <RewardStreamIndicator />
         
       </div>
-      
-    </div>
 
     <div className="mb-8">
                   
