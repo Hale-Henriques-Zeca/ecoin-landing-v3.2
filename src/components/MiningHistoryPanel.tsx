@@ -9,20 +9,24 @@ import {
   CheckCircle2,
 } from "lucide-react";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, } from "react";
+import { useAccount } from 'wagmi';
 import { useMiningStaking } from "@/hooks/useMiningStaking";
 
 export default function MiningHistoryPanel() {
-  const { getMiningSessions } = useMiningStaking();
-  const [sessions, setSessions] = useState<any[]>([]);
+  // No seu componente MiningHistoryPanel
+const { getMiningSessions } = useMiningStaking();
+const { address } = useAccount(); // Adicione isso
+const [sessions, setSessions] = useState<any[]>([]);
 
-  useEffect(() => {
-    async function load() {
-      const rows = await getMiningSessions();
-      setSessions(rows);
-    }
-    load();
-  }, []);
+useEffect(() => {
+  async function load() {
+    if (!address) return; // Só busca se tiver endereço
+    const rows = await getMiningSessions();
+    setSessions(rows);
+  }
+  load();
+}, [address, getMiningSessions]); // Adicione as dependências
 
   return (
     <div className="space-y-4">

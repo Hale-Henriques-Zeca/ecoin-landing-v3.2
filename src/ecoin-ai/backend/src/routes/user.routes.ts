@@ -5,9 +5,13 @@ const router = express.Router();
 
 // GET USER STATE
 router.get("/:wallet", async (req, res) => {
-  const { wallet } = req.params;
+  const wallet = req.params.wallet.toLowerCase();
+
+  console.log("GET USER:", wallet);
 
   let user = await User.findOne({ wallet });
+
+  console.log("FOUND:", user);
 
   if (!user) {
     user = await User.create({ wallet });
@@ -18,20 +22,27 @@ router.get("/:wallet", async (req, res) => {
 
 // START BOT
 router.post("/start", async (req, res) => {
-  const { wallet } = req.body;
+  const wallet = req.body.wallet.toLowerCase();
 
-  await User.updateOne({ wallet }, { botActive: true });
+  await User.updateOne(
+    { wallet },
+    { botActive: true }
+  );
 
   res.json({ success: true });
 });
 
 // STOP BOT
 router.post("/stop", async (req, res) => {
-  const { wallet } = req.body;
+  const wallet = req.body.wallet.toLowerCase();
 
-  await User.updateOne({ wallet }, { botActive: false });
+  await User.updateOne(
+    { wallet },
+    { botActive: false }
+  );
 
   res.json({ success: true });
 });
+
 
 export default router;

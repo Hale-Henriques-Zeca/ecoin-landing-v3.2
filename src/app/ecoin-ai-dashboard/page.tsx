@@ -29,6 +29,10 @@ import TriangularAI from "@/components/ai-bots/TriangularAI";
 import CrossAI from "@/components/ai-bots/CrossAI";
 import TradingGasVaultAdminPanel from "@/components/TradingGasVaultAdminPanel";
 
+
+const fetcher = (url: string) =>
+  fetch(url).then((res) => res.json());
+
 export default function AIDashboardContent() {
   const [mounted, setMounted] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -55,7 +59,12 @@ export default function AIDashboardContent() {
   const publicClient = usePublicClient();
   const { writeContractAsync } = useWriteContract();
 
-  const { data: user } = useSWR(address ? `http://localhost:4000/api/user/${address}` : null);
+  const { data: user } = useSWR(
+  address
+    ? `http://localhost:4000/api/user/${address}`
+    : null,
+  fetcher
+);
   const isBotRunning = user?.botActive;
 
   const CONTRACT_ADDRESS = "0xcD55717633ABBa6758616949fCa54d8C41972535"; 
@@ -87,7 +96,7 @@ export default function AIDashboardContent() {
     if (!address) return;
     const endpoint = user?.botActive ? "stop" : "start";
     await fetch(`http://localhost:4000/api/user/${endpoint}`, {
-      密m: "POST",
+      method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ wallet: address })
     });
@@ -136,8 +145,8 @@ export default function AIDashboardContent() {
     { id: "triangular", label: "Triangular AI", icon: Cpu },
     { id: "cross", label: "Cross AI", icon: Cpu },
     { id: "gas", label: "Gas Vault", icon: Fuel },
-    { id: "carteira", label: "Carteira", icon: Wallet },
-    ...(isOwner ? [{ id: "admin", label: "Admin Panel", icon: Settings }] : []),
+    { id: "carteira", label: "Portifolio", icon: Wallet },
+    ...(isOwner ? [{ id: "admin", label: "Settings", icon: Settings }] : []),
   ];
 
   return (

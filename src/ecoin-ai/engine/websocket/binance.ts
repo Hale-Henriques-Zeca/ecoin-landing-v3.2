@@ -2,21 +2,43 @@ import WebSocket from "ws";
 import { checkTriangularArbitrage } from "../arbitrage/triangular";
 
 type Prices = {
-  ETHBTC: number;
-  BTCUSDT: number;
-  ETHUSDT: number;
+  ETHBTC: {
+    bid: number;
+    ask: number;
+  };
+
+  BTCUSDT: {
+    bid: number;
+    ask: number;
+  };
+
+  ETHUSDT: {
+    bid: number;
+    ask: number;
+  };
 };
 
 const prices: Prices = {
-  ETHBTC: 0,
-  BTCUSDT: 0,
-  ETHUSDT: 0,
+  ETHBTC: {
+    bid: 0,
+    ask: 0,
+  },
+
+  BTCUSDT: {
+    bid: 0,
+    ask: 0,
+  },
+
+  ETHUSDT: {
+    bid: 0,
+    ask: 0,
+  },
 };
 
 export function startBinanceStream() {
   const ws = new WebSocket(
-    "wss://stream.binance.com:9443/ws/ethbtc@bookTicker/btcusdt@bookTicker/ethusdt@bookTicker"
-  );
+  "wss://stream.binance.com:9443/stream?streams=ethbtc@bookTicker/btcusdt@bookTicker/ethusdt@bookTicker"
+);
 
   ws.on("open", () => {
     console.log("🟢 Binance WebSocket Connected");
@@ -24,14 +46,35 @@ export function startBinanceStream() {
 
   ws.on("message", (data) => {
     try {
-      const msg = JSON.parse(data.toString());
-
+      const payload = JSON.parse(data.toString());
+      
+      const msg = payload.data;
+      
       const symbol = msg.s;
-      const price = parseFloat(msg.a); // ASK PRICE
 
-      if (symbol === "ETHBTC") prices.ETHBTC = price;
-      if (symbol === "BTCUSDT") prices.BTCUSDT = price;
-      if (symbol === "ETHUSDT") prices.ETHUSDT = price;
+
+      
+
+if (symbol === "ETHBTC") {
+  prices.ETHBTC = {
+    bid: Number(msg.b),
+    ask: Number(msg.a),
+  };
+}
+
+if (symbol === "BTCUSDT") {
+  prices.BTCUSDT = {
+    bid: Number(msg.b),
+    ask: Number(msg.a),
+  };
+}
+
+if (symbol === "ETHUSDT") {
+  prices.ETHUSDT = {
+    bid: Number(msg.b),
+    ask: Number(msg.a),
+  };
+}
 
       console.clear();
       console.clear();

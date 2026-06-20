@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { Cpu, ShieldCheck, Play, Square, Settings, RefreshCcw } from "lucide-react";
+import useSWR from "swr";
 
 const StatCard = ({ title, value, unit, color = "text-white" }: any) => (
   <div className="bg-white/5 border border-white/10 p-5 rounded-2xl backdrop-blur-md hover:bg-white/10 transition-colors">
@@ -18,6 +19,23 @@ export default function TriangularAI({ user, isBotRunning, toggleBot }: any) {
   const [secretKey, setSecretKey] = useState("");
   const [saved, setSaved] = useState(false);
   const [logs, setLogs] = useState<string[]>([]);
+  const [showCredentials, setShowCredentials] = useState(false);
+
+  const { data: opportunities } = useSWR(
+  "http://localhost:4000/api/arbitrage/opportunities",
+  (url) => fetch(url).then(r => r.json()),
+  {
+    refreshInterval: 1000,
+  }
+);
+
+const { data: market } = useSWR(
+  "http://localhost:4000/api/arbitrage/market",
+  (url) => fetch(url).then(r => r.json()),
+  {
+    refreshInterval: 1000,
+  }
+);
 
   useEffect(() => {
     const storedKey = localStorage.getItem("EKD_API_KEY");
@@ -48,36 +66,157 @@ export default function TriangularAI({ user, isBotRunning, toggleBot }: any) {
       <div className="lg:col-span-2 space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <StatCard title="Gas Balance" value={(user?.ecGas ?? 0).toLocaleString()} unit="ecGas" color="text-blue-400" />
-          <StatCard title="Gas Value" value={((user?.ecGas ?? 0) / 1000).toFixed(2)} unit="USDT" color="text-green-400" />
+          <StatCard title="Your Exchange Balance" value={((user?.ecGas ?? 0) / 1000).toFixed(2)} unit="USDT" color="text-green-400" />
           <StatCard title="Bot Status" value={isBotRunning ? "ON" : "OFF"} color={isBotRunning ? "text-green-400" : "text-red-400"} />
         </div>
 
         {/* API CONTROL PANEL */}
         <div className="bg-[#0f172a]/80 border border-blue-500/20 p-8 rounded-[32px] backdrop-blur-xl shadow-xl">
-          <div className="flex justify-between items-center mb-8">
-            <h3 className="text-sm font-bold uppercase tracking-widest flex items-center gap-2 text-blue-400">
-              <Settings size={18}/> Triangular API Control
-            </h3>
-            <div className={`px-3 py-1 rounded-full text-[10px] font-bold ${isBotRunning ? 'bg-green-500/20 text-green-500 border-green-500/30' : 'bg-red-500/20 text-red-500 border-red-500/30'} border`}>
-              {isBotRunning ? '• ACTIVE' : '• STANDBY'}
-            </div>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
-            <input type="password" value={apiKey} onChange={(e) => setApiKey(e.target.value)} placeholder="Binance API Key" className="bg-black/40 border border-white/10 p-4 rounded-xl text-sm focus:border-blue-500 outline-none transition" />
-            <input type="password" value={secretKey} onChange={(e) => setSecretKey(e.target.value)} placeholder="Binance Secret Key" className="bg-black/40 border border-white/10 p-4 rounded-xl text-sm focus:border-blue-500 outline-none transition" />
-          </div>
 
-          <div className="grid grid-cols-2 gap-4 mb-4">
-            <button onClick={() => { localStorage.setItem("EKD_API_KEY", apiKey); localStorage.setItem("EKD_SECRET_KEY", secretKey); setSaved(true); }} className="py-3 bg-blue-600/20 border border-blue-600/50 text-blue-400 rounded-xl text-xs font-bold hover:bg-blue-600 hover:text-white transition">Guardar API</button>
-            <button onClick={() => { localStorage.removeItem("EKD_API_KEY"); localStorage.removeItem("EKD_SECRET_KEY"); setApiKey(""); setSecretKey(""); setSaved(false); }} className="py-3 bg-red-600/20 border border-red-600/50 text-red-400 rounded-xl text-xs font-bold hover:bg-red-600 hover:text-white transition">Remover API</button>
-          </div>
-          {saved && <p className="text-green-400 text-xs mb-6 text-center">✔ API guardada com sucesso</p>}
+  <div className="flex justify-between items-center mb-8">
+    <h3 className="text-sm font-bold uppercase tracking-widest flex items-center gap-2 text-blue-400">
+      <Cpu size={18}/>
+      Triangular Market Scanner
+    </h3>
 
-          <button onClick={toggleBot} className={`w-full py-5 rounded-2xl font-black flex items-center justify-center gap-3 transition-all uppercase tracking-widest ${isBotRunning ? 'bg-red-600 hover:bg-red-500' : 'bg-blue-600 hover:bg-blue-500 shadow-[0_0_20px_rgba(37,99,235,0.3)]'}`}>
-            {isBotRunning ? <><Square size={18} fill="currentColor" /> Terminar Sessão</> : <><RefreshCcw size={18} /> Ativar Triangular Bot</>}
-          </button>
-        </div>
+    <div
+      className={`px-3 py-1 rounded-full text-[10px] font-bold ${
+        isBotRunning
+          ? "bg-green-500/20 text-green-500 border-green-500/30"
+          : "bg-red-500/20 text-red-500 border-red-500/30"
+      } border`}
+    >
+      {isBotRunning ? "• ACTIVE" : "• STANDBY"}
+    </div>
+  </div>
+
+  <div className="grid md:grid-cols-3 gap-4">
+
+    <div className="bg-black/30 border border-white/10 rounded-xl p-4">
+      <p className="text-blue-400 font-bold mb-2">ETHBTC</p>
+      <p className="text-white/70 text-xs">BID {market?.ETHBTC?.bid ?? "---"}</p>
+      <p className="text-white/70 text-xs">ASK {market?.ETHBTC?.ask ?? "---"}</p>
+    </div>
+
+    <div className="bg-black/30 border border-white/10 rounded-xl p-4">
+      <p className="text-blue-400 font-bold mb-2">BTCUSDT</p>
+      <p className="text-white/70 text-xs">BID {market?.BTCUSDT?.bid ?? "---"}</p>
+      <p className="text-white/70 text-xs">ASK {market?.BTCUSDT?.ask ?? "---"}</p>
+    </div>
+
+    <div className="bg-black/30 border border-white/10 rounded-xl p-4">
+      <p className="text-blue-400 font-bold mb-2">ETHUSDT</p>
+      <p className="text-white/70 text-xs">BID {market?.ETHUSDT?.bid ?? "---"}</p>
+      <p className="text-white/70 text-xs">ASK {market?.ETHUSDT?.ask ?? "---"}</p>
+    </div>
+
+  </div>
+
+  <div className="mt-6 bg-black/30 border border-white/10 rounded-xl p-4">
+    <p className="text-xs text-yellow-400 font-bold mb-4">
+      LIVE CALCULATION ENGINE
+    </p>
+
+    <div className="space-y-3">
+
+      <div>
+        <p className="text-white text-xs">
+          USDT→BTC→ETH→USDT
+        </p>
+        <p className="text-red-400 font-bold">
+          {market?.profit1 ?? "---"}%
+        </p>
+      </div>
+
+      <div>
+        <p className="text-white text-xs">
+          USDT→ETH→BTC→USDT
+        </p>
+        <p className="text-red-400 font-bold">
+          {market?.profit2 ?? "---"}%
+        </p>
+      </div>
+
+    </div>
+  </div>
+
+  <button
+    onClick={toggleBot}
+    className={`w-full mt-6 py-5 rounded-2xl font-black flex items-center justify-center gap-3 transition-all uppercase tracking-widest ${
+      isBotRunning
+        ? "bg-red-600 hover:bg-red-500"
+        : "bg-blue-600 hover:bg-blue-500"
+    }`}
+  >
+    {isBotRunning
+      ? "Terminar Sessão"
+      : "Ativar Triangular Bot"}
+  </button>
+
+  <button
+    onClick={() => setShowCredentials(!showCredentials)}
+    className="w-full mt-4 bg-white/5 border border-white/10 py-3 rounded-xl text-xs uppercase tracking-widest font-bold"
+  >
+    ⚙ Binance Credentials
+  </button>
+
+  {showCredentials && (
+    <div className="mt-4 space-y-4">
+
+      <input
+        type="password"
+        value={apiKey}
+        onChange={(e) => setApiKey(e.target.value)}
+        placeholder="Binance API Key"
+        className="w-full bg-black/40 border border-white/10 p-4 rounded-xl"
+      />
+
+      <input
+        type="password"
+        value={secretKey}
+        onChange={(e) => setSecretKey(e.target.value)}
+        placeholder="Binance Secret Key"
+        className="w-full bg-black/40 border border-white/10 p-4 rounded-xl"
+      />
+
+      <div className="grid grid-cols-2 gap-4">
+
+        <button
+          onClick={() => {
+            localStorage.setItem("EKD_API_KEY", apiKey);
+            localStorage.setItem("EKD_SECRET_KEY", secretKey);
+            setSaved(true);
+          }}
+          className="py-3 bg-blue-600/20 border border-blue-600/50 text-blue-400 rounded-xl"
+        >
+          Guardar API
+        </button>
+
+        <button
+          onClick={() => {
+            localStorage.removeItem("EKD_API_KEY");
+            localStorage.removeItem("EKD_SECRET_KEY");
+            setApiKey("");
+            setSecretKey("");
+            setSaved(false);
+          }}
+          className="py-3 bg-red-600/20 border border-red-600/50 text-red-400 rounded-xl"
+        >
+          Remover API
+        </button>
+
+      </div>
+
+      {saved && (
+        <p className="text-green-400 text-xs">
+          ✔ API guardada com sucesso
+        </p>
+      )}
+
+    </div>
+  )}
+
+</div>
 
         {/* METRICS */}
         <div className="bg-white/5 border border-white/10 p-6 rounded-[32px] grid grid-cols-2 md:grid-cols-4 gap-6">
