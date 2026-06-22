@@ -8,6 +8,10 @@ import "./engine/runner";
 import { startBinanceStream } from "../../engine/websocket/binance";
 import arbitrageRoutes from "./routes/arbitrage.routes";
 import marketRoutes from "./routes/market.routes";
+import historyRoutes from "./routes/history.routes";
+import statsRoutes from "./routes/stats.routes";
+import binanceRoutes from "./routes/binance.routes";
+
 
 dotenv.config();
 
@@ -21,6 +25,16 @@ app.use(
   "/api/arbitrage/market",
   marketRoutes
 );
+app.use(
+  "/api/arbitrage/stats",
+  statsRoutes
+);
+app.use(
+  "/api/binance",
+  binanceRoutes
+);
+
+app.use("/api/arbitrage/history", historyRoutes);
 
 // A função start garante a ordem correta
 async function start() {

@@ -1,6 +1,7 @@
 import { updateBalance } from "../../profit/pnl/tracker";
 import { opportunities } from "./opportunities";
 import { market } from "../../api/arbitrage/market";
+import { tradeHistory } from "../../engine/arbitrage/history";
 
 type Prices = {
   ETHBTC: {
@@ -88,7 +89,7 @@ if (profit2 > 0.0001) {
   console.log("💰 Balance atualizado");
 }
 
-if (profit1 > 0) {
+if (profit1 > 0.0001) {
 
   opportunities.unshift({
     route: "USDT→BTC→ETH→USDT",
@@ -96,16 +97,30 @@ if (profit1 > 0) {
     timestamp: Date.now(),
   });
 
+  tradeHistory.unshift({
+  route: "USDT→BTC→ETH→USDT",
+  profit: Number((profit1 * 100).toFixed(4)),
+  fee: 0.3,
+  timestamp: Date.now(),
+});
+
 }
 
 
-if (profit2 > 0) {
+if (profit2 > 0.0001) {
 
   opportunities.unshift({
     route: "USDT→ETH→BTC→USDT",
     profit: Number((profit2 * 100).toFixed(4)),
     timestamp: Date.now(),
   });
+
+  tradeHistory.unshift({
+  route: "USDT→ETH→BTC→USDT",
+  profit: Number((profit2 * 100).toFixed(4)),
+  fee: 0.3,
+  timestamp: Date.now(),
+});
 
 }
 
@@ -134,6 +149,10 @@ market.profit2 = Number(
 
 while (opportunities.length > 100) {
   opportunities.pop();
+}
+
+while (tradeHistory.length > 100) {
+  tradeHistory.pop();
 }
 
 }

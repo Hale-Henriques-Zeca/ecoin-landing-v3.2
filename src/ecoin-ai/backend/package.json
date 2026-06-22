@@ -2,6 +2,7 @@
   "name": "backend",
   "version": "1.0.0",
   "dependencies": {
+    "@binance/connector": "^3.6.1",
     "cors": "^2.8.6",
     "dotenv": "^16.6.1",
     "ethers": "^6.17.0",

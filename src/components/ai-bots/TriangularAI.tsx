@@ -18,7 +18,6 @@ export default function TriangularAI({ user, isBotRunning, toggleBot }: any) {
   const [apiKey, setApiKey] = useState("");
   const [secretKey, setSecretKey] = useState("");
   const [saved, setSaved] = useState(false);
-  const [logs, setLogs] = useState<string[]>([]);
   const [showCredentials, setShowCredentials] = useState(false);
 
   const { data: opportunities } = useSWR(
@@ -37,37 +36,81 @@ const { data: market } = useSWR(
   }
 );
 
+
+const { data: history } = useSWR(
+  "http://localhost:4000/api/arbitrage/history",
+  (url) => fetch(url).then(r => r.json()),
+  {
+    refreshInterval: 1000,
+  }
+);
+
+const { data: stats } = useSWR(
+  "http://localhost:4000/api/arbitrage/stats",
+  (url) => fetch(url).then(r => r.json()),
+  {
+    refreshInterval: 1000,
+  }
+);
+
+const { data: exchange } = useSWR(
+  "http://localhost:4000/api/binance/balance",
+  (url) => fetch(url).then(r => r.json()),
+  {
+    refreshInterval: 5000,
+  }
+);
+
+const { data: systemIp } = useSWR(
+  "http://localhost:4000/api/system/ip",
+  (url) => fetch(url).then(r => r.json())
+);
+
   useEffect(() => {
     const storedKey = localStorage.getItem("EKD_API_KEY");
     const storedSecret = localStorage.getItem("EKD_SECRET_KEY");
     if (storedKey && storedSecret) { setApiKey(storedKey); setSecretKey(storedSecret); setSaved(true); }
   }, []);
 
-  // Simulação de Logs do Bot Triangular
-  useEffect(() => {
-    if (!isBotRunning) return;
-    const messages = [
-      "Analyzing Triangle: USDT -> BTC -> ETH -> USDT", 
-      "Imbalance detected on Binance Spot", 
-      "Executing 3-way swap...", 
-      "Net Profit: +0.45 USDT",
-      "Deducting Gas: 1.5 ecGas"
-    ];
-    const interval = setInterval(() => {
-      const msg = `[${new Date().toLocaleTimeString()}] ${messages[Math.floor(Math.random() * messages.length)]}`;
-      setLogs(prev => [msg, ...prev].slice(0, 8));
-    }, 2500);
-    return () => clearInterval(interval);
-  }, [isBotRunning]);
+
+
+  
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 animate-fadeIn">
       {/* ESQUERDA */}
       <div className="lg:col-span-2 space-y-6">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <StatCard title="Gas Balance" value={(user?.ecGas ?? 0).toLocaleString()} unit="ecGas" color="text-blue-400" />
-          <StatCard title="Your Exchange Balance" value={((user?.ecGas ?? 0) / 1000).toFixed(2)} unit="USDT" color="text-green-400" />
-          <StatCard title="Bot Status" value={isBotRunning ? "ON" : "OFF"} color={isBotRunning ? "text-green-400" : "text-red-400"} />
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          <StatCard
+  title="Gas Balance"
+  value={(user?.ecGas ?? 0).toLocaleString()}
+  unit="ecGas"
+  color="text-blue-400"
+/>
+
+<StatCard
+  title="Exchange Balance"
+  value={
+    exchange?.balance?.toFixed(2)
+      ?? "0.00"
+  }
+  unit="USDT"
+  color="text-green-400"
+/>
+
+<StatCard
+  title="Open Trades"
+  value={opportunities?.length ?? 0}
+  unit="LIVE"
+  color="text-blue-400"
+/>
+
+<StatCard
+  title="Daily PnL"
+  value={stats?.totalProfit?.toFixed(2) ?? "0.00"}
+  unit="%"
+  color="text-emerald-400"
+/>
         </div>
 
         {/* API CONTROL PANEL */}
@@ -93,19 +136,19 @@ const { data: market } = useSWR(
   <div className="grid md:grid-cols-3 gap-4">
 
     <div className="bg-black/30 border border-white/10 rounded-xl p-4">
-      <p className="text-blue-400 font-bold mb-2">ETHBTC</p>
+      <p className="text-blue-400 font-bold mb-2">ETH/BTC</p>
       <p className="text-white/70 text-xs">BID {market?.ETHBTC?.bid ?? "---"}</p>
       <p className="text-white/70 text-xs">ASK {market?.ETHBTC?.ask ?? "---"}</p>
     </div>
 
     <div className="bg-black/30 border border-white/10 rounded-xl p-4">
-      <p className="text-blue-400 font-bold mb-2">BTCUSDT</p>
+      <p className="text-blue-400 font-bold mb-2">BTC/USDT</p>
       <p className="text-white/70 text-xs">BID {market?.BTCUSDT?.bid ?? "---"}</p>
       <p className="text-white/70 text-xs">ASK {market?.BTCUSDT?.ask ?? "---"}</p>
     </div>
 
     <div className="bg-black/30 border border-white/10 rounded-xl p-4">
-      <p className="text-blue-400 font-bold mb-2">ETHUSDT</p>
+      <p className="text-blue-400 font-bold mb-2">ETH/USDT</p>
       <p className="text-white/70 text-xs">BID {market?.ETHUSDT?.bid ?? "---"}</p>
       <p className="text-white/70 text-xs">ASK {market?.ETHUSDT?.ask ?? "---"}</p>
     </div>
@@ -160,7 +203,10 @@ const { data: market } = useSWR(
     ⚙ Binance Credentials
   </button>
 
+  
   {showCredentials && (
+
+    
     <div className="mt-4 space-y-4">
 
       <input
@@ -192,14 +238,38 @@ const { data: market } = useSWR(
           Guardar API
         </button>
 
+
         <button
-          onClick={() => {
-            localStorage.removeItem("EKD_API_KEY");
-            localStorage.removeItem("EKD_SECRET_KEY");
-            setApiKey("");
-            setSecretKey("");
-            setSaved(false);
-          }}
+          onClick={async () => {
+
+  localStorage.setItem(
+    "EKD_API_KEY",
+    apiKey
+  );
+
+  localStorage.setItem(
+    "EKD_SECRET_KEY",
+    secretKey
+  );
+
+  await fetch(
+    "http://localhost:4000/api/binance/connect",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type":
+          "application/json",
+      },
+      body: JSON.stringify({
+        apiKey,
+        secretKey,
+      }),
+    }
+  );
+
+  setSaved(true);
+
+}}
           className="py-3 bg-red-600/20 border border-red-600/50 text-red-400 rounded-xl"
         >
           Remover API
@@ -215,16 +285,223 @@ const { data: market } = useSWR(
 
     </div>
   )}
+  
+  <div className="mt-4">
+  <div className="bg-black/30 border border-white/10 rounded-xl p-4">
+
+  <p className="text-yellow-400 text-xs font-bold mb-3">
+    Binance Trusted IP
+  </p>
+
+  <div className="flex gap-2">
+
+    <input
+      readOnly
+      value={systemIp?.ips?.[0] ?? ""}
+      className="flex-1 bg-black/40 border border-white/10 p-3 rounded-xl"
+    />
+
+    <button
+      onClick={() => {
+        navigator.clipboard.writeText(
+          systemIp?.ips?.[0] ?? ""
+        );
+      }}
+      className="px-4 bg-yellow-500 text-black rounded-xl font-bold"
+    >
+      Copiar
+    </button>
+
+  </div>
+
+  <p className="text-[10px] text-gray-500 mt-3">
+    Adicione este IP na Binance para activar Spot Trading.
+  </p>
+
+</div>
+</div>
 
 </div>
 
         {/* METRICS */}
-        <div className="bg-white/5 border border-white/10 p-6 rounded-[32px] grid grid-cols-2 md:grid-cols-4 gap-6">
-          <div className="text-center"><p className="text-[9px] text-gray-500 uppercase font-mono">Triangles Found</p><p className="text-xl font-bold text-white">45</p></div>
-          <div className="text-center"><p className="text-[9px] text-gray-500 uppercase font-mono">Executed</p><p className="text-xl font-bold text-emerald-400">8</p></div>
-          <div className="text-center"><p className="text-[9px] text-gray-500 uppercase font-mono">Skipped</p><p className="text-xl font-bold text-red-400">37</p></div>
-          <div className="text-center"><p className="text-[9px] text-gray-500 uppercase font-mono">Avg Profit</p><p className="text-[10px] font-bold text-[#D4AF37] mt-2">+0.2% / Cycle</p></div>
+
+<div className="bg-white/5 border border-white/10 p-6 rounded-[32px] grid grid-cols-2 md:grid-cols-4 gap-6">
+
+  <div className="text-center">
+    <p className="text-[9px] text-gray-500 uppercase font-mono">
+      Triangles Found
+    </p>
+
+    <p className="text-xl font-bold text-white">
+      {opportunities?.length ?? 0}
+    </p>
+  </div>
+
+  <div className="text-center">
+    <p className="text-[9px] text-gray-500 uppercase font-mono">
+      Executed
+    </p>
+
+    <p className="text-xl font-bold text-emerald-400">
+      {stats?.successfulTrades ?? 0}
+    </p>
+  </div>
+
+  <div className="text-center">
+    <p className="text-[9px] text-gray-500 uppercase font-mono">
+      Failed
+    </p>
+
+    <p className="text-xl font-bold text-red-400">
+      {stats?.failedTrades ?? 0}
+    </p>
+  </div>
+
+  <div className="text-center">
+    <p className="text-[9px] text-gray-500 uppercase font-mono">
+      Avg Profit
+    </p>
+
+    <p className="text-[10px] font-bold text-[#D4AF37] mt-2">
+      {stats?.totalTrades
+        ? (
+            stats.totalProfit /
+            stats.totalTrades
+          ).toFixed(4)
+        : "0.0000"}
+      % / Cycle
+    </p>
+  </div>
+
+</div>
+
+        {/* PROFIT STATISTICSS */}
+
+        <div className="bg-white/5 border border-white/10 p-6 rounded-[32px]">
+
+  <h3 className="text-sm font-bold uppercase tracking-widest text-blue-400 mb-6">
+    Profit Statistics
+  </h3>
+
+  <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+
+    <div className="bg-black/20 rounded-xl p-4">
+      <p className="text-gray-500 text-[10px] uppercase">
+        Total Trades
+      </p>
+
+      <p className="text-white text-xl font-bold mt-2">
+        {stats?.totalTrades ?? 0}
+      </p>
+    </div>
+
+    <div className="bg-black/20 rounded-xl p-4">
+      <p className="text-gray-500 text-[10px] uppercase">
+        Successful
+      </p>
+
+      <p className="text-green-400 text-xl font-bold mt-2">
+        {stats?.successfulTrades ?? 0}
+      </p>
+    </div>
+
+    <div className="bg-black/20 rounded-xl p-4">
+      <p className="text-gray-500 text-[10px] uppercase">
+        Failed
+      </p>
+
+      <p className="text-red-400 text-xl font-bold mt-2">
+        {stats?.failedTrades ?? 0}
+      </p>
+    </div>
+
+    <div className="bg-black/20 rounded-xl p-4">
+      <p className="text-gray-500 text-[10px] uppercase">
+        Win Rate
+      </p>
+
+      <p className="text-yellow-400 text-xl font-bold mt-2">
+        {(stats?.winRate ?? 0).toFixed(2)}%
+      </p>
+    </div>
+
+    <div className="bg-black/20 rounded-xl p-4">
+      <p className="text-gray-500 text-[10px] uppercase">
+        Best Trade
+      </p>
+
+      <p className="text-green-400 text-xl font-bold mt-2">
+        {stats?.bestTrade ?? 0}%
+      </p>
+    </div>
+
+    <div className="bg-black/20 rounded-xl p-4">
+      <p className="text-gray-500 text-[10px] uppercase">
+        Worst Trade
+      </p>
+
+      <p className="text-red-400 text-xl font-bold mt-2">
+        {stats?.worstTrade ?? 0}%
+      </p>
+    </div>
+
+  </div>
+
+</div>
+        
+
+        {/* EXECUTION HISTORY */}
+
+        <div className="bg-white/5 border border-white/10 p-6 rounded-[32px] mt-6">
+
+  <h3 className="text-sm font-bold uppercase tracking-widest text-blue-400 mb-6">
+    Execution History
+  </h3>
+
+  <div className="space-y-3">
+
+    {(history ?? []).length === 0 ? (
+
+      <p className="text-xs text-gray-500">
+        No executions yet.
+      </p>
+
+    ) : (
+
+      history.map((trade: any, index: number) => (
+
+        <div
+          key={index}
+          className="flex justify-between items-center bg-black/20 border border-white/5 rounded-xl p-4"
+        >
+          <div>
+            <p className="text-xs text-white">
+              {trade.route}
+            </p>
+
+            <p className="text-[10px] text-gray-500">
+              {new Date(trade.timestamp).toLocaleTimeString()}
+            </p>
+          </div>
+
+          <div className="text-right">
+            <p className="text-green-400 font-bold">
+              +{trade.profit}%
+            </p>
+
+            <p className="text-[10px] text-red-400">
+              Fee: {trade.fee ?? 0}%
+            </p>
+          </div>
         </div>
+
+      ))
+
+    )}
+
+  </div>
+
+</div>
       </div>
 
       {/* DIREITA: CONSOLA NEURAL */}
@@ -238,21 +515,88 @@ const { data: market } = useSWR(
           <span className="text-[9px] font-mono text-blue-500/50">LATENCY: 5ms</span>
         </div>
 
-        <div className="flex-1 overflow-y-auto space-y-3 font-mono text-[10px]">
-          {!isBotRunning ? (
-            <div className="flex flex-col items-center justify-center h-full text-center p-6 space-y-4">
-              <Cpu size={40} className="text-white/10" />
-              <p className="text-gray-600 italic">Sistema em Standby.<br/>Aguardando ativação.</p>
-            </div>
-          ) : (
-            logs.map((log, i) => (
-              <div key={i} className="flex flex-col gap-1 border-l-2 border-blue-500/20 pl-3 py-1">
-                <span className="text-blue-400/90">{log}</span>
-                <span className="text-[8px] text-[#D4AF37]/80 uppercase font-bold">Gas Deducted: 0.05%</span>
-              </div>
-            ))
-          )}
-        </div>
+        <div className="flex-1 overflow-y-auto space-y-4">
+
+  <div className="bg-blue-500/5 border border-blue-500/20 rounded-xl p-4">
+
+    <p className="text-[10px] uppercase text-blue-400 font-bold">
+      Neural Scanner Status
+    </p>
+
+    <p className="text-xs text-white mt-2">
+      Monitoring:
+    </p>
+
+    <p className="text-[10px] text-gray-400 mt-1">
+      ETH/BTC • BTC/USDT • ETH/USDT
+    </p>
+
+    <p className="text-[10px] text-gray-500 mt-2">
+      Routes: 2
+    </p>
+
+  </div>
+
+  {!isBotRunning ? (
+
+    <div className="flex flex-col items-center justify-center h-64 text-center">
+
+      <Cpu size={40} className="text-white/10" />
+
+      <p className="text-gray-600 italic mt-4">
+        Sistema em Standby.
+      </p>
+
+    </div>
+
+  ) : opportunities?.length > 0 ? (
+
+    opportunities.slice(0, 10).map((op: any, i: number) => (
+
+      <div
+        key={i}
+        className="border border-green-500/20 bg-green-500/5 rounded-xl p-4"
+      >
+
+        <p className="text-green-400 font-bold">
+          🟢 OPPORTUNITY DETECTED
+        </p>
+
+        <p className="text-white text-xs mt-2">
+          {op.route}
+        </p>
+
+        <p className="text-yellow-400 font-bold mt-2">
+          +{op.profit}%
+        </p>
+
+        <p className="text-gray-500 text-[9px] mt-1">
+          {new Date(op.timestamp).toLocaleTimeString()}
+        </p>
+
+      </div>
+
+    ))
+
+  ) : (
+
+    <div className="flex flex-col items-center justify-center h-64 text-center">
+
+      <Cpu size={40} className="text-white/10" />
+
+      <p className="text-gray-600 italic mt-4">
+        Scanner ativo.
+      </p>
+
+      <p className="text-gray-500 text-xs">
+        Nenhuma oportunidade encontrada.
+      </p>
+
+    </div>
+
+  )}
+
+</div>
         
         <div className="mt-4 p-3 bg-[#D4AF37]/10 border border-[#D4AF37]/20 rounded-xl">
           <p className="text-[9px] text-[#D4AF37] flex items-center gap-2 font-bold uppercase tracking-tighter">
