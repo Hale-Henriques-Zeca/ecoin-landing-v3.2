@@ -31,13 +31,13 @@ export const CONTRACTS = {
     "0x3Afa8F637DAEEd848693D7D5Ad95E9D432FF1CfA",
 
   UNIFIED_COLLECTOR:
-    "0x25DE15D786132B532c8b4A5a3DdeC0Fa84Ea9FdA",
+    "0x9d104bb38Aba17F114FE536621D544d9107b5524",
 
   ECGAS_SALE:
-    "0xf662704FFfeE6f093E4d791e6886C252A99A1342",
+    "0xdB15D61f205b0E82D5D5D1c76B9003C4Ae819f4B",
 
   MINING_FEE_COLLECTOR:
-    "0xecbb47099Fb460618Ce32D7b582F2984190Bba0f",
+    "0xFee754388686CA1497fC724E88440201d2315CfF",
 
 
   /* ===================================================== */
@@ -45,10 +45,10 @@ export const CONTRACTS = {
   /* ===================================================== */
 
   TRADING_GAS_VAULT:
-    "0xcD55717633ABBa6758616949fCa54d8C41972535",
+    "0xeC9580C8c4e7C3e3DF98f0fE7A0C870146a07F57",
 
   TRADING_FEE_COLLECTOR:
-    "0xce7A5245c43Da5B01F609116ab1310e9b91C7396",
+    "0xE4732F16FCC0f283635cfc9477759a5e97ac46B7",
 
   /* ===================================================== */
   /*                  REFERRAL CODE REGISTRY SYSTEM        */

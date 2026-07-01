@@ -56,7 +56,7 @@ import APRPanel from "@/components/APRPanel";
 import EcoinWalletDashboard from "@/components/EcoinWalletDashboard";
 import ReferralCodePanel from "@/components/ReferralCodePanel";
 import ClaimCooldown from "@/components/ClaimCooldown";
-
+import SimulatorRedirectCard from "@/components/SimulatorRedirectCard";
 
 
 
@@ -277,6 +277,15 @@ const { data: eusdEnabled } = useReadContract({
 
   const pendingUSDT = pending ? Number(formatUnits(pending[0], 18)) : 0;
   const pendingEUSD = pending ? Number(formatUnits(pending[1], 18)) : 0;
+
+  // =====================================================
+ // Preview do saque (Taxa de 1%)
+// =====================================================
+
+const totalRewardsUSD = pendingUSDT + pendingEUSD;
+const withdrawFeeUSD = totalRewardsUSD * 0.01;
+const withdrawNetUSD = totalRewardsUSD - withdrawFeeUSD;
+
   const streaming = useRewardStreaming(address);
 
   const stats = {
@@ -476,13 +485,52 @@ const handleTeamsRedirect = () => {
                       <Gift size={20} /> Recompensas Disponíveis
                     </h2>
                   </div>
+
                   <div className="text-center py-8 border-y border-white/5 mb-6">
-                    <span className="text-xs text-white/40 uppercase tracking-widest block mb-2">Pronto para Retirada</span>
-                    <div className="space-y-2">
-                      <div className="text-3xl font-black text-emerald-400">{pendingUSDT.toFixed(7)} USDT</div>
-                      <div className="text-2xl font-bold text-blue-400">{pendingEUSD.toFixed(7)} eDollar</div>
-                    </div>
-                  </div>
+  <span className="text-xs text-white/40 uppercase tracking-widest block mb-2">
+    Pronto para Retirada
+  </span>
+
+  <div className="space-y-2">
+    <div className="text-3xl font-black text-emerald-400">
+      {pendingUSDT.toFixed(7)} USDT
+    </div>
+
+    <div className="text-2xl font-bold text-blue-400">
+      {pendingEUSD.toFixed(7)} eDollar
+    </div>
+  </div>
+</div>
+
+{/* Preview do Saque */}
+{totalRewardsUSD > 0 && (
+  <div className="bg-black/40 border border-white/5 rounded-2xl p-5 mb-6 space-y-3">
+
+    <div className="flex justify-between text-sm text-gray-300">
+      <span>Total das Recompensas</span>
+      <span className="font-bold text-white">
+        {totalRewardsUSD.toFixed(6)} USD
+      </span>
+    </div>
+
+    <div className="flex justify-between text-sm text-red-400">
+      <span>Taxa de Saque (1%)</span>
+      <span>
+        -{withdrawFeeUSD.toFixed(6)} USD
+      </span>
+    </div>
+
+    <div className="h-px bg-white/10" />
+
+    <div className="flex justify-between text-base font-black text-emerald-400">
+      <span>Você Receberá</span>
+      <span>
+        {withdrawNetUSD.toFixed(6)} USD
+      </span>
+    </div>
+
+  </div>
+)}
                   <TxButton
                     state={claimTx.state}
                     idleText="SACAR RECOMPENSAS"
@@ -780,7 +828,12 @@ const handleTeamsRedirect = () => {
     <div className="bg-[#0d0d0f] border border-white/5 rounded-3xl p-6">
       <ReferralCodePanel />
     </div>
-    
+
+    {/* PAINÉIS EXISTENTES */}
+    <div className="bg-[#0d0d0f] border border-white/5 rounded-3xl p-6">
+      <SimulatorRedirectCard />
+    </div>
+
     {isOwner && (
       <div className="bg-[#0d0d0f] border border-white/5 rounded-3xl p-6">
         <AdminPage />
