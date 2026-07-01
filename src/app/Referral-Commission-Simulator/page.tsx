@@ -27,7 +27,9 @@ export default function ReferralCommissionSimulator() {
           <Layers size={11} className="text-amber-500" /> EdenKingDom Protocol Labs
         </div>
         <h1 className="text-3xl md:text-5xl font-black tracking-tight uppercase bg-gradient-to-r from-slate-100 via-slate-300 to-slate-500 bg-clip-text text-transparent font-mono">
-          Referral System Hub
+           <span className="text-[#D4AF37]">
+              e-Coin
+            </span> Referral System Hub
         </h1>
         <p className="text-slate-500 text-xs md:text-sm max-w-2xl mx-auto font-medium">
           Simule, projete e audite o comportamento matemático das redes de incentivo multinível integradas nativamente ao ecossistema eCoin.

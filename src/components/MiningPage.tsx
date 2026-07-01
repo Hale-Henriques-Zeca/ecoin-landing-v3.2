@@ -57,8 +57,29 @@ import EcoinWalletDashboard from "@/components/EcoinWalletDashboard";
 import ReferralCodePanel from "@/components/ReferralCodePanel";
 import ClaimCooldown from "@/components/ClaimCooldown";
 import SimulatorRedirectCard from "@/components/SimulatorRedirectCard";
+import ProfitSimulatorCard from "@/components/Cards/ProfitSimulatorCard";
 
+// Mining Components
 
+import MiningTab from "@/components/mining/MiningTab";
+
+import RecompensasTab from "@/components/mining/RecompensasTab";
+
+import StakeTab from "@/components/mining/StakeTab";
+
+import GasVaultTab from "@/components/mining/GasVaultTab";
+
+import AnalyticsTab from "@/components/mining/AnalyticsTab";
+
+import ConfigTab from "@/components/mining/ConfigTab";
+
+import BottomNavigationMobile from "@/components/mining/BottomNavigationMobile";
+
+import SmartPoolsCallToAction from "@/components/mining/SmartPoolsCallToAction";
+
+import SocialFooter from "@/components/mining/SocialFooter";
+
+import ReferralModal from "@/components/mining/ReferralModal";
 
 
 function useSafeNumberInput(initial = "") {
@@ -833,6 +854,8 @@ const handleTeamsRedirect = () => {
     <div className="bg-[#0d0d0f] border border-white/5 rounded-3xl p-6">
       <SimulatorRedirectCard />
     </div>
+
+    <ProfitSimulatorCard />
 
     {isOwner && (
       <div className="bg-[#0d0d0f] border border-white/5 rounded-3xl p-6">
