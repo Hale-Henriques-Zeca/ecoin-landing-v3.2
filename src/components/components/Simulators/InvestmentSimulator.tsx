@@ -14,6 +14,13 @@ import {
   RefreshCw,
   Layers
 } from "lucide-react";
+import { useAccount, useReadContract } from "wagmi";
+import { formatUnits } from "viem";
+import { useMiningStaking } from "@/hooks/useMiningStaking";
+import { miningStakingAbi } from "@/lib/abis/miningStakingAbi";
+import { CONTRACTS } from "@/lib/contracts/contracts";
+import APRPanel from "@/components/APRPanel";
+
 
 // ============================================================================
 // CONFIGURAÇÕES DE ESCALA E COEFICIENTES DO PROTOCOLO (POLÍTICAS EDENKINGDOM)
@@ -36,14 +43,18 @@ interface InvestmentSimulatorProps {
   setWindow: (window: "24h" | "7d" | "30d") => void;
 }
 
-export default function InvestmentSimulator({ 
-  stake, 
-  ecGas, 
-  window, 
-  setStake, 
-  setEcGas, 
-  setWindow 
+export default function InvestmentSimulator({
+    stake,
+    ecGas,
+    window,
+    setStake,
+    setEcGas,
+    setWindow,
 }: InvestmentSimulatorProps) {
+
+
+  const { address } = useAccount();
+  const mining = useMiningStaking();
   
   // --------------------------------------------------------------------------
   // ESTADOS VISUAIS LOCAIS (UI APENAS)
@@ -125,6 +136,28 @@ export default function InvestmentSimulator({
   // Cálculos rápidos locais apenas para visualização da barra inferior (Live Preview Strip)
   const previewCapacity = ecGas;
   const previewEstimatedReturn = ecGas * ECGAS_TO_USDT_PARITY * ROI_MAX_COEFFICIENT;
+
+  const [projectionWindow, setProjectionWindow] = useState<"24h" | "7d" | "30d">("7d");
+
+
+  const { data: pending } = useReadContract({
+    abi: miningStakingAbi,
+    address: CONTRACTS.MINING_STAKING,
+    functionName: "pendingRewards",
+    chainId: 56,
+    args: address ? [address] : undefined,
+});
+
+
+const pendingUSDT =
+    pending
+        ? Number(formatUnits(pending[0], 18))
+        : 0;
+
+const pendingEUSD =
+    pending
+        ? Number(formatUnits(pending[1], 18))
+        : 0;
 
   return (
     <div className="w-full max-w-3xl mx-auto bg-slate-900/20 border border-slate-900 rounded-3xl p-6 md:p-8 shadow-2xl backdrop-blur-xl space-y-8">
@@ -311,66 +344,12 @@ export default function InvestmentSimulator({
         </div>
       </div>
 
-      {/* 4. PROJECTION WINDOW */}
-      <div className="space-y-3">
-        <label className="flex items-center gap-1.5 text-xs font-mono font-bold text-slate-400 uppercase tracking-wide">
-          <Clock size={13} /> Janela de Projeção Temporal
-        </label>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          
-          <button
-            type="button"
-            onClick={() => setWindow("24h")}
-            className={`p-4 rounded-xl border font-mono text-left space-y-1 transition-all ${
-              window === "24h"
-                ? "bg-gradient-to-br from-slate-900 to-purple-950/20 border-purple-500/40 shadow-xl shadow-purple-500/5 ring-1 ring-purple-500/20"
-                : "bg-slate-950/40 border-slate-900 text-slate-400 hover:border-slate-800"
-            }`}
-          >
-            <div className={`text-xs font-black flex items-center gap-1.5 ${window === "24h" ? "text-purple-400" : "text-slate-400"}`}>
-              <Zap size={13} /> 24 Hours
-            </div>
-            <p className="text-[10px] text-slate-500 font-sans leading-tight">
-              Análise de fluxo micro e comportamento imediato de rede.
-            </p>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => setWindow("7d")}
-            className={`p-4 rounded-xl border font-mono text-left space-y-1 transition-all ${
-              window === "7d"
-                ? "bg-gradient-to-br from-slate-900 to-amber-950/20 border-amber-500/40 shadow-xl shadow-amber-500/5 ring-1 ring-amber-500/20"
-                : "bg-slate-950/40 border-slate-900 text-slate-400 hover:border-slate-800"
-            }`}
-          >
-            <div className={`text-xs font-black flex items-center gap-1.5 ${window === "7d" ? "text-amber-400" : "text-slate-400"}`}>
-              <Calendar size={13} /> 7 Days
-            </div>
-            <p className="text-[10px] text-slate-500 font-sans leading-tight">
-              Projeção padrão estruturada em ciclos macro semanais.
-            </p>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => setWindow("30d")}
-            className={`p-4 rounded-xl border font-mono text-left space-y-1 transition-all ${
-              window === "30d"
-                ? "bg-gradient-to-br from-slate-900 to-blue-950/20 border-blue-500/40 shadow-xl shadow-blue-500/5 ring-1 ring-blue-500/20"
-                : "bg-slate-950/40 border-slate-900 text-slate-400 hover:border-slate-800"
-            }`}
-          >
-            <div className={`text-xs font-black flex items-center gap-1.5 ${window === "30d" ? "text-blue-400" : "text-slate-400"}`}>
-              <Layers size={13} /> 30 Days
-            </div>
-            <p className="text-[10px] text-slate-500 font-sans leading-tight">
-              Previsibilidade de acumulação de recompensas compostas.
-            </p>
-          </button>
-
-        </div>
-      </div>
+     <APRPanel
+       yearlyRewards={(pendingUSDT + pendingEUSD) * 365}
+       stakedAmount={Number(mining.userStake)}
+       window={projectionWindow}
+       setWindow={setProjectionWindow}
+     />
 
       {/* 5. RUN SIMULATION BUTTON */}
       <div className="flex gap-3 pt-2">

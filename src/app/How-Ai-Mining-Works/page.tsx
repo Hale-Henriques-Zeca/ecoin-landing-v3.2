@@ -124,7 +124,7 @@ export default function HowAiMiningWorksPage() {
                   </li>
                   <li className="flex gap-3">
                     <span className="text-[#D4AF37] mt-1">✓</span>
-                    O sistema de indicação por níveis depende da taxa de saques (10%) e compras de ecGas.
+                    O sistema de indicação por níveis depende da taxa de saques (1%) e compras de ecGas.
                   </li>
                   <li className="flex gap-3">
                     <span className="text-[#D4AF37] mt-1">✓</span>
@@ -135,7 +135,7 @@ export default function HowAiMiningWorksPage() {
 
               {/* Lado Direito: Taxa de Saque */}
               <div className="bg-black/30 p-6 rounded-2xl border border-white/5">
-                <h4 className="text-[#D4AF37] font-bold mb-4">Distribuição da Taxa de Saque (10%)</h4>
+                <h4 className="text-[#D4AF37] font-bold mb-4">Distribuição da Taxa de Saque (1%)</h4>
                 <ul className="space-y-4 text-sm">
                   <li className="flex justify-between items-center">
                     <span>Sistema de Indicação (3 Níveis)</span>
@@ -143,11 +143,11 @@ export default function HowAiMiningWorksPage() {
                   </li>
                   <li className="flex justify-between items-center">
                     <span className="pr-4">Reinvestimento (Distribuição horária visível no painel VELOCIDADE DE RECOMPENSA)</span>
-                    <strong className="text-white bg-white/10 px-2 py-1 rounded">20%</strong>
+                    <strong className="text-white bg-white/10 px-2 py-1 rounded">50%</strong>
                   </li>
                   <li className="flex justify-between items-center">
                     <span>Retorno ao Tesouro (Bônus futuros)</span>
-                    <strong className="text-white bg-white/10 px-2 py-1 rounded">50%</strong>
+                    <strong className="text-white bg-white/10 px-2 py-1 rounded">20%</strong>
                   </li>
                 </ul>
               </div>

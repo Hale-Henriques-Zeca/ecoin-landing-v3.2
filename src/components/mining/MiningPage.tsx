@@ -280,6 +280,8 @@ export default function MiningPage() {
   const simulatedWillMine = remainingCapacity > 0 && stakeActive;
   const totalPending = preview ? Number(formatUnits(preview[0], 18)) + Number(formatUnits(preview[1], 18)) : 0;
 
+  const [projectionWindow, setProjectionWindow] = useState<"24h" | "7d" | "30d">("7d");
+
   const { data: usdtEnabled } = useReadContract({
   address: CONTRACTS.ECGAS_SALE,
   abi: ecGasSaleAbi,
@@ -471,13 +473,11 @@ const handleTeamsRedirect = () => {
     <div className="mb-8">
                   
                     <APRPanel
-                      yearlyRewards={
-                        (pendingUSDT + pendingEUSD) * 365
-                      }
-                      stakedAmount={
-                        Number(mining.userStake)
-                      }
-                    />
+  yearlyRewards={(pendingUSDT + pendingEUSD) * 365}
+  stakedAmount={Number(mining.userStake)}
+  window={projectionWindow}
+  setWindow={setProjectionWindow}
+/>
                   
                   </div>
 
