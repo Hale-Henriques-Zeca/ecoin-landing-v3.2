@@ -886,7 +886,7 @@ const handleTeamsRedirect = () => {
               <a href="https://chat.whatsapp.com/G1F6USX5NrrLKikm7yiXXQ" target="_blank" rel="noreferrer"><FaWhatsapp /></a>
             </div>
             <button onClick={() => setShowModal(true)} className="mt-2 bg-gradient-to-r from-[#00FF9C] to-[#00C3FF] text-black text-xs font-bold py-2.5 px-6 rounded-full uppercase tracking-wider">
-              🎁 Referral Panel
+              🎁 Convidar Amigos
             </button>
           </div>
         </section>
@@ -912,16 +912,44 @@ const handleTeamsRedirect = () => {
           className={`flex flex-col items-center justify-center gap-1 flex-1 py-1 transition-all ${activeTab === "analytics" ? "text-[#D4AF37]" : "text-white/40"}`}
         >
           <Newspaper size={20} className={activeTab === "analytics" ? "scale-110" : ""} />
-          <span className="text-[9px] font-medium tracking-tight">Notícias</span>
+          <span className="text-[9px] font-medium tracking-tight">Analytics</span>
         </button>
 
-        {/* Botão Referral (Abre o Modal diretamente ou vai para Configs) */}
+        {/* Botão Notícias (Redireciona ou ativa os Analytics) */}
         <button
-          onClick={() => { setActiveTab("config"); setShowModal(true); }}
-          className={`flex flex-col items-center justify-center gap-1 flex-1 py-1 transition-all ${showModal ? "text-[#D4AF37]" : "text-white/40"}`}
+          onClick={() => setActiveTab("Portfolio")}
+          className={`flex flex-col items-center justify-center gap-1 flex-1 py-1 transition-all ${activeTab === "Portfolio" ? "text-[#D4AF37]" : "text-white/40"}`}
         >
-          <Users size={20} className={showModal ? "scale-110" : ""} />
-          <span className="text-[9px] font-medium tracking-tight">Referral</span>
+          <Wallet size={20} className={activeTab === "Portfolio" ? "scale-110" : ""} />
+          <span className="text-[9px] font-medium tracking-tight">Portfolio</span>
+        </button>
+
+
+        {/* Botão Profit (Redireciona ou ativa o recompensas) */}
+        <button
+          onClick={() => setActiveTab("recompensas")}
+          className={`flex flex-col items-center justify-center gap-1 flex-1 py-1 transition-all ${activeTab === "recompensas" ? "text-[#D4AF37]" : "text-white/40"}`}
+        >
+          <TrendingUp size={20} className={activeTab === "recompensas" ? "scale-110" : ""} />
+          <span className="text-[9px] font-medium tracking-tight">Profit</span>
+        </button>
+
+        {/* Botão Staking (Redireciona ou ativa o Stake) */}
+        <button
+          onClick={() => setActiveTab("stake")}
+          className={`flex flex-col items-center justify-center gap-1 flex-1 py-1 transition-all ${activeTab === "stake" ? "text-[#D4AF37]" : "text-white/40"}`}
+        >
+          <Zap size={20} className={activeTab === "stake" ? "scale-110" : ""} />
+          <span className="text-[9px] font-medium tracking-tight">Staking</span>
+        </button>
+
+         {/* Botão Gas (Redireciona ou ativa os Gas) */}
+        <button
+          onClick={() => setActiveTab("gas")}
+          className={`flex flex-col items-center justify-center gap-1 flex-1 py-1 transition-all ${activeTab === "gas" ? "text-[#D4AF37]" : "text-white/40"}`}
+        >
+          <Fuel size={20} className={activeTab === "gas" ? "scale-110" : ""} />
+          <span className="text-[9px] font-medium tracking-tight">Gas</span>
         </button>
 
         {/* Botão Perfil (Abre as Configurações da Conta) */}

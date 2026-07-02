@@ -4,10 +4,15 @@ import { useState } from "react";
 import { useDexWallet } from "@/contexts/DexWalletContext";
 import ReferralDashboard from "@/components/ReferralDashboard";
 import ReferralBindPanel from "@/components/ReferralBindPanel";
+import { X } from "lucide-react";
 
 export default function ReferralModalContent() {
   const { isConnected } = useDexWallet();
   const [tab, setTab] = useState<"bind" | "dashboard">("bind");
+  const [isVisible, setIsVisible] = useState(true);
+
+  // Se o estado for falso, o modal desaparece por completo
+  if (!isVisible) return null;
 
   if (!isConnected) {
     return (
@@ -43,6 +48,27 @@ export default function ReferralModalContent() {
           Painel
         </button>
       </div>
+
+      {/* BOTÃO FECHAR (Inserido logo após o Switch) */}
+      <button
+        onClick={() => setIsVisible(false)}
+        className="w-full group relative flex items-center justify-center gap-2 px-6 py-3 
+                   bg-red-500/10 hover:bg-red-500/20 
+                   border border-red-500/30 hover:border-red-500/60 
+                   rounded-xl transition-all duration-300 
+                   shadow-[0_0_15px_rgba(239,68,68,0.1)] hover:shadow-[0_0_25px_rgba(239,68,68,0.2)]"
+      >
+        {/* Ícone de Fechar */}
+        <X 
+          size={18} 
+          className="text-red-500 group-hover:text-red-400 group-hover:rotate-90 transition-all duration-300" 
+        />
+        
+        {/* Texto */}
+        <span className="text-red-400 font-bold text-xs uppercase tracking-[0.2em] group-hover:text-white transition-colors">
+          Fechar
+        </span>
+      </button>
 
       {/* CONTEÚDO */}
       {tab === "bind" ? <ReferralBindPanel /> : <ReferralDashboard />}
