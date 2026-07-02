@@ -8,14 +8,18 @@ import {
   Clock,
   Zap,
   Calendar,
-  Layers
+  Layers,
+  Gauge
 } from "lucide-react";
+
+// 1. Atualização do Tipo para suportar as 5 janelas temporais
+type WindowType = "1m" | "1h" | "24h" | "7d" | "30d";
 
 type Props = {
   yearlyRewards: number;
   stakedAmount: number;
-  window: "24h" | "7d" | "30d";
-  setWindow: (window: "24h" | "7d" | "30d") => void;
+  window: WindowType;
+  setWindow: (window: WindowType) => void;
 };
 
 export default function APRPanel({
@@ -29,44 +33,49 @@ export default function APRPanel({
   const apr = stakedAmount > 0 ? (yearlyRewards / stakedAmount) * 100 : 0;
   const apy = apr * 2.15;
 
-  // --- ESTADOS RELACIONADOS DIRETAMENTE À JANELA SELECIONADA ---
+  // --- MAPEAMENTO DOS 5 ESTADOS DE VELOCIDADE E TEMPO ---
   const getVelocityData = () => {
     switch (window) {
+      case "1m":
+        return {
+          velocity: "ADVANCED / SPEED",
+          color: "text-red-400",
+          desc: "Hiper-aceleração económica. O teto de 130% do Profit (ROI) é atingido e liquidado minuto a minuto."
+        };
+
+      case "1h":
+        return {
+          velocity: "EXTREME",
+          color: "text-fuchsia-400",
+          desc: "Fluxo ultra-rápido. Distribuição contínua com pagamentos dos 130% efetuados a cada hora."
+        };
+
       case "24h":
-        // Se o APR for crítico/massivo, ativa o modo de horas (EXTREME)
-        if (apr > 200) {
-          return {
-            velocity: "EXTREME",
-            color: "text-red-500 font-extrabold animate-pulse",
-            desc: "Fluxo ultra-acelerado! O teto de 130% de ROI é atingido em poucas horas devido à atividade crítica da rede."
-          };
-        }
-        // Padrão estável para 24h (HIGH)
         return {
           velocity: "HIGH",
           color: "text-purple-400",
-          desc: "Fluxo altamente dinâmico. Pagamento imediato e consolidação dos 130% de ROI em apenas 1 dia."
+          desc: "Análise de fluxo alto e comportamento imediato. Pagamento integral dos 130% em apenas 1 dia."
         };
 
       case "7d":
         return {
           velocity: "MEDIUM",
           color: "text-amber-400",
-          desc: "Fluxo micro-estruturado. Distribuição linear com conclusão dos 130% de ROI no ciclo de 1 semana."
+          desc: "Projeção padrão estruturada em fluxo micro-económico, liquidações semanais dos 130%."
         };
 
       case "30d":
         return {
           velocity: "LOW",
           color: "text-blue-400",
-          desc: "Fluxo macro-acumulativo. Recompensas compostas estáveis com consolidação dos 130% de ROI em 30 dias."
+          desc: "Previsibilidade macro quando o nível de produção é estável. Pagamentos mensais dos 130%."
         };
 
       default:
         return {
           velocity: "MEDIUM",
           color: "text-slate-400",
-          desc: "Projection window unavailable."
+          desc: "Janela de projeção indisponível."
         };
     }
   };
@@ -76,15 +85,51 @@ export default function APRPanel({
   return (
     <div className="space-y-6">
       
-      {/* 1. SELETOR REESTRUTURADO (PROJECTION WINDOW) */}
+      {/* 1. SELETOR EXPANDIDO PARA 5 JANELAS (Responsivo de 1 a 5 colunas) */}
       <div className="space-y-3">
         <label className="flex items-center gap-1.5 text-xs font-mono font-bold text-slate-400 uppercase tracking-wide">
           <Clock size={13} /> Janela de Projeção Temporal & tempo de duração para atingir os 130% do Profit (ROI)
         </label>
         
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
           
-          {/* Opção 24h */}
+          {/* CARD 1: Per Minutes (Advanced / Speed) */}
+          <button
+            type="button"
+            onClick={() => setWindow("1m")}
+            className={`p-4 rounded-xl border font-mono text-left space-y-1 transition-all ${
+              window === "1m"
+                ? "bg-gradient-to-br from-slate-900 to-red-950/20 border-red-500/40 shadow-xl shadow-red-500/5 ring-1 ring-red-500/20"
+                : "bg-slate-950/40 border-slate-900 text-slate-400 hover:border-slate-800"
+            }`}
+          >
+            <div className={`text-xs font-black flex items-center gap-1.5 ${window === "1m" ? "text-red-400" : "text-slate-400"}`}>
+              <Gauge size={13} /> Per Minutes
+            </div>
+            <p className="text-[10px] text-slate-500 font-sans leading-tight">
+              Velocidade máxima global. Retornos imediatos computados a cada minuto.
+            </p>
+          </button>
+
+          {/* CARD 2: Per Hours (Extreme) */}
+          <button
+            type="button"
+            onClick={() => setWindow("1h")}
+            className={`p-4 rounded-xl border font-mono text-left space-y-1 transition-all ${
+              window === "1h"
+                ? "bg-gradient-to-br from-slate-900 to-fuchsia-950/20 border-fuchsia-500/40 shadow-xl shadow-fuchsia-500/5 ring-1 ring-fuchsia-500/20"
+                : "bg-slate-950/40 border-slate-900 text-slate-400 hover:border-slate-800"
+            }`}
+          >
+            <div className={`text-xs font-black flex items-center gap-1.5 ${window === "1h" ? "text-fuchsia-400" : "text-slate-400"}`}>
+              <Zap size={13} /> Per Hours
+            </div>
+            <p className="text-[10px] text-slate-500 font-sans leading-tight">
+              Fluxo dinâmico extremo. Recompensas injetadas hora a hora na carteira.
+            </p>
+          </button>
+
+          {/* CARD 3: 1 Day (High) */}
           <button
             type="button"
             onClick={() => setWindow("24h")}
@@ -98,11 +143,11 @@ export default function APRPanel({
               <Zap size={13} /> 24 Hours
             </div>
             <p className="text-[10px] text-slate-500 font-sans leading-tight">
-              Análise de fluxo Alto e comportamento imediato da economia no ecossistema, pagamentos imediatos dos 130%.
+              Fluxo Alto. Comportamento e liquidação rápida do ROI em 1 dia.
             </p>
           </button>
 
-          {/* Opção 7d */}
+          {/* CARD 4: 7 Days (Medium) */}
           <button
             type="button"
             onClick={() => setWindow("7d")}
@@ -116,11 +161,11 @@ export default function APRPanel({
               <Calendar size={13} /> 7 Days
             </div>
             <p className="text-[10px] text-slate-500 font-sans leading-tight">
-              Projeção padrão estruturada em fluxo micro economia no ecossistema, pagamentos semanais dos 130%.
+              Fluxo micro regularizado. Pagamentos e ciclos fechados semanalmente.
             </p>
           </button>
 
-          {/* Opção 30d */}
+          {/* CARD 5: 30 Days (Low) */}
           <button
             type="button"
             onClick={() => setWindow("30d")}
@@ -134,7 +179,7 @@ export default function APRPanel({
               <Layers size={13} /> 30 Days
             </div>
             <p className="text-[10px] text-slate-500 font-sans leading-tight">
-              Previsibilidade de acumulação de recompensas compostas quando o nivel de produção for relativamente macro, Pagamentos mensais dos 130%.
+              Previsibilidade de acumulação composta macro com prazos mensais.
             </p>
           </button>
 
@@ -178,15 +223,15 @@ export default function APRPanel({
           {/* Bloco Velocity */}
           <div className="rounded-2xl border border-slate-800 bg-slate-950/60 p-5 shadow-inner transition-all duration-300">
             <div className="flex items-center gap-2 mb-3">
-              <Activity size={16} className={currentVelocity.color.split(" ")[0]} />
+              <Activity size={16} className={currentVelocity.color} />
               <span className="text-slate-400 font-mono text-xs uppercase tracking-wider">
                 AI Reward Velocity
               </span>
             </div>
-            <h2 className={`text-3xl font-black font-mono tracking-tight ${currentVelocity.color}`}>
+            <h2 className={`text-2xl font-black font-mono tracking-tight ${currentVelocity.color}`}>
               {currentVelocity.velocity}
             </h2>
-            <p className="text-[10px] text-slate-500 font-sans mt-2 leading-normal min-h-[32px]">
+            <p className="text-[10px] text-slate-500 font-sans mt-1 leading-normal">
               {currentVelocity.desc}
             </p>
           </div>
