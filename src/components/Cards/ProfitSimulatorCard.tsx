@@ -75,7 +75,7 @@ export default function ProfitSimulatorCard() {
               <div className="w-4 h-4 border-2 border-emerald-400 border-t-transparent rounded-full animate-spin" />
             ) : (
               <>
-                <span className="group-hover/btn:text-emerald-400 transition-colors duration-300">Analisar Métricas</span>
+                <span className="group-hover/btn:text-emerald-400 transition-colors duration-300">Abrir Simulador</span>
                 <ArrowRight size={14} className="text-slate-400 group-hover/btn:text-emerald-400 group-hover/btn:translate-x-1 transition-all duration-300" />
               </>
             )}

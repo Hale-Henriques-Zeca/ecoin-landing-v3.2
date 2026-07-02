@@ -56,7 +56,7 @@ import APRPanel from "@/components/APRPanel";
 import EcoinWalletDashboard from "@/components/EcoinWalletDashboard";
 import ReferralCodePanel from "@/components/ReferralCodePanel";
 import ClaimCooldown from "@/components/ClaimCooldown";
-import SimulatorRedirectCard from "@/components/SimulatorRedirectCard";
+import SimulatorRedirectCard from "@/components/Cards/SimulatorRedirectCard";
 import ProfitSimulatorCard from "@/components/Cards/ProfitSimulatorCard";
 
 // Mining Components
@@ -850,10 +850,7 @@ const handleTeamsRedirect = () => {
       <ReferralCodePanel />
     </div>
 
-    {/* PAINÉIS EXISTENTES */}
-    <div className="bg-[#0d0d0f] border border-white/5 rounded-3xl p-6">
-      <SimulatorRedirectCard />
-    </div>
+    <SimulatorRedirectCard />
 
     <ProfitSimulatorCard />
 
@@ -889,7 +886,7 @@ const handleTeamsRedirect = () => {
               <a href="https://chat.whatsapp.com/G1F6USX5NrrLKikm7yiXXQ" target="_blank" rel="noreferrer"><FaWhatsapp /></a>
             </div>
             <button onClick={() => setShowModal(true)} className="mt-2 bg-gradient-to-r from-[#00FF9C] to-[#00C3FF] text-black text-xs font-bold py-2.5 px-6 rounded-full uppercase tracking-wider">
-              🎁 Convidar Amigos
+              🎁 Referral Panel
             </button>
           </div>
         </section>

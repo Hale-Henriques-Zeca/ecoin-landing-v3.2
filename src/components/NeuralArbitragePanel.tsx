@@ -253,10 +253,10 @@ export default function NeuralArbitragePanel() {
             </a>
 
             <a
-              href="/Savings"
+              href="/Mining"
               className="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 px-4 rounded-lg flex items-center justify-between transition"
             >
-              <span>Open Savings Pools</span>
+              <span>Open Mining Pools</span>
               <RefreshCw className="w-4 h-4" />
             </a>
 
