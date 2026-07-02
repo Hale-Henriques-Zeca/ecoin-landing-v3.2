@@ -19,6 +19,7 @@ import {
   Zap,
   Wallet
 } from "lucide-react";
+import type { DistributionData } from "@/hooks/Profit-Simulator/useSimulator";
 
 // ============================================================================
 // CONFIGURAÇÃO DOS METADADOS E SUB-ROTINAS DO PROTOCOLO
@@ -38,6 +39,11 @@ interface NodeDetails {
   unit: string;
   description: string;
   pipeline: StepDetail[];
+}
+
+interface DistributionChartProps {
+    purchase: number;
+    distribution: DistributionData;
 }
 
 const DESTINATION_NODES_CONFIG: Record<string, NodeDetails> = {
@@ -193,10 +199,19 @@ export default function DistributionChart({ purchase, distribution }: Distributi
     ];
 
     let currentSourceOffset = 0;
-    const totalVal = Object.values(distribution).reduce((a, b) => a + b, 0) || 1;
+    const safeDistribution = distribution ?? {
+    liquidity: 0,
+    referral: 0,
+    rewardPool: 0,
+    extraReward: 0,
+    treasury: 0,
+};
+
+const totalVal =
+    Object.values(safeDistribution).reduce((a, b) => a + b, 0) || 1;
 
     return destinationTargets.map((dest) => {
-      const nodeValue = (distribution as any)[dest.id] || 0;
+      const nodeValue = safeDistribution[dest.id as keyof DistributionData];
       const proportion = nodeValue / totalVal;
       
       // Cálculo preciso da fatia de saída baseado na proporção real

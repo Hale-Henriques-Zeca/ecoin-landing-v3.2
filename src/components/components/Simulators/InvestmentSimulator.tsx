@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
   HelpCircle, 
@@ -24,47 +24,33 @@ const STAKE_PRESETS = [10000, 50000, 100000, 250000, 500000, 1000000];
 const LOG_MIN = -3;
 const LOG_MAX = 4;
 
-// 1 ecGas = 1 USDT. Política de Mineração: 1 USDT minerado consome 70 ecGas (ROI Máximo de 130%)
 const ECGAS_TO_USDT_PARITY = 1; 
 const ROI_MAX_COEFFICIENT = 1.30; 
 
-enum ProjectionWindow {
-  H24 = "24h",
-  DAYS_7 = "7d",
-  DAYS_30 = "30d"
-}
-
-// Interface de saída de dados consolidada e ultra completa para o pai / hooks
-export interface SimulatedOutputData {
+interface InvestmentSimulatorProps {
   stake: number;
   ecGas: number;
-  window: ProjectionWindow;
-  capitalUsdt: number;
-  projectedCapacity: number;
-  estimatedReturn: number;
-  distribution: {
-    liquidity: number;   // 20%
-    referral: number;    // 20%
-    rewardPool: number;  // 30%
-    extraEusd: number;   // 5%
-    treasury: number;    // 25%
-  };
+  window: "24h" | "7d" | "30d";
+  setStake: (value: number) => void;
+  setEcGas: (value: number) => void;
+  setWindow: (window: "24h" | "7d" | "30d") => void;
 }
 
-interface InvestmentSimulatorProps {
-  onSimulate: (data: SimulatedOutputData) => void;
-}
-
-export default function InvestmentSimulator({ onSimulate }: InvestmentSimulatorProps) {
+export default function InvestmentSimulator({ 
+  stake, 
+  ecGas, 
+  window, 
+  setStake, 
+  setEcGas, 
+  setWindow 
+}: InvestmentSimulatorProps) {
+  
   // --------------------------------------------------------------------------
-  // ESTADOS PRINCIPAIS
+  // ESTADOS VISUAIS LOCAIS (UI APENAS)
   // --------------------------------------------------------------------------
-  const [stake, setStake] = useState<number>(250000);
-  const [ecGas, setEcGas] = useState<number>(1000);
-  const [projection, setProjection] = useState<ProjectionWindow>(ProjectionWindow.DAYS_7);
-  const [isAnimating, setIsAnimating] = useState<boolean>(false);
   const [showStakeTooltip, setShowStakeTooltip] = useState<boolean>(false);
   const [showGasTooltip, setShowGasTooltip] = useState<boolean>(false);
+  const [isAnimating, setIsAnimating] = useState<boolean>(false);
 
   // --------------------------------------------------------------------------
   // LÓGICA DE FORMATAÇÃO DE INPUTS (Visual Premium)
@@ -79,9 +65,8 @@ export default function InvestmentSimulator({ onSimulate }: InvestmentSimulatorP
   };
 
   // --------------------------------------------------------------------------
-  // CONTROLO DE SLIDERS (Não-Linear para Stake e Logarítmico Real para ecGas)
+  // CONTROLO DE SLIDERS (Sincronizados com Props do Hook Pai)
   // --------------------------------------------------------------------------
-  // Stake: Interpolação Segmentada de Presets
   const stakeSliderValue = useMemo(() => {
     const index = STAKE_PRESETS.findIndex((v) => stake <= v);
     if (index === -1) return 100;
@@ -107,7 +92,6 @@ export default function InvestmentSimulator({ onSimulate }: InvestmentSimulatorP
     setStake(computed);
   };
 
-  // ecGas: Escala Logarítmica Base 10 Pura [10^-3 a 10^4]
   const ecGasSliderValue = useMemo(() => {
     if (ecGas <= 0) return 0;
     const currentLog = Math.log10(ecGas);
@@ -124,50 +108,23 @@ export default function InvestmentSimulator({ onSimulate }: InvestmentSimulatorP
     }
   };
 
-  // --------------------------------------------------------------------------
-  // MOTOR DE CÁLCULO INTERNO E DISPACHO REATIVO (EVM Realtime Simulation Engine)
-  // --------------------------------------------------------------------------
-  const calculatedPayload = useMemo<SimulatedOutputData>(() => {
-    const capitalUsdt = ecGas * ECGAS_TO_USDT_PARITY;
-    const projectedCapacity = ecGas; // ecGas dita a capacidade total permitida de mineração
-    const estimatedReturn = capitalUsdt * ROI_MAX_COEFFICIENT; // Teto do ROI de 130%
-
-    return {
-      stake,
-      ecGas,
-      window: projection,
-      capitalUsdt,
-      projectedCapacity,
-      estimatedReturn,
-      distribution: {
-        liquidity: Number((capitalUsdt * 0.20).toFixed(4)),
-        referral: Number((capitalUsdt * 0.20).toFixed(4)),
-        rewardPool: Number((capitalUsdt * 0.30).toFixed(4)),
-        extraEusd: Number((capitalUsdt * 0.05).toFixed(4)),
-        treasury: Number((capitalUsdt * 0.25).toFixed(4)),
-      }
-    };
-  }, [stake, ecGas, projection]);
-
-  // Efeito Reativo: Qualquer alteração de dados propaga instantaneamente para o Hub
-  useEffect(() => {
-    onSimulate(calculatedPayload);
-  }, [calculatedPayload, onSimulate]);
-
   // Botão foca-se exclusivamente em disparar uma animação visual premium de atualização
   const handleTriggerAnimation = () => {
     setIsAnimating(true);
     setTimeout(() => {
       setIsAnimating(false);
-      onSimulate(calculatedPayload);
     }, 600);
   };
 
   const handleReset = () => {
     setStake(250000);
     setEcGas(1000);
-    setProjection(ProjectionWindow.DAYS_7);
+    setWindow("7d");
   };
+
+  // Cálculos rápidos locais apenas para visualização da barra inferior (Live Preview Strip)
+  const previewCapacity = ecGas;
+  const previewEstimatedReturn = ecGas * ECGAS_TO_USDT_PARITY * ROI_MAX_COEFFICIENT;
 
   return (
     <div className="w-full max-w-3xl mx-auto bg-slate-900/20 border border-slate-900 rounded-3xl p-6 md:p-8 shadow-2xl backdrop-blur-xl space-y-8">
@@ -197,6 +154,7 @@ export default function InvestmentSimulator({ onSimulate }: InvestmentSimulatorP
           <div className="flex items-center gap-1.5 text-xs font-mono font-bold text-slate-300 uppercase tracking-wide">
             <Coins size={14} className="text-amber-500" /> Stake (eCoin)
             <button 
+              type="button"
               onMouseEnter={() => setShowStakeTooltip(true)}
               onMouseLeave={() => setShowStakeTooltip(false)}
               className="text-slate-600 hover:text-slate-400 transition-colors"
@@ -254,6 +212,7 @@ export default function InvestmentSimulator({ onSimulate }: InvestmentSimulatorP
         <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
           {STAKE_PRESETS.map((val) => (
             <button
+              type="button"
               key={`stake-btn-${val}`}
               onClick={() => setStake(val)}
               className={`py-1.5 px-2 rounded-lg font-mono text-[10px] font-bold border transition-all ${
@@ -268,12 +227,13 @@ export default function InvestmentSimulator({ onSimulate }: InvestmentSimulatorP
         </div>
       </div>
 
-      {/* 3. ECGAS SECTION (Com Paridade USDT e Escala Logarítmica Pura) */}
+      {/* 3. ECGAS SECTION */}
       <div className="space-y-4">
         <div className="flex items-center justify-between relative">
           <div className="flex items-center gap-1.5 text-xs font-mono font-bold text-slate-300 uppercase tracking-wide">
             <Fuel size={14} className="text-purple-500" /> Buy ecGas
             <button 
+              type="button"
               onMouseEnter={() => setShowGasTooltip(true)}
               onMouseLeave={() => setShowGasTooltip(false)}
               className="text-slate-600 hover:text-slate-400 transition-colors"
@@ -290,7 +250,7 @@ export default function InvestmentSimulator({ onSimulate }: InvestmentSimulatorP
                 exit={{ opacity: 0, y: 5 }}
                 className="absolute z-20 left-0 top-6 max-w-xs p-3 bg-slate-950 border border-slate-800 rounded-xl shadow-2xl text-[11px] text-slate-400 font-sans leading-relaxed"
               >
-                Massa crítica de ecGas necessária para a mineração ativa. Estabelece a injeção de liquidez e fixa o teto de ROI máximo a 130%.
+                Massa crítica de ecGas necessária para a mineração active. Estabelece a injeção de liquidez e fixa o teto de ROI máximo a 130%.
               </motion.div>
             )}
           </AnimatePresence>
@@ -336,6 +296,7 @@ export default function InvestmentSimulator({ onSimulate }: InvestmentSimulatorP
         <div className="grid grid-cols-4 sm:grid-cols-8 gap-1.5">
           {[0.001, 0.01, 0.1, 1, 10, 100, 1000, 10000].map((val) => (
             <button
+              type="button"
               key={`gas-btn-${val}`}
               onClick={() => setEcGas(val)}
               className={`py-1.5 px-1 rounded-lg font-mono text-[9px] font-bold border transition-all truncate ${
@@ -358,14 +319,15 @@ export default function InvestmentSimulator({ onSimulate }: InvestmentSimulatorP
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           
           <button
-            onClick={() => setProjection(ProjectionWindow.H24)}
+            type="button"
+            onClick={() => setWindow("24h")}
             className={`p-4 rounded-xl border font-mono text-left space-y-1 transition-all ${
-              projection === ProjectionWindow.H24
+              window === "24h"
                 ? "bg-gradient-to-br from-slate-900 to-purple-950/20 border-purple-500/40 shadow-xl shadow-purple-500/5 ring-1 ring-purple-500/20"
                 : "bg-slate-950/40 border-slate-900 text-slate-400 hover:border-slate-800"
             }`}
           >
-            <div className={`text-xs font-black flex items-center gap-1.5 ${projection === ProjectionWindow.H24 ? "text-purple-400" : "text-slate-400"}`}>
+            <div className={`text-xs font-black flex items-center gap-1.5 ${window === "24h" ? "text-purple-400" : "text-slate-400"}`}>
               <Zap size={13} /> 24 Hours
             </div>
             <p className="text-[10px] text-slate-500 font-sans leading-tight">
@@ -374,14 +336,15 @@ export default function InvestmentSimulator({ onSimulate }: InvestmentSimulatorP
           </button>
 
           <button
-            onClick={() => setProjection(ProjectionWindow.DAYS_7)}
+            type="button"
+            onClick={() => setWindow("7d")}
             className={`p-4 rounded-xl border font-mono text-left space-y-1 transition-all ${
-              projection === ProjectionWindow.DAYS_7
+              window === "7d"
                 ? "bg-gradient-to-br from-slate-900 to-amber-950/20 border-amber-500/40 shadow-xl shadow-amber-500/5 ring-1 ring-amber-500/20"
                 : "bg-slate-950/40 border-slate-900 text-slate-400 hover:border-slate-800"
             }`}
           >
-            <div className={`text-xs font-black flex items-center gap-1.5 ${projection === ProjectionWindow.DAYS_7 ? "text-amber-400" : "text-slate-400"}`}>
+            <div className={`text-xs font-black flex items-center gap-1.5 ${window === "7d" ? "text-amber-400" : "text-slate-400"}`}>
               <Calendar size={13} /> 7 Days
             </div>
             <p className="text-[10px] text-slate-500 font-sans leading-tight">
@@ -390,14 +353,15 @@ export default function InvestmentSimulator({ onSimulate }: InvestmentSimulatorP
           </button>
 
           <button
-            onClick={() => setProjection(ProjectionWindow.DAYS_30)}
+            type="button"
+            onClick={() => setWindow("30d")}
             className={`p-4 rounded-xl border font-mono text-left space-y-1 transition-all ${
-              projection === ProjectionWindow.DAYS_30
+              window === "30d"
                 ? "bg-gradient-to-br from-slate-900 to-blue-950/20 border-blue-500/40 shadow-xl shadow-blue-500/5 ring-1 ring-blue-500/20"
                 : "bg-slate-950/40 border-slate-900 text-slate-400 hover:border-slate-800"
             }`}
           >
-            <div className={`text-xs font-black flex items-center gap-1.5 ${projection === ProjectionWindow.DAYS_30 ? "text-blue-400" : "text-slate-400"}`}>
+            <div className={`text-xs font-black flex items-center gap-1.5 ${window === "30d" ? "text-blue-400" : "text-slate-400"}`}>
               <Layers size={13} /> 30 Days
             </div>
             <p className="text-[10px] text-slate-500 font-sans leading-tight">
@@ -408,9 +372,10 @@ export default function InvestmentSimulator({ onSimulate }: InvestmentSimulatorP
         </div>
       </div>
 
-      {/* 5. RUN SIMULATION BUTTON (Play Animation Trigger) */}
+      {/* 5. RUN SIMULATION BUTTON */}
       <div className="flex gap-3 pt-2">
         <button
+          type="button"
           onClick={handleTriggerAnimation}
           disabled={isAnimating}
           className="w-full relative overflow-hidden bg-slate-100 hover:bg-white text-slate-950 font-mono text-xs font-black tracking-widest uppercase py-4 px-6 rounded-xl transition-all shadow-xl disabled:opacity-50"
@@ -428,6 +393,7 @@ export default function InvestmentSimulator({ onSimulate }: InvestmentSimulatorP
         </button>
         
         <button
+          type="button"
           onClick={handleReset}
           title="Resetar parâmetros"
           className="px-4 border border-slate-900 hover:border-slate-800 rounded-xl text-slate-500 hover:text-slate-300 transition-colors bg-slate-950/20"
@@ -436,7 +402,7 @@ export default function InvestmentSimulator({ onSimulate }: InvestmentSimulatorP
         </button>
       </div>
 
-      {/* 6. LIVE PREVIEW STRIP (Otimizada com Capacidade e Retorno Estimado) */}
+      {/* 6. LIVE PREVIEW STRIP */}
       <div className="bg-slate-950/80 border border-slate-900/60 rounded-xl p-3.5 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 font-mono text-[10px] text-slate-500 shadow-inner">
         <div className="flex items-center gap-1">
           <span className="text-slate-600">Stake:</span> 
@@ -450,12 +416,12 @@ export default function InvestmentSimulator({ onSimulate }: InvestmentSimulatorP
         <div className="w-1 h-1 rounded-full bg-slate-800 hidden sm:block" />
         <div className="flex items-center gap-1">
           <span className="text-slate-600">Capacity:</span> 
-          <span className="text-blue-400 font-bold">{formatNumber(calculatedPayload.projectedCapacity)} USDT</span>
+          <span className="text-blue-400 font-bold">{formatNumber(previewCapacity)} USDT</span>
         </div>
         <div className="w-1 h-1 rounded-full bg-slate-800 hidden sm:block" />
         <div className="flex items-center gap-1">
           <span className="text-slate-600">Est. Return (130%):</span> 
-          <span className="text-emerald-400 font-bold">{formatNumber(calculatedPayload.estimatedReturn)} USDT</span>
+          <span className="text-emerald-400 font-bold">{formatNumber(previewEstimatedReturn)} USDT</span>
         </div>
         <div className="w-1 h-1 rounded-full bg-slate-800 hidden lg:block" />
         <div className="flex items-center gap-1">

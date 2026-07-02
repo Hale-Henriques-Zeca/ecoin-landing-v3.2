@@ -33,24 +33,26 @@ export interface ProfitRow {
 }
 
 interface ProfitTableProps {
-  stake: number;
-  ecGas: number;
+  rows: ProfitRow[];
+
+  currentEcGas: number;
+
   projectionWindow: "24h" | "7d" | "30d";
+
   share: number;
+
   capacity: number;
-  rows: ProfitRow[]; // Já vem ordenado, calculado e injetado com o Custom Row vindo do useSimulator()
 }
 
 // Quick Filters expandidos para refletir micro-aportes e baleias de forma coerente
 const QUICK_FILTERS = [0.001, 0.01, 0.1, 1, 5, 10, 50, 100, 250, 500, 1000, 2500, 5000, 10000];
 
-export default function ProfitTable({ 
-  stake, 
-  ecGas, 
-  projectionWindow, 
-  share, 
-  capacity, 
-  rows 
+export default function ProfitTable({
+    rows,
+    currentEcGas,
+    projectionWindow,
+    share,
+    capacity,
 }: ProfitTableProps) {
   
   // --------------------------------------------------------------------------
@@ -196,11 +198,11 @@ export default function ProfitTable({
       {/* 2. SUMMARY CARDS COM ANIMAÇÕES DEPENDENTES DO LOTE SELECIONADO */}
       <div className="grid grid-cols-2 md:grid-cols-6 gap-4">
         {[
-          { label: "Simulated Capital", val: formatCurrency(activeRowData?.capital || ecGas), icon: Coins, color: "text-slate-200" },
-          { label: "Net Profit (30%)", val: formatCurrency(activeRowData?.profit || (ecGas * 0.3)), icon: TrendingUp, color: "text-emerald-400" },
-          { label: "Total Return (130%)", val: formatCurrency(activeRowData?.totalReturn || (ecGas * 1.3)), icon: DollarSign, color: "text-blue-400" },
-          { label: "Pool Share", val: formatPercentage(activeRowData?.share || share), icon: PieChart, color: "text-purple-400" },
-          { label: "Mining Capacity", val: formatGas(activeRowData?.capacity || capacity), icon: ShieldCheck, color: "text-amber-400" },
+          { label: "Simulated Capital", val: formatCurrency(activeRowData?.capital ?? currentEcGas), icon: Coins, color: "text-slate-200" },
+          { label: "Net Profit (30%)", val: formatCurrency(activeRowData?.profit ?? currentEcGas * 0.3), icon: TrendingUp, color: "text-emerald-400" },
+          { label: "Total Return (130%)", val: formatCurrency(activeRowData?.totalReturn ?? currentEcGas * 1.3), icon: DollarSign, color: "text-blue-400" },
+          { label: "Pool Share", val: formatPercentage(activeRowData?.share ?? share), icon: PieChart, color: "text-purple-400" },
+          { label: "Mining Capacity", val: formatGas(activeRowData?.capacity ?? capacity), icon: ShieldCheck, color: "text-amber-400" },
           { label: "Projection Window", val: projectionWindow === "24h" ? "24 Hours" : projectionWindow === "7d" ? "7 Days" : "30 Days", icon: Calendar, color: "text-slate-400" }
         ].map((card, i) => (
           <div key={`summary-${i}`} className="bg-slate-950/60 border border-slate-900 p-4 rounded-2xl space-y-1 relative overflow-hidden group">

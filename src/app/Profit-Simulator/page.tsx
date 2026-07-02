@@ -57,20 +57,20 @@ export default function ProfitSimulatorPage() {
         <div className="flex flex-col gap-8">
           
           {/* COMPONENTE 1: Painel de Controlo e Inputs do Simulador (Largura Total) */}
-<motion.section
-  initial={{ opacity: 0, y: 15 }}
-  animate={{ opacity: 1, y: 0 }}
-  transition={{ duration: ANIMATION.cardsDuration, delay: 0.1 }}
->
-  <InvestmentSimulator 
-    onSimulate={(data) => {
-      // Sincroniza os estados do componente filho de volta para o Hook Pai
-      simulator.setStake(data.stake);
-      simulator.setEcGas(data.ecGas);
-      simulator.setWindow(data.window);
-    }}
-  />
-</motion.section>
+          <motion.section
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: ANIMATION.cardsDuration, delay: 0.1 }}
+          >
+            <InvestmentSimulator 
+              stake={simulator.state.stake}
+              ecGas={simulator.state.ecGas}
+              window={simulator.state.window}
+              setStake={simulator.setStake}
+              setEcGas={simulator.setEcGas}
+              setWindow={simulator.setWindow}
+            />
+          </motion.section>
 
           {/* COMPONENTE 2: Gráfico Sankey / Distribuição do ecGas Queimado */}
           <motion.section
@@ -78,26 +78,24 @@ export default function ProfitSimulatorPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: ANIMATION.sankeyDuration, delay: 0.2 }}
           >
-            <DistributionChart 
-              purchase={simulator.state.ecGas}
-              distribution={simulator.distribution}
-            />
+            <DistributionChart
+            purchase={simulator.state.ecGas}
+            distribution={simulator.distribution} />
           </motion.section>
 
-          {/* COMPONENTE 3: Tabela Estruturada de Retornos e Lotes de Mercado */}
+          {/* COMPONENTE 3: Matriz Global de Prospecção (ProfitTable) */}
           <motion.section
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: ANIMATION.tableDuration, delay: 0.3 }}
+            transition={{ duration: ANIMATION.sankeyDuration, delay: 0.3 }}
           >
-            <ProfitTable 
-              stake={simulator.state.stake}
-              ecGas={simulator.state.ecGas}
-              projectionWindow={simulator.state.window}
-              share={simulator.summary.share}
-              capacity={simulator.summary.capacity}
-              rows={simulator.rows}
-            />
+            <ProfitTable
+    rows={simulator.rows}
+    currentEcGas={simulator.state.ecGas}
+    projectionWindow={simulator.state.window}
+    share={simulator.summary.share}
+    capacity={simulator.summary.capacity}
+/>
           </motion.section>
 
         </div>
