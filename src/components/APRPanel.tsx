@@ -87,8 +87,8 @@ export default function APRPanel({
       
       {/* 1. SELETOR EXPANDIDO PARA 5 JANELAS (Responsivo de 1 a 5 colunas) */}
       <div className="space-y-3">
-        <label className="flex items-center gap-1.5 text-xs font-mono font-bold text-slate-400 uppercase tracking-wide">
-          <Clock size={13} /> Janela de Projeção Temporal & tempo de duração para atingir os 130% do Profit (ROI)
+        <label className="flex items-center text-xs font-mono font-bold text-red-400 md:text-3xl font-black tracking-tighter">
+          <Clock size={50} /> Janela de Projeção Temporal & tempo de duração para atingir os 130% do Profit (ROI)
         </label>
         
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
