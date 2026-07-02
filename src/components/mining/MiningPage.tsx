@@ -573,6 +573,7 @@ const handleTeamsRedirect = () => {
               {/* TAB 3: STAKE */}
               {activeTab === "stake" && (
                 <div className="max-w-2xl mx-auto bg-[#0d0d0f] border border-white/5 rounded-3xl p-6 md:p-8">
+                  
                   <h2 className="text-md font-bold uppercase tracking-wider mb-6 flex items-center gap-2 text-[#D4AF37]">
                     <Zap size={20} /> Gerenciar Depósito de eCoin
                   </h2>
@@ -641,7 +642,10 @@ const handleTeamsRedirect = () => {
               {/* TAB 4: GAS VAULT */}
               {activeTab === "gas" && (
 
+
                 <div className="max-w-2xl mx-auto bg-zinc-950/60 backdrop-blur-xl border border-white/5 rounded-3xl p-8 shadow-2xl">
+
+                  
   {/* HEADER DO PAINEL */}
   <div className="flex items-center justify-between mb-8">
     <h3 className="text-sm font-bold uppercase tracking-[0.2em] flex items-center gap-2 text-[#D4AF37]">
@@ -808,10 +812,21 @@ const handleTeamsRedirect = () => {
               {/* TAB 8: CONFIGURAÇÕES */}
 {activeTab === "config" && (
   <div className="space-y-6">
+
+    <APRPanel
+           yearlyRewards={(pendingUSDT + pendingEUSD) * 365}
+           stakedAmount={Number(mining.userStake)}
+           window={projectionWindow}
+           setWindow={setProjectionWindow}
+         />
+    
+
+    
     {/* CARD PREMIUM DE REDIRECIONAMENTO PARA LÍDER DE EQUIPAS */}
     <div className="relative overflow-hidden bg-gradient-to-br from-[#D4AF37]/10 via-[#0d0d0f] to-[#0d0d0f] border border-[#D4AF37]/20 rounded-3xl p-6 shadow-[0_4px_30px_rgba(212,175,55,0.05)]">
       {/* Detalhe de Luz de Fundo Luxo */}
       <div className="absolute top-0 right-0 w-32 h-32 bg-[#D4AF37]/5 rounded-full blur-3xl pointer-events-none" />
+      
       
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 relative z-10">
         <div className="flex items-start gap-4">
@@ -847,12 +862,14 @@ const handleTeamsRedirect = () => {
 
     {/* PAINÉIS EXISTENTES */}
     <div className="bg-[#0d0d0f] border border-white/5 rounded-3xl p-6">
-      <ReferralCodePanel />
+      
     </div>
 
     <SimulatorRedirectCard />
 
     <ProfitSimulatorCard />
+    
+    <ReferralCodePanel />
 
     {isOwner && (
       <div className="bg-[#0d0d0f] border border-white/5 rounded-3xl p-6">
