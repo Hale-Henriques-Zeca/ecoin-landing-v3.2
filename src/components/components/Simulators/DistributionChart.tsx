@@ -49,14 +49,14 @@ interface DistributionChartProps {
 const DESTINATION_NODES_CONFIG: Record<string, NodeDetails> = {
   liquidity: {
     id: "liquidity",
-    label: "Liquidity Pool",
+    label: "eCoin Liquidity Reserves",
     pct: 20,
     color: "rgb(249, 115, 22)", // Orange
     glowColor: "rgba(249, 115, 22, 0.25)",
     unit: "USDT",
     description: "20% do valor é injetado diretamente no Automated Market Maker (AMM) para estabelecer um piso de liquidez estável e mitigar derrapagens de preço.",
     pipeline: [
-      { name: "Liquidity Router", desc: "Coleta e emparelha os ativos recebidos", icon: Droplet },
+      { name: "eCoin Liquidity Reserves", desc: "Coleta e emparelha os ativos recebidos", icon: Droplet },
       { name: "AMM Smart Contract", desc: "Injeção direta no par nativo da DEX", icon: Cpu },
       { name: "LP Token Lock", desc: "Bloqueio automatizado dos tokens de liquidez", icon: ShieldCheck },
       { name: "Floor Elevation", desc: "Estabilização do preço base do ecossistema", icon: Activity }
