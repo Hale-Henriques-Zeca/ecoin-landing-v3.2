@@ -20,7 +20,7 @@ import { useRewardStreaming } from "@/hooks/useRewardStreaming";
 import { useOverflowAnalytics } from "@/hooks/useOverflowAnalytics";
 import { useMiningFeeCollector } from "@/hooks/useMiningFeeCollector";
 
-
+import APRPanel from "@/components/APRPanel";
 
 // O componente com o design da pagina de mining
 import MiningPage from "@/components/mining/MiningPage";
