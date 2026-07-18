@@ -25,12 +25,18 @@ import {
   Zap,
   ExternalLink,
   PiggyBank,
+  Wallet,
 } from "lucide-react";
 
 const navLinks = [
   { name: "Home", href: "/", icon: Home },
   { name: "Importar E-Coin", href: "/import-guide", icon: Download },
-  { name: "MozP2P", href: "https://efte.edenkingdom.org/p2p", external: true, icon: Repeat2 },
+  {
+  name: "Wallet",
+  href: "/eCoinCloudWallet",
+  external: false,
+  icon: Wallet,
+},
   { name: "Mineração", href: "/Mining", icon: PiggyBank },
   { name: "Converter", href: "/ecoin-converter", icon: ArrowLeftRight },
   { name: "Trading AI", href: "/ecoin-ai-trading", icon: Bot },

@@ -125,7 +125,7 @@ export default function APRPanel({
               <Zap size={13} /> Per Hours
             </div>
             <p className="text-[10px] text-slate-500 font-sans leading-tight">
-              Fluxo dinâmico extremo. Recompensas injetadas hora a hora na carteira.
+              Fluxo dinâmico extremo. Retornos injetadas hora a hora no painel de recompensas dos mineradores.
             </p>
           </button>
 
