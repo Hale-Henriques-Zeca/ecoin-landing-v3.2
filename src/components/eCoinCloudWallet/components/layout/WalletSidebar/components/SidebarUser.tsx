@@ -4,7 +4,7 @@ import React from 'react';
 
 export default function SidebarUser() {
   // Mock de dados para manter o visual premium e representativo
-  const username = "Eden Developer";
+  const username = "Edenit Developer";
   const tier = "Diamond Node";
 
   return (

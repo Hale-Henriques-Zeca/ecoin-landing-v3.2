@@ -9,5 +9,6 @@ export const WALLET_ROUTES = {
   ecosystem: '/eCoinCloudWallet/ecosystem',
   nfts: '/eCoinCloudWallet/nfts',
   settings: '/eCoinCloudWallet/settings',
+  investment: '/eCoinCloudWallet/investment',
   whitepaper: '/whitepaper',
 } as const;

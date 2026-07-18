@@ -18,7 +18,7 @@ export const QUICK_ACTIONS_SECTIONS = [
         desc: "Transferência instantânea" 
       },
       { 
-        title: "Convert Swap", 
+        title: "Convert", 
         href: WALLET_ROUTES.convert, 
         icon: RefreshCw, 
         desc: "Troca com taxa zero" 

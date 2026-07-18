@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { useRouter } from 'next/navigation'; // Hook ideal para navegação em componentes 'use client'
+import { useRouter } from 'next/navigation'; 
 import { 
   ArrowDownLeft, 
   ArrowUpRight, 
@@ -44,15 +44,15 @@ export default function DashboardView() {
   const quickActions = [
     { id: 'receive', label: 'Receber', icon: ArrowDownLeft },
     { id: 'send', label: 'Enviar', icon: ArrowUpRight },
-    { id: 'Convert', label: 'Convert', icon: RefreshCw },
+    { id: 'convert', label: 'convert', icon: RefreshCw },
     { id: 'buy', label: 'Comprar', icon: ShoppingCart },
     { id: 'investment', label: 'investir', icon: Landmark }, 
     { id: 'history', label: 'Histórico', icon: History },
   ];
 
   const assets = [
-    { name: 'eCoin', symbol: 'ECOIN', balance: 752420.50, fiatBalance: 7524.20, price: 0.010, trend24h: 14.85 },
-    { name: 'eDollar', symbol: 'EUSD', balance: 3762.10, fiatBalance: 3762.10, price: 1.000, trend24h: 0.00 },
+    { name: 'eCoin', symbol: 'E-Coin', balance: 752420.50, fiatBalance: 7524.20, price: 0.010, trend24h: 14.85 },
+    { name: 'eDollar', symbol: 'E-USD', balance: 3762.10, fiatBalance: 3762.10, price: 1.000, trend24h: 0.00 },
     { name: 'Bitcoin', symbol: 'BTC', balance: 0.145, fiatBalance: 9425.00, price: 65000.000, trend24h: 3.20 },
     { name: 'Ethereum', symbol: 'ETH', balance: 1.620, fiatBalance: 5670.00, price: 3500.000, trend24h: -1.45 },
     { name: 'Binance Coin', symbol: 'BNB', balance: 5.400, fiatBalance: 3132.00, price: 580.000, trend24h: 0.85 },
@@ -104,7 +104,7 @@ export default function DashboardView() {
         router.push('/eCoinCloudWallet/buy');
         break;
       case 'investment':
-        router.push('/investment'); // Redireciona para a página de investimentos externa à subpasta wallet
+        router.push('/eCoinCloudWallet/investment'); 
         break;
       case 'history':
         router.push('/eCoinCloudWallet/history');

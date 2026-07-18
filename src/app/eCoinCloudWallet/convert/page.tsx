@@ -22,8 +22,13 @@ export default function ConvertPage() {
             <div className="flex items-center justify-between">
               <input type="number" placeholder="0.00" className="bg-transparent text-lg font-mono text-white font-bold w-2/3 focus:outline-none placeholder-neutral-700" />
               <select className="bg-neutral-900 border border-white/10 rounded-lg text-xs font-mono text-white px-3 py-1.5 focus:outline-none">
-                <option>ECOIN</option>
-                <option>EUSD</option>
+                <option>eCoin</option>
+                <option>eDollar</option>
+                <option>BTC</option>
+                <option>BNB</option>
+                <option>SOL</option>
+                <option>POL</option>
+                <option>TRX</option>
                 <option>USDT</option>
               </select>
             </div>
@@ -45,9 +50,14 @@ export default function ConvertPage() {
             <div className="flex items-center justify-between">
               <input type="number" placeholder="0.00" disabled className="bg-transparent text-lg font-mono text-white font-bold w-2/3 focus:outline-none placeholder-neutral-700" />
               <select className="bg-neutral-900 border border-white/10 rounded-lg text-xs font-mono text-white px-3 py-1.5 focus:outline-none">
-                <option>EUSD</option>
-                <option>ECOIN</option>
+                <option>eDollar</option>
+                <option>eCoin</option>
                 <option>BTC</option>
+                <option>BNB</option>
+                <option>SOL</option>
+                <option>POL</option>
+                <option>TRX</option>
+                <option>USDT</option>
               </select>
             </div>
           </div>
@@ -56,7 +66,7 @@ export default function ConvertPage() {
           <div className="bg-white/[0.01] border border-white/[0.03] rounded-xl p-3 flex flex-col gap-2 mb-5">
             <div className="flex justify-between text-[10px] font-mono">
               <span className="text-neutral-500">Preço de Referência</span>
-              <span className="text-neutral-300 font-bold">1 ECOIN &approx; 10 eDollar</span>
+              <span className="text-neutral-300 font-bold">1 eCoin &approx; 10 eDollar</span>
             </div>
             <div className="flex justify-between text-[10px] font-mono">
               <span className="text-neutral-500">Slippage Tolerance</span>

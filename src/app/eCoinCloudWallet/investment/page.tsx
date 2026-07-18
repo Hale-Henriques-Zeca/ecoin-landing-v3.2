@@ -8,9 +8,9 @@ import SectionHeader from '@/components/eCoinCloudWallet/components/common/Secti
 
 export default function InvestmentPage() {
   const products = [
-    { name: 'Cloud Mining Vault V2', type: 'Mineração Alocada', apy: '18.5% APY', status: 'Ativo', icon: Cpu, reward: 'ECOIN' },
-    { name: 'AI Arbitrage Engine Bybit/Binance', type: 'Trading Algorítmico', apy: '32.4% APY', status: 'Ativo', icon: Bot, reward: 'EUSD' },
-    { name: 'Liquid Staking Hub', type: 'Validação de Rede', apy: '8.2% APY', status: 'Disponível', icon: TrendingUp, reward: 'ECOIN' },
+    { name: 'Cloud Mining Vault V2', type: 'Mineração Alocada', apy: '18.5% APY', status: 'Ativo', icon: Cpu, reward: 'USDT' },
+    { name: 'AI Arbitrage Engine Bybit/Binance', type: 'Trading Algorítmico', apy: '32.4% APY', status: 'Ativo', icon: Bot, reward: 'EUSD & USDT' },
+    { name: 'Liquid Staking Hub', type: 'Validação de Rede', apy: '8.2% APY', status: 'Disponível', icon: TrendingUp, reward: 'eCoin' },
   ];
 
   return (
