@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import LanguageSelector from "@/components/LanguageSelector";
+import LanguageSelector from "@/components/language/components/dropdown/LanguageSelector";
 import {
   Home,
   Download,

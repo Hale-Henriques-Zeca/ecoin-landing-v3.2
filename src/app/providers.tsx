@@ -6,6 +6,7 @@ import { RainbowKitProvider, getDefaultConfig, darkTheme } from "@rainbow-me/rai
 import { WagmiProvider, http, fallback } from "wagmi";
 import { bsc } from "@/lib/chains";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { LanguageProvider } from "@/components/language/i18n/context/LanguageProvider";
 
 const config = getDefaultConfig({
   appName: "EdenKingDom Coin (E-Coin) DApp",
@@ -35,6 +36,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
   }, []);
 
   return (
+    <LanguageProvider>
     <WagmiProvider config={config}>
       <QueryClientProvider client={queryClient}>
         <RainbowKitProvider
@@ -50,5 +52,6 @@ export function Providers({ children }: { children: React.ReactNode }) {
         </RainbowKitProvider>
       </QueryClientProvider>
     </WagmiProvider>
+    </LanguageProvider>
   );
 }

@@ -3,9 +3,9 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { useSimulator } from "@/hooks/Profit-Simulator/useSimulator";
-import InvestmentSimulator from "@/components/components/Simulators/InvestmentSimulator";
-import DistributionChart from "@/components/components/Simulators/DistributionChart";
-import ProfitTable from "@/components/components/Simulators/ProfitTable";
+import InvestmentSimulator from "@/components/Simulators/components/InvestmentSimulator";
+import DistributionChart from "@/components/Simulators/components/DistributionChart";
+import ProfitTable from "@/components/Simulators/components/ProfitTable";
 import { ANIMATION } from "@/lib/Profit-Simulator/constants";
 
 export default function ProfitSimulatorPage() {
