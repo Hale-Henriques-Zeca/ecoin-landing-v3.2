@@ -199,6 +199,12 @@ export default function LanguageSelector({
     className="w-5 h-4 rounded-sm object-cover"
 />
 
+       <span className="font-medium">
+    
+    <span className="ml-1 text-xs opacity-70">
+        ({currentLanguage.code.toUpperCase()})
+    </span>
+</span>
         <ChevronDown size={14} className={`transition-transform duration-300 ${open ? "rotate-180" : ""}`} />
       </button>
 
