@@ -57,6 +57,12 @@ export default function LanguageSelector({
     cacheHitRate = "98%"
   } = useLanguage();
 
+  console.log(currentLanguage);
+
+  console.log("currentLanguage:", currentLanguage);
+
+  console.log("availableLanguages:", availableLanguages);
+
   // --------------------------------------------------------
   // 2. LOCAL STATES
   // --------------------------------------------------------
@@ -187,11 +193,22 @@ export default function LanguageSelector({
         onClick={() => setOpen(!open)}
         className="flex items-center gap-2.5 bg-black/80 border border-[#D4AF37] rounded-full px-5 py-2.5 text-[#D4AF37] hover:bg-[#D4AF37] hover:text-black transition-all shadow-lg backdrop-blur-xl group"
       >
-        <Globe size={18} className="animate-spin-slow group-hover:scale-110 transition-transform" />
-        <span className="font-medium text-sm tracking-wide">
-          {currentLangObj ? currentLangObj.name : "Idioma"}
-        </span>
-        <ChevronDown size={14} className={`transition-transform duration-300 ${open ? "rotate-180" : ""}`} />
+        <img
+    src={`https://flagcdn.com/w40/${currentLanguage.flag.toLowerCase()}.png`}
+    alt={currentLanguage.nativeName ?? "Idioma"}
+    className="w-5 h-4 rounded-sm object-cover"
+/>
+
+<span>
+    {currentLanguage.nativeName ?? "Idioma"}
+</span>
+
+<ChevronDown
+    size={14}
+    className={`transition-transform duration-300 ${
+        open ? "rotate-180" : ""
+    }`}
+/>
       </button>
 
       {/* 🔽 DROPDOWN MENU ENTERPRISE */}
