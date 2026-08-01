@@ -194,21 +194,12 @@ export default function LanguageSelector({
         className="flex items-center gap-2.5 bg-black/80 border border-[#D4AF37] rounded-full px-5 py-2.5 text-[#D4AF37] hover:bg-[#D4AF37] hover:text-black transition-all shadow-lg backdrop-blur-xl group"
       >
         <img
-    src={`https://flagcdn.com/w40/${currentLanguage.flag.toLowerCase()}.png`}
+    src={`https://flagcdn.com/w40/${currentLanguage.flag}.png`}
     alt={currentLanguage.nativeName ?? "Idioma"}
     className="w-5 h-4 rounded-sm object-cover"
 />
 
-<span>
-    {currentLanguage.nativeName ?? "Idioma"}
-</span>
-
-<ChevronDown
-    size={14}
-    className={`transition-transform duration-300 ${
-        open ? "rotate-180" : ""
-    }`}
-/>
+        <ChevronDown size={14} className={`transition-transform duration-300 ${open ? "rotate-180" : ""}`} />
       </button>
 
       {/* 🔽 DROPDOWN MENU ENTERPRISE */}
