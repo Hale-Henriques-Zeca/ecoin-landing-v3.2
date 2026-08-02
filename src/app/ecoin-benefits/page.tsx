@@ -227,20 +227,31 @@ export default function ECoinBenefitsInfo() {
       </section>
 
 
-      {/* ================= CTA BUTTON ================= */}
+      {/* ================= PANCAKESWAP PANEL ================= */}
 
       <section className="py-24 px-6 text-center relative overflow-hidden">
+        <div className="max-w-3xl mx-auto">
+          <div className="bg-black text-white p-8 rounded-xl text-center shadow-2xl">
 
-        <Link
-          href="/ecoin-converter"
-          className="inline-flex items-center gap-2 px-10 py-4 rounded-full
-          bg-black text-white font-semibold
-          hover:bg-[#D4AF37] hover:text-black
-          transition-all duration-300 shadow-lg"
-        >
-          Obter E-Coin convertendo USDT / E-Coin →
-        </Link>
+            <h3 className="text-xl text-[#D4AF37] font-semibold mb-4">
+               Obter E-Coin convertendo USDT / E-Coin no Pair — PancakeSwap
+            </h3>
 
+            <p className="mb-6 text-gray-300 text-sm md:text-base">
+              The E-Coin pair is already pre-listed on PancakeSwap.
+            </p>
+
+            <a
+              href="https://pancakeswap.finance/swap?chain=bsc&inputCurrency=0x55d398326f99059fF775485246999027B3197955&outputCurrency=0xDf69235019cc416dd5Be75dfc0eDc922aB4b5964"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block px-8 py-4 bg-[#D4AF37] text-black font-semibold rounded-full hover:bg-white transition-all duration-300 shadow-lg"
+            >
+              Access USDT / E-Coin Pair →
+            </a>
+
+          </div>
+        </div>
       </section>
 
     </main>
