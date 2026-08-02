@@ -11,7 +11,7 @@ export default function CareersPage() {
       location: "Nhamatanda, Mozambique / Remote",
       type: "Full-Time",
       description:
-        "Develop and optimize smart contracts, backend integrations, and DeFi architecture for EKD’s token ecosystem.",
+        "Develop and optimize smart contracts, backend integrations, and DeFi architecture for EdenKingDom’s token ecosystem.",
     },
     {
       title: "Frontend Developer",
@@ -19,15 +19,15 @@ export default function CareersPage() {
       location: "Toronto, Canada / Hybrid",
       type: "Full-Time",
       description:
-        "Create interactive, high-performance UIs for EKD dashboards, trading platforms, and investor panels.",
+        "Create interactive, high-performance UIs for EdenKingDom dashboards, trading platforms, and investor panels.",
     },
     {
       title: "AI Systems Analyst",
-      department: "EKD Code+ Lab",
+      department: "EdenKingDom Code+ Lab",
       location: "New York, USA / Remote",
       type: "Contract",
       description:
-        "Integrate AI-driven data pipelines, automate decision frameworks, and support EKD’s autonomous management systems.",
+        "Integrate AI-driven data pipelines, automate decision frameworks, and support EdenKingDom’s autonomous management systems.",
     },
     {
       title: "Public Relations & Brand Officer",
@@ -35,7 +35,7 @@ export default function CareersPage() {
       location: "Nhamatanda, Mozambique / Field",
       type: "Full-Time",
       description:
-        "Represent EKD’s vision across events, media, and community partnerships. Ensure global alignment of the corporate identity.",
+        "Represent EdenKingDom’s vision across events, media, and community partnerships. Ensure global alignment of the corporate identity.",
     },
     {
       title: "Corporate Administrator",
@@ -43,7 +43,7 @@ export default function CareersPage() {
       location: "Nhamatanda, Mozambique / Office",
       type: "Full-Time",
       description:
-        "Manage legal documentation, coordinate executive agendas, and oversee corporate reporting between EKD divisions.",
+        "Manage legal documentation, coordinate executive agendas, and oversee corporate reporting between EdenKingDom divisions.",
     },
   ];
 
@@ -60,7 +60,7 @@ export default function CareersPage() {
           transition={{ duration: 0.8 }}
           className="text-5xl md:text-6xl font-bold mb-6"
         >
-          Work at <span className="text-[#D4AF37]">EKD Corporation</span>
+          Work at <span className="text-[#D4AF37]">EdenKingDom Group</span>
         </motion.h1>
         <motion.p
           initial={{ opacity: 0, y: 40 }}
@@ -112,7 +112,7 @@ export default function CareersPage() {
             },
             {
               title: "Learning & Development",
-              text: "Gain access to continuous training programs, mentorship, and EKD Academy certifications.",
+              text: "Gain access to continuous training programs, mentorship, and EdenKingDom Academy certifications.",
               icon: "🎓",
             },
             {
@@ -192,7 +192,7 @@ export default function CareersPage() {
         className="bg-[#0D0D0D]/60 border-t border-[#D4AF37]/20 py-20 px-6 text-center"
       >
         <h2 className="text-3xl md:text-4xl font-bold mb-4">
-          Apply to <span className="text-[#D4AF37]">Join EKD</span>
+          Apply to <span className="text-[#D4AF37]">Join EdenKingDom</span>
         </h2>
         <p className="text-gray-400 mb-10">
           Send your professional profile directly or connect your LinkedIn.

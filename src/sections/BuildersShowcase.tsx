@@ -18,7 +18,7 @@ export default function BuildersShowcase() {
   className="max-w-6xl mx-auto mb-24"
 >
   <h2 className="text-4xl md:text-5xl font-bold text-center mb-12">
-    Start your <span className="text-[#D4AF37]">EKD Journey</span>
+    Start your <span className="text-[#D4AF37]">EdenKingDom Journey</span>
   </h2>
 
   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
@@ -31,13 +31,13 @@ export default function BuildersShowcase() {
       },
       {
         title: "Start Coding",
-        text: "Master EKD smart contracts and our blockchain tools with our E-Code+ community, EdenKingDom Innovation Center, and E-Lab.",
+        text: "Master EdenKingDom smart contracts and our blockchain tools with our eCode+ community, EdenKingDom Innovation Center, and eLab.",
         icon: "💻",
         button: "Learn More",
       },
       {
         title: "Start Earning",
-        text: "Get a wallet, claim E-Coin, and explore top dApps in the EKD ecosystem.",
+        text: "Get a wallet, claim eCoin, and explore top dApps in the EdenKingDom ecosystem.",
         icon: "💰",
         button: "Get Wallet",
       },
@@ -48,8 +48,8 @@ export default function BuildersShowcase() {
         button: "Join Now",
       },
       {
-        title: "Get Employed at EKD",
-        text: "Work with visionaries shaping the future of global innovation. At EKD Corporation, we value creativity, leadership, and purpose-driven impact. Join our corporate, tech, and field teams across Africa, America, and beyond.",
+        title: "Get Employed at EdenKingDom Group",
+        text: "Work with visionaries shaping the future of global innovation. At EdenKingDom Group, we value creativity, leadership, and purpose-driven impact. Join our corporate, tech, and field teams across Africa, America, and beyond.",
         icon: "🧠",
         button: "Apply Now",
       },
@@ -117,19 +117,19 @@ export default function BuildersShowcase() {
         className="max-w-6xl mx-auto mb-24"
       >
         <h2 className="text-4xl md:text-5xl font-bold mb-10 text-center">
-          Build alongside our <span className="text-[#D4AF37]">E-Code+ global community</span>.
+          Build alongside our <span className="text-[#D4AF37]">eCode+ global community</span>.
         </h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {[
             {
               title: "Validate the Network",
-              text: "Run a validator to help keep the EKD blockchain secure and fast for all users.",
+              text: "Run a validator to help keep the EdenKingDom Group blockchain secure and fast for all users.",
               icon: "🔒",
             },
             {
               title: "Secure by Staking",
-              text: "Stake E-Coin and earn rewards while supporting decentralization.",
+              text: "Stake eCoin and earn rewards while supporting decentralization.",
               icon: "🪙",
             },
             {
@@ -176,10 +176,10 @@ export default function BuildersShowcase() {
         className="max-w-6xl mx-auto"
       >
         <h2 className="text-4xl md:text-5xl font-bold text-center mb-8">
-          How we <span className="text-[#D4AF37]">built this at EKD?</span>
+          How we <span className="text-[#D4AF37]">built this at EdenKingDom?</span>
         </h2>
         <p className="text-gray-400 text-center mb-10">
-          Hear from pioneers creating the future of global markets with EKD.
+          Hear from pioneers creating the future of global markets with EdenKingDom.
         </p>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

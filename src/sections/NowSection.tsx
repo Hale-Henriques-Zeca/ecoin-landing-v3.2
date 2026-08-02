@@ -15,31 +15,31 @@ const categories = [
 const mockNews = [
   {
     id: 1,
-    title: "E-Coin integrates with EKD Pay global gateway",
+    title: "eCoin integrates with ePay global gateway",
     category: "FINTECH",
     date: "21 Dec 2025",
   },
   {
     id: 2,
-    title: "E-Chain activates smart contracts layer for EKD apps",
+    title: "eChain activates smart contracts layer for EdenKingDom apps",
     category: "BLOCKCHAIN",
     date: "20 Dec 2025",
   },
   {
     id: 3,
-    title: "E-DEX opens high-liquidity pool for E-Coin/USDT",
+    title: "eDEX opens high-liquidity pool for E-Coin/USDT",
     category: "EXCHANGE",
     date: "19 Dec 2025",
   },
   {
     id: 4,
-    title: "AltaTec Group launches corporate governance DAO",
+    title: "EdenKingDom Group launches corporate governance DAO",
     category: "INSTITUTIONAL",
     date: "18 Dec 2025",
   },
   {
     id: 5,
-    title: "E-Pay introduces on-chain card settlements",
+    title: "ePay introduces on-chain card settlements",
     category: "PAYMENTS",
     date: "17 Dec 2025",
   },

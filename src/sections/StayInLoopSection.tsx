@@ -39,15 +39,15 @@ export default function StayInLoopSection() {
           </h3>
           <ul className="space-y-4">
             <li className="flex justify-between items-center border-b border-gray-800 pb-3">
-              <span>Série E-Coin Documentary: O futuro institucional</span>
+              <span>Série eCoin Documentary: O futuro institucional</span>
               <a href="#" className="text-[#D4AF37] hover:underline">→</a>
             </li>
             <li className="flex justify-between items-center border-b border-gray-800 pb-3">
-              <span>Explorando o impacto global da EKD</span>
+              <span>Explorando o impacto global da EdenKingDom</span>
               <a href="#" className="text-[#D4AF37] hover:underline">→</a>
             </li>
             <li className="flex justify-between items-center">
-              <span>Integrando E-Pay em plataformas internacionais</span>
+              <span>Integrando ePay em plataformas internacionais</span>
               <a href="#" className="text-[#D4AF37] hover:underline">→</a>
             </li>
           </ul>
@@ -68,7 +68,7 @@ export default function StayInLoopSection() {
           />
           <div className="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black via-black/60 to-transparent p-6">
             <h4 className="font-semibold text-white text-lg">
-              EKD Summit 2025 — Beira & Nhamatanda Edition
+              EdenKingDom Summit 2025 — Beira & Nhamatanda Edition
             </h4>
             <a
               href="#"
@@ -94,7 +94,7 @@ export default function StayInLoopSection() {
             <p className="text-4xl md:text-5xl font-bold mt-3 text-[#D4AF37]">
               $2,048,375,211
             </p>
-            <p className="text-gray-500 text-sm mt-2">Across E-Coin & EKD Ecosystem</p>
+            <p className="text-gray-500 text-sm mt-2">Across eCoin & EdenKingDom Ecosystem in general</p>
           </div>
 
           <div className="grid grid-cols-2 border-t border-gray-800">

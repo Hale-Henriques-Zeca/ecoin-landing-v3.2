@@ -21,7 +21,7 @@ import EcoinCarousel from "@/components/EcoinCarousel";
 import AITradingCard from "@/components/AITradingCard";
 import ECoinDevelopmentNotice from "@/components/ECoinDevelopmentNotice";
 import LiquidityPanel from "@/components/LiquidityPanel";
-import Chart from "@/components/Chart";
+import Chart from "@/components/eCoinChart/Chart";
 import EFTEBuySellPanel from "@/components/EFTEBuySellPanel";
 import EKDSmartFinanceTool from "@/components/EKDSmartFinanceTool";
 import NeuralArbitragePanel from "@/components/NeuralArbitragePanel";
@@ -99,26 +99,26 @@ function FloatingDashboardMenu() {
     { label: "Home", target: "Hero" },
     { label: "AI", target: "ecoin-ai-section" },
     { label: "eCoin Neural AI Arbitrage Panel", target: "neural-arbitrage" },
-    { label: "Converter/Calculator/Market", target: "Converter" },
-    { label: "Vantagens da E-Coin", target: "advantages" },
-    { label: "Liquidez da E-Coin", target: "LiquidityPanel" },
-    { label: "Gráfico & Preço da E-Coin", target: "Chart" },
+    { label: "Converter & Calculator e Market", target: "Converter" },
+    { label: "Vantagens da eCoin", target: "advantages" },
+    { label: "Liquidez da eCoin", target: "LiquidityPanel" },
+    { label: "Gráfico & Preço da eCoin", target: "Chart" },
     { label: "Percentage calculator", target: "percentage-calculator" },
     { label: "Carousel", target: "EcoinCarousel" },
     { label: "Trading AI", target: "AITradingCard" },
     { label: "Development Notice", target: "ECoinDevelopmentNotice" },
     { label: "eCoin Cash Out Gateway", target: "cashout-gateway" },
-    { label: "EFTE (E-Exchange)", target: "efte" },
+    { label: "EFTE (eExchange)", target: "efte" },
     { label: "Crypto Growth Simulator", target: "growth-simulator" },
     { label: "Explore the eCoin Future Value", target: "future-value" },
-    { label: "eCoin Buy-Back Engine", target: "buyback-engine" },
+    { label: "eCoin BuyBack Engine", target: "buyback-engine" },
     { label: "ECGPSE CONTROL BOARD", target: "control-board" },
     { label: "What’s happening now", target: "now-section" },
     { label: "Stay in the loop", target: "stay-loop" },
     { label: "Global Events & Conferences", target: "global-events" },
     { label: "Proof That Builders & Creators Grow Here", target: "builders-creators" },
     { label: "ECOSSISTEMA EDENKINGDOM", target: "ecosistema-ekd" },
-    { label: "Work at EKD Corporation", target: "careers-ekd" },
+    { label: "Work at EdenKingDom Group", target: "careers-ekd" },
     { label: "SEGURANÇA", target: "seguranca-ecoin" },
     { label: "ROADMAP", target: "roadmap-ecoin" },
   ];

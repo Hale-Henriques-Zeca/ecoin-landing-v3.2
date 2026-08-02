@@ -34,7 +34,7 @@ const Countdown = ({ targetDate }: { targetDate: string }) => {
 const events = [
   {
     id: 1,
-    title: "E-Coin Accelerate Global Summit 2026",
+    title: "eCoin Accelerate Global Summit 2026",
     subtitle: "Feb. 15, 2026 @ Beira & Nhamatanda, Mozambique",
     location: "Beira & Nhamatanda",
     date: "2026-02-15T09:00:00",
@@ -45,7 +45,7 @@ const events = [
   },
   {
     id: 2,
-    title: "EKD Breakpoint 2026",
+    title: "EdenKingDom Breakpoint 2026",
     subtitle: "Mar. 20, 2026 @ New York, US",
     location: "New York",
     date: "2026-03-20T10:00:00",
@@ -56,7 +56,7 @@ const events = [
   },
   {
     id: 3,
-    title: "E-Pay International Conference",
+    title: "ePay International Conference",
     subtitle: "May. 9, 2026 @ Toronto, Canada",
     location: "Toronto",
     date: "2026-05-09T09:00:00",
@@ -67,7 +67,7 @@ const events = [
   },
   {
     id: 4,
-    title: "E-Chain Developers Expo 2026",
+    title: "eChain Developers Expo 2026",
     subtitle: "July 12, 2026 @ London, UK",
     location: "London",
     date: "2026-07-12T09:00:00",
@@ -97,7 +97,7 @@ const events = [
           Global <span className="text-[#D4AF37]">Events</span> & Conferences
         </h2>
         <p className="text-gray-400 mt-4 md:mt-0 text-center md:text-right max-w-md">
-          Participe dos encontros oficiais da EKD Corporation, impulsionando o
+          Participe dos encontros oficiais da EdenKingDom Group, impulsionando o
           futuro da tecnologia, blockchain e economia corporativa.
         </p>
       </motion.div>
