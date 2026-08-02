@@ -99,7 +99,7 @@ function FloatingDashboardMenu() {
     { label: "Home", target: "Hero" },
     { label: "AI", target: "ecoin-ai-section" },
     { label: "eCoin Neural AI Arbitrage Panel", target: "neural-arbitrage" },
-    { label: "Converter", target: "Converter" },
+    { label: "Converter/Calculator/Market", target: "Converter" },
     { label: "Vantagens da E-Coin", target: "advantages" },
     { label: "Liquidez da E-Coin", target: "LiquidityPanel" },
     { label: "Gráfico & Preço da E-Coin", target: "Chart" },
