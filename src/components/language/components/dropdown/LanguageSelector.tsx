@@ -14,20 +14,15 @@ import {
   Layers
 } from "lucide-react";
 import { useLanguage } from "../../i18n/hooks";
+import {
+    LANGUAGES_ULTRA,
+    type LanguageDefinition,
+} from "../../i18n/constants/languages";
 
 /* ==========================================================
  * TYPES
  * ========================================================== */
-export interface LanguageOption {
-  code: string;
-  name: string;
-  nativeName?: string;
-  flag: string; // Ex: "mz", "us" ou Emoji
-  region?: "África" | "América" | "Europa" | "Ásia" | "Oceania";
-  isRTL?: boolean;
-  providersSupported?: string[];
-  cached?: boolean;
-}
+export type LanguageOption = LanguageDefinition;
 
 export interface LanguageSelectorProps {
   className?: string;
@@ -57,11 +52,6 @@ export default function LanguageSelector({
     cacheHitRate = "98%"
   } = useLanguage();
 
-  console.log(currentLanguage);
-
-  console.log("currentLanguage:", currentLanguage);
-
-  console.log("availableLanguages:", availableLanguages);
 
   // --------------------------------------------------------
   // 2. LOCAL STATES
@@ -76,14 +66,10 @@ export default function LanguageSelector({
   const searchInputRef = useRef<HTMLInputElement>(null);
 
   // Fallback seguro caso availableLanguages venha do hook como undefined
-  const languagesList: LanguageOption[] = availableLanguages || [
-    { code: "pt", name: "Português", nativeName: "Português (MZ)", flag: "mz", region: "África", providersSupported: ["OpenAI", "Gemini"], cached: true },
-    { code: "en", name: "Inglês", nativeName: "English", flag: "us", region: "América", providersSupported: ["OpenAI", "Gemini", "Claude"], cached: true },
-    { code: "es", name: "Espanhol", nativeName: "Español", flag: "es", region: "Europa", providersSupported: ["OpenAI"], cached: false },
-    { code: "fr", name: "Francês", nativeName: "Français", flag: "fr", region: "Europa", providersSupported: ["Claude"], cached: true },
-    { code: "ja", name: "Japonês", nativeName: "日本語", flag: "jp", region: "Ásia", providersSupported: ["OpenAI", "Gemini"], cached: false },
-    { code: "ar", name: "Árabe", nativeName: "العربية", flag: "sa", region: "Ásia", isRTL: true, providersSupported: ["OpenAI"], cached: true },
-  ];
+  const languagesList: LanguageOption[] =
+    availableLanguages?.length > 0
+        ? availableLanguages
+        : LANGUAGES_ULTRA;
 
   // --------------------------------------------------------
   // 3. EFFECTS (Outside Click, ESC, Focus)
@@ -118,7 +104,7 @@ export default function LanguageSelector({
   const filteredLanguages = useMemo(() => {
     return languagesList.filter((lang) => {
       const matchesSearch =
-  (lang.name ?? "")
+  (lang.nativeName ?? "")
     .toLowerCase()
     .includes(query.toLowerCase()) ||
 
@@ -293,7 +279,7 @@ animate-fadeIn
             >
               Todos
             </button>
-            {["África", "América", "Europa", "Ásia"].map((reg) => (
+            {["Africa", "Americas", "Europa", "Asia"].map((reg) => (
               <button
                 key={reg}
                 onClick={() => setSelectedRegion(selectedRegion === reg ? null : reg)}
@@ -433,7 +419,7 @@ function LanguageItem({
         {lang.flag.length <= 2 ? (
           <img
             src={`https://flagcdn.com/w40/${lang.flag.toLowerCase()}.png`}
-            alt={lang.name}
+            alt={lang.nativeName}
             className="w-5 h-3.5 object-cover rounded-sm border border-black/40 shadow-sm"
             onError={(e) => {
               // Fallback para não quebrar UI
@@ -447,8 +433,8 @@ function LanguageItem({
         {/* Nomes */}
         <div className="flex flex-col min-w-0">
           <div className="flex items-center gap-1.5">
-            <span className="text-xs font-medium truncate">{lang.name}</span>
-            {lang.isRTL && (
+            <span className="text-xs font-medium truncate">{lang.nativeName}</span>
+            {lang.rtl && (
               <span className="text-[9px] px-1 bg-red-950/60 text-red-400 border border-red-800/40 rounded">
                 RTL
               </span>

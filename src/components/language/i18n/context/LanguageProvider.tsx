@@ -10,17 +10,13 @@ import React, {
 import { LanguageService } from "../services/LanguageService";
 
 // Definição do tipo para cada idioma na framework
-export interface LanguageDefinition {
-  code: string;
-  name: string;
-  nativeName?: string;
-  flag: string;
-  locale?: string;
-  region?: "África" | "América" | "Europa" | "Ásia" | "Oceania";
-  isRTL?: boolean;
-  providersSupported?: string[];
-  cached?: boolean;
-}
+import {
+    LANGUAGES_ULTRA,
+    type LanguageDefinition,
+} from "../constants/languages";
+
+
+
 
 export interface LanguageContextType {
   /** Código do idioma atual (ex: "pt") */
@@ -79,12 +75,12 @@ export function LanguageProvider({ children }: Props) {
     }
     // Fallback padrão com metadata enriquecida
     return [
-      { code: "pt", name: "Português", nativeName: "Português (MZ)", flag: "mz", locale: "pt-MZ", region: "África", providersSupported: ["OpenAI", "Gemini"], cached: true },
-      { code: "en", name: "Inglês", nativeName: "English", flag: "us", locale: "en-US", region: "América", providersSupported: ["OpenAI", "Gemini", "Claude"], cached: true },
-      { code: "es", name: "Espanhol", nativeName: "Español", flag: "es", locale: "es-ES", region: "Europa", providersSupported: ["OpenAI"], cached: false },
-      { code: "fr", name: "Francês", nativeName: "Français", flag: "fr", locale: "fr-FR", region: "Europa", providersSupported: ["Claude"], cached: true },
-      { code: "ja", name: "Japonês", nativeName: "日本語", flag: "jp", locale: "ja-JP", region: "Ásia", providersSupported: ["OpenAI", "Gemini"], cached: false },
-      { code: "ar", name: "Árabe", nativeName: "العربية", flag: "sa", locale: "ar-SA", region: "Ásia", isRTL: true, providersSupported: ["OpenAI"], cached: true },
+      { code: "pt", name: "Português", nativeName: "Português (MZ)", flag: "mz", locale: "pt-MZ", region: "África", providers: ["OpenAI", "Gemini"], cached: true },
+      { code: "en", name: "Inglês", nativeName: "English", flag: "us", locale: "en-US", region: "América", providers: ["OpenAI", "Gemini", "Claude"], cached: true },
+      { code: "es", name: "Espanhol", nativeName: "Español", flag: "es", locale: "es-ES", region: "Europa", providers: ["OpenAI"], cached: false },
+      { code: "fr", name: "Francês", nativeName: "Français", flag: "fr", locale: "fr-FR", region: "Europa", providers: ["Claude"], cached: true },
+      { code: "ja", name: "Japonês", nativeName: "日本語", flag: "jp", locale: "ja-JP", region: "Ásia", providers: ["OpenAI", "Gemini"], cached: false },
+      { code: "ar", name: "Árabe", nativeName: "العربية", flag: "sa", locale: "ar-SA", region: "Ásia", rtl: true, providers: ["OpenAI"], cached: true },
     ];
   }, [service]);
 

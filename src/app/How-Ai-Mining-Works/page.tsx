@@ -169,7 +169,7 @@ export default function HowAiMiningWorksPage() {
           </a>
 
           <a 
-            href="https://ecoin.edenkingdom.org/Savings" 
+            href="https://ecoin.edenkingdom.org/Mining" 
             target="_blank" 
             rel="noopener noreferrer"
             className="group flex flex-col items-center justify-center gap-3 p-6 rounded-2xl bg-white/[0.02] border border-white/10 hover:bg-[#D4AF37]/10 hover:border-[#D4AF37]/30 transition-all duration-300"
