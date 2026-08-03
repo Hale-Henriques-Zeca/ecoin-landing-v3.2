@@ -25,7 +25,7 @@ export const Chart: React.FC = () => {
           <div>
             <div className="flex items-center gap-2">
               <span className="text-[10px] font-mono uppercase tracking-[0.3em] text-[#D4AF37]">
-                EdenKingDom Terminal
+                EdenKingDom Protocol
               </span>
               <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[9px] font-mono bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
                 Live Feed
