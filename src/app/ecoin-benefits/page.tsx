@@ -17,6 +17,14 @@ import {
 } from "lucide-react";
 import CryptoHistoricalExample from "@/components/CryptoHistoricalExample";
 
+// CTA
+
+import { SmartPoolsCTA } from "@/components/CTA/SmartPoolsCTA/SmartPoolsCTA";
+
+import { MiningpageCTA } from '@/components/CTA/MiningpageCTA/MiningpageCTA';
+
+import { ECoinPancakeSwapPairCTA } from '@/components/CTA/ECoinPancakeSwapPairCTA/ECoinPancakeSwapPairCTA';
+
 export default function ECoinBenefitsInfo() {
   return (
     <main className="min-h-screen bg-[#020617] text-white flex flex-col selection:bg-[#D4AF37] selection:text-black">
@@ -321,39 +329,15 @@ export default function ECoinBenefitsInfo() {
         </div>
       </section>
 
+      {/* SMART POOLS CALL TO ACTION */}
+                <SmartPoolsCTA />
 
-      {/* ================= PANCAKESWAP PANEL ================= */}
-      <section className="py-24 px-6 text-center relative overflow-hidden bg-[#020617]">
-        <div className="max-w-3xl mx-auto">
-          <div className="relative rounded-[2.5rem] bg-gradient-to-b from-zinc-900/95 to-black/95 border border-[#D4AF37]/40 p-10 text-center shadow-[0_0_50px_rgba(212,175,55,0.15)] overflow-hidden">
-            
-            <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-[#D4AF37] via-yellow-400 to-[#D4AF37]" />
 
-            <span className="text-[10px] font-mono uppercase tracking-[0.4em] text-[#D4AF37] block mb-3">
-              PancakeSwap Liquidity Pool
-            </span>
+      {/* ================= PANCAKESWAP PANEL (Novo Componente) ================= */}
+          <ECoinPancakeSwapPairCTA />
 
-            <h3 className="text-2xl font-black text-white mb-4 italic">
-              Obter E-Coin convertendo USDT / E-Coin no Pair — PancakeSwap
-            </h3>
-
-            <p className="mb-8 text-gray-300 text-sm md:text-base font-light">
-              The E-Coin pair is already pre-listed on PancakeSwap.
-            </p>
-
-            <a
-              href="https://pancakeswap.finance/swap?chain=bsc&inputCurrency=0x55d398326f99059fF775485246999027B3197955&outputCurrency=0xDf69235019cc416dd5Be75dfc0eDc922aB4b5964"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-3 px-10 py-5 bg-gradient-to-r from-[#D4AF37] via-yellow-500 to-[#D4AF37] text-black font-black uppercase tracking-widest text-sm rounded-full hover:bg-white hover:text-black transition-all duration-300 shadow-[0_0_30px_rgba(212,175,55,0.4)] hover:shadow-none"
-            >
-              <span>Access USDT / E-Coin Pair</span>
-              <ExternalLink size={18} />
-            </a>
-
-          </div>
-        </div>
-      </section>
+      {/* BOTÕES DE AÇÃO FINAL (Novo Componente) */}
+            <MiningpageCTA />
 
     </main>
   );

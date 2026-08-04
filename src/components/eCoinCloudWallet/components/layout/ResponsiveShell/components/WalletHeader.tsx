@@ -35,7 +35,7 @@ export default function WalletHeader({ onMenuClick }: WalletHeaderProps) {
       <div className="flex items-center gap-3">
         <div className="hidden sm:flex items-center gap-1.5 px-3 py-1 rounded-full border border-[#00FF9C]/20 bg-[#00FF9C]/5">
           <span className="w-1.5 h-1.5 rounded-full bg-[#00FF9C] animate-pulse" />
-          <span className="text-[10px] font-mono font-bold text-[#00FF9C] uppercase tracking-wider">Eden Mainnet</span>
+          <span className="text-[10px] font-mono font-bold text-[#00FF9C] uppercase tracking-wider">EdenKingDom Verse</span>
         </div>
         
         <div className="p-2 rounded-lg border border-white/5 bg-[#0A0A0A] text-neutral-400">

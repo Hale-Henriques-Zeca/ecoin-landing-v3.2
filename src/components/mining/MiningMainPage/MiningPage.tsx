@@ -59,6 +59,10 @@ import ClaimCooldown from "@/components/ClaimCooldown";
 import SimulatorRedirectCard from "@/components/Cards/SimulatorRedirectCard";
 import ProfitSimulatorCard from "@/components/Cards/ProfitSimulatorCard";
 
+// CTA
+
+import { SmartPoolsCTA } from "@/components/CTA/SmartPoolsCTA/SmartPoolsCTA";
+
 // Mining Components
 
 import MiningTab from "@/components/mining/MiningTab";
@@ -885,11 +889,7 @@ const handleTeamsRedirect = () => {
           
 
           {/* SMART POOLS CALL TO ACTION */}
-          <div className="mt-8 flex justify-center w-full">
-            <Link href="ecoin-buyback-engine" className="inline-block px-6 py-2.5 text-xs font-semibold text-cyan-400 border border-cyan-500/20 rounded-xl bg-cyan-500/5 hover:bg-cyan-500 hover:text-white transition-all duration-300">
-              Saiba mais de Smart Pools
-            </Link>
-          </div>
+          <SmartPoolsCTA />
           
           
 

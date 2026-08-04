@@ -20,15 +20,22 @@ export default function RootLayout({
   return (
     <html lang="pt">
       <body className="overflow-x-hidden">
-        <Providers>
-          <DexWalletProvider>
+    <Providers>
+        <DexWalletProvider>
+
             <Header />
-            {children}
-             <TxToastStack />
+
+            <main className="pt-16">
+                {children}
+            </main>
+
+            <TxToastStack />
+
             <Toaster position="bottom-center" />
-          </DexWalletProvider>
-        </Providers>
-      </body>
+
+        </DexWalletProvider>
+    </Providers>
+</body>
     </html>
   );
 }
