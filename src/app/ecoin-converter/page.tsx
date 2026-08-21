@@ -19,9 +19,9 @@ export default function EBCConvertPage() {
           </p>
         </div>
 
-        {/* CARD 1: EFTE Exchange Web3 */}
+        {/* CARD 3: PancakeSwap Liquidity CTA */}
         <section className="w-full">
-          <EfteExchangeCTA />
+          <ECoinPancakeSwapPairCTA />
         </section>
 
         {/* CARD 2: ePay Cash Out Gateway */}
@@ -29,9 +29,9 @@ export default function EBCConvertPage() {
           <EPayAgentCTA />
         </section>
 
-        {/* CARD 3: PancakeSwap Liquidity CTA */}
+        {/* CARD 1: EFTE Exchange Web3 */}
         <section className="w-full">
-          <ECoinPancakeSwapPairCTA />
+          <EfteExchangeCTA />
         </section>
       </div>
     </main>
