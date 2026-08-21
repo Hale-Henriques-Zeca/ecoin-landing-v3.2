@@ -38,11 +38,11 @@ export default function EcoinWalletModal({ className = "" }: EcoinWalletModalPro
         onClick={() => setOpen(!open)}
         className="flex items-center gap-2.5 bg-black/80 border border-[#00FF9C]/40 rounded-full px-5 py-2.5 text-[#00FF9C] hover:bg-[#00FF9C] hover:text-black transition-all shadow-lg backdrop-blur-xl group"
       >
-        
-        <span className="text-xs font-bold uppercase tracking-wider"></span>
-        <Wallet
-          size={12}
-          className={`transition-transform duration-300 ${open ? "rotate-120" : ""}`}
+        <Wallet size={10} className="transition-transform group-hover:scale-110" />
+        <span className="text-xs font-bold uppercase tracking-wider">Balance</span>
+        <ChevronDown
+          size={14}
+          className={`transition-transform duration-300 ${open ? "rotate-180" : ""}`}
         />
       </button>
 

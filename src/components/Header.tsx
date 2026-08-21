@@ -28,17 +28,18 @@ import {
   Download,
 } from "lucide-react";
 
-// Substiuição efetuada: "Importar E-Coin" foi removido da lista de redirecionamento simples
 const navLinks = [
   
+  { name: "Balance", isModal: true }, 
+  
   { name: "Home", href: "/", icon: Home },
-  { name: "Importar E-Coin", href: "/import-guide", icon: Download },
   {
     name: "Wallet",
     href: "/eCoinCloudWallet",
     external: false,
     icon: Wallet,
   },
+  { name: "Importar E-Coin", href: "/import-guide", icon: Download },
   { name: "Mineração", href: "/Mining", icon: PiggyBank },
   { name: "Converter", href: "/ecoin-converter", icon: ArrowLeftRight },
   { name: "Trading AI", href: "/ecoin-ai-trading", icon: Bot },
@@ -89,17 +90,13 @@ export default function Header() {
             : "bg-black/80 backdrop-blur-xl border-b border-white/8"
         }`}
       >
-        {/* Radial glow inside header */}
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_0%,rgba(212,175,55,0.06),transparent_60%)] pointer-events-none" />
 
         <div className="relative mx-auto max-w-[1400px] xl:max-w-[1600px] h-16 px-6 flex items-center justify-between gap-6">
 
-          {/* ──────────────────────────────────────
-              LEFT — LOGO BLOCK
-          ────────────────────────────────────── */}
+          {/* LEFT — LOGO BLOCK */}
           <div className="flex items-center min-w-fit">
             <Link href="/" className="flex items-center gap-2.5 group">
-              {/* Gold ring around logo */}
               <div className="relative">
                 <div className="absolute inset-0 rounded-full bg-[#D4AF37]/20 blur-md group-hover:bg-[#D4AF37]/40 transition-all duration-300" />
                 <div className="relative w-9 h-9 rounded-full border border-[#D4AF37]/40 flex items-center justify-center overflow-hidden group-hover:border-[#D4AF37]/80 transition-all">
@@ -125,15 +122,21 @@ export default function Header() {
             </Link>
           </div>
 
-          {/* ──────────────────────────────────────
-              CENTER — DESKTOP NAV
-          ────────────────────────────────────── */}
+          {/* CENTER — DESKTOP NAV */}
           <nav className="hidden xl:flex flex-1 justify-start items-center gap-1 overflow-x-auto scrollbar-hide">
             {navLinks.map((link) => {
+              if (link.isModal) {
+                return (
+                  <div key={link.name} className="px-1">
+                    <EcoinWalletModal />
+                  </div>
+                );
+              }
+
               const Icon = link.icon;
               const inner = (
                 <span className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-[9.5px] font-bold uppercase tracking-wider text-[#D4AF37]/70 hover:text-[#D4AF37] hover:bg-[#D4AF37]/8 border border-transparent hover:border-[#D4AF37]/20 transition-all duration-200 group/link whitespace-nowrap">
-                  <Icon size={10} className="shrink-0 opacity-70 group-hover/link:opacity-100 transition-opacity" />
+                  {Icon && <Icon size={10} className="shrink-0 opacity-70 group-hover/link:opacity-100 transition-opacity" />}
                   {link.name}
                   {link.external && (
                     <ExternalLink size={8} className="shrink-0 opacity-40 group-hover/link:opacity-70 transition-opacity" />
@@ -151,29 +154,21 @@ export default function Header() {
                   {inner}
                 </a>
               ) : (
-                <Link key={link.name} href={link.href}>
+                <Link key={link.name} href={link.href!}>
                   {inner}
                 </Link>
               );
             })}
           </nav>
 
-          {/* ──────────────────────────────────────
-              RIGHT — ECOIN WALLET + LANGUAGE + MOBILE TOGGLE
-          ────────────────────────────────────── */}
+          {/* RIGHT — APENAS O SELETOR DE IDIOMAS & STATUS */}
           <div className="flex items-center gap-3 min-w-fit">
-            {/* Live dot indicator */}
             <div className="hidden xl:flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-emerald-500/20 bg-emerald-500/5">
               <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
               <span className="text-[8px] font-mono text-emerald-400/70 uppercase tracking-widest">Binance Chain (Bep20)</span>
             </div>
 
-            {/* BOTÃO ECOIN WALLET MODAL (Novo Flutuante) */}
-            <div>
-              <EcoinWalletModal />
-            </div>
-
-            {/* SELETOR DE IDIOMAS */}
+            {/* Apenas o idioma fica aqui na ponta */}
             <div className="border-l border-white/10 pl-3">
               <LanguageSelector onLangChange={handleLangChange} />
             </div>
@@ -189,15 +184,11 @@ export default function Header() {
           </div>
         </div>
 
-        {/* ──────────────────────────────────────────────────
-            MOBILE DROPDOWN — full redesign
-        ────────────────────────────────────────────────── */}
+        {/* MOBILE DROPDOWN */}
         {open && (
           <div className="xl:hidden absolute top-16 left-0 w-full bg-black/98 backdrop-blur-2xl border-b border-[#D4AF37]/20 overflow-hidden animate-in fade-in slide-in-from-top-4 duration-200">
-            {/* top gold line */}
             <div className="w-full h-px bg-gradient-to-r from-transparent via-[#D4AF37]/50 to-transparent" />
 
-            {/* header inside dropdown */}
             <div className="flex items-center justify-between px-6 pt-5 pb-3">
               <div className="flex items-center gap-2">
                 <Zap size={12} className="text-[#D4AF37]" />
@@ -211,9 +202,16 @@ export default function Header() {
               </div>
             </div>
 
-            {/* grid of links */}
             <div className="grid grid-cols-2 gap-2 px-4 pb-6">
               {navLinks.map((link) => {
+                if (link.isModal) {
+                  return (
+                    <div key={link.name} className="col-span-2 py-1 flex justify-center" onClick={() => setOpen(false)}>
+                      <EcoinWalletModal />
+                    </div>
+                  );
+                }
+
                 const Icon = link.icon;
                 const inner = (
                   <span
@@ -221,7 +219,7 @@ export default function Header() {
                     onClick={() => setOpen(false)}
                   >
                     <span className="w-7 h-7 rounded-lg flex items-center justify-center bg-[#D4AF37]/10 border border-[#D4AF37]/20 group-hover/mlink:bg-[#D4AF37]/20 transition-all shrink-0">
-                      <Icon size={13} className="text-[#D4AF37]" />
+                      {Icon && <Icon size={13} className="text-[#D4AF37]" />}
                     </span>
                     <span className="flex flex-col leading-none min-w-0">
                       <span className="text-[11px] font-bold text-white/80 group-hover/mlink:text-white truncate">
@@ -245,14 +243,13 @@ export default function Header() {
                     {inner}
                   </a>
                 ) : (
-                  <Link key={link.name} href={link.href} className="block">
+                  <Link key={link.name} href={link.href!} className="block">
                     {inner}
                   </Link>
                 );
               })}
             </div>
 
-            {/* bottom separator */}
             <div className="w-full h-px bg-gradient-to-r from-transparent via-[#D4AF37]/20 to-transparent" />
             <div className="flex justify-center items-center gap-2 py-3">
               <span className="text-[8px] font-mono text-white/15 uppercase tracking-widest">
