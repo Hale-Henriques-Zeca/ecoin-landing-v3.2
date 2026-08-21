@@ -1,180 +1,197 @@
+// ============================================================================
+// EDENKINGDOM AI TRANSLATION FRAMEWORK
+// Translation Engine
+// OpenAI-only architecture
+// ============================================================================
+
 import { TranslationPipeline } from "./TranslationPipeline";
 import { TranslationQueue } from "./TranslationQueue";
-import { ProviderManager } from "../providers/ProviderManager";
-import { GlossaryService } from "../glossary/GlossaryService";
+import { GlossaryService } from "../services/GlossaryService";
 import { TranslationCache } from "./TranslationCache";
 
 export class TranslationEngine {
+  private readonly glossary: GlossaryService;
+  private readonly cache: TranslationCache;
+  private readonly queue: TranslationQueue;
+  private readonly pipeline: TranslationPipeline;
 
-    private readonly pipeline = new TranslationPipeline();
+  private initialized = false;
+  private targetLanguage = "pt";
 
-    private readonly queue = new TranslationQueue();
+  constructor() {
+    this.glossary = new GlossaryService();
 
-    private readonly providers = new ProviderManager();
+    this.cache = new TranslationCache();
 
-    private readonly glossary = new GlossaryService();
+    this.queue = new TranslationQueue();
 
-    private readonly cache = new TranslationCache();
+    this.pipeline = new TranslationPipeline({
+      glossary: this.glossary,
+      cache: this.cache,
+    });
+  }
 
-    /**
-     * Inicializa toda a framework.
-     */
-    async initialize(): Promise<void> {
+  // --------------------------------------------------------------------------
+  // Inicialização
+  // --------------------------------------------------------------------------
 
-        await this.providers.initialize();
-
-        await this.glossary.load();
-
+  async initialize(): Promise<void> {
+    if (this.initialized) {
+      return;
     }
 
-    /**
-     * Finaliza todos os recursos.
-     */
-    async shutdown(): Promise<void> {
+    await this.glossary.load();
 
-        await this.providers.destroy();
+    this.initialized = true;
 
+    console.info("[TranslationEngine] initialized");
+  }
+
+  // --------------------------------------------------------------------------
+  // Shutdown
+  // --------------------------------------------------------------------------
+
+  async shutdown(): Promise<void> {
+    if (!this.initialized) {
+      return;
     }
 
-    /**
-     * Traduz um texto.
-     */
-    async translate(
+    this.initialized = false;
 
-        text: string,
+    console.info("[TranslationEngine] destroyed");
+  }
 
-        targetLanguage: string
+  // --------------------------------------------------------------------------
+  // Idioma
+  // --------------------------------------------------------------------------
 
-    ): Promise<string> {
+  setTargetLanguage(language: string): void {
+    if (!language?.trim()) {
+      return;
+    }
 
-        return this.pipeline.execute(
+    this.targetLanguage = language.trim().toLowerCase();
 
-            text,
+    console.info(
+      `[TranslationEngine] Target language: ${this.targetLanguage}`
+    );
+  }
 
-            targetLanguage
+  getTargetLanguage(): string {
+    return this.targetLanguage;
+  }
 
+  // --------------------------------------------------------------------------
+  // Tradução
+  // --------------------------------------------------------------------------
+
+  async translate(
+    text: string,
+    targetLanguage = this.targetLanguage,
+    sourceLanguage = "auto"
+  ): Promise<string> {
+    if (!text?.trim()) {
+      return "";
+    }
+
+    if (!this.initialized) {
+      await this.initialize();
+    }
+
+    return this.pipeline.execute({
+      text,
+      sourceLanguage,
+      targetLanguage,
+    });
+  }
+
+  // --------------------------------------------------------------------------
+  // Tradução em lote
+  // --------------------------------------------------------------------------
+
+  async translateMany(
+    texts: string[],
+    targetLanguage = this.targetLanguage,
+    sourceLanguage = "auto"
+  ): Promise<string[]> {
+    if (!Array.isArray(texts) || texts.length === 0) {
+      return [];
+    }
+
+    if (!this.initialized) {
+      await this.initialize();
+    }
+
+    const results: string[] = [];
+
+    for (const text of texts) {
+      results.push(
+        await this.translate(
+          text,
+          targetLanguage,
+          sourceLanguage
+        )
+      );
+    }
+
+    return results;
+  }
+
+  // --------------------------------------------------------------------------
+  // Queue
+  // --------------------------------------------------------------------------
+
+  async enqueue(
+    text: string,
+    targetLanguage = this.targetLanguage,
+    priority = 0
+  ): Promise<void> {
+    if (!text?.trim()) {
+      return;
+    }
+
+    this.queue.add({
+      id: crypto.randomUUID(),
+      priority,
+
+      execute: async () => {
+        await this.translate(
+          text,
+          targetLanguage
         );
+      },
+    });
+  }
 
-    }
+  async processQueue(): Promise<void> {
+    await this.queue.process();
+  }
 
-    /**
-     * Traduz vários textos.
-     */
-    async translateMany(
+  // --------------------------------------------------------------------------
+  // Warmup
+  // --------------------------------------------------------------------------
 
-        texts: string[],
+  async warmup(
+    texts: string[],
+    language = this.targetLanguage
+  ): Promise<void> {
+    await this.translateMany(
+      texts,
+      language
+    );
+  }
 
-        targetLanguage: string
+  // --------------------------------------------------------------------------
+  // Cache
+  // --------------------------------------------------------------------------
 
-    ): Promise<string[]> {
+  async clearCache(): Promise<void> {
+    await this.cache.clear();
+  }
 
-        const result: string[] = [];
-
-        for (const text of texts) {
-
-            result.push(
-
-                await this.translate(
-
-                    text,
-
-                    targetLanguage
-
-                )
-
-            );
-
-        }
-
-        return result;
-
-    }
-
-    /**
-     * Traduz utilizando fila.
-     */
-    async enqueue(
-
-        text: string,
-
-        targetLanguage: string,
-
-        priority = 0
-
-    ): Promise<void> {
-
-        this.queue.add({
-
-            id: crypto.randomUUID(),
-
-            priority,
-
-            execute: async () => {
-
-                await this.translate(
-
-                    text,
-
-                    targetLanguage
-
-                );
-
-            }
-
-        });
-
-    }
-
-    /**
-     * Processa a fila.
-     */
-    async processQueue(): Promise<void> {
-
-        await this.queue.process();
-
-    }
-
-    /**
-     * Pré-carrega traduções.
-     */
-    async warmup(
-
-        texts: string[],
-
-        language: string
-
-    ): Promise<void> {
-
-        await this.translateMany(
-
-            texts,
-
-            language
-
-        );
-
-    }
-
-    /**
-     * Limpa o cache.
-     */
-    async clearCache(): Promise<void> {
-
-        await this.cache.clear();
-
-    }
-
-    /**
-     * Verifica se existe cache.
-     */
-    async hasCache(
-
-        key: string
-
-    ): Promise<boolean> {
-
-        return this.cache.has(key);
-
-    }
-
+  async hasCache(key: string): Promise<boolean> {
+    return this.cache.has(key);
+  }
 }
+
+export default TranslationEngine;

@@ -78,3 +78,22 @@ export interface FrameworkConfig {
     plugins: PluginConfig;
 
 }
+
+
+export interface TranslationOptions {
+
+    model?: string;
+
+    temperature?: number;
+
+    topP?: number;
+
+    maxTokens?: number;
+
+    glossary?: boolean;
+
+    stream?: boolean;
+
+    cache?: boolean;
+
+}

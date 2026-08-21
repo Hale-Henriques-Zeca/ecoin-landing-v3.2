@@ -1,4 +1,4 @@
-import TranslationPipeline from "../engine/TranslationPipeline";
+import { TranslationPipeline } from "../engine/TranslationPipeline";
 
 import {
     CachePlugin,

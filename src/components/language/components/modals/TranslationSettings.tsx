@@ -15,11 +15,11 @@ import {
   Sparkles,
   ShieldCheck,
 } from "lucide-react";
-import { useLanguage } from "../../hooks/useLanguage";
-import { useProviders } from "../../hooks/useProviders";
-import { useTranslationCache } from "../../hooks/useTranslationCache";
-import { useGlossary } from "../../hooks/useGlossary";
-import { useTranslation } from "../../hooks/useTranslation";
+import { useLanguage } from "../../i18n/hooks/useLanguage";
+import { useProviders } from "../../i18n/hooks/useProviders";
+import { useTranslationCache } from "../../i18n/hooks/useTranslationCache";
+import { useGlossary } from "../../i18n/hooks/useGlossary";
+import { useTranslation } from "../../i18n/hooks/useTranslation";
 
 export interface TranslationSettingsProps {
   isOpen: boolean;
@@ -141,7 +141,7 @@ export default function TranslationSettings({
                       : "bg-black/40 border-gray-800 text-gray-400 hover:border-[#D4AF37]/40 hover:text-white"
                   }`}
                 >
-                  <span className="truncate">{lang.name}</span>
+                  <span className="truncate">{lang.nativeName}</span>
                   <span className="text-[10px] text-[#D4AF37] uppercase bg-[#D4AF37]/10 px-1.5 py-0.5 rounded border border-[#D4AF37]/30">
                     {lang.code}
                   </span>

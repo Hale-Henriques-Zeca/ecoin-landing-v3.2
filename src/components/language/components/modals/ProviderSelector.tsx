@@ -14,7 +14,7 @@ import {
   Sparkles,
   ShieldAlert,
 } from "lucide-react";
-import { useProviders } from "../../hooks/useProviders";
+import { useProviders } from "../../i18n/hooks/useProviders";
 
 export interface ProviderSelectorProps {
   isOpen: boolean;

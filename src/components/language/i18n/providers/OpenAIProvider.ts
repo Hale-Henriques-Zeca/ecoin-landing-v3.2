@@ -1,106 +1,239 @@
-import { AIProvider, ProviderCapabilities, ProviderHealthStatus } from "./AIProvider";
+// ============================================================================
+// EDENKINGDOM AI TRANSLATION FRAMEWORK
+// OpenAI Translation Provider
+// ============================================================================
+
+import OpenAI from "openai";
+
+import {
+    AIProvider,
+    ProviderCapabilities,
+    ProviderHealthStatus,
+} from "./AIProvider";
 
 import { Translation } from "../types/Translation";
 import { TranslationOptions } from "../types/Config";
-
 import { OPENAI_CONFIG } from "../config/openai.config";
 
 export class OpenAIProvider implements AIProvider {
 
-    readonly id = "openai";
+    readonly id = OPENAI_CONFIG.id;
 
-    readonly name = "OpenAI";
+    readonly name = OPENAI_CONFIG.name;
 
     readonly version = "1.0.0";
 
     readonly priority = 1;
 
-    readonly enabled = OPENAI_CONFIG.enabled;
+    private readonly client: OpenAI;
+
+    get enabled(): boolean {
+
+        return OPENAI_CONFIG.enabled;
+
+    }
 
     readonly capabilities: ProviderCapabilities = {
 
         translate: true,
 
-        glossary: true,
+        glossary:
+            OPENAI_CONFIG.supportsGlossary,
 
-        html: true,
+        html:
+            OPENAI_CONFIG.supportsHtml,
 
-        markdown: true,
+        markdown:
+            OPENAI_CONFIG.supportsMarkdown,
 
-        json: true,
+        json:
+            OPENAI_CONFIG.supportsJson,
 
-        streaming: true,
+        streaming:
+            OPENAI_CONFIG.supportsStreaming,
 
-        functions: true,
+        functions:
+            OPENAI_CONFIG.supportsFunctions,
 
-        vision: true
+        vision:
+            OPENAI_CONFIG.supportsVision,
 
     };
 
+    constructor() {
+
+        this.client = new OpenAI({
+            apiKey:
+                process.env.OPENAI_API_KEY,
+        });
+
+    }
+
     async initialize(): Promise<void> {
 
-        console.info("[OpenAI] initialized");
+        if (!process.env.OPENAI_API_KEY) {
+
+            throw new Error(
+                "OPENAI_API_KEY não está configurada."
+            );
+
+        }
+
+        console.info(
+            `[${this.name}] initialized`
+        );
 
     }
 
     async destroy(): Promise<void> {
 
-        console.info("[OpenAI] destroyed");
+        console.info(
+            `[${this.name}] destroyed`
+        );
 
     }
 
     async translate(
-
         text: string,
-
         source: string,
-
         target: string,
-
         options?: TranslationOptions
-
     ): Promise<Translation> {
 
-        /**
-         * O TranslationEngine chamará este método.
-         *
-         * Aqui será integrado:
-         *
-         * src/components/language/lib/openai.ts
-         *
-         */
+        const model =
+            options?.model ??
+            OPENAI_CONFIG.defaultModel;
 
-        return {
+        try {
 
-            id: crypto.randomUUID(),
+            const glossary =
+                options?.glossary ?? [];
 
-            key: "",
+            const glossaryInstruction =
+                glossary.length > 0
+                    ? `
+Use the following EdenKingdom glossary
+and preserve its terminology exactly:
 
-            sourceLanguage: source,
+${JSON.stringify(glossary)}
+`
+                    : "";
 
-            targetLanguage: target,
+            const response =
+                await this.client.responses.create({
 
-            sourceText: text,
+                    model,
 
-            translatedText: text,
+                    input: [
 
-            provider: this.id,
+                        {
+                            role: "system",
 
-            model: OPENAI_CONFIG.model,
+                            content:
+                                `
+You are EdenKingdom Translation AI.
 
-            confidence: 1,
+Translate only.
 
-            tokens: 0,
+Never explain.
+Never summarize.
+Never add commentary.
 
-            cached: false,
+Preserve exactly:
+- formatting
+- placeholders
+- variables
+- HTML
+- Markdown
+- JSON structure
+- line breaks
+- numbers
+- URLs
+- product names
+- technical identifiers
 
-            reviewed: false,
+Source language:
+${source}
 
-            createdAt: Date.now(),
+Target language:
+${target}
 
-            updatedAt: Date.now()
+${glossaryInstruction}
+`,
+                        },
 
-        };
+                        {
+                            role: "user",
+
+                            content: text,
+                        },
+
+                    ],
+
+                });
+
+            const translated =
+                response.output_text.trim();
+
+            if (!translated) {
+
+                throw new Error(
+                    "OpenAI retornou uma tradução vazia."
+                );
+
+            }
+
+            const now =
+                new Date();
+
+            return {
+
+                id:
+                    crypto.randomUUID(),
+
+                original:
+                    text,
+
+                translated,
+
+                sourceLanguage:
+                    source,
+
+                targetLanguage:
+                    target,
+
+                status:
+                    "translated",
+
+                provider:
+                    this.id,
+
+                model,
+
+                confidence:
+                    undefined,
+
+                cached:
+                    false,
+
+                createdAt:
+                    now,
+
+                updatedAt:
+                    now,
+
+            };
+
+        } catch (error) {
+
+            console.error(
+                "[OpenAIProvider] Falha na tradução:",
+                error
+            );
+
+            throw error;
+
+        }
 
     }
 
@@ -108,21 +241,30 @@ export class OpenAIProvider implements AIProvider {
 
         return {
 
-            healthy: true,
+            healthy:
+                this.enabled &&
+                !!process.env.OPENAI_API_KEY,
 
-            latency: 0,
+            latency:
+                0,
 
-            lastCheck: Date.now(),
+            lastCheck:
+                Date.now(),
 
-            message: "OK"
+            message:
+                this.enabled
+                    ? "OK"
+                    : "Provider disabled",
 
         };
 
     }
 
-    supports(feature: keyof ProviderCapabilities): boolean {
+    supports(
+        feature: keyof ProviderCapabilities
+    ): boolean {
 
-        return this.capabilities[feature];
+        return !!this.capabilities[feature];
 
     }
 

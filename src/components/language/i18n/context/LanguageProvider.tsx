@@ -2,132 +2,247 @@
 
 import React, {
   createContext,
+  useCallback,
   useContext,
   useMemo,
   useState,
   ReactNode,
 } from "react";
-import { LanguageService } from "../services/LanguageService";
 
-// Definição do tipo para cada idioma na framework
+import { LanguageService } from "../services/LanguageService";
 import {
-    LANGUAGES_ULTRA,
-    type LanguageDefinition,
+  LANGUAGES_ULTRA,
+  type LanguageDefinition,
 } from "../constants/languages";
 
-
-
+import { TranslationEngine } from "../engine/TranslationEngine";
 
 export interface LanguageContextType {
-  /** Código do idioma atual (ex: "pt") */
   language: string;
-
-  /** Objeto completo do idioma atual */
   currentLanguage: LanguageDefinition;
-
-  /** Locale completo (ex: "pt-MZ") */
   locale: string;
 
-  /** Lista de todos os idiomas suportados */
   availableLanguages: LanguageDefinition[];
 
-  /** Função assíncrona para alterar o idioma */
   setLanguage: (code: string) => Promise<void>;
-
-  /** Alias para setLanguage */
   changeLanguage: (code: string) => Promise<void>;
 
-  /** Estado de carregamento ao trocar de idioma */
   isLoading: boolean;
 
-  /** Idioma padrão da aplicação */
   defaultLanguage: LanguageDefinition;
 
-  /** Provider de IA atualmente ativo na framework */
   activeProvider: string;
 
-  /** Taxa de acerto da cache de traduções */
   cacheHitRate: string;
 
-  /** Instância do LanguageService */
   service: LanguageService;
+
+  engine: TranslationEngine;
 }
 
-const LanguageContext = createContext<LanguageContextType | null>(null);
+const LanguageContext =
+  createContext<LanguageContextType | null>(null);
 
-interface Props {
+interface LanguageProviderProps {
   children: ReactNode;
 }
 
-export function LanguageProvider({ children }: Props) {
-  const service = useMemo(() => new LanguageService(), []);
+export function LanguageProvider({
+  children,
+}: LanguageProviderProps) {
+  const service = useMemo(
+    () => new LanguageService(),
+    []
+  );
 
-  // Estados locais da framework
-  const [language, setLanguageState] = useState<string>(() => service.getCurrent());
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [activeProvider] = useState<string>("OpenAI");
-  const [cacheHitRate] = useState<string>("98%");
+  const engine = useMemo(
+    () => new TranslationEngine(),
+    []
+  );
 
-  // Obter idiomas do serviço (com fallback seguro caso o método divirja)
-  const availableLanguages: LanguageDefinition[] = useMemo(() => {
-    if (typeof (service as any).getLanguages === "function") {
-      return (service as any).getLanguages();
-    }
-    // Fallback padrão com metadata enriquecida
-    return [
-      { code: "pt", name: "Português", nativeName: "Português (MZ)", flag: "mz", locale: "pt-MZ", region: "África", providers: ["OpenAI", "Gemini"], cached: true },
-      { code: "en", name: "Inglês", nativeName: "English", flag: "us", locale: "en-US", region: "América", providers: ["OpenAI", "Gemini", "Claude"], cached: true },
-      { code: "es", name: "Espanhol", nativeName: "Español", flag: "es", locale: "es-ES", region: "Europa", providers: ["OpenAI"], cached: false },
-      { code: "fr", name: "Francês", nativeName: "Français", flag: "fr", locale: "fr-FR", region: "Europa", providers: ["Claude"], cached: true },
-      { code: "ja", name: "Japonês", nativeName: "日本語", flag: "jp", locale: "ja-JP", region: "Ásia", providers: ["OpenAI", "Gemini"], cached: false },
-      { code: "ar", name: "Árabe", nativeName: "العربية", flag: "sa", locale: "ar-SA", region: "Ásia", rtl: true, providers: ["OpenAI"], cached: true },
-    ];
-  }, [service]);
+  const [language, setLanguageState] = useState<string>(
+    () => service.getCurrent()
+  );
 
-  // Idioma atual (objeto completo)
-  const currentLanguage: LanguageDefinition = useMemo(() => {
-    return (
-      availableLanguages.find((l) => l.code === language) ||
-      availableLanguages[0]
-    );
-  }, [availableLanguages, language]);
+  const [isLoading, setIsLoading] =
+    useState<boolean>(false);
 
-  // Idioma padrão
-  const defaultLanguage: LanguageDefinition = useMemo(() => {
-    return availableLanguages[0];
-  }, [availableLanguages]);
+  const [activeProvider] =
+    useState<string>("OpenAI");
 
-  // Locale atual
-  const locale = currentLanguage.locale || `${language.toLowerCase()}-${language.toUpperCase()}`;
+  const [cacheHitRate] =
+    useState<string>("98%");
 
-  // Ação de mudança de idioma assíncrona
-  const changeLanguage = async (code: string) => {
-    setIsLoading(true);
-    try {
-      if (typeof service.setCurrent === "function") {
-        await service.setCurrent(code);
+  const availableLanguages =
+    useMemo<LanguageDefinition[]>(() => {
+      if (
+        typeof (service as any).getLanguages ===
+        "function"
+      ) {
+        return (service as any).getLanguages();
       }
-      setLanguageState(code);
-    } catch (error) {
-      console.error("Erro ao alterar o idioma na framework:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
-  const contextValue: LanguageContextType = {
-    language,
-    currentLanguage,
-    locale,
-    availableLanguages,
-    setLanguage: changeLanguage,
-    changeLanguage,
-    isLoading,
-    defaultLanguage,
-    activeProvider,
-    cacheHitRate,
-    service,
-  };
+      return LANGUAGES_ULTRA;
+    }, [service]);
+
+  const currentLanguage =
+    useMemo<LanguageDefinition>(() => {
+      return (
+        availableLanguages.find(
+          (item) => item.code === language
+        ) ??
+        availableLanguages[0]
+      );
+    }, [availableLanguages, language]);
+
+  const defaultLanguage =
+    useMemo<LanguageDefinition>(() => {
+      return availableLanguages[0];
+    }, [availableLanguages]);
+
+  const locale =
+    currentLanguage?.locale ??
+    `${language.toLowerCase()}-${language.toUpperCase()}`;
+
+  /**
+   * Inicializa o TranslationEngine.
+   */
+  React.useEffect(() => {
+    let mounted = true;
+
+    async function initialize() {
+      try {
+        await engine.initialize();
+
+        if (!mounted) return;
+
+        console.info(
+          "[LanguageProvider] TranslationEngine initialized"
+        );
+      } catch (error) {
+        console.error(
+          "[LanguageProvider] Failed to initialize TranslationEngine:",
+          error
+        );
+      }
+    }
+
+    initialize();
+
+    return () => {
+      mounted = false;
+
+      engine.shutdown().catch((error) => {
+        console.error(
+          "[LanguageProvider] Failed to shutdown TranslationEngine:",
+          error
+        );
+      });
+    };
+  }, [engine]);
+
+  /**
+   * Altera o idioma atual.
+   */
+  const changeLanguage = useCallback(
+    async (code: string): Promise<void> => {
+      if (!code) return;
+
+      if (
+        !availableLanguages.some(
+          (item) => item.code === code
+        )
+      ) {
+        console.warn(
+          `[LanguageProvider] Unsupported language: ${code}`
+        );
+
+        return;
+      }
+
+      if (code === language) {
+        return;
+      }
+
+      setIsLoading(true);
+
+      try {
+        /**
+         * 1. Persistir idioma.
+         */
+        await service.setCurrent(code);
+
+        /**
+         * 2. Atualizar estado React.
+         */
+        setLanguageState(code);
+
+        /**
+         * 3. Informar o TranslationEngine.
+         *
+         * O engine poderá posteriormente
+         * carregar/preencher o catálogo.
+         */
+        await engine.setTargetLanguage(code);
+
+        console.info(
+          `[LanguageProvider] Language changed to ${code}`
+        );
+      } catch (error) {
+        console.error(
+          "[LanguageProvider] Error changing language:",
+          error
+        );
+
+        throw error;
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [
+      availableLanguages,
+      language,
+      service,
+      engine,
+    ]
+  );
+
+  const contextValue =
+    useMemo<LanguageContextType>(
+      () => ({
+        language,
+        currentLanguage,
+        locale,
+
+        availableLanguages,
+
+        setLanguage: changeLanguage,
+        changeLanguage,
+
+        isLoading,
+
+        defaultLanguage,
+
+        activeProvider,
+        cacheHitRate,
+
+        service,
+        engine,
+      }),
+      [
+        language,
+        currentLanguage,
+        locale,
+        availableLanguages,
+        changeLanguage,
+        isLoading,
+        defaultLanguage,
+        activeProvider,
+        cacheHitRate,
+        service,
+        engine,
+      ]
+    );
 
   return (
     <LanguageContext.Provider value={contextValue}>
@@ -138,10 +253,12 @@ export function LanguageProvider({ children }: Props) {
 
 export function useLanguageContext() {
   const context = useContext(LanguageContext);
+
   if (!context) {
     throw new Error(
       "useLanguageContext deve ser usado dentro do LanguageProvider."
     );
   }
+
   return context;
 }

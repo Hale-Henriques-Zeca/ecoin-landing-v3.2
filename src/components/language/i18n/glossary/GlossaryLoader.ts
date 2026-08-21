@@ -22,7 +22,7 @@ export class GlossaryLoader {
 
     async reload(): Promise<GlossaryTerm[]> {
 
-        return this.load();
+        return this.load(); 
 
     }
 

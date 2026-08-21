@@ -1,12 +1,12 @@
-import TranslationEngine from "../engine/TranslationEngine";
+import {TranslationEngine } from "../engine/TranslationEngine";
 
-import TranslationPipeline from "../engine/TranslationPipeline";
+import {TranslationPipeline} from "../engine/TranslationPipeline";
 
-import TranslationQueue from "../engine/TranslationQueue";
+import {TranslationQueue} from "../engine/TranslationQueue";
 
-import TranslationRenderer from "../engine/TranslationRenderer";
+import {TranslationRenderer} from "../engine/TranslationRenderer";
 
-import TranslationOptimizer from "../engine/TranslationOptimizer";
+import {TranslationOptimizer} from "../engine/TranslationOptimizer";
 
 export default class BootstrapEngine {
 

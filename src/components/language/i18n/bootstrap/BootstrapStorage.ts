@@ -1,10 +1,10 @@
-import MemoryStorage from "../storage/MemoryStorage";
+import {MemoryStorage} from "../storage/MemoryStorage";
 
-import SessionStorage from "../storage/SessionStorage";
+import {SessionStorage} from "../storage/SessionStorage";
 
-import IndexedDBStorage from "../storage/IndexedDBStorage";
+import {IndexedDBStorage} from "../storage/IndexedDBStorage";
 
-import SupabaseStorage from "../storage/SupabaseStorage";
+import {SupabaseStorage} from "../storage/SupabaseStorage";
 
 export default class BootstrapStorage {
 

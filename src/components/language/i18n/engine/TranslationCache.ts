@@ -1,78 +1,85 @@
+// ============================================================================
+// EDENKINGDOM AI TRANSLATION FRAMEWORK
+// Translation Cache
+// ============================================================================
+
 import { CacheManager } from "../cache/CacheManager";
-import { Translation } from "../types/Translation";
+
+export interface TranslationCacheEntry {
+  key: string;
+  text: string;
+  translation: string;
+  sourceLanguage: string;
+  targetLanguage: string;
+  createdAt: number;
+}
 
 export class TranslationCache {
+  private readonly cache: CacheManager;
 
-    constructor(
-        private readonly cache = new CacheManager()
-    ) {}
+  constructor() {
+    this.cache = new CacheManager();
+  }
 
-    /**
-     * Procura uma tradução no cache.
-     */
-    async get(key: string): Promise<Translation | null> {
+  private buildKey(
+    text: string,
+    sourceLanguage: string,
+    targetLanguage: string
+  ): string {
+    return [
+      "translation",
+      sourceLanguage,
+      targetLanguage,
+      text.trim(),
+    ].join(":");
+  }
 
-        return await this.cache.get<Translation>(key);
+  async get(
+    text: string,
+    sourceLanguage: string,
+    targetLanguage: string
+  ): Promise<string | null> {
+    const key = this.buildKey(
+      text,
+      sourceLanguage,
+      targetLanguage
+    );
 
-    }
+    const entry =
+      await this.cache.get<TranslationCacheEntry>(key);
 
-    /**
-     * Guarda uma tradução.
-     */
-    async set(
+    return entry?.translation ?? null;
+  }
 
-        key: string,
+  async set(
+    text: string,
+    translation: string,
+    sourceLanguage: string,
+    targetLanguage: string
+  ): Promise<void> {
+    const key = this.buildKey(
+      text,
+      sourceLanguage,
+      targetLanguage
+    );
 
-        translation: Translation
+    const entry: TranslationCacheEntry = {
+      key,
+      text,
+      translation,
+      sourceLanguage,
+      targetLanguage,
+      createdAt: Date.now(),
+    };
 
-    ): Promise<void> {
+    await this.cache.set(key, entry);
+  }
 
-        await this.cache.set(key, translation);
+  async has(key: string): Promise<boolean> {
+    return this.cache.has(key);
+  }
 
-    }
-
-    /**
-     * Remove uma tradução.
-     */
-    async remove(key: string): Promise<void> {
-
-        await this.cache.remove(key);
-
-    }
-
-    /**
-     * Verifica existência.
-     */
-    async has(key: string): Promise<boolean> {
-
-        return await this.cache.has(key);
-
-    }
-
-    /**
-     * Limpa o cache.
-     */
-    async clear(): Promise<void> {
-
-        await this.cache.clear();
-
-    }
-
-    /**
-     * Atualiza uma tradução.
-     */
-    async refresh(
-
-        key: string,
-
-        translation: Translation
-
-    ): Promise<void> {
-
-        await this.remove(key);
-
-        await this.set(key, translation);
-
-    }
-
+  async clear(): Promise<void> {
+    await this.cache.clear();
+  }
 }

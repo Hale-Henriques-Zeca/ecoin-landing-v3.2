@@ -1,19 +1,151 @@
-import { NextResponse } from "next/server";
+// ============================================================================
+// EDENKINGDOM AI TRANSLATION FRAMEWORK
+// Translation API Route
+// ============================================================================
 
-export async function POST(req: Request) {
-  try {
-    const { text, targetLang } = await req.json();
+import {
+    NextRequest,
+    NextResponse,
+} from "next/server";
 
-    // Simulação de tradução (podes integrar API real mais tarde)
-    const translated = `[${targetLang.toUpperCase()}] ${text}`;
+import { TranslationPipeline } from "@/components/language/i18n/engine/TranslationPipeline";
+import { TranslationCache } from "@/components/language/i18n/engine/TranslationCache";
+import { GlossaryService } from "@/components/language/i18n/services/GlossaryService";
+import { OpenAIProvider } from "@/components/language/i18n/providers/OpenAIProvider";
+import { GlossaryRepository } from "@/components/language/i18n/repository/GlossaryRepository";
 
-    return NextResponse.json({ ok: true, translated }, { status: 200 });
+const provider =
+    new OpenAIProvider();
 
-  } catch (err) {
-    console.error("Translation API error:", err);
-    return NextResponse.json(
-      { ok: false, translated: "" },
-      { status: 500 }
+const cache =
+    new TranslationCache();
+
+const glossaryRepository =
+    new GlossaryRepository();
+
+const glossary =
+    new GlossaryService(
+        glossaryRepository
     );
-  }
+
+let initialized = false;
+
+async function getTranslationPipeline(): Promise<TranslationPipeline> {
+
+    if (!initialized) {
+
+        await glossary.load();
+
+        await provider.initialize();
+
+        initialized = true;
+
+    }
+
+    return new TranslationPipeline({
+
+        provider,
+
+        glossary,
+
+        cache,
+
+    });
+
+}
+
+export async function POST(
+    request: NextRequest
+) {
+
+    try {
+
+        const body =
+            await request.json();
+
+        const {
+            text,
+            source,
+            target,
+        } = body;
+
+        if (
+            typeof text !== "string" ||
+            !text.trim()
+        ) {
+
+            return NextResponse.json(
+                {
+                    error:
+                        "Translation text is required.",
+                },
+                {
+                    status: 400,
+                }
+            );
+
+        }
+
+        if (
+            typeof target !== "string" ||
+            !target.trim()
+        ) {
+
+            return NextResponse.json(
+                {
+                    error:
+                        "Target language is required.",
+                },
+                {
+                    status: 400,
+                }
+            );
+
+        }
+
+        const pipeline =
+            await getTranslationPipeline();
+
+        const translated =
+            await pipeline.execute({
+
+                text,
+
+                sourceLanguage:
+                    typeof source === "string" &&
+                    source.trim()
+                        ? source
+                        : "auto",
+
+                targetLanguage:
+                    target,
+
+            });
+
+        return NextResponse.json({
+
+            translatedText:
+                translated,
+
+        });
+
+    } catch (error) {
+
+        console.error(
+            "[/api/translate]",
+            error
+        );
+
+        return NextResponse.json(
+            {
+                error:
+                    "Translation service failed.",
+            },
+            {
+                status: 500,
+            }
+        );
+
+    }
+
 }

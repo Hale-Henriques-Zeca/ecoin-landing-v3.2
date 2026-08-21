@@ -1,91 +1,131 @@
 /**
  * ============================================================
  * Glossary Types
- * EdenKingDom AI Translation Framework
+ * EdenKingdom AI Translation Framework
  * ============================================================
  */
 
-export type GlossaryAction =
-    | "translate"
-    | "ignore"
-    | "protect"
-    | "replace";
+import { GlossaryRule } from "./GlossaryRule";
+import { GlossaryEntry } from "./GlossaryEntry";
+
+import type { GlossaryAction } from "../constants/actions";
+
 
 export interface GlossaryTerm {
 
-    /**
-     * ID
-     */
-    id: string;
+  /**
+   * ID
+   */
+  id: string;
 
-    /**
-     * Palavra original
-     */
-    source: string;
+  /**
+   * Palavra original
+   */
+  source: string;
 
-    /**
-     * Tradução
-     */
-    target: string;
+  /**
+   * Tradução
+   */
+  target: string;
 
-    /**
-     * Idioma origem
-     */
-    sourceLanguage: string;
+  /**
+   * Idioma origem
+   */
+  sourceLanguage: string;
 
-    /**
-     * Idioma destino
-     */
-    targetLanguage: string;
+  /**
+   * Idioma destino
+   */
+  targetLanguage: string;
 
-    /**
-     * Acção
-     */
-    action: GlossaryAction;
+  /**
+   * Acção
+   */
+  action: GlossaryAction;
 
-    /**
-     * Comentário
-     */
-    description?: string;
+  /**
+   * Comentário
+   */
+  description?: string;
 
-    /**
-     * Sensível a maiúsculas
-     */
-    caseSensitive?: boolean;
+  /**
+   * Sensível a maiúsculas
+   */
+  caseSensitive?: boolean;
 
-    /**
-     * Prioridade
-     */
-    priority: number;
+  /**
+   * Prioridade
+   */
+  priority: number;
 
-    /**
-     * Activo
-     */
-    enabled: boolean;
+  /**
+   * Activo
+   */
+  enabled: boolean;
 
-    /**
-     * Datas
-     */
-    createdAt?: Date;
+  /**
+   * Datas
+   */
+  createdAt?: Date;
 
-    updatedAt?: Date;
-
+  updatedAt?: Date;
 }
+
 
 export interface Glossary {
 
-    id: string;
+  id: string;
 
-    name: string;
+  name: string;
 
-    version: string;
+  version: string;
 
-    description?: string;
+  description?: string;
 
-    terms: GlossaryTerm[];
+  /**
+   * Aplicação
+   */
+  application?: string;
 
-    createdAt?: Date;
+  /**
+   * Idioma origem
+   */
+  sourceLanguage?: string;
 
-    updatedAt?: Date;
+  /**
+   * Idioma destino
+   */
+  targetLanguage?: string;
 
+  /**
+   * Activo
+   */
+  enabled?: boolean;
+
+  /**
+   * Termos
+   */
+  terms: GlossaryTerm[];
+
+  /**
+   * Regras
+   */
+  rules?: GlossaryRule[];
+
+  /**
+   * Entradas do glossário.
+   */
+  entries?: GlossaryEntry[];
+
+  /**
+   * Total de termos
+   */
+  totalTerms?: number;
+
+  /**
+   * Datas
+   */
+  createdAt?: Date;
+
+  updatedAt?: Date;
 }

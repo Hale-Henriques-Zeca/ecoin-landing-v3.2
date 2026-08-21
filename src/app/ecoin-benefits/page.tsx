@@ -87,7 +87,7 @@ export default function ECoinBenefitsInfo() {
           
           <div className="text-center mb-16">
             <span className="text-xs font-mono uppercase tracking-[0.3em] text-[#D4AF37] block mb-2">
-              Ecosystem Utility
+              E-Coin Ecosystem Utility
             </span>
             <h2 className="text-3xl md:text-4xl font-black tracking-tight text-white">
               Formas de ganhar com a E-Coin

@@ -37,31 +37,31 @@ export class CacheSynchronizer {
     /**
      * Remove de todas as camadas.
      */
-    async delete(hash: string): Promise<void> {
+    async delete(
+    application: string,
+    language: string,
+    hash: string
+): Promise<void> {
 
-        this.memory.delete(hash);
+    this.memory.delete(hash);
 
-        this.local.delete(hash);
+    this.local.delete(hash);
 
-        // Procura primeiro no banco
+    const dbEntry = await this.supabase.get(
+        application,
+        language,
+        hash
+    );
 
-        const dbEntry = await this.supabase.get(
+    if (dbEntry) {
 
-            entry.application,
-
-            entry.languageCode,
-
-            hash
-
+        await this.supabase.delete(
+            dbEntry.id
         );
 
-        if (dbEntry) {
-
-            await this.supabase.delete(dbEntry.id);
-
-        }
-
     }
+
+}
 
     /**
      * Limpa memória e navegador.

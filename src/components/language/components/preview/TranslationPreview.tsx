@@ -9,7 +9,7 @@ import {
   CheckCircle,
 } from "lucide-react";
 
-import { useTranslation } from "../../hooks/useTranslation";
+import { useTranslation } from "../../i18n/hooks/useTranslation";
 
 export interface TranslationPreviewProps {
   source: string;

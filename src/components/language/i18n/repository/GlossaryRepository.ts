@@ -22,7 +22,7 @@ export class GlossaryRepository {
 
         await this.storage.set(
 
-            term.key,
+            term.id,
 
             term
 
@@ -38,7 +38,7 @@ export class GlossaryRepository {
 
         await this.storage.update(
 
-            term.key,
+            term.id,
 
             term
 

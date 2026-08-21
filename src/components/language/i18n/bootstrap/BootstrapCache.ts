@@ -1,10 +1,10 @@
-import CacheManager from "../cache/CacheManager";
+import {CacheManager} from "../../i18n/cache/CacheManager";
 
-import MemoryCache from "../cache/MemoryCache";
+import MemoryCache from "../../i18n/cache/MemoryCache";
 
-import LocalStorageCache from "../cache/LocalStorageCache";
+import LocalStorageCache from "../../i18n/cache/LocalStorageCache";
 
-import SupabaseCache from "../cache/SupabaseCache";
+import SupabaseCache from "../../i18n/cache/SupabaseCache";
 
 export default class BootstrapCache {
 

@@ -1,126 +1,121 @@
-import { Translation } from "../types/Translation";
+// ============================================================================
+// EDENKINGDOM AI TRANSLATION FRAMEWORK
+// Translation Pipeline
+// ============================================================================
 
+import { AIProvider } from "../providers/AIProvider";
+import { GlossaryService } from "../services/GlossaryService";
 import { TranslationCache } from "./TranslationCache";
 
-import { GlossaryService } from "../glossary/GlossaryService";
+export interface TranslationPipelineRequest {
+    text: string;
+    sourceLanguage: string;
+    targetLanguage: string;
+}
 
-import { ProviderManager } from "../providers/ProviderManager";
-
-import { TranslationOptimizer } from "./TranslationOptimizer";
-
-import { TranslationRenderer } from "./TranslationRenderer";
+export interface TranslationPipelineDependencies {
+    provider: AIProvider;
+    glossary: GlossaryService;
+    cache: TranslationCache;
+}
 
 export class TranslationPipeline {
 
-    constructor(
+    private readonly provider: AIProvider;
 
-        private readonly cache = new TranslationCache(),
+    private readonly glossary: GlossaryService;
 
-        private readonly glossary = new GlossaryService(),
+    private readonly cache: TranslationCache;
 
-        private readonly providers = new ProviderManager(),
+    constructor({
+        provider,
+        glossary,
+        cache,
+    }: TranslationPipelineDependencies) {
 
-        private readonly optimizer = new TranslationOptimizer(),
+        this.provider = provider;
+        this.glossary = glossary;
+        this.cache = cache;
 
-        private readonly renderer = new TranslationRenderer()
-
-    ) {}
+    }
 
     /**
-     * Executa todo o pipeline de tradução.
+     * Executa uma tradução através do pipeline EdenKingdom.
      */
-    async execute(
+    async execute({
+        text,
+        sourceLanguage,
+        targetLanguage,
+    }: TranslationPipelineRequest): Promise<string> {
 
-        text: string,
-
-        targetLanguage: string
-
-    ): Promise<string> {
-
-        //--------------------------------------------------
-        // 1. Cache
-        //--------------------------------------------------
-
-        const cacheKey = `${targetLanguage}:${text}`;
-
-        const cached = await this.cache.get(cacheKey);
-
-        if (cached) {
-
-            return cached.translation;
-
+        if (!text.trim()) {
+            return text;
         }
 
-        //--------------------------------------------------
-        // 2. Glossário
-        //--------------------------------------------------
+        const source =
+            sourceLanguage.trim().toLowerCase();
 
-        const protectedText = await this.glossary.protect(text);
+        const target =
+            targetLanguage.trim().toLowerCase();
 
-        //--------------------------------------------------
-        // 3. Provider
-        //--------------------------------------------------
+        /**
+         * 1. Cache
+         */
+        const cacheKey =
+            TranslationCache.createKey(
+                text,
+                source,
+                target
+            );
 
-        const provider = await this.providers.getAvailable();
+        const cached =
+            await this.cache.get(cacheKey);
 
-        const translated = await provider.translate(
+        if (cached) {
+            return cached.translated;
+        }
 
-            protectedText,
+        /**
+         * 2. Glossário
+         */
+        const glossaryEntries =
+            await this.glossary.getForTranslation(
+                source,
+                target,
+                text
+            );
 
-            targetLanguage
+        /**
+         * 3. Provider
+         */
+        if (!this.provider.enabled) {
+            throw new Error(
+                "EdenKingdom Translation Provider está desativado."
+            );
+        }
 
-        );
+        /**
+         * 4. Tradução
+         */
+        const result =
+            await this.provider.translate(
+                text,
+                source,
+                target,
+                {
+                    glossary: glossaryEntries,
+                }
+            );
 
-        //--------------------------------------------------
-        // 4. Otimização
-        //--------------------------------------------------
-
-        const optimized = await this.optimizer.optimize(
-
-            translated
-
-        );
-
-        //--------------------------------------------------
-        // 5. Renderização
-        //--------------------------------------------------
-
-        const rendered = await this.renderer.render(
-
-            optimized
-
-        );
-
-        //--------------------------------------------------
-        // 6. Cache
-        //--------------------------------------------------
-
-        const translation: Translation = {
-
-            key: cacheKey,
-
-            language: targetLanguage,
-
-            translation: rendered,
-
-            isBaseLanguage: false
-
-        };
-
+        /**
+         * 5. Cache
+         */
         await this.cache.set(
-
             cacheKey,
-
-            translation
-
+            result
         );
 
-        //--------------------------------------------------
-        // Resultado
-        //--------------------------------------------------
-
-        return rendered;
-
+        return result.translated;
     }
 
 }

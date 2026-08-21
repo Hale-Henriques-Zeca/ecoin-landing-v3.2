@@ -33,6 +33,14 @@ export interface Provider {
 
     apiKey?: string;
 
+    baseUrl: string;
+    
+    organization?: string;
+    
+    project?: string;
+    
+    headers?: Record<string,string>;
+
     model: string;
 
     maxTokens: number;

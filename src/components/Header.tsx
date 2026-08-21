@@ -4,9 +4,9 @@ import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import LanguageSelector from "@/components/language/components/dropdown/LanguageSelector";
+import EcoinWalletModal from "@/components/EcoinWalletModal";
 import {
   Home,
-  Download,
   ArrowLeftRight,
   Bot,
   TrendingUp,
@@ -19,24 +19,26 @@ import {
   Sprout,
   CandlestickChart,
   Crown,
-  Repeat2,
   X,
   Menu,
   Zap,
   ExternalLink,
   PiggyBank,
   Wallet,
+  Download,
 } from "lucide-react";
 
+// Substiuição efetuada: "Importar E-Coin" foi removido da lista de redirecionamento simples
 const navLinks = [
+  
   { name: "Home", href: "/", icon: Home },
   { name: "Importar E-Coin", href: "/import-guide", icon: Download },
   {
-  name: "Wallet",
-  href: "/eCoinCloudWallet",
-  external: false,
-  icon: Wallet,
-},
+    name: "Wallet",
+    href: "/eCoinCloudWallet",
+    external: false,
+    icon: Wallet,
+  },
   { name: "Mineração", href: "/Mining", icon: PiggyBank },
   { name: "Converter", href: "/ecoin-converter", icon: ArrowLeftRight },
   { name: "Trading AI", href: "/ecoin-ai-trading", icon: Bot },
@@ -114,7 +116,7 @@ export default function Header() {
 
               <div className="flex flex-col leading-none">
                 <span className="text-[13px] font-black tracking-tight text-[#D4AF37] group-hover:text-white transition-colors">
-                  eCOIN
+                  eCoin
                 </span>
                 <span className="text-[8px] font-mono text-white/30 uppercase tracking-[0.25em]">
                   Neural Web3
@@ -157,20 +159,26 @@ export default function Header() {
           </nav>
 
           {/* ──────────────────────────────────────
-              RIGHT — LANGUAGE + MOBILE TOGGLE
+              RIGHT — ECOIN WALLET + LANGUAGE + MOBILE TOGGLE
           ────────────────────────────────────── */}
           <div className="flex items-center gap-3 min-w-fit">
             {/* Live dot indicator */}
             <div className="hidden xl:flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-emerald-500/20 bg-emerald-500/5">
               <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-              <span className="text-[8px] font-mono text-emerald-400/70 uppercase tracking-widest">BSC Live</span>
+              <span className="text-[8px] font-mono text-emerald-400/70 uppercase tracking-widest">Binance Chain (Bep20)</span>
             </div>
 
+            {/* BOTÃO ECOIN WALLET MODAL (Novo Flutuante) */}
+            <div>
+              <EcoinWalletModal />
+            </div>
+
+            {/* SELETOR DE IDIOMAS */}
             <div className="border-l border-white/10 pl-3">
               <LanguageSelector onLangChange={handleLangChange} />
             </div>
 
-            {/* Mobile burger — styled */}
+            {/* Mobile burger */}
             <button
               className="xl:hidden relative w-9 h-9 flex items-center justify-center rounded-xl border border-[#D4AF37]/30 bg-[#D4AF37]/5 text-[#D4AF37] hover:border-[#D4AF37]/60 hover:bg-[#D4AF37]/10 transition-all"
               onClick={() => setOpen(!open)}
@@ -199,7 +207,7 @@ export default function Header() {
               </div>
               <div className="flex items-center gap-1.5">
                 <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                <span className="text-[8px] font-mono text-emerald-400/60">BSC LIVE</span>
+                <span className="text-[8px] font-mono text-emerald-400/60"> Binance Chain (Bep20)</span>
               </div>
             </div>
 

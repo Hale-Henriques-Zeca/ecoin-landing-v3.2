@@ -2,7 +2,7 @@
 
 import React from "react";
 
-import { useLanguage } from "../../hooks/useLanguage";
+import { useLanguage } from "../../i18n/hooks/useLanguage";
 
 export interface LanguageMenuProps {
 

@@ -1,100 +1,143 @@
 /**
- * ============================================================
+ * ============================================================================
  * Translation Types
- * EdenKingDom AI Translation Framework
- * ============================================================
+ * EdenKingdom AI Translation Framework
+ * ============================================================================
  */
 
-import type { ProviderName } from "./Provider";
+export type TranslationProvider = "openai";
 
 export type TranslationStatus =
-    | "pending"
-    | "translating"
-    | "translated"
-    | "cached"
-    | "error";
+  | "pending"
+  | "translating"
+  | "translated"
+  | "cached"
+  | "error";
 
 export interface Translation {
+  /**
+   * ID
+   */
+  id: string;
 
-    /**
-     * ID
-     */
-    id: string;
+  /**
+   * Texto original
+   */
+  original: string;
 
-    /**
-     * Texto original
-     */
-    original: string;
+  /**
+   * Resultado
+   */
+  translated: string;
 
-    /**
-     * Resultado
-     */
-    translated: string;
+  /**
+   * Idioma origem
+   */
+  sourceLanguage: string;
 
-    /**
-     * Idioma origem
-     */
-    sourceLanguage: string;
+  /**
+   * Idioma destino
+   */
+  targetLanguage: string;
 
-    /**
-     * Idioma destino
-     */
-    targetLanguage: string;
+  /**
+   * Provider utilizado.
+   */
+  provider: TranslationProvider;
 
-    /**
-     * Provider utilizado
-     */
-    provider: ProviderName;
+  /**
+   * Modelo IA.
+   */
+  model?: string;
 
-    /**
-     * Modelo IA
-     */
-    model?: string;
+  /**
+   * Cache.
+   */
+  cached: boolean;
 
-    /**
-     * Cache
-     */
-    cached: boolean;
+  /**
+   * Estado.
+   */
+  status: TranslationStatus;
 
-    /**
-     * Estado
-     */
-    status: TranslationStatus;
+  /**
+   * Tempo de processamento.
+   */
+  duration?: number;
 
-    /**
-     * Tempo processamento
-     */
-    duration?: number;
+  /**
+   * Tokens utilizados.
+   */
+  promptTokens?: number;
 
-    /**
-     * Tokens utilizados
-     */
-    promptTokens?: number;
+  completionTokens?: number;
 
-    completionTokens?: number;
+  totalTokens?: number;
 
-    totalTokens?: number;
+  /**
+   * Confiança.
+   */
+  confidence?: number;
 
-    /**
-     * Confiança
-     */
-    confidence?: number;
+  /**
+   * Hash do texto.
+   */
+  hash?: string;
 
-    /**
-     * Hash do texto
-     */
-    hash?: string;
+  /**
+   * Erro.
+   */
+  error?: string;
 
-    /**
-     * Erro
-     */
-    error?: string;
+  /**
+   * Datas.
+   */
+  createdAt?: Date;
 
-    /**
-     * Datas
-     */
-    createdAt?: Date;
+  updatedAt?: Date;
 
-    updatedAt?: Date;
+  /**
+   * Latência do OpenAI.
+   */
+  providerLatency?: number;
 
+  /**
+   * Versão do provider.
+   */
+  providerVersion?: string;
+
+  /**
+   * Cache hit.
+   */
+  cacheHit?: boolean;
+
+  /**
+   * Request ID.
+   */
+  requestId?: string;
+
+  /**
+   * Result ID.
+   */
+  resultId?: string;
+
+  /**
+   * Custo.
+   */
+  cost?: number;
+
+  /**
+   * Glossário aplicado.
+   */
+  glossaryApplied?: boolean;
+
+  /**
+   * Houve retry.
+   */
+  retried?: boolean;
+
+  /**
+   * Número de tentativas.
+   */
+  attempts?: number;
 }

@@ -22,7 +22,7 @@ export class TranslationRepository {
 
         await this.storage.set(
 
-            translation.key,
+            translation.id,
 
             translation
 
@@ -38,7 +38,7 @@ export class TranslationRepository {
 
         await this.storage.update(
 
-            translation.key,
+            translation.id,
 
             translation
 

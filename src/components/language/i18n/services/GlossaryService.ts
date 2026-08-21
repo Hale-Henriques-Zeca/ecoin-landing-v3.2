@@ -1,23 +1,52 @@
-import { GlossaryTerm } from "../types/Glossary";
+// ============================================================================
+// EDENKINGDOM AI TRANSLATION FRAMEWORK
+// Glossary Service
+// ============================================================================
 
 import { GlossaryLoader } from "../glossary/GlossaryLoader";
 import { GlossaryMatcher } from "../glossary/GlossaryMatcher";
 import { GlossaryCompiler } from "../glossary/GlossaryCompiler";
+import { GlossaryRepository } from "../repository/GlossaryRepository";
+import { GlossaryTerm } from "../types/Glossary";
 
 export class GlossaryService {
 
-    private readonly loader = new GlossaryLoader();
+    private glossary =
+        new Map<string, GlossaryTerm>();
 
-    private readonly matcher = new GlossaryMatcher();
+    private matcher: GlossaryMatcher | null = null;
 
-    private readonly compiler = new GlossaryCompiler();
+    private readonly loader: GlossaryLoader;
+
+    private readonly compiler: GlossaryCompiler;
+
+    constructor(
+        repository: GlossaryRepository
+    ) {
+
+        this.loader =
+            new GlossaryLoader(repository);
+
+        this.compiler =
+            new GlossaryCompiler();
+
+    }
 
     /**
-     * Carrega todo o glossário.
+     * Inicializa o glossário.
      */
     async load(): Promise<void> {
 
-        await this.loader.load();
+        const terms =
+            await this.loader.load();
+
+        this.glossary =
+            this.compiler.compile(terms);
+
+        this.matcher =
+            new GlossaryMatcher(
+                this.glossary
+            );
 
     }
 
@@ -26,104 +55,117 @@ export class GlossaryService {
      */
     async reload(): Promise<void> {
 
-        await this.loader.reload();
+        await this.load();
 
     }
 
     /**
-     * Compila o glossário para utilização rápida.
+     * Garante que o glossário foi inicializado.
      */
-    async compile(): Promise<void> {
+    private ensureLoaded(): GlossaryMatcher {
 
-        await this.compiler.compile();
+        if (!this.matcher) {
+            throw new Error(
+                "GlossaryService ainda não foi inicializado. Execute load() primeiro."
+            );
+        }
+
+        return this.matcher;
 
     }
 
     /**
-     * Obtém todos os termos.
+     * Encontra os termos presentes no texto.
      */
-    getAll(): GlossaryTerm[] {
+    match(text: string) {
 
-        return this.loader.getAll();
+        return this.ensureLoaded().match(text);
+
+    }
+
+    /**
+     * Obtém os termos relevantes para uma tradução.
+     *
+     * O source/target ficam registrados no contrato
+     * para permitir evolução futura do glossário por idioma.
+     */
+    async getForTranslation(
+        sourceLanguage: string,
+        targetLanguage: string,
+        text: string
+    ): Promise<GlossaryTerm[]> {
+
+        void sourceLanguage;
+        void targetLanguage;
+
+        if (!text.trim()) {
+            return [];
+        }
+
+        return this.match(text);
+
+    }
+
+    /**
+     * Protege termos do glossário.
+     */
+    protect(text: string): string {
+
+        return this.ensureLoaded().protect(text);
+
+    }
+
+    /**
+     * Remove a proteção.
+     */
+    unprotect(text: string): string {
+
+        return this.ensureLoaded().unprotect(text);
+
+    }
+
+    /**
+     * Aplica substituições do glossário.
+     */
+    replace(text: string): string {
+
+        return this.ensureLoaded().replace(text);
+
+    }
+
+    /**
+     * Verifica se um termo existe.
+     */
+    has(term: string): boolean {
+
+        return this.ensureLoaded().has(term);
+
+    }
+
+    /**
+     * Verifica se um termo está protegido.
+     */
+    isProtected(term: string): boolean {
+
+        return this.ensureLoaded().isProtected(term);
 
     }
 
     /**
      * Procura um termo.
      */
-    find(term: string): GlossaryTerm | undefined {
+    find(term: string) {
 
-        return this.loader.find(term);
-
-    }
-
-    /**
-     * Verifica existência.
-     */
-    exists(term: string): boolean {
-
-        return this.loader.exists(term);
+        return this.ensureLoaded().find(term);
 
     }
 
     /**
-     * Verifica se está protegido.
+     * Retorna todos os termos.
      */
-    isProtected(term: string): boolean {
+    getAll(): GlossaryTerm[] {
 
-        const item = this.find(term);
-
-        if (!item) {
-
-            return false;
-
-        }
-
-        return item.action === "KEEP";
-
-    }
-
-    /**
-     * Protege texto.
-     */
-    async protect(
-
-        text: string
-
-    ): Promise<string> {
-
-        return this.matcher.protect(text);
-
-    }
-
-    /**
-     * Faz substituições.
-     */
-    async replace(
-
-        text: string
-
-    ): Promise<string> {
-
-        return this.matcher.replace(text);
-
-    }
-
-    /**
-     * Localiza termos.
-     */
-    match(text: string): GlossaryTerm[] {
-
-        return this.matcher.match(text);
-
-    }
-
-    /**
-     * Valida um texto.
-     */
-    validate(text: string): boolean {
-
-        return this.matcher.validate(text);
+        return [...this.glossary.values()];
 
     }
 

@@ -1,9 +1,7 @@
-/**
- * ============================================================
- * Translation Actions
- * EdenKingDom AI Translation Framework
- * ============================================================
- */
+// ============================================================================
+// EDENKINGDOM AI TRANSLATION FRAMEWORK
+// Translation Actions
+// ============================================================================
 
 export const TRANSLATION_ACTIONS = {
 
@@ -23,7 +21,7 @@ export const TRANSLATION_ACTIONS = {
     IGNORE: "ignore",
 
     /**
-     * Substitui antes da tradução
+     * Substitui antes/durante o processamento
      */
     REPLACE: "replace",
 
@@ -59,5 +57,38 @@ export const TRANSLATION_ACTIONS = {
 
 } as const;
 
+
+/**
+ * Todas as ações possíveis do Translation Framework.
+ */
 export type TranslationAction =
-    typeof TRANSLATION_ACTIONS[keyof typeof TRANSLATION_ACTIONS];
+    typeof TRANSLATION_ACTIONS[
+        keyof typeof TRANSLATION_ACTIONS
+    ];
+
+
+/**
+ * Ações específicas utilizadas pelo Glossário.
+ *
+ * Usa a mesma fonte de verdade de TRANSLATION_ACTIONS.
+ */
+export const GlossaryAction = {
+
+    TRANSLATE: TRANSLATION_ACTIONS.TRANSLATE,
+
+    KEEP: TRANSLATION_ACTIONS.KEEP,
+
+    IGNORE: TRANSLATION_ACTIONS.IGNORE,
+
+    REPLACE: TRANSLATION_ACTIONS.REPLACE
+
+} as const;
+
+
+/**
+ * Tipo das ações aceitas pelo Glossário.
+ */
+export type GlossaryAction =
+    typeof GlossaryAction[
+        keyof typeof GlossaryAction
+    ];

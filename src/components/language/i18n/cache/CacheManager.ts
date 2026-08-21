@@ -190,7 +190,7 @@ export class CacheManager {
     /**
      * Limpa cache local.
      */
-    clear(): void {
+    async clear(): Promise<void> {
 
         this.synchronizer.clearLocal();
 

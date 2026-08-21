@@ -19,7 +19,7 @@ export class GlossaryCompiler {
 
             compiled.set(
 
-                term.key.toLowerCase(),
+                term.id.toLowerCase(),
 
                 term
 

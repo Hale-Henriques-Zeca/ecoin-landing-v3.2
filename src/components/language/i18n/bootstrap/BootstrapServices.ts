@@ -1,12 +1,12 @@
-import TranslationService from "../services/TranslationService";
+import{ TranslationService } from "../services/TranslationService";
 
-import LanguageService from "../services/LanguageService";
+import { LanguageService }  from "../services/LanguageService";
 
-import ProviderService from "../services/ProviderService";
+import  {ProviderService }from "../services/ProviderService";
 
-import CacheService from "../services/CacheService";
+import {CacheService } from "../services/CacheService";
 
-import GlossaryService from "../services/GlossaryService";
+import { GlossaryService } from "../services/GlossaryService";
 
 export default class BootstrapServices {
 

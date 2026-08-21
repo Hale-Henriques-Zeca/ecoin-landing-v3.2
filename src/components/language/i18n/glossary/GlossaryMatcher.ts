@@ -3,7 +3,7 @@
 // Glossary Matcher
 // ============================================================================
 
-import { GlossaryTerm } from "../types/Glossary";
+import type { GlossaryTerm } from "../types/Glossary";
 import { GlossaryAction } from "../constants/actions";
 
 export class GlossaryMatcher {
@@ -64,7 +64,7 @@ export class GlossaryMatcher {
 
             const regex = new RegExp(
 
-                `\\b${item.key}\\b`,
+                `\\b${item.id}\\b`,
 
                 "gi"
 
@@ -97,7 +97,7 @@ export class GlossaryMatcher {
 
             const regex = new RegExp(
 
-                `\\b${item.key}\\b`,
+                `\\b${item.id}\\b`,
 
                 "gi"
 
@@ -107,7 +107,7 @@ export class GlossaryMatcher {
 
                 regex,
 
-                `__KEEP__${item.key}__`
+                `__KEEP__${item.id}__`
 
             );
 
@@ -151,7 +151,7 @@ export class GlossaryMatcher {
 
             const regex = new RegExp(
 
-                `\\b${item.key}\\b`,
+                `\\b${item.id}\\b`,
 
                 "gi"
 
