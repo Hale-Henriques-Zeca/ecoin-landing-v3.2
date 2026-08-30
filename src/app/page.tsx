@@ -58,7 +58,7 @@ export default function Home() {
 
   return (
     <>
-      <div id="Hero" className="scroll-mt-28"><Hero /><BlockchainDeviceAlert /></div>
+      <div id="Hero" className="scroll-mt-28"><Hero /></div>
       <div id="EcoinCarousel" className="scroll-mt-28"><EcoinCarousel /></div>
       <div id="AITradingCard" className="scroll-mt-28"><AITradingCard /></div>
       <div id="ECoinDevelopmentNotice" className="scroll-mt-28"><ECoinDevelopmentNotice /></div>

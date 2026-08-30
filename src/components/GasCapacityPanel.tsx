@@ -1,56 +1,48 @@
 "use client";
 
 import { motion } from "framer-motion";
-
 import {
-  Fuel,
   ShieldCheck,
-  AlertTriangle,
   TrendingUp,
   BatteryCharging,
+  Coins,
 } from "lucide-react";
 
 type Props = {
   gasBalance: number;
-
   maxCapacity: number;
   usedCapacity: number;
   remainingCapacity: number;
-
   willMine: boolean;
   stakeActive: boolean;
 };
 
 export default function GasCapacityPanel({
   gasBalance,
-
   maxCapacity,
   usedCapacity,
   remainingCapacity,
-
   willMine,
   stakeActive,
 }: Props) {
 
-  // 🔥 ROI PROGRESS
+  // PROGRESSO DO TETO DE DIVIDENDOS (ROI 130%)
   const roiProgress =
     maxCapacity > 0
       ? (usedCapacity / maxCapacity) * 100
       : 0;
 
-      const formatGas = (value: number) => {
+  const formatGas = (value: number) => {
+    if (value >= 1000000) {
+      return `${(value / 1000000).toFixed(2)}M`;
+    }
 
-  if (value >= 1000000) {
-    return `${(value / 1000000).toFixed(2)}M`;
-  }
+    if (value >= 1000) {
+      return `${(value / 1000).toFixed(2)}k`;
+    }
 
-  if (value >= 1000) {
-    return `${(value / 1000).toFixed(2)}k`;
-  }
-
-  return value.toFixed(9);
-};
-
+    return value.toFixed(9);
+  };
 
   return (
     <motion.div
@@ -68,7 +60,6 @@ export default function GasCapacityPanel({
         mb-8
       "
     >
-
       {/* BACKGROUND FX */}
       <div className="absolute inset-0 bg-gradient-to-br from-[#D4AF37]/5 to-transparent" />
 
@@ -76,17 +67,15 @@ export default function GasCapacityPanel({
 
         {/* HEADER */}
         <div className="
-  flex
-  flex-col
-  sm:flex-row
-  sm:items-center
-  sm:justify-between
-  gap-4
-  mb-6
-">
-
+          flex
+          flex-col
+          sm:flex-row
+          sm:items-center
+          sm:justify-between
+          gap-4
+          mb-6
+        ">
           <div className="flex items-center gap-3">
-
             <div className="
               w-14
               h-14
@@ -96,7 +85,7 @@ export default function GasCapacityPanel({
               items-center
               justify-center
             ">
-              <Fuel
+              <Coins
                 size={24}
                 className="text-[#D4AF37]"
               />
@@ -104,47 +93,41 @@ export default function GasCapacityPanel({
 
             <div>
               <h2 className="text-white text-xl font-black">
-                eCoin AI Gas Capacity Engine
+                Motor de Capacidade CS & Dividendos
               </h2>
 
               <p className="text-xs text-white/40">
-                AI Neural mining capacity controller
+                Controlador de limite do Selo de Compromisso (CS)
               </p>
             </div>
-
           </div>
 
-          {/* STAKE STATUS */}
-  <div
-    className={`
-      flex
-      items-center
-      gap-2
-      px-3
-      py-1
-      rounded-full
-      text-[10px]
-      sm:text-xs
-      font-bold
-      border
-      ${
-        stakeActive
-          ? "bg-blue-500/10 text-blue-400 border-blue-500/20"
-          : "bg-gray-500/10 text-gray-400 border-gray-500/20"
-      }
-    `}
-  >
-    <ShieldCheck size={14} />
-
-    {stakeActive
-      ? "STAKE ACTIVE"
-      : "STAKE INACTIVE"}
-  </div>
-
-  
+          {/* STATUS DO SHAREHOLDER */}
+          <div
+            className={`
+              flex
+              items-center
+              gap-2
+              px-3
+              py-1
+              rounded-full
+              text-[10px]
+              sm:text-xs
+              font-bold
+              border
+              ${
+                stakeActive
+                  ? "bg-blue-500/10 text-blue-400 border-blue-500/20"
+                  : "bg-gray-500/10 text-gray-400 border-gray-500/20"
+              }
+            `}
+          >
+            <ShieldCheck size={14} />
+            {stakeActive ? "SHAREHOLDER ATIVO" : "SHAREHOLDER INATIVO"}
+          </div>
         </div>
 
-        {/* ecGas BALANCE */}
+        {/* BALANÇO CS */}
         <div className="
           mb-6
           rounded-2xl
@@ -153,20 +136,16 @@ export default function GasCapacityPanel({
           bg-black/20
           p-4
         ">
-
           <div className="flex items-center justify-between">
-
             <div className="flex items-center gap-2">
-
               <BatteryCharging
                 size={18}
                 className="text-[#D4AF37]"
               />
 
               <span className="text-white/50 text-sm">
-                AI ecGas Balance
+                Saldo de Capacidade CS
               </span>
-
             </div>
 
             <span className="
@@ -176,15 +155,13 @@ export default function GasCapacityPanel({
             ">
               {formatGas(gasBalance)}
             </span>
-
           </div>
-
         </div>
 
-        {/* GRID */}
+        {/* GRID DE CAPACIDADES */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
 
-          {/* MAX */}
+          {/* TETO MÁXIMO */}
           <div className="
             rounded-2xl
             border
@@ -192,9 +169,8 @@ export default function GasCapacityPanel({
             bg-black/20
             p-5
           ">
-
             <p className="text-white/40 text-xs uppercase mb-2">
-              AI Payout Limit
+              Teto Máximo (130% ROI)
             </p>
 
             <h2 className="
@@ -206,12 +182,11 @@ export default function GasCapacityPanel({
             </h2>
 
             <p className="text-[10px] text-white/30 mt-1">
-              AI Maximum mining payout
+              Limite máximo de recebimento CS
             </p>
-
           </div>
 
-          {/* USED */}
+          {/* CONSUMIDO */}
           <div className="
             rounded-2xl
             border
@@ -219,9 +194,8 @@ export default function GasCapacityPanel({
             bg-red-500/5
             p-5
           ">
-
             <p className="text-white/40 text-xs uppercase mb-2">
-              Used Capacity
+              Capacidade Consumida
             </p>
 
             <h2 className="
@@ -233,12 +207,11 @@ export default function GasCapacityPanel({
             </h2>
 
             <p className="text-[10px] text-white/30 mt-1">
-              Consumed payout
+              Dividendos já debitados da CS
             </p>
-
           </div>
 
-          {/* REMAINING */}
+          {/* RESTANTE */}
           <div className="
             rounded-2xl
             border
@@ -246,9 +219,8 @@ export default function GasCapacityPanel({
             bg-green-500/5
             p-5
           ">
-
             <p className="text-white/40 text-xs uppercase mb-2">
-              Remaining
+              Capacidade Restante
             </p>
 
             <h2 className="
@@ -260,18 +232,15 @@ export default function GasCapacityPanel({
             </h2>
 
             <p className="text-[10px] text-white/30 mt-1">
-              Remaining mining rights
+              Direitos de dividendo restantes
             </p>
-
           </div>
 
         </div>
 
         {/* ROI PROGRESS */}
         <div className="mt-8">
-
           <div className="flex items-center justify-between mb-2">
-
             <div className="
               flex
               items-center
@@ -281,7 +250,7 @@ export default function GasCapacityPanel({
               uppercase
             ">
               <TrendingUp size={14} />
-              AI ROI Progress
+              Progresso do Teto CS (130%)
             </div>
 
             <span className="
@@ -289,9 +258,8 @@ export default function GasCapacityPanel({
               text-xs
               font-bold
             ">
-              {roiProgress.toFixed(9)}%
+              {roiProgress.toFixed(2)}%
             </span>
-
           </div>
 
           <div className="
@@ -301,7 +269,6 @@ export default function GasCapacityPanel({
             rounded-full
             overflow-hidden
           ">
-
             <motion.div
               animate={{
                 width: `${roiProgress}%`,
@@ -317,7 +284,6 @@ export default function GasCapacityPanel({
                 to-red-500
               "
             />
-
           </div>
 
           <div className="
@@ -328,10 +294,9 @@ export default function GasCapacityPanel({
             text-white/30
           ">
             <span>0%</span>
-            <span>AI Mining Exhaustion</span>
-            <span>100%</span>
+            <span>Esgotamento da Capacidade CS</span>
+            <span>100% (Teto ROI)</span>
           </div>
-
         </div>
 
         {/* STATUS PANEL */}
@@ -342,134 +307,104 @@ export default function GasCapacityPanel({
             border
             p-5
             ${
-  remainingCapacity <= 0
-    ? "border-red-500/20 bg-red-500/5"
-    : willMine
-      ? "border-green-500/20 bg-green-500/5"
-      : "border-red-500/20 bg-red-500/5"
-}
+              remainingCapacity <= 0
+                ? "border-red-500/20 bg-red-500/5"
+                : willMine
+                  ? "border-green-500/20 bg-green-500/5"
+                  : "border-red-500/20 bg-red-500/5"
+            }
           `}
         >
-
-          <div className="
-            flex
-            items-center
-            justify-between
-          ">
-
+          <div className="flex items-center justify-between">
             <div>
-
               <h3
-  className={`
-    text-sm
-    font-black
-    ${
-      remainingCapacity <= 0
-        ? "text-red-400"
-        : willMine
-          ? "text-green-400"
-          : "text-red-400"
-    }
-  `}
->
- {willMine
-  ? "🟢 AI Mining Active"
-  : "🔴 AI Mining Paused"}
+                className={`
+                  text-sm
+                  font-black
+                  ${
+                    remainingCapacity <= 0
+                      ? "text-red-400"
+                      : willMine
+                        ? "text-green-400"
+                        : "text-red-400"
+                  }
+                `}
+              >
+                {willMine
+                  ? "🟢 Distribuição de Dividendos Ativa"
+                  : "🔴 Distribuição de Dividendos Pausada"}
               </h3>
 
               <p className="text-[11px] text-white/40 mt-1">
-
-                {
-  remainingCapacity <= 0
-    ? "Mining rewards exceeded your ecGas capacity. Recharge ecGas to continue mining."
-    : willMine
-      ? "Mining Capacity available for reward accumulation."
-      : stakeActive
-        ? "Purchase ecGas to resume mining rewards."
-        : "Stake eCoin to activate mining."
-}
-
+                {remainingCapacity <= 0
+                  ? "Os dividendos excederam a sua capacidade CS. Recarregue seu Selo de Compromisso para continuar a receber."
+                  : willMine
+                    ? "Capacidade CS disponível para crédito regular de dividendos."
+                    : stakeActive
+                      ? "Adquira mais Capacidade CS para retomar o recebimento dos rendimentos."
+                      : "Ative sua posição de Shareholder para liberar o recebimento."}
               </p>
-
             </div>
-
           </div>
-          
-
         </div>
 
         {/* OVERFLOW PROTECTION */}
-<div
-  className="
-    mt-6
-    rounded-2xl
-    border
-    border-cyan-500/20
-    bg-cyan-500/5
-    p-5
-  "
->
-
-  <div className="flex items-start gap-3">
-
-    <div
-      className="
-        w-12
-        h-12
-        rounded-xl
-        bg-cyan-500/10
-        flex
-        items-center
-        justify-center
-      "
-    >
-      ♻️
-    </div>
-
-    <div className="flex-1">
-
-      <h3 className="text-cyan-400 font-black text-sm uppercase tracking-wide">
-       AI Overflow Protection Active
-      </h3>
-
-      <p className="text-[11px] text-white/40 mt-1 leading-relaxed">
-        Excess mining rewards exceeding your ecGas capacity are automatically recycled back into the reward pool instead of being lost.
-      </p>
-
-      {/* OPTIONAL LIVE STATUS */}
-      {
-        remainingCapacity <= 0 && (
-          <div
-            className="
-              mt-3
-              inline-flex
-              items-center
-              gap-2
-              px-3
-              py-1
-              rounded-full
+        <div className="
+          mt-6
+          rounded-2xl
+          border
+          border-cyan-500/20
+          bg-cyan-500/5
+          p-5
+        ">
+          <div className="flex items-start gap-3">
+            <div className="
+              w-12
+              h-12
+              rounded-xl
               bg-cyan-500/10
-              border
-              border-cyan-500/20
-              text-cyan-300
-              text-[10px]
-              font-bold
-              uppercase
-            "
-          >
-            ♻ AI Rewards Recycling Enabled
+              flex
+              items-center
+              justify-center
+              text-lg
+            ">
+              ♻️
+            </div>
+
+            <div className="flex-1">
+              <h3 className="text-cyan-400 font-black text-sm uppercase tracking-wide">
+                Proteção de Overflow de Dividendos Ativa
+              </h3>
+
+              <p className="text-[11px] text-white/40 mt-1 leading-relaxed">
+                Dividendos excedentes que ultrapassarem sua Capacidade CS atual são automaticamente reciclados e re-injetados na pool de recompensas do protocolo em vez de serem perdidos.
+              </p>
+
+              {remainingCapacity <= 0 && (
+                <div className="
+                  mt-3
+                  inline-flex
+                  items-center
+                  gap-2
+                  px-3
+                  py-1
+                  rounded-full
+                  bg-cyan-500/10
+                  border
+                  border-cyan-500/20
+                  text-cyan-300
+                  text-[10px]
+                  font-bold
+                  uppercase
+                ">
+                  ♻ Reciclagem Automática de Dividendos Ativada
+                </div>
+              )}
+            </div>
           </div>
-        )
-      }
-
-    </div>
-
-  </div>
-
-</div>
+        </div>
 
       </div>
-
     </motion.div>
   );
 }

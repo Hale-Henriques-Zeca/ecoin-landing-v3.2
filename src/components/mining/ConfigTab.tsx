@@ -2,7 +2,7 @@
 
 import { Users2, ArrowUpRight } from "lucide-react";
 import ReferralCodePanel from "@/components/ReferralCodePanel";
-import SimulatorRedirectCard from "@/components/SimulatorRedirectCard";
+import SimulatorRedirectCard from "@/components/Cards/SimulatorRedirectCard";
 import AdminPage from "@/components/AdminPage";
 
 interface ConfigTabProps {

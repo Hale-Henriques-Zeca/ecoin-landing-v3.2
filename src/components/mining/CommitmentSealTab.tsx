@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Fuel } from "lucide-react";
+import { ShieldCheck, Award } from "lucide-react";
 import { parseUnits } from "viem";
 import { useAccount, useReadContract } from "wagmi";
 
@@ -14,7 +14,6 @@ import { useEcGas } from "@/hooks/useEcGas";
 import { useTransactionState } from "@/hooks/useTransactionState";
 import TxButton from "@/components/TxButton";
 
-// Helper hook local para validação de input numérico
 function useSafeNumberInput(initial = "") {
   const [value, setValue] = useState(initial);
   const onChange = (input: string) => {
@@ -28,15 +27,15 @@ function useSafeNumberInput(initial = "") {
   return { value, normalizedValue, setValue, onChange, isValid };
 }
 
-export default function GasVaultTab() {
+export default function CommitmentSealTab() {
   const { address } = useAccount();
   const gas = useEcGas(address);
-  const gasTx = useTransactionState();
+  const csTx = useTransactionState();
   const amountInput = useSafeNumberInput();
 
-  const [gasToken, setGasToken] = useState<"USDT" | "EUSD">("USDT");
+  const [csToken, setCsToken] = useState<"USDT" | "EUSD">("USDT");
 
-  // Leitura de disponibilidade dos tokens
+  // Leitura de disponibilidade de emissão de Selos via Contrato
   const { data: usdtEnabled } = useReadContract({
     address: CONTRACTS.ECGAS_SALE,
     abi: ecGasSaleAbi,
@@ -49,42 +48,41 @@ export default function GasVaultTab() {
     functionName: "eusdEnabled",
   });
 
-  // Controle do estado da transação
   useEffect(() => {
     if (gas.gasPending) {
-      gasTx.setState("confirming");
+      csTx.setState("confirming");
     }
   }, [gas.gasPending]);
 
   useEffect(() => {
     if (gas.gasConfirmed) {
-      gasTx.setState("success");
+      csTx.setState("success");
       setTimeout(() => {
-        gasTx.setState("idle");
+        csTx.setState("idle");
       }, 2000);
     }
   }, [gas.gasConfirmed]);
 
-  const isSystemActive = gasToken === "USDT" ? !!usdtEnabled : !!eusdEnabled;
+  const isSystemActive = csToken === "USDT" ? !!usdtEnabled : !!eusdEnabled;
 
-  const handleBuyGas = async () => {
+  const handleAcquireCS = async () => {
     try {
       if (!amountInput.isValid) {
         alert("Insira um valor válido maior que zero.");
         return;
       }
-      gasTx.setState("wallet");
+      csTx.setState("wallet");
       const parsed = parseUnits(amountInput.normalizedValue, 18);
       
-      if (gasToken === "USDT") {
+      if (csToken === "USDT") {
         await gas.buyGasUSDT(parsed);
       } else {
         await gas.buyGasEUSD(parsed);
       }
-      gasTx.setState("submitted");
+      csTx.setState("submitted");
     } catch (error) {
-      console.error("Erro na compra de ecGas:", error);
-      gasTx.setState("error");
+      console.error("Erro na aquisição do Selo de Compromisso (CS):", error);
+      csTx.setState("error");
     }
   };
 
@@ -93,27 +91,27 @@ export default function GasVaultTab() {
       {/* HEADER DO PAINEL */}
       <div className="flex items-center justify-between mb-8">
         <h3 className="text-sm font-bold uppercase tracking-[0.2em] flex items-center gap-2 text-[#D4AF37]">
-          <Fuel size={18} /> Compra ecGas
+          <ShieldCheck size={18} /> Aquisição de Selo de Compromisso (CS)
         </h3>
 
         {/* STATUS BADGE */}
         <div
           className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border ${
             isSystemActive
-              ? "bg-green-500/10 text-green-500 border-green-500/20"
+              ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20"
               : "bg-red-500/10 text-red-500 border-red-500/20"
           }`}
         >
-          {isSystemActive ? "Sistema Ativo" : "Sistema Pausado"}
+          {isSystemActive ? "Emissão Ativa" : "Emissão Pausada"}
         </div>
       </div>
 
       {/* TOKEN SWITCHER */}
       <div className="flex bg-black/40 p-1 rounded-2xl mb-6 border border-white/5">
         <button
-          onClick={() => setGasToken("USDT")}
+          onClick={() => setCsToken("USDT")}
           className={`flex-1 py-3 rounded-xl font-bold transition-all duration-300 cursor-pointer ${
-            gasToken === "USDT"
+            csToken === "USDT"
               ? "bg-[#D4AF37] text-black shadow-lg"
               : "text-zinc-500 hover:text-white"
           }`}
@@ -121,9 +119,9 @@ export default function GasVaultTab() {
           USDT
         </button>
         <button
-          onClick={() => setGasToken("EUSD")}
+          onClick={() => setCsToken("EUSD")}
           className={`flex-1 py-3 rounded-xl font-bold transition-all duration-300 cursor-pointer ${
-            gasToken === "EUSD"
+            csToken === "EUSD"
               ? "bg-[#D4AF37] text-black shadow-lg"
               : "text-zinc-500 hover:text-white"
           }`}
@@ -140,26 +138,27 @@ export default function GasVaultTab() {
             autoComplete="off"
             spellCheck={false}
             type="text"
-            placeholder={`Enter ${gasToken} amount...`}
+            placeholder={`Quantidade em ${csToken}...`}
             value={amountInput.value}
             onChange={(e) => amountInput.onChange(e.target.value)}
             className="w-full bg-black/40 border border-white/10 group-focus-within:border-[#D4AF37]/50 rounded-2xl px-6 py-4 text-white placeholder:text-zinc-600 outline-none transition-all duration-300"
           />
           <div className="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-500 text-xs font-mono">
-            {gasToken}
+            {csToken}
           </div>
         </div>
 
         <TxButton
-          state={gasTx.state}
-          idleText={`Comprar Com ${gasToken}`}
+          state={csTx.state}
+          idleText={`Emitir CS com ${csToken}`}
           className="px-8 py-4 rounded-2xl font-black whitespace-nowrap bg-gradient-to-r from-[#D4AF37] to-amber-600 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 text-black shadow-lg shadow-[#D4AF37]/20 cursor-pointer"
-          onClick={handleBuyGas}
+          onClick={handleAcquireCS}
         />
       </div>
 
-      <p className="text-[11px] text-zinc-500 mt-4 leading-relaxed">
-        Fuel your <strong>ecGas</strong> (mining capacity) to power your mining payout capacity. Transações seguras via contrato inteligente.
+      <p className="text-[11px] text-zinc-500 mt-4 leading-relaxed flex items-center gap-1.5">
+        <Award size={14} className="text-[#D4AF37] shrink-0" />
+        Ative o seu <strong>Selo de Compromisso (CS)</strong> para expandir seu teto operacional de dividendos e governança de Shareholder. Transações auditadas via contratos inteligentes.
       </p>
     </div>
   );

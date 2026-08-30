@@ -2,14 +2,19 @@
 
 import React from "react";
 
-interface StatCardProps {
+export interface StatCardProps {
   label: string;
   value: string | number;
   icon: React.ComponentType<{ className?: string; size?: number }>;
   color?: "green" | "blue" | "gold" | "purple";
 }
 
-export default function StatCard({ label, value, icon: Icon, color = "gold" }: StatCardProps) {
+export default function StatCard({
+  label,
+  value,
+  icon: Icon,
+  color = "gold",
+}: StatCardProps) {
   const colorMap = {
     green: {
       text: "text-emerald-400",
@@ -44,21 +49,41 @@ export default function StatCard({ label, value, icon: Icon, color = "gold" }: S
   const currentTheme = colorMap[color];
 
   return (
-    <div className={`relative overflow-hidden bg-[#0d0d0f] border border-white/5 rounded-2xl p-5 transition-all duration-300 ${currentTheme.hoverBorder} ${currentTheme.shadow} group`}>
-      <div className={`absolute -right-4 -bottom-4 w-24 h-24 bg-gradient-to-br ${currentTheme.bgGlow} to-transparent rounded-full blur-xl opacity-50 group-hover:opacity-100 transition-opacity duration-500`} />
-      
-      <div className="flex items-center justify-between relative z-10">
-        <div className="space-y-1">
-          <span className="text-[11px] font-bold text-white/40 uppercase tracking-wider block">
-            {label}
-          </span>
-          <h4 className={`text-xl font-black tracking-tight transition-all ${currentTheme.text}`}>
-            {value}
-          </h4>
+    <div
+      className={`
+        relative overflow-hidden rounded-3xl border border-white/10 
+        bg-[#09090b]/60 backdrop-blur-xl p-6 w-full min-h-[195px] 
+        transition-all duration-300 hover:-translate-y-1.5 hover:bg-white/[0.04]
+        ${currentTheme.hoverBorder} ${currentTheme.shadow}
+      `}
+    >
+      <div
+        className={`absolute inset-0 bg-gradient-to-br ${currentTheme.bgGlow} via-transparent to-transparent pointer-events-none`}
+      />
+
+      <div className="relative z-10 h-full flex flex-col justify-between">
+        <div className="flex items-center justify-between mb-6">
+          <div
+            className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${currentTheme.iconBg} flex items-center justify-center border`}
+          >
+            <Icon size={24} className={currentTheme.text} />
+          </div>
+
+          <div className="relative flex h-2 w-2">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+            <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+          </div>
         </div>
-        
-        <div className={`p-3 rounded-xl bg-gradient-to-br ${currentTheme.iconBg} border transition-transform duration-300 group-hover:scale-110`}>
-          <Icon size={20} />
+
+        <div className="mt-auto">
+          <p className="text-[20px] uppercase tracking-[0.25em] text-white/40 font-bold mb-2">
+            {label}
+          </p>
+          <h2
+            className={`text-2xl md:text-3xl font-black tracking-tight font-mono break-words leading-none ${currentTheme.text}`}
+          >
+            {value}
+          </h2>
         </div>
       </div>
     </div>

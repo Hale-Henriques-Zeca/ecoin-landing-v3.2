@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import {
   BarChart3,
   Coins,
-  Fuel,
+  ShieldCheck,
   Activity,
   RefreshCw,
   TrendingUp,
@@ -27,45 +27,39 @@ export default function MiningAnalyticsPanel({
   recycled,
   apr,
 }: Props) {
-
   const cards = [
     {
-      title: "Total Rewards Earned",
+      title: "Total de Dividendos Gerados",
       value: `${totalRewards.toFixed(7)} USD`,
       icon: Coins,
-      color: "text-green-400",
+      color: "text-emerald-400",
     },
-
     {
-      title: "Total Gas Used",
+      title: "Capacidade CS Utilizada",
       value: `${totalGasUsed.toFixed(9)}`,
-      icon: Fuel,
-      color: "text-red-400",
+      icon: ShieldCheck,
+      color: "text-amber-400",
     },
-
     {
-      title: "Mining Efficiency",
+      title: "Eficiência Operacional CS",
       value: `${efficiency.toFixed(2)}%`,
       icon: Activity,
       color: "text-cyan-400",
     },
-
     {
-      title: "Sessions Completed",
+      title: "Ciclos de Distribuição",
       value: sessions,
       icon: BarChart3,
       color: "text-yellow-400",
     },
-
     {
-      title: "Recycled Rewards",
+      title: "Dividendos Reciclados (Overflow)",
       value: `${recycled.toFixed(7)} USD`,
       icon: RefreshCw,
       color: "text-blue-400",
     },
-
     {
-      title: "Current APR",
+      title: "APR de Dividendos Atual",
       value: `${apr.toFixed(2)}%`,
       icon: TrendingUp,
       color: "text-purple-400",
@@ -74,9 +68,7 @@ export default function MiningAnalyticsPanel({
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-
       {cards.map((card, index) => {
-
         const Icon = card.icon;
 
         return (
@@ -96,13 +88,10 @@ export default function MiningAnalyticsPanel({
               p-6
             "
           >
-
             <div className="absolute inset-0 bg-gradient-to-br from-[#D4AF37]/5 to-transparent" />
 
             <div className="relative z-10">
-
               <div className="flex items-center justify-between mb-5">
-
                 <div
                   className="
                     w-14
@@ -124,10 +113,9 @@ export default function MiningAnalyticsPanel({
                   w-2
                   h-2
                   rounded-full
-                  bg-green-400
+                  bg-emerald-400
                   animate-pulse
                 " />
-
               </div>
 
               <p className="
@@ -148,14 +136,10 @@ export default function MiningAnalyticsPanel({
               `}>
                 {card.value}
               </h2>
-
             </div>
-
           </motion.div>
         );
-
       })}
-
     </div>
   );
 }

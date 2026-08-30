@@ -1,47 +1,74 @@
 "use client";
 
-import { Coins, Zap, ShieldCheck, TrendingUp } from "lucide-react";
-import StatCard from "./StatCard"; 
+import { Coins, Award, ShieldCheck, Users } from "lucide-react";
+import StatCard from "@/components/mining/StatCard";
 import MiningAnalyticsPanel from "@/components/MiningAnalyticsPanel";
 import EcoinWalletDashboard from "@/components/EcoinWalletDashboard";
 
 interface AnalyticsTabProps {
-  stats: {
-    myStake: string | number;
-    share: string | number;
-    totalStaked: string | number;
-    totalStakers: string | number;
+  stats?: {
+    myStake?: string | number;
+    share?: string | number;
+    totalStaked?: string | number;
+    totalStakers?: string | number;
   };
-  pendingUSDT: number;
-  pendingEUSD: number;
-  usedCapacity: number;
-  maxCapacity: number;
-  overflow: { totalUSDT: number; totalEUSD: number };
+  pendingUSDT?: number;
+  pendingEUSD?: number;
+  usedCapacity?: number;
+  maxCapacity?: number;
+  overflow?: {
+    totalUSDT?: number;
+    totalEUSD?: number;
+  };
 }
 
 export default function AnalyticsTab({
-  stats,
-  pendingUSDT,
-  pendingEUSD,
-  usedCapacity,
-  maxCapacity,
-  overflow,
+  stats = {},
+  pendingUSDT = 0,
+  pendingEUSD = 0,
+  usedCapacity = 0,
+  maxCapacity = 0,
+  overflow = { totalUSDT: 0, totalEUSD: 0 },
 }: AnalyticsTabProps) {
+  const totalRewards = pendingUSDT + pendingEUSD;
+  const efficiency = maxCapacity > 0 ? (usedCapacity / maxCapacity) * 100 : 0;
+  const recycled = (overflow.totalUSDT || 0) + (overflow.totalEUSD || 0);
+
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatCard label="Meu Depósito" value={stats.myStake} icon={Coins} color="gold" />
-        <StatCard label="Ganhos Estimados" value={stats.share} icon={Zap} color="purple" />
-        <StatCard label="Depósitos Globais" value={stats.totalStaked} icon={ShieldCheck} color="green" />
-        <StatCard label="Mineradores Ativos" value={stats.totalStakers} icon={TrendingUp} color="blue" />
+        <StatCard
+          label="Minha Retenção"
+          value={stats.myStake ?? "0 eCoin"}
+          icon={Coins}
+          color="gold"
+        />
+        <StatCard
+          label="Quota de Dividendos"
+          value={stats.share ?? "0.00%"}
+          icon={Award}
+          color="purple"
+        />
+        <StatCard
+          label="Retenção Global"
+          value={stats.totalStaked ?? "0 eCoin"}
+          icon={ShieldCheck}
+          color="green"
+        />
+        <StatCard
+          label="Acionistas Ativos"
+          value={stats.totalStakers ?? "0"}
+          icon={Users}
+          color="blue"
+        />
       </div>
 
       <MiningAnalyticsPanel
-        totalRewards={pendingUSDT + pendingEUSD}
+        totalRewards={totalRewards}
         totalGasUsed={usedCapacity}
-        efficiency={maxCapacity > 0 ? (usedCapacity / maxCapacity) * 100 : 0}
+        efficiency={efficiency}
         sessions={5}
-        recycled={overflow.totalUSDT + overflow.totalEUSD}
+        recycled={recycled}
         apr={148.22}
       />
 

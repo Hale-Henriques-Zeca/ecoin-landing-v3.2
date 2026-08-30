@@ -38,7 +38,7 @@ const navLinks = [
     icon: Wallet,
   },
   { name: "Importar E-Coin", href: "/import-guide", icon: Download },
-  { name: "eCoin ShareHolder", href: "/eCoin-ShareHolder", icon: PiggyBank },
+  { name: "ShareHolder", href: "/eCoin-ShareHolder", icon: PiggyBank },
   { name: "Converter", href: "/ecoin-converter", icon: ArrowLeftRight },
   { name: "Trading AI", href: "/ecoin-ai-trading", icon: Bot },
   { name: "Investir", href: "/ecoin-rewards", icon: TrendingUp },

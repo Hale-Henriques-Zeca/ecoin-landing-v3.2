@@ -12,7 +12,6 @@ import {
   Gauge
 } from "lucide-react";
 
-// 1. Atualização do Tipo para suportar as 5 janelas temporais
 type WindowType = "1m" | "1h" | "24h" | "7d" | "30d";
 
 type Props = {
@@ -33,42 +32,42 @@ export default function APRPanel({
   const apr = stakedAmount > 0 ? (yearlyRewards / stakedAmount) * 100 : 0;
   const apy = apr * 2.15;
 
-  // --- MAPEAMENTO DOS 5 ESTADOS DE VELOCIDADE E TEMPO ---
+  // --- MAPEAMENTO DOS 5 ESTADOS DE VELOCIDADE E TEMPO (DIVIDENDOS & CS) ---
   const getVelocityData = () => {
     switch (window) {
       case "1m":
         return {
           velocity: "ADVANCED / SPEED",
           color: "text-red-400",
-          desc: "Hiper-aceleração económica. O teto de 130% do Profit (ROI) é atingido e liquidado minuto a minuto."
+          desc: "Hiper-aceleração de dividendos. O teto de 130% de ROI é atingido e creditado minuto a minuto via CS."
         };
 
       case "1h":
         return {
           velocity: "EXTREME",
           color: "text-fuchsia-400",
-          desc: "Fluxo ultra-rápido. Distribuição contínua com pagamentos dos 130% efetuados a cada hora."
+          desc: "Fluxo ultra-rápido. Distribuição contínua com créditos dos 130% efetuados a cada hora aos shareholders."
         };
 
       case "24h":
         return {
           velocity: "HIGH",
           color: "text-purple-400",
-          desc: "Análise de fluxo alto e comportamento imediato. Pagamento integral dos 130% em apenas 1 dia."
+          desc: "Fluxo acelerado. Pagamento e liquidação integral do teto de 130% de dividendos em 24 horas."
         };
 
       case "7d":
         return {
           velocity: "MEDIUM",
           color: "text-amber-400",
-          desc: "Projeção padrão estruturada em fluxo micro-económico, liquidações semanais dos 130%."
+          desc: "Projeção semanal estruturada em micro-fluxo econômico com liquidações dos 130% a cada 7 dias."
         };
 
       case "30d":
         return {
           velocity: "LOW",
           color: "text-blue-400",
-          desc: "Previsibilidade macro quando o nível de produção é estável. Pagamentos mensais dos 130%."
+          desc: "Previsibilidade macro quando a produção de rendimentos é estável. Prazos mensais de acúmulo."
         };
 
       default:
@@ -85,15 +84,15 @@ export default function APRPanel({
   return (
     <div className="space-y-6">
       
-      {/* 1. SELETOR EXPANDIDO PARA 5 JANELAS (Responsivo de 1 a 5 colunas) */}
+      {/* 1. SELETOR DE TEMPO */}
       <div className="space-y-3">
-        <label className="flex items-center text-xs font-mono font-bold text-red-400 md:text-3xl font-black tracking-tighter">
-          <Clock size={50} /> Janela de Projeção Temporal & tempo de duração para atingir os 130% do Profit (ROI)
+        <label className="flex items-center gap-3 text-3xl font-mono font-bold text-red-400 md:text-2xl font-black tracking-tighter">
+          <Clock size={32} /> Janela Projetada & Tempo para Atingir o Teto de 130% ROI
         </label>
         
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
           
-          {/* CARD 1: Per Minutes (Advanced / Speed) */}
+          {/* CARD 1: Per Minutes */}
           <button
             type="button"
             onClick={() => setWindow("1m")}
@@ -104,14 +103,14 @@ export default function APRPanel({
             }`}
           >
             <div className={`text-xs font-black flex items-center gap-1.5 ${window === "1m" ? "text-red-400" : "text-slate-400"}`}>
-              <Gauge size={13} /> Per Minutes
+              <Gauge size={13} /> Por Minutos
             </div>
             <p className="text-[10px] text-slate-500 font-sans leading-tight">
-              Velocidade máxima global. Retornos imediatos computados a cada minuto.
+              Velocidade máxima global. Créditos imediatos processados a cada minuto.
             </p>
           </button>
 
-          {/* CARD 2: Per Hours (Extreme) */}
+          {/* CARD 2: Per Hours */}
           <button
             type="button"
             onClick={() => setWindow("1h")}
@@ -122,14 +121,14 @@ export default function APRPanel({
             }`}
           >
             <div className={`text-xs font-black flex items-center gap-1.5 ${window === "1h" ? "text-fuchsia-400" : "text-slate-400"}`}>
-              <Zap size={13} /> Per Hours
+              <Zap size={13} /> Por Horas
             </div>
             <p className="text-[10px] text-slate-500 font-sans leading-tight">
-              Fluxo dinâmico extremo. Retornos injetadas hora a hora no painel de recompensas dos mineradores.
+              Fluxo dinâmico contínuo. Dividendos injetados hora a hora no painel do shareholder.
             </p>
           </button>
 
-          {/* CARD 3: 1 Day (High) */}
+          {/* CARD 3: 24 Hours */}
           <button
             type="button"
             onClick={() => setWindow("24h")}
@@ -140,14 +139,14 @@ export default function APRPanel({
             }`}
           >
             <div className={`text-xs font-black flex items-center gap-1.5 ${window === "24h" ? "text-purple-400" : "text-slate-400"}`}>
-              <Zap size={13} /> 24 Hours
+              <Zap size={13} /> 24 Horas
             </div>
             <p className="text-[10px] text-slate-500 font-sans leading-tight">
-              Fluxo Alto. Comportamento e liquidação rápida do ROI em 1 dia.
+              Fluxo Acelerado. Liquidação do teto completo de ROI em apenas 1 dia.
             </p>
           </button>
 
-          {/* CARD 4: 7 Days (Medium) */}
+          {/* CARD 4: 7 Days */}
           <button
             type="button"
             onClick={() => setWindow("7d")}
@@ -158,14 +157,14 @@ export default function APRPanel({
             }`}
           >
             <div className={`text-xs font-black flex items-center gap-1.5 ${window === "7d" ? "text-amber-400" : "text-slate-400"}`}>
-              <Calendar size={13} /> 7 Days
+              <Calendar size={13} /> 7 Dias
             </div>
             <p className="text-[10px] text-slate-500 font-sans leading-tight">
-              Fluxo micro regularizado. Pagamentos e ciclos fechados semanalmente.
+              Fluxo semanal regularizado. Ciclos de dividendos fechados a cada 7 dias.
             </p>
           </button>
 
-          {/* CARD 5: 30 Days (Low) */}
+          {/* CARD 5: 30 Days */}
           <button
             type="button"
             onClick={() => setWindow("30d")}
@@ -176,17 +175,17 @@ export default function APRPanel({
             }`}
           >
             <div className={`text-xs font-black flex items-center gap-1.5 ${window === "30d" ? "text-blue-400" : "text-slate-400"}`}>
-              <Layers size={13} /> 30 Days
+              <Layers size={13} /> 30 Dias
             </div>
             <p className="text-[10px] text-slate-500 font-sans leading-tight">
-              Previsibilidade de acumulação composta macro com prazos mensais.
+              Previsibilidade e acúmulo de rendimentos com prazos mensais.
             </p>
           </button>
 
         </div>
       </div>
 
-      {/* 2. PAINEL DE MÉTRICAS DA REDE (APR, APY, VELOCITY) */}
+      {/* 2. PAINEL DE MÉTRICAS */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -199,7 +198,7 @@ export default function APRPanel({
             <div className="flex items-center gap-2 mb-3">
               <TrendingUp size={16} className="text-emerald-400" />
               <span className="text-slate-400 font-mono text-xs uppercase tracking-wider">
-                AI Current APR
+                APR de Dividendos Atual
               </span>
             </div>
             <h2 className="text-3xl font-black font-mono text-emerald-400 tracking-tight">
@@ -212,7 +211,7 @@ export default function APRPanel({
             <div className="flex items-center gap-2 mb-3">
               <BarChart3 size={16} className="text-cyan-400" />
               <span className="text-slate-400 font-mono text-xs uppercase tracking-wider">
-                AI Projected APY
+                APY Projetado de Shareholders
               </span>
             </div>
             <h2 className="text-3xl font-black font-mono text-cyan-400 tracking-tight">
@@ -225,7 +224,7 @@ export default function APRPanel({
             <div className="flex items-center gap-2 mb-3">
               <Activity size={16} className={currentVelocity.color} />
               <span className="text-slate-400 font-mono text-xs uppercase tracking-wider">
-                AI Reward Velocity
+                Velocidade de Distribuição CS
               </span>
             </div>
             <h2 className={`text-2xl font-black font-mono tracking-tight ${currentVelocity.color}`}>
