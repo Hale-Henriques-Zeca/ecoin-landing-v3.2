@@ -282,10 +282,10 @@ export default function ECoinSmartPoolsExplanation() {
           {/* INÍCIO DO BOTÃO SAIBA MAIS */}
           <div className="mt-8 flex justify-center w-full">
             <Link 
-              href="How-Ai-Mining-Works" 
+              href="eCoin-ShareHolder-Seat" 
               className="inline-flex items-center gap-2 px-8 py-4 text-sm font-bold text-yellow-400 border border-yellow-500/40 rounded-2xl bg-amber-500/10 hover:bg-amber-500 hover:text-black transition-all duration-300 shadow-[0_0_20px_rgba(245,158,11,0.2)] hover:shadow-[0_0_30px_rgba(245,158,11,0.5)] group"
             >
-              <span>Saiba mais como se ganha</span>
+              <span>Saiba como acionista ganham</span>
               <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
             </Link>
           </div>
@@ -363,10 +363,10 @@ export default function ECoinSmartPoolsExplanation() {
             </Link>
 
             <Link
-              href="/Mining"
+              href="/eCoin-ShareHolder"
               className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-gradient-to-r from-cyan-600 to-teal-600 hover:from-cyan-500 hover:to-teal-500 text-white font-extrabold transition-all duration-300 shadow-lg shadow-cyan-950/50 text-center tracking-wide"
             >
-              Open eCoin Mining Smart Pools
+              Open eCoin ShareHolder Smart Pools
             </Link>
           </div>
 

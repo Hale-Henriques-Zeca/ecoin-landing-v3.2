@@ -29,10 +29,8 @@ import {
 } from "lucide-react";
 
 const navLinks = [
-  
-  { name: "Balance", isModal: true }, 
-  
   { name: "Home", href: "/", icon: Home },
+  { name: "Balance", isModal: true }, // Marcado como modal flutuante
   {
     name: "Wallet",
     href: "/eCoinCloudWallet",
@@ -40,7 +38,7 @@ const navLinks = [
     icon: Wallet,
   },
   { name: "Importar E-Coin", href: "/import-guide", icon: Download },
-  { name: "Mineração", href: "/Mining", icon: PiggyBank },
+  { name: "eCoin ShareHolder", href: "/eCoin-ShareHolder", icon: PiggyBank },
   { name: "Converter", href: "/ecoin-converter", icon: ArrowLeftRight },
   { name: "Trading AI", href: "/ecoin-ai-trading", icon: Bot },
   { name: "Investir", href: "/ecoin-rewards", icon: TrendingUp },
