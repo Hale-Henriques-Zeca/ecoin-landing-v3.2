@@ -1,20 +1,24 @@
 "use client";
 
+import React, { useState, useEffect } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
   Cpu, BarChart3, Wallet, 
-  Settings, History, Gift, Coins, ShieldCheck, Award
+  Settings, History, Gift, Coins, ShieldCheck
 } from "lucide-react";
-
-import { useState, useEffect } from "react";
 import { formatUnits } from "viem";
-import { useRouter } from "next/navigation";
 
 // Wagmi & Contracts
-import { useAccount, useReadContract, useWriteContract, useWaitForTransactionReceipt, useSwitchChain, useChainId } from "wagmi";
+import { 
+  useAccount, 
+  useReadContract, 
+  useSwitchChain, 
+  useChainId 
+} from "wagmi";
 import { CONTRACTS } from "@/lib/contracts/contracts";
 import { miningStakingAbi } from "@/lib/abis/miningStakingAbi";
-import { ecGasSaleAbi } from "@/lib/abis/ecGasSaleAbi";
 
 // Contexts & Hooks
 import { useTransactionState } from "@/hooks/useTransactionState";
@@ -24,11 +28,10 @@ import { useRewardStreaming } from "@/hooks/useRewardStreaming";
 import { useOverflowAnalytics } from "@/hooks/useOverflowAnalytics";
 
 // Components
-import { ConnectButton } from '@rainbow-me/rainbowkit';
+import { ConnectButton } from "@rainbow-me/rainbowkit";
 import AdminPage from "@/components/AdminPage";
 import GasCapacityPanel from "@/components/GasCapacityPanel";
 import MiningHistoryPanel from "@/components/MiningHistoryPanel";
-import APRPanel from "@/components/APRPanel";
 import ReferralCodePanel from "@/components/ReferralCodePanel";
 import SimulatorRedirectCard from "@/components/Cards/SimulatorRedirectCard";
 import ProfitSimulatorCard from "@/components/Cards/ProfitSimulatorCard";
@@ -43,24 +46,11 @@ import RecompensasTab from "@/components/mining/RecompensasTab";
 import StakeTab from "@/components/mining/StakeTab";
 import CommitmentSealTab from "@/components/mining/CommitmentSealTab";
 import AnalyticsTab from "@/components/mining/AnalyticsTab";
-import BottomNavigationMobile from "@/components/mining/BottomNavigationMobile";
 import SocialFooter from "@/components/mining/SocialFooter";
 import ReferralModal from "@/components/mining/ReferralModal";
 
-function useSafeNumberInput(initial = "") {
-  const [value, setValue] = useState(initial);
-  const onChange = (input: string) => {
-    const raw = input.replace(",", ".").replace(/[^\d.]/g, "");
-    if (/^\d*\.?\d*$/.test(raw)) {
-      setValue(raw);
-    }
-  };
-  const normalizedValue = value.replace(",", ".").trim() || "0";
-  const isValid = value && !isNaN(Number(normalizedValue));
-  return { value, normalizedValue, setValue, onChange, isValid };
-}
-
 export default function ShareholdersPage() {
+  const router = useRouter();
   const { isConnected, address } = useAccount();
   const gas = useEcGas(address);
   
@@ -71,7 +61,6 @@ export default function ShareholdersPage() {
   // 🗂️ NAVEGAÇÃO COMPATÍVEL COM SHAREHOLDERS
   const [activeTab, setActiveTab] = useState<string>("shareholders");
   const overflow = useOverflowAnalytics();
-  const amountInput = useSafeNumberInput();
 
   const mining = useMiningStaking();
 
@@ -82,8 +71,6 @@ export default function ShareholdersPage() {
   const csBalance = remainingCapacity; 
   const stakeActive = Number(mining.userStake) > 0; 
   const simulatedWillMine = remainingCapacity > 0 && stakeActive;
-
-  const [projectionWindow, setProjectionWindow] = useState<"24h" | "7d" | "30d">("7d");
 
   const { data: pending } = useReadContract({ 
     abi: miningStakingAbi, 
@@ -116,7 +103,7 @@ export default function ShareholdersPage() {
   useEffect(() => {
     if (!isConnected) return;
     if (chainId !== 56) { switchChain({ chainId: 56 }); }
-  }, [isConnected, chainId]);
+  }, [isConnected, chainId, switchChain]);
 
   const claimTx = useTransactionState();
 
@@ -125,17 +112,58 @@ export default function ShareholdersPage() {
       claimTx.setState("success"); 
       setTimeout(() => { claimTx.setState("idle"); }, 2000); 
     } 
-  }, [mining.claimConfirmed]);
+  }, [mining.claimConfirmed, claimTx]);
 
+  // 📌 MAPA DE NAVEGAÇÃO COM ROTAS DEDICADAS
   const menuItems = [
-    { id: "shareholders", label: "Participação CS", icon: Award },
-    { id: "recompensas", label: "Dividendos", icon: Gift },
-    { id: "stake", label: "Staking Pool", icon: Coins },
-    { id: "cs_vault", label: "Selo de Compromisso (CS)", icon: ShieldCheck },
-    { id: "analytics", label: "Métricas", icon: BarChart3 },
-    { id: "historico", label: "Histórico", icon: History },
-    { id: "portfolio", label: "Portfolio CS", icon: Wallet },
-    { id: "config", label: "Configurações", icon: Settings },
+    { 
+      id: "shareholders", 
+      label: "Participação", 
+      icon: Cpu, 
+      href: "/eCoin-ShareHolder/ParticipationTab" 
+    },
+    { 
+      id: "recompensas", 
+      label: "DIVIDENDOS", 
+      icon: Gift, 
+      href: "/eCoin-ShareHolder/ProfitTab" 
+    },
+    { 
+      id: "stake", 
+      label: "AÇÕES", 
+      icon: Coins, 
+      href: "/eCoin-ShareHolder/StakeTab" 
+    },
+    { 
+      id: "cs_vault", 
+      label: "SELOS", 
+      icon: ShieldCheck, 
+      href: "/eCoin-ShareHolder/CommitmentSealTab" 
+    },
+    { 
+      id: "analytics", 
+      label: "Métricas", 
+      icon: BarChart3, 
+      href: "/eCoin-ShareHolder/AnalyticsTab" 
+    },
+    { 
+      id: "historico", 
+      label: "HISTÓRICO", 
+      icon: History, 
+      href: "/eCoin-ShareHolder/HistoryTab" 
+    },
+    { 
+      id: "portfolio", 
+      label: "PORTFOLIO", 
+      icon: Wallet, 
+      href: "/eCoin-ShareHolder/PortfolioTab" 
+    },
+    { 
+      id: "config", 
+      label: "CONFIGURAÇÕES", 
+      icon: Settings, 
+      href: "/eCoin-ShareHolder/ProfileTab" 
+    },
   ];
 
   const handleClaimRewards = async () => {
@@ -155,7 +183,7 @@ export default function ShareholdersPage() {
 
       <div className="max-w-[1600px] mx-auto flex flex-col lg:flex-row gap-8 relative z-10">
         
-        {/* NAVEGAÇÃO LATERAL DESKTOP */}
+        {/* 💻 NAVEGAÇÃO LATERAL (EXCLUSIVA DESKTOP) */}
         <aside className="hidden lg:flex flex-col w-64 bg-[#0d0d0f] border border-white/5 rounded-3xl p-4 h-fit sticky top-24 gap-2">
           <div className="px-3 py-2 mb-4 border-b border-white/5 flex items-center gap-2">
             <div className="w-6 h-6 rounded-full bg-[#D4AF37]/20 flex items-center justify-center text-[#D4AF37] font-bold text-xs">CS</div>
@@ -182,10 +210,10 @@ export default function ShareholdersPage() {
         </aside>
 
         {/* CONTAINER PRINCIPAL DE CONTEÚDO */}
-        <section className="flex-1 min-w-0">
+        <section className="flex-1 min-w-0 space-y-6">
           
           {/* HEADER PRINCIPAL */}
-          <div className="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4 bg-[#0d0d0f]/60 p-6 rounded-3xl border border-white/5 backdrop-blur-md">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-[#0d0d0f]/60 p-6 rounded-3xl border border-white/5 backdrop-blur-md">
             <div>
               <h1 className="text-2xl md:text-3xl font-black tracking-tighter">
                 Painel de <span className="text-[#D4AF37]">Shareholders</span>
@@ -201,106 +229,118 @@ export default function ShareholdersPage() {
             </div>
           </div>
 
-          {/* RENDERING CONDICIONAL DAS ABAS */}
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={activeTab}
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -15 }}
-              transition={{ duration: 0.25 }}
-              className="space-y-6"
-            >
-              {/* TAB 1: SHAREHOLDERS / PARTICIPAÇÃO */}
-              {activeTab === "shareholders" && (
-                <MiningTab setActiveTab={setActiveTab} />
-              )}
+          {/* 📱 GRADE DE ÍCONES PARA DISPOSITIVOS MÓVEIS (REDIRECIONAMENTO POR LINK) */}
+          <div className="grid lg:hidden grid-cols-2 gap-3 sm:gap-4">
+            {menuItems.map((item) => {
+              const Icon = item.icon;
+              return (
+                <Link
+                  key={item.id}
+                  href={item.href}
+                  className="flex flex-col items-center justify-center p-6 sm:p-8 bg-[#0d0d0f]/80 hover:bg-white/5 border border-white/10 hover:border-[#D4AF37]/40 rounded-3xl transition-all duration-300 active:scale-95 text-center group"
+                >
+                  <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-white/5 group-hover:bg-[#D4AF37]/10 flex items-center justify-center mb-3 text-[#D4AF37] transition-all duration-300">
+                    <Icon size={26} className="group-hover:scale-110 transition-transform" />
+                  </div>
+                  <span className="text-xs font-black tracking-wider text-white/90 uppercase group-hover:text-[#D4AF37]">
+                    {item.label}
+                  </span>
+                </Link>
+              );
+            })}
+          </div>
 
-              {/* TAB 2: DIVIDENDOS / RECOMPENSAS */}
-              {activeTab === "recompensas" && (
-                <RecompensasTab
-                  pendingUSDT={pendingUSDT}
-                  pendingEUSD={pendingEUSD}
-                  totalRewardsUSD={totalRewardsUSD}
-                  withdrawFeeUSD={withdrawFeeUSD}
-                  withdrawNetUSD={withdrawNetUSD}
-                  claimTxState={claimTx.state}
-                  onClaim={handleClaimRewards}
-                />
-              )}
+          {/* 💻 RENDERING CONDICIONAL DAS ABAS (MANTIDO EM DESKTOP) */}
+          <div className="hidden lg:block">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={activeTab}
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -15 }}
+                transition={{ duration: 0.25 }}
+                className="space-y-6"
+              >
+                {/* TAB 1: SHAREHOLDERS / PARTICIPAÇÃO */}
+                {activeTab === "shareholders" && (
+                  <MiningTab setActiveTab={setActiveTab} />
+                )}
 
-              {/* TAB 3: STAKING */}
-              {activeTab === "stake" && ( <StakeTab /> )}
+                {/* TAB 2: DIVIDENDOS / RECOMPENSAS */}
+                {activeTab === "recompensas" && (
+                  <RecompensasTab
+                    pendingUSDT={pendingUSDT}
+                    pendingEUSD={pendingEUSD}
+                    totalRewardsUSD={totalRewardsUSD}
+                    withdrawFeeUSD={withdrawFeeUSD}
+                    withdrawNetUSD={withdrawNetUSD}
+                    claimTxState={claimTx.state}
+                    onClaim={handleClaimRewards}
+                  />
+                )}
 
-              {/* TAB 4: SELO DE COMPROMISSO (CS) */}
-              {activeTab === "cs_vault" && ( <CommitmentSealTab /> )}
+                {/* TAB 3: STAKING */}
+                {activeTab === "stake" && ( <StakeTab /> )}
 
-              {/* TAB 5: ANALYTICS */}
-              {activeTab === "analytics" && (
-                <AnalyticsTab
-                  stats={stats}
-                  pendingUSDT={pendingUSDT}
-                  pendingEUSD={pendingEUSD}
-                  usedCapacity={usedCapacity}
-                  maxCapacity={maxCapacity}
-                  overflow={overflow}
-                />
-              )}
+                {/* TAB 4: SELO DE COMPROMISSO (CS) */}
+                {activeTab === "cs_vault" && ( <CommitmentSealTab /> )}
 
-              {/* TAB 6: HISTÓRICO */}
-              {activeTab === "historico" && (
-                <div className="bg-[#0d0d0f] border border-white/5 rounded-3xl p-6">
-                  <MiningHistoryPanel />
-                </div>
-              )}
-
-              {/* TAB 7: PORTFOLIO DE CAPACIDADE CS */}
-              {activeTab === "portfolio" && (
-                <div className="bg-[#0d0d0f] border border-white/5 rounded-3xl p-6">
-                  <GasCapacityPanel
-                    gasBalance={csBalance}
-                    maxCapacity={maxCapacity}
+                {/* TAB 5: ANALYTICS */}
+                {activeTab === "analytics" && (
+                  <AnalyticsTab
+                    stats={stats}
+                    pendingUSDT={pendingUSDT}
+                    pendingEUSD={pendingEUSD}
                     usedCapacity={usedCapacity}
-                    remainingCapacity={remainingCapacity}
-                    willMine={simulatedWillMine}
-                    stakeActive={stakeActive}
+                    maxCapacity={maxCapacity}
+                    overflow={overflow}
                   />
-                </div>
-              )}
+                )}
 
-              {/* TAB 8: CONFIGURAÇÕES */}
-              {activeTab === "config" && (
-                <div className="space-y-6">
-                  <APRPanel
-                    yearlyRewards={(pendingUSDT + pendingEUSD) * 365}
-                    stakedAmount={Number(mining.userStake)}
-                    window={projectionWindow}
-                    setWindow={setProjectionWindow}
-                  />
-                  <TeamLeaderCTA/>
-                  <SimulatorRedirectCard />
-                  <ProfitSimulatorCard />
-                  <ReferralCodePanel />
-                  {isOwner && (
-                    <div className="bg-[#0d0d0f] border border-white/5 rounded-3xl p-6">
-                      <AdminPage />
-                    </div>
-                  )}
-                </div>
-              )}
-            </motion.div>
-          </AnimatePresence>
+                {/* TAB 6: HISTÓRICO */}
+                {activeTab === "historico" && (
+                  <div className="bg-[#0d0d0f] border border-white/5 rounded-3xl p-6">
+                    <MiningHistoryPanel />
+                  </div>
+                )}
+
+                {/* TAB 7: PORTFOLIO DE CAPACIDADE CS */}
+                {activeTab === "portfolio" && (
+                  <div className="bg-[#0d0d0f] border border-white/5 rounded-3xl p-6">
+                    <GasCapacityPanel
+                      gasBalance={csBalance}
+                      maxCapacity={maxCapacity}
+                      usedCapacity={usedCapacity}
+                      remainingCapacity={remainingCapacity}
+                      willMine={simulatedWillMine}
+                      stakeActive={stakeActive}
+                    />
+                  </div>
+                )}
+
+                {/* TAB 8: CONFIGURAÇÕES */}
+                {activeTab === "config" && (
+                  <div className="space-y-6">
+                    <TeamLeaderCTA />
+                    <SimulatorRedirectCard />
+                    <ProfitSimulatorCard />
+                    <ReferralCodePanel />
+                    {isOwner && (
+                      <div className="bg-[#0d0d0f] border border-white/5 rounded-3xl p-6">
+                        <AdminPage />
+                      </div>
+                    )}
+                  </div>
+                )}
+              </motion.div>
+            </AnimatePresence>
+          </div>
 
           <SmartPoolsCTA />
           <SocialFooter />
           <ReferralModal />
         </section>
       </div>
-
-      <BottomNavigationMobile
-        activeTab={activeTab}
-        setActiveTab={setActiveTab}
-      />
     </main>
   );
 }
