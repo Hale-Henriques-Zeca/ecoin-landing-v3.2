@@ -205,7 +205,7 @@ export default function ProfileTabPage() {
                   exit={{ opacity: 0, y: -12 }}
                   transition={{ duration: 0.2, ease: "easeInOut" }}
                 >
-                  <ReferralCodePanel />
+                  <TeamLeaderCTA />
                 </motion.div>
               )}
 
@@ -218,7 +218,8 @@ export default function ProfileTabPage() {
                   exit={{ opacity: 0, y: -12 }}
                   transition={{ duration: 0.2, ease: "easeInOut" }}
                 >
-                  <TeamLeaderCTA />
+                  
+                  <ReferralCodePanel />
                 </motion.div>
               )}
 

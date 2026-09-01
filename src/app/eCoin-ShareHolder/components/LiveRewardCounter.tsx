@@ -68,7 +68,7 @@ export default function LiveRewardCounter({
             <Coins size={12} className="text-emerald-400" /> USDT
           </span>
           <span className="text-base font-black text-emerald-400 font-mono tracking-tight">
-            {liveUSDT.toFixed(15)}
+            {liveUSDT.toFixed(9)}
           </span>
         </div>
 
@@ -77,7 +77,7 @@ export default function LiveRewardCounter({
             <TrendingUp size={12} className="text-blue-400" /> eDollar
           </span>
           <span className="text-base font-black text-blue-400 font-mono tracking-tight">
-            {liveEUSD.toFixed(15)}
+            {liveEUSD.toFixed(9)}
           </span>
         </div>
       </div>
