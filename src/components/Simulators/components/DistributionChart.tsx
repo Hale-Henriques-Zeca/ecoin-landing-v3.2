@@ -319,7 +319,7 @@ const totalVal =
               <p className="text-base font-mono font-black text-slate-100 tracking-tight">
                 <AnimatedCounter value={purchase} prefix="" suffix="" />
               </p>
-              <span className="block text-[10px] font-mono text-slate-500 font-bold uppercase">ecGas</span>
+              <span className="block text-[10px] font-mono text-slate-500 font-bold uppercase">Selos</span>
             </div>
 
             <div className="border-t border-slate-900 pt-2 z-10">

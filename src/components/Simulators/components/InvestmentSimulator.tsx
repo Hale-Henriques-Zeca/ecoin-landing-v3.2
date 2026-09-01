@@ -185,7 +185,7 @@ const pendingEUSD =
       <div className="space-y-4">
         <div className="flex items-center justify-between relative">
           <div className="flex items-center gap-1.5 text-xs font-mono font-bold text-slate-300 uppercase tracking-wide">
-            <Coins size={14} className="text-amber-500" /> Stake (eCoin)
+            <Coins size={14} className="text-amber-500" /> Stake/reter (eCoin)
             <button 
               type="button"
               onMouseEnter={() => setShowStakeTooltip(true)}
@@ -264,7 +264,7 @@ const pendingEUSD =
       <div className="space-y-4">
         <div className="flex items-center justify-between relative">
           <div className="flex items-center gap-1.5 text-xs font-mono font-bold text-slate-300 uppercase tracking-wide">
-            <Fuel size={14} className="text-purple-500" /> Buy ecGas
+            <Fuel size={14} className="text-purple-500" /> Buy Seal (CS)
             <button 
               type="button"
               onMouseEnter={() => setShowGasTooltip(true)}
@@ -302,7 +302,7 @@ const pendingEUSD =
               ≈ {formatNumber(ecGas * ECGAS_TO_USDT_PARITY)} USDT
             </span>
           </div>
-          <span className="text-xs font-mono font-bold text-slate-500 bg-slate-900/60 border border-slate-800/80 px-2.5 py-1 rounded-md self-center">ecGas</span>
+          <span className="text-xs font-mono font-bold text-slate-500 bg-slate-900/60 border border-slate-800/80 px-2.5 py-1 rounded-md self-center">Selo</span>
         </div>
 
         {/* Slider Logarítmico Real */}
@@ -389,7 +389,7 @@ const pendingEUSD =
         </div>
         <div className="w-1 h-1 rounded-full bg-slate-800" />
         <div className="flex items-center gap-1">
-          <span className="text-slate-600">ecGas:</span> 
+          <span className="text-slate-600">Selos:</span> 
           <span className="text-purple-400 font-bold">{formatNumber(ecGas)} UNITS</span>
         </div>
         <div className="w-1 h-1 rounded-full bg-slate-800 hidden sm:block" />

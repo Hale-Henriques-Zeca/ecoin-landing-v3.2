@@ -41,10 +41,10 @@ export default function ReferralCommissionSimulator() {
         <div className="bg-slate-950 border border-slate-900 rounded-2xl p-4 grid grid-cols-2 gap-4 divide-x divide-slate-900/60 text-center font-mono text-[10px]">
           <div className="space-y-1">
             <span className={`block font-bold uppercase ${activeTab === ProtocolTab.EC_GAS ? 'text-purple-400' : 'text-slate-600'}`}>
-              ⚡ ecGas Engine
+              ⚡ Seal Engine
             </span>
             <span className="text-slate-500 block text-[9px] leading-tight font-sans">
-              Comissões geradas no ato de compra/reabastecimento de ecGas para mineração ativa.
+              Comissões geradas no ato de compra/reabastecimento de Selos para mineração ativa.
             </span>
           </div>
           <div className="space-y-1 pl-4">
@@ -79,7 +79,7 @@ export default function ReferralCommissionSimulator() {
               activeTab === ProtocolTab.EC_GAS ? "text-purple-400 font-black" : "text-slate-500 hover:text-slate-300"
             }`}
           >
-            <Fuel size={13} /> ecGas Model
+            <Fuel size={13} /> Seal (CS) Model
           </button>
 
           <button 
@@ -125,7 +125,7 @@ export default function ReferralCommissionSimulator() {
       <footer className="w-full max-w-6xl mx-auto mt-24 border-t border-slate-900 py-8 px-4 flex flex-col sm:flex-row justify-between items-center gap-4 font-mono text-[10px] text-slate-600">
         <div className="flex items-center gap-2">
           <ShieldCheck size={12} className="text-emerald-500" />
-          <span>EdenKingDom Ecosystem Consensus Engine © 2026</span>
+          <span>EdenKingDom Ecosystem Consensus Engine Since © 2025</span>
         </div>
         <div className="flex gap-4 tracking-wider">
           <span className="hover:text-slate-400 cursor-help flex items-center gap-1"><HelpCircle size={10}/> EVM Docs</span>

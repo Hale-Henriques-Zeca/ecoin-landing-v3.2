@@ -37,12 +37,12 @@ export default function RecompensasTab({
         </span>
 
         <div className="space-y-2">
-          <div className="text-3xl font-black text-emerald-400">
-            {pendingUSDT.toFixed(7)} USDT
+          <div className="text-2xl font-black text-emerald-400">
+            {pendingUSDT.toFixed(15)} USDT
           </div>
 
           <div className="text-2xl font-bold text-blue-400">
-            {pendingEUSD.toFixed(7)} eDollar
+            {pendingEUSD.toFixed(15)} eDollar
           </div>
         </div>
       </div>
@@ -52,20 +52,20 @@ export default function RecompensasTab({
           <div className="flex justify-between text-sm text-gray-300">
             <span>Total de Dividendos</span>
             <span className="font-bold text-white">
-              {totalRewardsUSD.toFixed(6)} USD
+              {totalRewardsUSD.toFixed(9)} USD
             </span>
           </div>
 
           <div className="flex justify-between text-sm text-red-400">
             <span>Taxa de Processamento (1%)</span>
-            <span>-{withdrawFeeUSD.toFixed(6)} USD</span>
+            <span>-{withdrawFeeUSD.toFixed(9)} USD</span>
           </div>
 
           <div className="h-px bg-white/10" />
 
           <div className="flex justify-between text-base font-black text-emerald-400">
             <span>Rendimento Líquido</span>
-            <span>{withdrawNetUSD.toFixed(6)} USD</span>
+            <span>{withdrawNetUSD.toFixed(9)} USD</span>
           </div>
         </div>
       )}
