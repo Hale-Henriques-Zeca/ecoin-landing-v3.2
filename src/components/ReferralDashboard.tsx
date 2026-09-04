@@ -1,14 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-
-import {
-  Wallet,
-  Users,
-  Gift,
-  ShieldCheck,
-} from "lucide-react";
-
+import { Wallet, Users, ShieldCheck } from "lucide-react";
 import { useReferral } from "@/hooks/useReferral";
 import { useDexWallet } from "@/contexts/DexWalletContext";
 import { CONTRACTS } from "@/lib/contracts/contracts";
@@ -17,415 +10,139 @@ type Rewards = {
   usdt: bigint;
   eusd: bigint;
   ecoin: bigint;
+  bnb: bigint;
 };
 
 export default function ReferralDashboard() {
-
-  const USDT =
-  CONTRACTS.USDT as `0x${string}`;
-
-const EUSD =
-  CONTRACTS.EDOLLAR as `0x${string}`;
-
-  const ECOIN =
-  CONTRACTS.ECOIN as `0x${string}`;
+  const USDT = CONTRACTS.USDT as `0x${string}`;
+  const EUSD = CONTRACTS.EDOLLAR as `0x${string}`;
+  const ECOIN = CONTRACTS.ECOIN as `0x${string}`;
+  const BNB = (CONTRACTS.WBNB || CONTRACTS.BNB || "0x0000000000000000000000000000000000000000") as `0x${string}`;
 
   const { address, isConnected } = useDexWallet();
+  const { getInviter, getPendingRewards, claimRewards } = useReferral();
 
-  const {
-    getInviter,
-    getPendingRewards,
-    claimRewards,
-  } = useReferral();
-
-  const [inviter, setInviter] =
-    useState<string | null>(null);
-
-  const [pending, setPending] =
-  useState<Rewards>({
-    usdt: 0n,
-    eusd: 0n,
-    ecoin: 0n,
-  });
-
-  const [loading, setLoading] =
-    useState(false);
+  const [inviter, setInviter] = useState<string | null>(null);
+  const [pending, setPending] = useState<Rewards>({ usdt: 0n, eusd: 0n, ecoin: 0n, bnb: 0n });
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-
     if (!isConnected) return;
-
     async function load() {
-
-      const inviterData =
-        await getInviter();
-
+      const inviterData = await getInviter();
       setInviter(inviterData);
 
-      const usdtRewards =
-  await getPendingRewards(USDT);
+      const usdtRewards = await getPendingRewards(USDT);
+      const eusdRewards = await getPendingRewards(EUSD);
+      const ecoinRewards = await getPendingRewards(ECOIN);
+      const bnbRewards = await getPendingRewards(BNB);
 
-const eusdRewards =
-  await getPendingRewards(EUSD);
-
-  const ecoinRewards =
-  await getPendingRewards(ECOIN);
-
-setPending({
-  usdt: usdtRewards,
-  eusd: eusdRewards,
-  ecoin: ecoinRewards,
-});
-
-
+      setPending({ usdt: usdtRewards, eusd: eusdRewards, ecoin: ecoinRewards, bnb: bnbRewards });
     }
-
     load();
-
   }, [isConnected]);
 
   if (!isConnected) {
-
-    return (
-      <p className="text-sm text-gray-400">
-        Connect wallet to access referral rewards.
-      </p>
-    );
+    return <p className="text-xs text-gray-400 text-center py-4">Conecte a wallet para ver as recompensas.</p>;
   }
 
-  const pendingUSDT =
-    Number(pending.usdt) / 1e18;
-
-  const pendingEUSD =
-    Number(pending.eusd) / 1e18;
-
-  const pendingECOIN =
-  Number(pending.ecoin) / 1e18;
-
-  const total =
-  pendingUSDT +
-  pendingEUSD +
-  pendingECOIN;
+  const pendingUSDT = Number(pending.usdt) / 1e18;
+  const pendingEUSD = Number(pending.eusd) / 1e18;
+  const pendingECOIN = Number(pending.ecoin) / 1e18;
+  const pendingBNB = Number(pending.bnb) / 1e18;
+  const total = pendingUSDT + pendingEUSD + pendingECOIN + pendingBNB;
 
   return (
-
-    <div className="
-      relative
-      overflow-hidden
-      rounded-3xl
-      border
-      border-[#D4AF37]/20
-      bg-black/40
-      backdrop-blur-xl
-      p-6
-      space-y-6
-    ">
-
-      {/* FX */}
-      <div className="absolute inset-0 bg-gradient-to-br from-[#D4AF37]/5 to-transparent" />
-
-      <div className="relative z-10">
-
-        {/* HEADER */}
-        <div className="flex items-center justify-between">
-
-          <div className="flex items-center gap-3">
-
-            <div className="
-              w-14
-              h-14
-              rounded-2xl
-              bg-[#D4AF37]/10
-              flex
-              items-center
-              justify-center
-            ">
-              <Users
-                size={24}
-                className="text-[#D4AF37]"
-              />
-            </div>
-
-            <div>
-
-              <h3 className="text-lg font-bold text-white tracking-wide">
-  Referral Vault
-</h3>
-
-<p className="text-[10px] text-white/40">
-  Neural affiliate engine
-</p>
-
-            </div>
-
+    <div className="relative rounded-xl border border-[#D4AF37]/20 bg-black/50 backdrop-blur-xl p-3.5 sm:p-4 space-y-3">
+      {/* HEADER */}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <div className="w-8 h-8 rounded-lg bg-[#D4AF37]/10 flex items-center justify-center shrink-0">
+            <Users size={16} className="text-[#D4AF37]" />
           </div>
-
-          <ShieldCheck
-            className="text-green-400"
-          />
-
-        </div>
-
-        {/* WALLET */}
-        <div className="
-          rounded-2xl
-          border
-          border-white/10
-          bg-black/20
-          p-4
-        ">
-
-          <div className="flex items-center gap-2 mb-2">
-
-            <Wallet
-              size={16}
-              className="text-[#D4AF37]"
-            />
-
-            <span className="
-              text-xs
-              uppercase
-              text-white/40
-            ">
-              Wallet
-            </span>
-
+          <div>
+            <h3 className="text-xs sm:text-sm font-bold text-white leading-none">Referral Vault</h3>
+            <p className="text-[9px] text-white/40 mt-0.5">Neural affiliate engine</p>
           </div>
-
-         <p
-  translate="no"
-  title={address}
-  className="
-    notranslate
-    text-[11px]
-    text-white/70
-    truncate
-  "
->
-  {address}
-</p>
-
         </div>
-
-        {/* UPLINE */}
-        <div className="
-          rounded-2xl
-          border
-          border-blue-500/10
-          bg-blue-500/5
-          p-4
-        ">
-
-          <p className="
-            text-xs
-            uppercase
-            text-white/40
-            mb-2
-          ">
-            Upline
-          </p>
-
-          <p
-  translate="no"
-  className="
-    notranslate
-    text-xs
-    text-blue-300
-    break-all
-  "
->
-
-            {
-              inviter &&
-              inviter !==
-              "0x0000000000000000000000000000000000000000"
-                ? inviter
-                : "No upline linked"
-            }
-
-          </p>
-
-        </div>
-
-        {/* REWARDS */}
-        <div className="grid grid-cols-2 gap-4">
-
-          {/* USDT */}
-          <div className="
-            rounded-2xl
-            border
-            border-green-500/10
-            bg-green-500/5
-            p-5
-          ">
-
-            <p
-  translate="no"
-  className="
-    notranslate
-    text-xs
-    uppercase
-    text-white/40
-    mb-2
-  "
->
-  Pending USDT
-</p>
-
-            <h2
-  translate="no"
-  className="
-    notranslate
-    text-xs
-    font-black
-    text-green-400
-  "
->
-  {pendingUSDT.toFixed(6)}
-</h2>
-
-          </div>
-
-          {/* EUSD */}
-          <div className="
-            rounded-2xl
-            border
-            border-blue-500/10
-            bg-blue-500/5
-            p-3
-          ">
-
-            <p
-  translate="no"
-  className="
-    notranslate
-    text-xs
-    uppercase
-    text-white/40
-    mb-2
-  "
->
-  Pending eDollar
-</p>
-
-            <h2
-  translate="no"
-  className="
-    notranslate
-    text-xs
-    font-black
-    text-blue-400
-  "
->
-  {pendingEUSD.toFixed(6)}
-</h2>
-
-          </div>
-
-        </div>
-
-        {/* eCOIN */}
-<div className="flex flex-col items-center justify-center">
-<div className="
-  rounded-2xl
-  border
-  border-[#D4AF37]/10
-  bg-[#D4AF37]/5
-  p-5
-">
-
-  <p
-    translate="no"
-    className="
-      notranslate
-      text-xs
-      uppercase
-      text-white/40
-      mb-2
-    "
-  >
-    Pending eCoin
-  </p>
-
-  <h2
-    translate="no"
-    className="
-      notranslate
-      text-xl
-      font-black
-      text-[#D4AF37]
-    "
-  >
-    {pendingECOIN.toFixed(6)}
-  </h2>
-
-</div>
-</div>
-
-        {/* CLAIM */}
-        <button
-          disabled={
-            total <= 0 || loading
-          }
-          onClick={async () => {
-
-            try {
-
-  setLoading(true);
-
-  if (pendingUSDT > 0) {
-
-    await claimRewards(USDT);
-  }
-
-  if (pendingEUSD > 0) {
-  await claimRewards(EUSD);
-}
-
-if (pendingECOIN > 0) {
-  await claimRewards(ECOIN);
-}
-
-  setPending({
-  usdt: 0n,
-  eusd: 0n,
-  ecoin: 0n,
-});
-
-} finally {
-
-  setLoading(false);
-}
-          }}
-
-          className={`
-            w-full
-            py-4
-            rounded-2xl
-            font-black
-            uppercase
-            tracking-[0.2em]
-            transition-all
-            mt-6
-
-            ${
-              total <= 0
-                ? "bg-gray-700 text-gray-400 cursor-not-allowed"
-                : "bg-gradient-to-r from-[#00FF9C] to-[#00C3FF] text-black hover:scale-[1.02]"
-            }
-          `}
-        >
-
-          {
-            loading
-              ? "PROCESSING..."
-              : "CLAIM REFERRAL REWARDS"
-          }
-
-        </button>
-
+        <ShieldCheck size={18} className="text-emerald-400 shrink-0" />
       </div>
 
+      {/* WALLET & UPLINE SUMMARY */}
+      <div className="grid grid-cols-1 gap-2 text-[11px]">
+        <div className="rounded-lg border border-white/10 bg-black/30 p-2 flex items-center justify-between gap-2">
+          <span className="text-white/40 flex items-center gap-1 uppercase text-[9px] shrink-0">
+            <Wallet size={12} className="text-[#D4AF37]" /> Wallet
+          </span>
+          <span translate="no" className="notranslate text-white/70 truncate font-mono">
+            {address ? `${address.slice(0, 6)}...${address.slice(-4)}` : "—"}
+          </span>
+        </div>
+
+        <div className="rounded-lg border border-blue-500/20 bg-blue-500/5 p-2 flex items-center justify-between gap-2">
+          <span className="text-white/40 uppercase text-[9px] shrink-0">Upline</span>
+          <span translate="no" className="notranslate text-blue-300 truncate font-mono">
+            {inviter && inviter !== "0x0000000000000000000000000000000000000000"
+              ? `${inviter.slice(0, 6)}...${inviter.slice(-4)}`
+              : "Nenhum"}
+          </span>
+        </div>
+      </div>
+
+      {/* REWARDS GRID (4 MOEDAS) */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center">
+        <div className="rounded-lg border border-emerald-500/20 bg-emerald-500/5 p-2">
+          <p translate="no" className="notranslate text-[9px] uppercase text-white/40">USDT</p>
+          <p translate="no" className="notranslate text-xs font-black text-emerald-400 mt-0.5">
+            {pendingUSDT.toFixed(4)}
+          </p>
+        </div>
+
+        <div className="rounded-lg border border-blue-500/20 bg-blue-500/5 p-2">
+          <p translate="no" className="notranslate text-[9px] uppercase text-white/40">eDollar</p>
+          <p translate="no" className="notranslate text-xs font-black text-blue-400 mt-0.5">
+            {pendingEUSD.toFixed(4)}
+          </p>
+        </div>
+
+        <div className="rounded-lg border border-[#D4AF37]/20 bg-[#D4AF37]/5 p-2">
+          <p translate="no" className="notranslate text-[9px] uppercase text-white/40">eCoin</p>
+          <p translate="no" className="notranslate text-xs font-black text-[#D4AF37] mt-0.5">
+            {pendingECOIN.toFixed(4)}
+          </p>
+        </div>
+
+        <div className="rounded-lg border border-yellow-500/20 bg-yellow-500/5 p-2">
+          <p translate="no" className="notranslate text-[9px] uppercase text-white/40">BNB</p>
+          <p translate="no" className="notranslate text-xs font-black text-yellow-400 mt-0.5">
+            {pendingBNB.toFixed(4)}
+          </p>
+        </div>
+      </div>
+
+      {/* BOTÃO CLAIM */}
+      <button
+        disabled={total <= 0 || loading}
+        onClick={async () => {
+          try {
+            setLoading(true);
+            if (pendingUSDT > 0) await claimRewards(USDT);
+            if (pendingEUSD > 0) await claimRewards(EUSD);
+            if (pendingECOIN > 0) await claimRewards(ECOIN);
+            if (pendingBNB > 0) await claimRewards(BNB);
+            setPending({ usdt: 0n, eusd: 0n, ecoin: 0n, bnb: 0n });
+          } finally {
+            setLoading(false);
+          }
+        }}
+        className={`w-full py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider transition-all ${
+          total <= 0
+            ? "bg-gray-800 text-gray-500 cursor-not-allowed border border-white/5"
+            : "bg-gradient-to-r from-[#00FF9C] to-[#00C3FF] text-black hover:brightness-110 active:scale-98"
+        }`}
+      >
+        {loading ? "A Processar..." : "Claim Rewards"}
+      </button>
     </div>
   );
 }

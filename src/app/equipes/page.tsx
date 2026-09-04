@@ -1,79 +1,126 @@
 "use client";
 
-import { Suspense, useState, useEffect } from "react"; 
-import BonusCard from "./components/BonusCard";
-import BonusTable from "./components/BonusTable";
+import { Suspense, useState, useEffect, useRef } from "react";
 import LevelTree from "./components/LevelTree";
+import BonusTable from "./components/BonusTable";
+import BonusCard from "./components/BonusCard";
 import InfoBox from "./components/InfoBox";
 
-// ICONS (Lucide para manter o luxo e padronização visual)
-import { Users, BarChart3, ShieldCheck, Megaphone, AudioLines, Trophy } from "lucide-react";
+// ICONS (Lucide & React Icons)
+import {
+  Users,
+  BarChart3,
+  ShieldCheck,
+  Megaphone,
+  Trophy,
+  Download,
+  Flame,
+  ArrowDownUp,
+  Coins,
+  ShieldAlert,
+} from "lucide-react";
+import { BsStars } from "react-icons/bs";
 
-import LeaderMarketingStudio from "@/components/LeaderMarketingStudio";
+// COMPONENTES DE LIDERANÇA & REDE
 import EcoinLeaderMarketingEngine from "@/components/EcoinLeaderMarketingEngine";
 import EcoinLeaderBoard from "@/components/EcoinLeaderBoard";
 import ReferralBindPanel from "@/components/ReferralBindPanel";
 import ReferralDashboard from "@/components/ReferralDashboard";
 import EcoinCommunityMap from "@/components/EcoinCommunityMap";
 import EMarketingPage from "@/components/EMarketingPage";
-import EcoinPreparationPhasePanel from "@/components/EcoinPreparationPhasePanel";
 import EcoinNetworkAnalytics from "@/components/EcoinNetworkAnalytics";
-import AskAIAudioEngine from "@/components/AskAIAudioEngine";
-import PremiumDocumentVoice from "@/components/PremiumDocumentVoice";
-import DocumentVoicePlayer from "@/components/DocumentVoicePlayer";
 import EcoinAdvantages from "@/components/EcoinAdvantages";
-import { BsStars } from "react-icons/bs";
 
 function EquipesContent() {
   const [mounted, setMounted] = useState(false);
-  
-  // 🗂️ ESTADO GLOBAL DE ABAS (Categorias de Liderança)
-  const [activeTab, setActiveTab] = useState<"estrutura" | "economia" | "marketing" | "analytics">("estrutura");
+  const printRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => { setMounted(true); }, []);
+  // 🗂️ ESTADO GLOBAL DE ABAS
+  const [activeTab, setActiveTab] = useState<
+    "estrutura" | "economia" | "marketing" | "analytics"
+  >("estrutura");
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   if (!mounted) return null;
 
+  // Função de Impressão e Exportação para PDF (Windows, Mac, Android e iOS)
+  const handleDownloadPDF = () => {
+    window.print();
+  };
+
   // Itens do menu estruturados com ícones semânticos
   const menuItems = [
-    { id: "estrutura", label: "Minha Rede", icon: Users, color: "bg-[#D4AF37]" },
-    { id: "economia", label: "Tokenomics", icon: ShieldCheck, color: "bg-blue-600" },
-    { id: "marketing", label: "Marketing AI", icon: Megaphone, color: "bg-purple-600" },
-    { id: "analytics", label: "Analytics", icon: BarChart3, color: "bg-emerald-600" },
+    { id: "estrutura", label: "Minha Rede", icon: Users, color: "text-[#D4AF37]" },
+    { id: "economia", label: "Tokenomics", icon: ShieldCheck, color: "text-blue-500" },
+    { id: "marketing", label: "Marketing AI", icon: Megaphone, color: "text-purple-500" },
+    { id: "analytics", label: "Analytics", icon: BarChart3, color: "text-emerald-500" },
   ];
 
   return (
-    <div className="min-h-screen bg-[#020205] text-gray-300 pt-24 pb-24 lg:pb-12 px-4 lg:px-8 font-sans selection:bg-yellow-500/30">
+    <div className="min-h-screen bg-[#020205] text-gray-300 pt-20 pb-24 lg:pb-12 px-4 lg:px-8 font-sans selection:bg-yellow-500/30">
+      {/* Estilos Globais de Impressão CSS */}
+      <style jsx global>{`
+        @media print {
+          body {
+            background-color: #000000 !important;
+            color: #ffffff !important;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+          }
+          .no-print {
+            display: none !important;
+          }
+          .print-area {
+            width: 100% !important;
+            max-width: 100% !important;
+            padding: 0 !important;
+            margin: 0 !important;
+          }
+        }
+      `}</style>
+
+      {/* Fundo Gradiente sutil */}
       <div className="fixed inset-0 bg-[radial-gradient(circle_at_50%_-20%,#0f1026,transparent)] pointer-events-none" />
 
-      
-
       <div className="max-w-[1600px] mx-auto flex flex-col lg:flex-row gap-8 relative z-10">
-        
         {/* =========================================================================
-            1. NAVIGATION BAR LATERAL (DESKTOP & TABLET)
+            1. NAVIGATION BAR LATERAL (DESKTOP & TABLET - NO PRINT)
            ========================================================================= */}
-        <aside className="hidden lg:flex flex-col w-64 bg-[#090a14] border border-white/5 rounded-3xl p-4 h-fit sticky top-28 gap-2">
-          <div className="px-3 py-2 mb-4 border-b border-white/5 flex items-center gap-2">
+        <aside className="no-print hidden lg:flex flex-col w-64 bg-[#090a14] border border-white/5 rounded-3xl p-4 h-fit sticky top-28 gap-2 shadow-2xl">
+          <div className="px-3 py-2 mb-2 border-b border-white/5 flex items-center gap-2">
             <Trophy size={16} className="text-[#D4AF37]" />
-            <span className="font-black tracking-wider text-xs text-white/90">LIDERANÇA WEB3</span>
+            <span className="font-black tracking-wider text-xs text-white/90">
+              LIDERANÇA WEB3
+            </span>
           </div>
 
           {menuItems.map((item) => {
             const Icon = item.icon;
             const isActive = activeTab === item.id;
-            
-            let activeStyle = "bg-yellow-500 text-black shadow-[0_4px_20px_rgba(234,179,8,0.25)]";
-            if (item.id === "economia") activeStyle = "bg-blue-600 text-white shadow-[0_4px_20px_rgba(37,99,235,0.25)]";
-            if (item.id === "marketing") activeStyle = "bg-purple-600 text-white shadow-[0_4px_20px_rgba(147,51,234,0.25)]";
-            if (item.id === "analytics") activeStyle = "bg-emerald-600 text-white shadow-[0_4px_20px_rgba(16,185,129,0.25)]";
+
+            let activeStyle =
+              "bg-[#D4AF37] text-black shadow-[0_4px_20px_rgba(212,175,55,0.25)]";
+            if (item.id === "economia")
+              activeStyle =
+                "bg-blue-600 text-white shadow-[0_4px_20px_rgba(37,99,235,0.25)]";
+            if (item.id === "marketing")
+              activeStyle =
+                "bg-purple-600 text-white shadow-[0_4px_20px_rgba(147,51,234,0.25)]";
+            if (item.id === "analytics")
+              activeStyle =
+                "bg-emerald-600 text-white shadow-[0_4px_20px_rgba(16,185,129,0.25)]";
 
             return (
               <button
                 key={item.id}
-                onClick={() => setActiveTab(item.id)}
+                onClick={() => setActiveTab(item.id as any)}
                 className={`flex items-center gap-3 w-full px-4 py-3.5 rounded-xl text-xs font-bold tracking-wide uppercase transition-all duration-200 ${
-                  isActive ? activeStyle : "text-white/50 hover:bg-white/5 hover:text-white"
+                  isActive
+                    ? activeStyle
+                    : "text-white/50 hover:bg-white/5 hover:text-white"
                 }`}
               >
                 <Icon size={16} />
@@ -84,246 +131,263 @@ function EquipesContent() {
         </aside>
 
         {/* =========================================================================
-            CONTEÚDO DINÂMICO DA PÁGINA
+            2. CONTEÚDO DINÂMICO DA PÁGINA
            ========================================================================= */}
         <section className="flex-1 min-w-0 space-y-8">
-          
-          {/* HEADER PRINCIPAL */}
-          <div className="bg-[#090a14]/80 border border-white/5 rounded-3xl p-6 backdrop-blur-xl text-center lg:text-left">
-            <h1 className="text-2xl md:text-3xl font-extrabold text-[#D4AF37] tracking-wide">
-              Líder de Equipes — E-Coin
-            </h1>
-            <p className="text-gray-400 text-xs md:text-sm max-w-2xl mt-2">
-              Estrutura oficial de bonificações da Pré-Venda e Staking via telegram bot da moeda corporativa{" "}
-              <span className="text-[#D4AF37] font-semibold">E-Coin</span>.
-            </p>
+          {/* HEADER PRINCIPAL + BOTÃO PDF (NO PRINT PARA NAVEGAÇÃO) */}
+          <div className="bg-[#090a14]/80 border border-white/5 rounded-3xl p-6 backdrop-blur-xl flex flex-col md:flex-row md:items-center justify-between gap-6 shadow-2xl">
+            <div>
+              <h1 className="text-2xl md:text-3xl font-extrabold text-[#D4AF37] tracking-wide font-mono">
+                Líder de Equipes & Acionistas — E-Coin
+              </h1>
+              <p className="text-gray-400 text-xs md:text-sm max-w-2xl mt-1">
+                Arquitetura On-Chain de Distribuição de Bonificações via{" "}
+                <span className="text-[#D4AF37] font-semibold">
+                  Smart Contracts EVM
+                </span>{" "}
+                (3 Níveis de Afiliados).
+              </p>
+            </div>
+
+            <button
+              onClick={handleDownloadPDF}
+              className="no-print w-full md:w-auto px-6 py-3 bg-gradient-to-r from-[#D4AF37] to-[#B8860B] text-black font-bold font-mono text-xs uppercase tracking-wider rounded-xl shadow-[0_0_20px_rgba(212,175,55,0.3)] hover:brightness-110 active:scale-95 transition-all flex items-center justify-center gap-2 shrink-0"
+            >
+              <Download size={16} />
+              Exportar PDF On-Chain
+            </button>
           </div>
 
-          {/* CONTEÚDO DA ABA 1: ESTRUTURA E REDE */}
+          {/* =========================================================================
+              CONTEÚDO DA ABA 1: ESTRUTURA E REDE (3 NÍVEIS REAL)
+             ========================================================================= */}
           {activeTab === "estrutura" && (
-            <div className="space-y-12 animate-fadeIn">
+            <div ref={printRef} className="print-area space-y-10 animate-fadeIn">
+              {/* Visão de Explicação Anti-Drain & Regras */}
               <InfoBox />
+
+              {/* Cartões Resumo dos 3 Contratos */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <BonusCard
+                  title="Venda de Selos"
+                  percent="20.00%"
+                  levels="3 Níveis"
+                  items={[
+                    "Nível 1 (L1): 14.00% do valor total",
+                    "Nível 2 (L2): 4.00% do valor total",
+                    "Nível 3 (L3): 2.00% do valor total",
+                    "Pool Staking: 30% alocado direto",
+                  ]}
+                  color="from-[#D4AF37]/20 via-[#111] to-[#050505]"
+                  badgeText="Unified Mining"
+                />
+
+                <BonusCard
+                  title="Trading Engine"
+                  percent="20.00%"
+                  levels="3 Níveis"
+                  items={[
+                    "Nível 1 (L1): 15.00% da taxa cobrada",
+                    "Nível 2 (L2): 3.00% da taxa cobrada",
+                    "Nível 3 (L3): 2.00% da taxa cobrada",
+                    "Reserva Liquidez: 30% injeção",
+                  ]}
+                  color="from-cyan-500/20 via-[#111] to-[#050505]"
+                  badgeText="Trading Profit & ecGas"
+                />
+
+                <BonusCard
+                  title="Mining Claim Fee"
+                  percent="0.30%"
+                  levels="3 Níveis"
+                  items={[
+                    "Taxa Fixa de Saque: 1.00%",
+                    "Nível 1 (L1): 0.210% (70% do pool)",
+                    "Nível 2 (L2): 0.075% (25% do pool)",
+                    "Nível 3 (L3): 0.015% (5% do pool)",
+                  ]}
+                  color="from-fuchsia-500/20 via-[#111] to-[#050505]"
+                  badgeText="Claim Collector"
+                />
+              </div>
+
+              {/* Árvore Hierárquica */}
+              <LevelTree />
+
+              {/* Tabela On-Chain Detalhada */}
               <BonusTable />
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-4xl mx-auto">
-                <BonusCard
-                  title="Pré-Venda via telegram bot"
-                  percent="9%"
-                  levels="7 níveis"
-                  color="from-[#D4AF37] to-[#8d6f24]"
-                  items={[
-                    "5.10% — 1º nível",
-                    "1.10% — 2º nível",
-                    "1.00% — 3º nível",
-                    "0.90% — 4º nível",
-                    "0.50% — 5º nível",
-                    "0.30% — 6º nível",
-                    "0.10% — 7º nível",
-                  ]}
-                />
-                <BonusCard
-                  title="Staking via telegram bot"
-                  percent="1%"
-                  levels="2 níveis"
-                  color="from-[#444] to-[#222]"
-                  items={[
-                    "0.90% — 1º nível",
-                    "0.10% — 2º nível",
-                  ]}
-                />
-              </div>
 
-              <div className="w-full max-w-3xl mx-auto">
-                <LevelTree />
-              </div>
-
-              <div className="w-full max-w-5xl mx-auto grid md:grid-cols-2 gap-10">
+              {/* Painéis Interativos de Vinculação e Painel Pessoal */}
+              <div className="w-full grid md:grid-cols-2 gap-8 no-print">
                 <ReferralBindPanel />
                 <ReferralDashboard />
               </div>
 
-              <EcoinLeaderBoard />
+              {/* Leaderboard dos Melhores Líderes */}
+              <div className="no-print">
+                <EcoinLeaderBoard />
+              </div>
             </div>
           )}
 
-          {/* CONTEÚDO DA ABA 2: ECONOMIA REAL (E-SWAP & STAKING ENGINE) */}
+          {/* =========================================================================
+              CONTEÚDO DA ABA 2: ECONOMIA REAL (TOKENOMICS & EXACT CONTRACT FEES)
+             ========================================================================= */}
           {activeTab === "economia" && (
-            <div className="space-y-16 animate-fadeIn">
+            <div className="space-y-12 animate-fadeIn">
               <EcoinAdvantages />
 
-              {/* EFTE DEX (E-Swap) */}
-              <div className="w-full max-w-5xl mx-auto space-y-12">
-                <div className="text-center space-y-3">
-                  <h2 className="text-2xl md:text-3xl font-extrabold text-[#D4AF37]">
-                    🌐 EFTE DEX - E-Coin Converter (E-Swap) — Economia do Protocolo
+              {/* EFTE DEX & DADOS DE CONTRATOS */}
+              <div className="w-full space-y-8">
+                <div className="text-center space-y-2">
+                  <h2 className="text-2xl md:text-3xl font-extrabold text-[#D4AF37] font-mono">
+                    🌐 Arquitetura Tokenomics & CashFlow On-Chain
                   </h2>
-                  <p className="text-gray-400 max-w-3xl mx-auto text-sm">
-                    A E-Swap não distribui recompensas artificiais. Todo o rendimento do staking nasce do uso real do protocolo.
+                  <p className="text-gray-400 max-w-3xl mx-auto text-xs md:text-sm">
+                    Recompensas geradas por utilidade real de rede, sem emissão desenfreada de tokens sem lastro.
                   </p>
                 </div>
 
-                <div className="bg-[#0D0D0D]/80 border border-gray-800 rounded-2xl p-6 text-center">
-                  <p className="text-lg text-gray-200 font-medium">Quanto mais a rede é usada, mais valor circula.</p>
-                  <p className="text-gray-400 text-sm mt-2">O staking recebe recompensas continuamente através de CashFlow real gerado pelas transações.</p>
-                </div>
+                {/* TABELA REAL DE DISTRIBUIÇÃO DOS RECURSOS POR CONTRATO */}
+                <div className="bg-[#090a14] border border-white/10 rounded-2xl p-6 shadow-xl space-y-6">
+                  <h3 className="text-lg font-bold text-white flex items-center gap-2 font-mono">
+                    <Coins className="text-[#D4AF37]" size={20} />
+                    Matriz de Alocação por Contrato (Basis Points BP)
+                  </h3>
 
-                <div className="space-y-4">
-                  <h3 className="text-xl font-semibold text-[#3B82F6]">💰 O conceito de CashFlow On-Chain</h3>
-                  <p className="text-gray-400 text-sm">
-                    Sempre que alguém utiliza a DEX, parte das taxas geradas é automaticamente redirecionada para o sistema de recompensas através de contratos inteligentes auditáveis.
-                  </p>
-                </div>
-
-                {/* TAXAS DO PROTOCOLO */}
-                <div className="bg-[#0D0D0D]/80 border border-gray-800 rounded-xl p-6 space-y-4">
-                  <h3 className="text-lg font-semibold text-[#D4AF37]">💱 Taxas de Conversão da E-Swap</h3>
                   <div className="overflow-x-auto">
-                    <table className="w-full border border-gray-800 rounded-xl overflow-hidden text-sm">
-                      <thead className="bg-[#111]">
-                        <tr>
-                          <th className="px-4 py-3 text-left text-[#D4AF37]">Transação</th>
-                          <th className="px-4 py-3 text-left text-[#D4AF37]">Taxa</th>
-                          <th className="px-4 py-3 text-left text-[#D4AF37]">Descrição</th>
+                    <table className="w-full border-collapse text-xs sm:text-sm text-left">
+                      <thead>
+                        <tr className="bg-[#111] text-[#D4AF37] font-mono border-b border-white/10">
+                          <th className="py-3 px-4">Contrato Origem</th>
+                          <th className="py-3 px-4">Referral Pool (3 Níveis)</th>
+                          <th className="py-3 px-4">Staking Pool</th>
+                          <th className="py-3 px-4">Liquidez / Vault</th>
+                          <th className="py-3 px-4">Protocol Treasury</th>
                         </tr>
                       </thead>
-                      <tbody className="divide-y divide-gray-800">
+                      <tbody className="divide-y divide-white/5 text-gray-300">
                         <tr>
-                          <td className="px-4 py-3">USDT / EUSD → E-Coin</td>
-                          <td className="px-4 py-3 text-[#22C55E]">0.5%</td>
-                          <td className="px-4 py-3 text-gray-400">Entrada de liquidez no protocolo</td>
+                          <td className="py-3.5 px-4 font-bold text-white flex items-center gap-2">
+                            <Flame size={14} className="text-amber-500" /> UnifiedMiningCollector (Selos)
+                          </td>
+                          <td className="py-3.5 px-4 text-emerald-400 font-mono font-bold">20.0%</td>
+                          <td className="py-3.5 px-4 text-blue-400 font-mono">30.0%</td>
+                          <td className="py-3.5 px-4 text-cyan-400 font-mono">20.0%</td>
+                          <td className="py-3.5 px-4 text-white/60 font-mono">30.0%</td>
                         </tr>
                         <tr>
-                          <td className="px-4 py-3">E-Coin → USDT / EUSD</td>
-                          <td className="px-4 py-3 text-[#F59E0B]">2.5%</td>
-                          <td className="px-4 py-3 text-gray-400">Saída de liquidez do protocolo</td>
+                          <td className="py-3.5 px-4 font-bold text-white flex items-center gap-2">
+                            <ArrowDownUp size={14} className="text-cyan-500" /> TradingFeeCollector (ecGas)
+                          </td>
+                          <td className="py-3.5 px-4 text-emerald-400 font-mono font-bold">20.0%</td>
+                          <td className="py-3.5 px-4 text-blue-400 font-mono">30.0%</td>
+                          <td className="py-3.5 px-4 text-cyan-400 font-mono">30.0%</td>
+                          <td className="py-3.5 px-4 text-white/60 font-mono">20.0%</td>
                         </tr>
                         <tr>
-                          <td className="px-4 py-3">Claim de Staking</td>
-                          <td className="px-4 py-3 text-[#22C55E]">1%</td>
-                          <td className="px-4 py-3 text-gray-400">Taxa de distribuição de recompensas</td>
+                          <td className="py-3.5 px-4 font-bold text-white flex items-center gap-2">
+                            <Coins size={14} className="text-fuchsia-500" /> ECoinMiningFeeCollector (Claim)
+                          </td>
+                          <td className="py-3.5 px-4 text-emerald-400 font-mono font-bold">30.0% (da taxa 1%)</td>
+                          <td className="py-3.5 px-4 text-blue-400 font-mono">50.0% (Buffer)</td>
+                          <td className="py-3.5 px-4 text-cyan-400 font-mono">0.0%</td>
+                          <td className="py-3.5 px-4 text-white/60 font-mono">20.0%</td>
                         </tr>
                       </tbody>
                     </table>
                   </div>
                 </div>
 
-                {/* DISTRIBUIÇÃO DAS TAXAS */}
-                <div className="space-y-4">
-                  <h3 className="text-xl font-semibold text-[#3B82F6]">📊 Como as taxas são distribuídas</h3>
-                  <ul className="list-disc list-inside text-gray-300 space-y-2 text-sm">
-                    <li>20% → Treasury do protocolo</li>
-                    <li>30% → Buyback automático de E-Coin</li>
-                    <li>20% → Liquidity Vault</li>
-                    <li>10% → Reward Pool de Staking</li>
-                    <li>20% → Reserva estratégica</li>
-                  </ul>
+                {/* PAINEL PROTEÇÃO ANTI-DRAIN */}
+                <div className="bg-gradient-to-r from-red-950/30 via-[#0a0a0a] to-red-950/30 border border-red-500/30 rounded-2xl p-6 shadow-xl flex flex-col md:flex-row items-start md:items-center gap-4">
+                  <div className="p-3 bg-red-500/10 border border-red-500/30 rounded-xl text-red-400 shrink-0">
+                    <ShieldAlert size={28} />
+                  </div>
+                  <div>
+                    <h4 className="text-sm font-bold text-red-400 font-mono uppercase tracking-wide">
+                      Mecanismo de Proteção e Liquidez (EUSD Reserve Protection)
+                    </h4>
+                    <p className="text-xs text-gray-300 mt-1 leading-relaxed">
+                      Se o saldo da reserva em EUSD do contrato cair abaixo do limite de segurança de{" "}
+                      <strong className="text-white font-mono">10.000 EUSD</strong>, o Smart Contract ativa automaticamente a redução dinâmica de 50% (`dynamicReductionBP = 5000`) nas distribuições extraordinárias, garantindo solubilidade contínua para a rede.
+                    </p>
+                  </div>
                 </div>
               </div>
-
-              {/* STAKING REWARD ENGINE */}
-              <section className="relative overflow-hidden rounded-2xl border border-gray-800 bg-black/40 p-6 md:p-10">
-                <h3 className="text-xl font-semibold text-[#D4AF37] mb-4">💰 Staking Reward Engine</h3>
-                <p className="text-gray-400 text-sm mb-6">
-                  O protocolo utiliza um modelo de <strong>reward streaming buffer</strong> que leva 40% pagos no claiming de volta ao Reward Pool para um novo Círculo de redistribuição gradual.
-                </p>
-
-                {/* SINALIZADORES DE FLUXO */}
-                <div className="flex flex-col items-center space-y-3 mb-8 text-xs font-mono">
-                  <div className="bg-black/50 border border-white/10 rounded-xl px-6 py-2.5">Protocol Fees</div>
-                  <div className="text-[#D4AF37]">↓</div>
-                  <div className="bg-black/50 border border-white/10 rounded-xl px-6 py-2.5">Reward Buffer</div>
-                  <div className="text-[#D4AF37]">↓</div>
-                  <div className="bg-black/50 border border-white/10 rounded-xl px-6 py-2.5">Streaming Rewards</div>
-                  <div className="text-[#D4AF37]">↓</div>
-                  <div className="bg-black/50 border border-[#D4AF37]/40 rounded-xl px-6 py-2.5 text-[#D4AF37]">Stakers</div>
-                </div>
-
-                <h4 className="text-md font-semibold text-[#4ade80] mb-2">1️⃣ Claim Fee Redistribution</h4>
-                <div className="overflow-x-auto mb-6">
-                  <table className="w-full border-collapse text-xs border border-gray-800">
-                    <thead>
-                      <tr className="bg-[#D4AF37]/10 text-[#D4AF37]">
-                        <th className="border border-gray-700 px-4 py-2 text-left">Destino</th>
-                        <th className="border border-gray-700 px-4 py-2 text-left">Percentagem</th>
-                      </tr>
-                    </thead>
-                    <tbody className="text-gray-400">
-                      <tr><td className="border border-gray-700 px-4 py-2">Referral Rewards</td><td className="border border-gray-700 px-4 py-2">30%</td></tr>
-                      <tr><td className="border border-gray-700 px-4 py-2">Gas Pool</td><td className="border border-gray-700 px-4 py-2">20%</td></tr>
-                      <tr><td className="border border-gray-700 px-4 py-2">Reward Buffer</td><td className="border border-gray-700 px-4 py-2">40%</td></tr>
-                      <tr><td className="border border-gray-700 px-4 py-2">Treasury</td><td className="border border-gray-700 px-4 py-2">10%</td></tr>
-                    </tbody>
-                  </table>
-                </div>
-
-                <h4 className="text-md font-semibold text-[#facc15] mb-2">2️⃣ Staking Security Layer</h4>
-                <ul className="text-gray-400 list-disc list-inside space-y-1 text-sm">
-                  <li>Reward streaming buffer para evitar spikes</li>
-                  <li>Claim cooldown de 10 minutos</li>
-                  <li>Proteção contra flash staking e execução 100% on-chain</li>
-                </ul>
-              </section>
             </div>
           )}
 
-          {/* CONTEÚDO DA ABA 3: ESTÚDIO DE MARKETING & CONTEÚDOS AI */}
+          {/* =========================================================================
+              CONTEÚDO DA ABA 3: ESTÚDIO DE MARKETING & CONTEÚDOS AI
+             ========================================================================= */}
           {activeTab === "marketing" && (
-            <div className="space-y-12 animate-fadeIn">
+            <div className="space-y-12 animate-fadeIn no-print">
               <EcoinLeaderMarketingEngine />
               <EMarketingPage />
             </div>
           )}
 
-          {/* CONTEÚDO DA ABA 4: ANALYTICS & MAPEAMENTO */}
+          {/* =========================================================================
+              CONTEÚDO DA ABA 4: ANALYTICS & MAPEAMENTO DA COMUNIDADE
+             ========================================================================= */}
           {activeTab === "analytics" && (
-            <div className="space-y-12 animate-fadeIn">
+            <div className="space-y-12 animate-fadeIn no-print">
               <EcoinNetworkAnalytics />
               <EcoinCommunityMap />
             </div>
           )}
 
           {/* RODAPÉ */}
-          <div className="text-center text-gray-600 text-[10px] pt-12 border-t border-white/5 uppercase tracking-widest flex items-center justify-center gap-2">
-            <span>© EdenKingDom Corporation — E-Coin & E-Coin Converter (E-Swap) Network</span>
+          <footer className="text-center text-gray-600 text-[10px] pt-12 border-t border-white/5 uppercase tracking-widest flex items-center justify-center gap-2 font-mono">
+            <span>
+              © EdenKingDom Corporation — E-Coin Protocol & Unified Collector Network
+            </span>
             <BsStars className="text-yellow-600 animate-pulse" />
-          </div>
-
+          </footer>
         </section>
       </div>
 
       {/* =========================================================================
-            2. BOTTOM NAVIGATION BAR (FLUTUANTE PARA MOBILE / SMARTPHONE)
-           ========================================================================= */}
-      <nav className="lg:hidden fixed bottom-0 left-0 right-0 bg-[#090a14]/95 border-t border-white/10 backdrop-blur-md z-50 px-2 py-2 flex items-center justify-around">
+          3. BOTTOM NAVIGATION BAR (FLUTUANTE PARA MOBILE / SMARTPHONE - NO PRINT)
+         ========================================================================= */}
+      <nav className="no-print lg:hidden fixed bottom-0 left-0 right-0 bg-[#090a14]/95 border-t border-white/10 backdrop-blur-md z-50 px-2 py-2 flex items-center justify-around shadow-2xl">
         {menuItems.map((item) => {
           const Icon = item.icon;
           const isActive = activeTab === item.id;
-          
-          let selectColor = "text-yellow-500";
-          if (item.id === "economia") selectColor = "text-blue-500";
-          if (item.id === "marketing") selectColor = "text-purple-500";
-          if (item.id === "analytics") selectColor = "text-emerald-500";
 
           return (
             <button
               key={item.id}
-              onClick={() => setActiveTab(item.id)}
-              className={`flex flex-col items-center justify-center gap-1 flex-1 py-1 transition-all ${isActive ? selectColor : "text-white/40"}`}
+              onClick={() => setActiveTab(item.id as any)}
+              className={`flex flex-col items-center justify-center gap-1 flex-1 py-1 transition-all ${
+                isActive ? item.color : "text-white/40"
+              }`}
             >
-              <Icon size={18} className={isActive ? "scale-110 transition-transform" : ""} />
-              <span className="text-[10px] font-bold tracking-tight">{item.label}</span>
+              <Icon
+                size={18}
+                className={isActive ? "scale-110 transition-transform" : ""}
+              />
+              <span className="text-[10px] font-bold tracking-tight font-mono">
+                {item.label}
+              </span>
             </button>
           );
         })}
       </nav>
-
     </div>
   );
 }
 
 export default function EquipesPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-black flex items-center justify-center text-white font-mono text-xs">CARREGANDO PAINEL DE EQUIPES...</div>}>
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-black flex items-center justify-center text-white font-mono text-xs">
+          CARREGANDO PAINEL ON-CHAIN DE EQUIPES...
+        </div>
+      }
+    >
       <EquipesContent />
     </Suspense>
   );
