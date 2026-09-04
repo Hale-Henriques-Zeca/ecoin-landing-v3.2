@@ -4,7 +4,7 @@ import { useState, useMemo, useRef } from "react";
 import QRCode from "react-qr-code";
 import { Copy, Download, Share2, Send, MessageSquare, Twitter, LogOut, Wallet } from "lucide-react";
 import { useAccount, useDisconnect, useWriteContract, usePublicClient } from "wagmi";
-import { ConnectButton } from '@rainbow-me/rainbowkit';
+import { ConnectButton } from "@rainbow-me/rainbowkit";
 
 // Contextos e Componentes Internos
 import { useDexWallet } from "@/contexts/DexWalletContext";
@@ -12,7 +12,7 @@ import EcoinWalletDashboard from "@/components/EcoinWalletDashboard";
 
 export default function EcoinLeaderMarketingEngine() {
   /* ==========================================================================
-     1. WALLET HOOKS & CONTEXTS (Sempre no topo)
+     1. WALLET HOOKS & CONTEXTS
      ========================================================================== */
   const { isConnected, address } = useAccount();
   const { disconnect } = useDisconnect();
@@ -164,46 +164,46 @@ export default function EcoinLeaderMarketingEngine() {
   };
 
   /* ==========================================================================
-     5. RENDERIZAÇÃO DO COMPONENTE (INTERFACE DE USUÁRIO)
+     5. RENDERIZAÇÃO DO COMPONENTE
      ========================================================================== */
   return (
-    <div className="w-full max-w-6xl mx-auto bg-zinc-950/40 backdrop-blur-md border border-zinc-800 rounded-2xl p-6 md:p-10 my-10 shadow-2xl">
+    <div className="w-full max-w-6xl mx-auto bg-zinc-950/40 backdrop-blur-md border border-zinc-800/80 rounded-2xl p-4 sm:p-6 md:p-10 my-4 sm:my-10 shadow-2xl overflow-hidden box-border">
       
       {/* HEADER SECTION */}
-      <div className="text-center mb-10">
-        <h2 className="text-3xl md:text-4xl font-bold text-[#D4AF37] tracking-wide mb-4">
+      <div className="text-center mb-6 sm:mb-10">
+        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#D4AF37] tracking-wide mb-3 sm:mb-4">
           🚀 E-Coin Leader Marketing Engine
         </h2>
-        <p className="text-zinc-400 max-w-2xl mx-auto text-sm md:text-base">
+        <p className="text-zinc-400 max-w-2xl mx-auto text-xs sm:text-sm md:text-base px-2">
           Ferramentas avançadas para líderes promoverem o ecossistema E-Coin através de links Web3 estruturados, QR Codes institucionais e conteúdos prontos para conversão.
         </p>
       </div>
 
       {/* WALLET STATUS BAR */}
-      <div className="bg-zinc-900/60 border border-zinc-800 rounded-xl p-4 mb-8 flex flex-col sm:flex-row items-center justify-between gap-4">
-        <div className="flex items-center gap-3">
-          <div className="p-2 rounded-lg bg-[#D4AF37]/10 text-[#D4AF37]">
+      <div className="bg-zinc-900/60 border border-zinc-800 rounded-xl p-3.5 sm:p-4 mb-6 sm:mb-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div className="flex items-center gap-3 w-full sm:w-auto">
+          <div className="p-2 rounded-lg bg-[#D4AF37]/10 text-[#D4AF37] shrink-0">
             <Wallet size={20} />
           </div>
-          <div>
-            <h4 className="text-xs text-zinc-500 font-medium uppercase tracking-wider">Status de Liderança</h4>
-            <p className="text-sm font-semibold text-zinc-200">
+          <div className="min-w-0">
+            <h4 className="text-[10px] sm:text-xs text-zinc-500 font-medium uppercase tracking-wider">Status de Liderança</h4>
+            <p className="text-xs sm:text-sm font-semibold text-zinc-200 truncate">
               {isConnected ? "Sessão Web3 Ativa" : "Aguardando Conexão de Líder"}
             </p>
           </div>
         </div>
 
-        <div>
+        <div className="w-full sm:w-auto flex justify-end shrink-0">
           {!isConnected ? (
             <ConnectButton label="Conectar Carteira de Líder" showBalance={false} />
           ) : (
-            <div className="flex items-center gap-3">
-              <span className="text-xs px-3 py-1.5 rounded-full font-mono font-medium text-amber-400 bg-amber-500/10 border border-amber-500/20">
+            <div className="flex items-center gap-2 sm:gap-3 w-full sm:w-auto justify-between sm:justify-start">
+              <span className="text-xs px-3 py-1.5 rounded-full font-mono font-medium text-amber-400 bg-amber-500/10 border border-amber-500/20 truncate">
                 {address?.slice(0, 6)}...{address?.slice(-4)}
               </span>
               <button
                 onClick={() => disconnect()}
-                className="flex items-center gap-1.5 text-xs text-red-400 hover:text-red-300 transition bg-red-500/10 border border-red-500/20 px-3 py-1.5 rounded-full font-medium"
+                className="flex items-center gap-1.5 text-xs text-red-400 hover:text-red-300 transition bg-red-500/10 border border-red-500/20 px-3 py-1.5 rounded-full font-medium shrink-0"
               >
                 <LogOut size={13} />
                 Sair
@@ -214,20 +214,22 @@ export default function EcoinLeaderMarketingEngine() {
       </div>
 
       {/* GRID PRINCIPAL DE MAILING E CONVERSÃO */}
-      <div className="grid lg:grid-cols-2 gap-8">
+      <div className="grid lg:grid-cols-2 gap-6 sm:gap-8">
         
         {/* COLUNA ESQUERDA: LINKS DE AFILIADO & ARTE DIGITAL */}
-        <div className="bg-zinc-900/40 border border-zinc-800/80 rounded-xl p-6 flex flex-col justify-between">
-          <div>
-            <h3 className="text-lg font-semibold text-[#D4AF37] mb-2 flex items-center gap-2">
+        <div className="bg-zinc-900/40 border border-zinc-800/80 rounded-xl p-4 sm:p-6 flex flex-col justify-between min-w-0">
+          <div className="min-w-0">
+            <h3 className="text-base sm:text-lg font-semibold text-[#D4AF37] mb-2 flex items-center gap-2">
               <span>🔗</span> Link de Referência Único
             </h3>
             <p className="text-xs text-zinc-400 mb-4">
               Use este link para registrar sua rede direta. Seus bônus de rede e participação serão vinculados on-chain a este endereço.
             </p>
 
-            <div className="bg-black/40 border border-zinc-800 rounded-xl p-4 font-mono text-sm break-all text-zinc-300 selection:bg-[#D4AF37]/30 min-h-[52px] flex items-center">
-              {isConnected ? referralLink : <span className="text-zinc-600 italic">Conecte sua carteira para gerar o link</span>}
+            <div className="bg-black/40 border border-zinc-800 rounded-xl p-3 sm:p-4 font-mono text-xs sm:text-sm text-zinc-300 selection:bg-[#D4AF37]/30 min-h-[52px] flex items-center min-w-0 overflow-hidden">
+              <span className="break-all w-full">
+                {isConnected ? referralLink : <span className="text-zinc-600 italic">Conecte sua carteira para gerar o link</span>}
+              </span>
             </div>
           </div>
 
@@ -253,8 +255,8 @@ export default function EcoinLeaderMarketingEngine() {
         </div>
 
         {/* COLUNA DIREITA: ENDEREÇO BEP20 & QR CODE DE DEPÓSITO/REGISTRO */}
-        <div className="bg-zinc-900/40 border border-zinc-800/80 rounded-xl p-6 text-center flex flex-col items-center justify-center">
-          <h3 className="text-lg font-semibold text-[#D4AF37] mb-2 self-start flex items-center gap-2">
+        <div className="bg-zinc-900/40 border border-zinc-800/80 rounded-xl p-4 sm:p-6 text-center flex flex-col items-center justify-center min-w-0">
+          <h3 className="text-base sm:text-lg font-semibold text-[#D4AF37] mb-2 self-start flex items-center gap-2">
             <span>🏦</span> Identidade BEP20 On-Chain
           </h3>
           <p className="text-xs text-zinc-400 mb-6 self-start text-left">
@@ -262,9 +264,10 @@ export default function EcoinLeaderMarketingEngine() {
           </p>
 
           {isConnected ? (
-            <div className="w-full flex flex-col items-center">
-              <div className="bg-black/30 border border-zinc-800 rounded-xl px-4 py-2.5 font-mono text-xs text-zinc-400 break-all w-full max-w-md mb-6 flex items-center justify-between gap-2">
-                <span className="truncate">{address}</span>
+            <div className="w-full flex flex-col items-center min-w-0">
+              {/* ENDEREÇO COM TRUNCATE E BOTÃO DE CÓPIA FIXO */}
+              <div className="bg-black/30 border border-zinc-800 rounded-xl px-3 sm:px-4 py-2.5 font-mono text-xs text-zinc-400 w-full max-w-md mb-6 flex items-center justify-between gap-2 min-w-0">
+                <span className="truncate min-w-0 flex-1 text-left">{address}</span>
                 <button 
                   onClick={copyAddress} 
                   className="text-[#D4AF37] hover:text-amber-400 p-1 rounded transition shrink-0"
@@ -274,10 +277,15 @@ export default function EcoinLeaderMarketingEngine() {
                 </button>
               </div>
 
-              {/* QR CODE WRAPPER */}
-              <div className="bg-white p-3.5 rounded-xl shadow-xl inline-block transition-transform hover:scale-[1.02] duration-300">
-                <div ref={qrRef}>
-                  <QRCode value={address} size={180} level="H" />
+              {/* QR CODE FLUIDO E RESPONSIVO */}
+              <div className="bg-white p-3 sm:p-4 rounded-xl shadow-xl inline-block transition-transform hover:scale-[1.02] duration-300 max-w-full">
+                <div ref={qrRef} className="w-full flex justify-center">
+                  <QRCode 
+                    value={address} 
+                    size={180} 
+                    level="H" 
+                    style={{ height: "auto", maxWidth: "100%", width: "100%" }}
+                  />
                 </div>
               </div>
               <p className="text-[11px] text-zinc-500 mt-3 font-medium">
@@ -293,26 +301,26 @@ export default function EcoinLeaderMarketingEngine() {
       </div>
 
       {/* SEÇÃO 6: BALANCES & INTEGRATED METRICS DASHBOARD */}
-      <div className="mt-8 bg-zinc-900/20 border border-zinc-800/60 rounded-xl p-4">
+      <div className="mt-6 sm:mt-8 bg-zinc-900/20 border border-zinc-800/60 rounded-xl p-3 sm:p-4 overflow-hidden">
         <EcoinWalletDashboard />
       </div>
 
       {/* SEÇÃO 7: COPYWRITING HUB & COMPARTILHAMENTO EM REDES SOCIAIS */}
       {isConnected && (
-        <div className="mt-8 border-t border-zinc-800/80 pt-8">
-          <h3 className="text-xl font-semibold text-[#D4AF37] mb-4 flex items-center gap-2">
+        <div className="mt-6 sm:mt-8 border-t border-zinc-800/80 pt-6 sm:pt-8 min-w-0">
+          <h3 className="text-lg sm:text-xl font-semibold text-[#D4AF37] mb-4 flex items-center gap-2">
             <span>📢</span> Kit de Divulgação para Líderes
           </h3>
           
           <div className="grid lg:grid-cols-3 gap-6">
             
             {/* TEXT BOX PRE-MADE */}
-            <div className="lg:col-span-2 bg-black/50 border border-zinc-800 rounded-xl p-5 relative flex flex-col justify-between">
-              <div>
-                <span className="absolute top-3 right-3 text-[10px] uppercase font-bold tracking-widest text-zinc-600 bg-zinc-900 px-2 py-0.5 rounded border border-zinc-800">
+            <div className="lg:col-span-2 bg-black/50 border border-zinc-800 rounded-xl p-4 sm:p-5 relative flex flex-col justify-between min-w-0">
+              <div className="min-w-0">
+                <span className="inline-block sm:absolute top-3 right-3 text-[10px] uppercase font-bold tracking-widest text-zinc-600 bg-zinc-900 px-2 py-0.5 rounded border border-zinc-800 mb-2 sm:mb-0">
                   Copywriting Pronto
                 </span>
-                <p className="text-sm text-zinc-300 font-sans whitespace-pre-line leading-relaxed pt-2 pr-12 select-all">
+                <p className="text-xs sm:text-sm text-zinc-300 font-sans whitespace-pre-line leading-relaxed sm:pt-2 sm:pr-12 select-all break-words">
                   {marketingText}
                 </p>
               </div>
@@ -320,7 +328,7 @@ export default function EcoinLeaderMarketingEngine() {
               <div className="flex flex-wrap gap-3 mt-6 pt-4 border-t border-zinc-900">
                 <button
                   onClick={copyMarketing}
-                  className="px-5 py-2 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-200 text-xs font-semibold flex items-center gap-2 transition active:scale-95"
+                  className="px-4 sm:px-5 py-2 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-200 text-xs font-semibold flex items-center gap-2 transition active:scale-95 flex-1 sm:flex-none justify-center"
                 >
                   <Copy size={14} />
                   {copiedText ? "Texto Copiado!" : "Copiar Texto Base"}
@@ -328,7 +336,7 @@ export default function EcoinLeaderMarketingEngine() {
 
                 <button
                   onClick={shareMarketing}
-                  className="px-5 py-2 rounded-xl border border-green-500/30 hover:border-green-500 bg-green-500/5 text-green-400 hover:text-green-300 text-xs font-semibold flex items-center gap-2 transition"
+                  className="px-4 sm:px-5 py-2 rounded-xl border border-green-500/30 hover:border-green-500 bg-green-500/5 text-green-400 hover:text-green-300 text-xs font-semibold flex items-center gap-2 transition flex-1 sm:flex-none justify-center"
                 >
                   <Share2 size={14} />
                   Compartilhamento Nativo
@@ -337,8 +345,8 @@ export default function EcoinLeaderMarketingEngine() {
             </div>
 
             {/* QUICK SOCIAL SHARE LINKS */}
-            <div className="flex flex-col gap-3 justify-between">
-              <div className="bg-zinc-900/40 border border-zinc-800 rounded-xl p-4 flex-1 flex flex-col justify-center">
+            <div className="flex flex-col gap-3 justify-between min-w-0">
+              <div className="bg-zinc-900/40 border border-zinc-800 rounded-xl p-4 flex-1 flex flex-col justify-center min-w-0">
                 <p className="text-xs font-medium text-zinc-400 mb-4 text-center">
                   Compartilhamento direto via API oficial das redes:
                 </p>
