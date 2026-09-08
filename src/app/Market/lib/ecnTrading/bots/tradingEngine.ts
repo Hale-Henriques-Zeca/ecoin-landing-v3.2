@@ -1,0 +1,48 @@
+import { TradingBotPerformance } from '../../../types/ecnTrading';
+
+export const INITIAL_BOT_PERFORMANCE: TradingBotPerformance[] = [
+  {
+    id: 'usdt-bot',
+    name: 'USDT AI BOT',
+    asset: 'USDT',
+    capital: 100000,
+    profitToday: 842,
+    profitWeek: 5931,
+    profitMonth: 22410,
+    profitYear: 184920,
+    isLive: true,
+  },
+  {
+    id: 'eusd-bot',
+    name: 'EUSD AI BOT',
+    asset: 'EUSD',
+    capital: 50000,
+    profitToday: 391,
+    profitWeek: 2844,
+    profitMonth: 11208,
+    profitYear: 91320,
+    isLive: true,
+  },
+  {
+    id: 'ecoin-bot',
+    name: 'E-COIN AI BOT',
+    asset: 'ECOIN',
+    capital: 10000000,
+    profitToday: 84000,
+    profitWeek: 590000,
+    profitMonth: 2100000,
+    profitYear: 18400000,
+    isLive: true,
+  },
+  {
+    id: 'bnb-bot',
+    name: 'BNB AI BOT',
+    asset: 'BNB',
+    capital: 100,
+    profitToday: 0.81,
+    profitWeek: 5.42,
+    profitMonth: 21.7,
+    profitYear: 183,
+    isLive: true,
+  },
+];

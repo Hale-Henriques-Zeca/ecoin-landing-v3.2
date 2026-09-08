@@ -26,6 +26,7 @@ import {
   PiggyBank,
   Wallet,
   Download,
+  
 } from "lucide-react";
 
 const navLinks = [
@@ -38,8 +39,9 @@ const navLinks = [
     icon: Wallet,
   },
   { name: "Importar E-Coin", href: "/import-guide", icon: Download },
-  { name: "ShareHolder", href: "/eCoin-ShareHolder", icon: PiggyBank },
+  { name: "HolderShare", href: "/eCoin-ShareHolder", icon: PiggyBank },
   { name: "Converter", href: "/ecoin-converter", icon: ArrowLeftRight },
+  { name: "Market", href: "/Market", icon: CandlestickChart },
   { name: "Trading AI", href: "/ecoin-ai-trading", icon: Bot },
   { name: "Investir", href: "/ecoin-rewards", icon: TrendingUp },
   { name: "Acionistas", href: "https://eshare.edenkingdom.org", external: true, icon: Users },
