@@ -44,7 +44,7 @@ export const DesktopBarAdapter: React.FC<DesktopBarAdapterProps> = ({
       <div className="flex items-center gap-3 px-3">
         <span className="flex items-center gap-1.5 text-xs text-emerald-400 bg-emerald-950/60 border border-emerald-500/30 px-3 py-1 rounded-full font-mono">
           <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-          ECN NETWORK: ACTIVE
+          ecnTrading NETWORK: ACTIVE
         </span>
       </div>
     </nav>
