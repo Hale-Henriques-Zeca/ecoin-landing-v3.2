@@ -23,7 +23,7 @@ export const CapitalPoolCard: React.FC<CapitalPoolCardProps> = ({ pool }) => {
           <h3 className="text-base font-bold text-white tracking-wide">
             {pool.poolAsset} Capital Pool
           </h3>
-          <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-slate-800 text-slate-300 border border-slate-700">
+          <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-slate-800 text-slate-300 border border-slate-700">
             {pool.poolAsset}
           </span>
         </div>
@@ -31,7 +31,7 @@ export const CapitalPoolCard: React.FC<CapitalPoolCardProps> = ({ pool }) => {
         <div className="space-y-2.5 my-4">
           <div className="flex justify-between items-center text-xs">
             <span className="text-slate-400 font-medium">Available</span>
-            <span className="font-bold text-slate-100">{formatVal(pool.available)}</span>
+            <span className="font-bold text-white">{formatVal(pool.available)}</span>
           </div>
           <div className="flex justify-between items-center text-xs">
             <span className="text-slate-400 font-medium">In Trading</span>
@@ -43,12 +43,20 @@ export const CapitalPoolCard: React.FC<CapitalPoolCardProps> = ({ pool }) => {
           </div>
           <div className="flex justify-between items-center text-xs pt-2 border-t border-slate-800">
             <span className="text-slate-400 font-medium">Total Realized Profit</span>
-            <span className="font-extrabold text-emerald-400">+{formatVal(pool.totalProfit)}</span>
+            <span className="font-black text-emerald-400">+{formatVal(pool.totalProfit)}</span>
           </div>
         </div>
+
+        <PoolCapitalChart pool={pool} />
       </div>
 
-      <PoolCapitalChart pool={pool} />
+      <a
+        href="/ecoin-rewards"
+        className="w-full text-center py-2.5 px-4 rounded-xl bg-amber-500/10 hover:bg-amber-500 text-amber-400 hover:text-slate-950 font-bold text-xs border border-amber-500/30 transition-all duration-200 flex items-center justify-center gap-1.5 shadow-sm"
+      >
+        <span>Invest & Earn</span>
+        <span>↗</span>
+      </a>
     </div>
   );
 };

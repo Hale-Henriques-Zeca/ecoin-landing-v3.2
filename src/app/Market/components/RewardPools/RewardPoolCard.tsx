@@ -66,9 +66,17 @@ export const RewardPoolCard: React.FC<RewardPoolCardProps> = ({ pool }) => {
             {pool.mechanism}
           </span>
         </div>
+
+        <RewardDistributionChart pool={pool} />
       </div>
 
-      <RewardDistributionChart pool={pool} />
+      <a
+        href="/ecoin-rewards"
+        className="w-full text-center py-2.5 px-4 rounded-xl bg-amber-500/10 hover:bg-amber-500 text-amber-400 hover:text-slate-950 font-bold text-xs border border-amber-500/30 transition-all duration-200 flex items-center justify-center gap-1.5 shadow-sm"
+      >
+        <span>Invest & Earn {pool.rewardAsset}</span>
+        <span>↗</span>
+      </a>
     </div>
   );
 };

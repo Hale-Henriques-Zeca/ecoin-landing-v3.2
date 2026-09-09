@@ -565,20 +565,7 @@ const shareNum = Number(staking.share || 0);
 
 <div className="grid grid-cols-2 gap-4">
 <button
-onClick={async () => {
-  try {
-    if (!stakeInput.isValid) {
-      alert("Valor inválido");
-      return;
-    }
 
-    
-
-    await staking.stake(stakeInput.value);
-  } catch (e: any) {
-    alert(e?.message || "Erro no Poupar");
-  }
-}}
 className="py-4 rounded-2xl font-black text-black bg-gradient-to-r from-[#D4AF37] to-[#F3BA2F] hover:brightness-110 transition uppercase tracking-wider text-xs"
 >
 POUPAR
