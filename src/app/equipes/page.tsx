@@ -334,7 +334,6 @@ function EquipesContent() {
           {activeTab === "analytics" && (
             <div className="space-y-12 animate-fadeIn no-print">
               <EcoinNetworkAnalytics />
-              <EcoinCommunityMap />
             </div>
           )}
 

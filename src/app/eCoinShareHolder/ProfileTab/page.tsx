@@ -20,8 +20,8 @@ import { useAccount } from "wagmi";
 import { TeamLeaderCTA } from "@/components/CTA/TeamLeaderCTA/TeamLeaderCTA";
 import SimulatorRedirectCard from "@/components/Cards/SimulatorRedirectCard";
 import ProfitSimulatorCard from "@/components/Cards/ProfitSimulatorCard";
-import ReferralCodePanel from "@/components/ReferralCodePanel";
-import AdminPage from "@/components/AdminPage";
+import ReferralCodePanel from "@/components/mining/eDollar/MiningMainPage/Components/ReferralCodePanel";
+import AdminPage from "@/components/mining/eDollar/MiningMainPage/Components/AdminPage";
 
 type TabType =
   | "lideranca"
@@ -116,7 +116,7 @@ export default function ProfileTabPage() {
           className="flex items-center justify-between border-b border-white/10 pb-4 px-2"
         >
           <button
-            onClick={() => router.push("/eCoin-ShareHolder")}
+            onClick={() => router.push("/eCoinShareHolder")}
             className="group flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-white/80 hover:text-white hover:bg-white/10 hover:border-[#D4AF37]/50 transition-all duration-300 active:scale-95 cursor-pointer"
           >
             <ArrowLeft size={18} className="text-[#D4AF37] group-hover:-translate-x-1 transition-transform" />

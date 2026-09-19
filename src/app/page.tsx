@@ -39,6 +39,9 @@ import ECoinFutureSimulatorInfo from "@/components/ECoinFutureSimulatorInfo";
 import BuyBackEngineChart from "@/app/BuyBackEngineChart";
 import CareersPage from "@/app/CareersPage";
 
+// 5. MobileBar
+import HomePageMobileBar from "@/components/HomePageMobileBar";
+
 const SectionDivider = ({ label, id }: { label: string; id?: string }) => (
   <div id={id} className="relative z-10 mt-14 mb-10 flex items-center gap-4 scroll-mt-28">
     <div className="h-px flex-1 bg-gradient-to-r from-transparent via-[#D4AF37]/40 to-transparent" />
@@ -88,7 +91,10 @@ export default function Home() {
 
       {/* Renderização condicional para evitar erro de servidor */}
       {isClient && <FloatingDashboardMenu />}
+
+      <HomePageMobileBar />
     </>
+    
   );
 }
 
@@ -199,5 +205,7 @@ function FloatingDashboardMenu() {
         </button>
       </motion.div>
     </>
+
+    
   );
 }

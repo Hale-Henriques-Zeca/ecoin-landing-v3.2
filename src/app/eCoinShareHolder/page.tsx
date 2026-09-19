@@ -236,7 +236,7 @@ export default function MiningPortal() {
                 de Acionistas & Suportadores da Moeda & Activo Digital <span className="text-[#D4AF37]">eCoin</span> <br />
               </h1>
               <p className="text-gray-400 text-sm md:text-base max-w-lg mx-auto leading-relaxed">
-                Participe da distribuição global de taxas do ecossistema e lucros realizados pelo <span className="text-[#D4AF37]">ecnTrading DEX</span> <br /> AI trading robot. Escolha o pool de AI trading abaixo para visualizar as métricas e conectar-se.
+                Participe da distribuição global de taxas do ecossistema e lucros realizados pelo <span className="text-[#D4AF37]">ecnTrading DEX</span> <br /> - On-Chain AI trading robot no mercado descentralizado via WEB3. Escolha o pool de AI trading abaixo para visualizar as métricas e conectar-se.
               </p>
             </motion.div>
 

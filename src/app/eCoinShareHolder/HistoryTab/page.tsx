@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { ArrowLeft, History } from "lucide-react";
 
-import MiningHistoryPanel from "@/components/MiningHistoryPanel";
+import MiningHistoryPanel from "@/components/mining/eDollar/MiningMainPage/Components/MiningHistoryPanel";
 
 export default function HistoryTabPage() {
   const router = useRouter();
@@ -19,7 +19,7 @@ export default function HistoryTabPage() {
         className="flex items-center justify-between border-b border-white/10 pb-4"
       >
         <button
-          onClick={() => router.push("/eCoin-ShareHolder")}
+          onClick={() => router.push("/eCoinShareHolder")}
           className="group flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-white/80 hover:text-white hover:bg-white/10 hover:border-[#D4AF37]/50 transition-all duration-300 active:scale-95"
         >
           <ArrowLeft size={18} className="text-[#D4AF37] group-hover:-translate-x-1 transition-transform" />

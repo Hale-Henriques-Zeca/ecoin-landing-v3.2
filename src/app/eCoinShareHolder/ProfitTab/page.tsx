@@ -7,7 +7,7 @@ import { ArrowLeft, Gift } from "lucide-react";
 import { useAccount, useReadContract } from "wagmi";
 import { formatUnits } from "viem";
 
-import RecompensasTab from "@/components/mining/RecompensasTab";
+import RecompensasTab from "@/components/mining/eDollar/RecompensasTab";
 
 import { CONTRACTS } from "@/lib/contracts/contracts";
 import { miningStakingAbi } from "@/lib/abis/miningStakingAbi";

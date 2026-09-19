@@ -7,7 +7,7 @@ import { ArrowLeft, BarChart3 } from "lucide-react";
 import { useAccount, useReadContract } from "wagmi";
 import { formatUnits } from "viem";
 
-import AnalyticsTab from "@/components/mining/AnalyticsTab";
+import AnalyticsTab from "@/components/mining/eDollar/AnalyticsTab";
 
 import { useMiningStaking } from "@/hooks/useMiningStaking";
 import { useOverflowAnalytics } from "@/hooks/useOverflowAnalytics";

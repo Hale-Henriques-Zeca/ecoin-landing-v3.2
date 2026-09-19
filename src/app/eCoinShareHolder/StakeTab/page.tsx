@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { ArrowLeft, Coins } from "lucide-react";
 
-import StakeTab from "@/components/mining/StakeTab";
+import StakeTab from "@/components/mining/eDollar/StakeTab";
 
 export default function StakeTabPage() {
   const router = useRouter();
