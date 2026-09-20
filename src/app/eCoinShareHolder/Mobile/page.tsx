@@ -24,7 +24,7 @@ export default function MobilePage() {
     <div className="min-h-screen bg-[#0B0E14] text-white pb-24 px-4 pt-2 select-none">
       {/* Cabeçalho do App Mobile */}
       <MobileHeader 
-        title="E-Coin Trading" 
+        title="EcnTrading DEX Markets" 
         subtitle="ShareHolder Dashboard" 
       />
 

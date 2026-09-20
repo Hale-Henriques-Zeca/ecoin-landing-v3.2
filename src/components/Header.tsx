@@ -4,7 +4,6 @@ import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import LanguageSelector from "@/components/language/components/dropdown/LanguageSelector";
-import EcoinWalletModal from "@/components/EcoinWalletModal";
 import {
   Home,
   ArrowLeftRight,
@@ -26,12 +25,10 @@ import {
   PiggyBank,
   Wallet,
   Download,
-  
 } from "lucide-react";
 
 const navLinks = [
   { name: "Home", href: "/", icon: Home },
-  { name: "Balance", isModal: true }, // Marcado como modal flutuante
   {
     name: "Wallet",
     href: "/eCoinCloudWallet",
@@ -42,7 +39,7 @@ const navLinks = [
   { name: "ShareHolder", href: "/eCoinShareHolder", icon: PiggyBank },
   { name: "Converter", href: "/ecoin-converter", icon: ArrowLeftRight },
   { name: "Market", href: "/Market", icon: CandlestickChart },
-  { name: "Trading AI", href: "/eCoinShareHolder/ProfitPosition", icon: Bot },
+  { name: "Trading AI", href: "/eCoinShareHolder/Mobile", icon: Bot },
   { name: "Investir", href: "/ecoin-rewards", icon: TrendingUp },
   { name: "Acionistas", href: "https://eshare.edenkingdom.org", external: true, icon: Users },
   { name: "Lei", href: "https://elaw.edenkingdom.org", external: true, icon: Scale },
@@ -52,7 +49,6 @@ const navLinks = [
   { name: "Marketing", href: "https://emarketing.edenkingdom.org", external: true, icon: Megaphone },
   { name: "Agricultura", href: "https://efarm.edenkingdom.org", external: true, icon: Sprout },
   { name: "Exchange", href: "https://efte.edenkingdom.org/", external: true, icon: CandlestickChart },
-  { name: "Líder de equipes", href: "/equipes", icon: Crown },
 ];
 
 export default function Header() {
@@ -125,14 +121,6 @@ export default function Header() {
           {/* CENTER — DESKTOP NAV */}
           <nav className="hidden xl:flex flex-1 justify-start items-center gap-1 overflow-x-auto scrollbar-hide">
             {navLinks.map((link) => {
-              if (link.isModal) {
-                return (
-                  <div key={link.name} className="px-1">
-                    <EcoinWalletModal />
-                  </div>
-                );
-              }
-
               const Icon = link.icon;
               const inner = (
                 <span className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-[9.5px] font-bold uppercase tracking-wider text-[#D4AF37]/70 hover:text-[#D4AF37] hover:bg-[#D4AF37]/8 border border-transparent hover:border-[#D4AF37]/20 transition-all duration-200 group/link whitespace-nowrap">
@@ -204,14 +192,6 @@ export default function Header() {
 
             <div className="grid grid-cols-2 gap-2 px-4 pb-6">
               {navLinks.map((link) => {
-                if (link.isModal) {
-                  return (
-                    <div key={link.name} className="col-span-2 py-1 flex justify-center" onClick={() => setOpen(false)}>
-                      <EcoinWalletModal />
-                    </div>
-                  );
-                }
-
                 const Icon = link.icon;
                 const inner = (
                   <span

@@ -11,7 +11,7 @@ export default function MobileBar() {
     { label: 'Bot', href: '/eCoinShareHolder/Mobile/bot', icon: Bot },
     { label: 'Running Bot', href: '/eCoinShareHolder/Mobile/running-bot', icon: Zap },
     { label: 'Profit', href: '/eCoinShareHolder/Mobile/profit', icon: DollarSign },
-    { label: 'Início', href: '/eCoinShareHolder/Mobile/home', icon: Home },
+    { label: 'Início', href: '/eCoinShareHolder/Mobile', icon: Home },
     { label: 'Assets', href: '/eCoinShareHolder/Mobile/assets', icon: Wallet },
   ];
 

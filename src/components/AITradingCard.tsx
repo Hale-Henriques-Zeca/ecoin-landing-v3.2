@@ -64,7 +64,7 @@ export default function AITradingCard() {
 
           {/* 🔹 BUTTON */}
           <Link
-            href="/ecoin-ai-trading"
+            href="/eCoinShareHolder/Mobile"
             className="
               mt-2 flex items-center justify-center gap-3
               py-4 rounded-2xl font-black text-xs
