@@ -2,7 +2,7 @@
 
 import React, { useEffect } from 'react';
 import Link from 'next/link';
-import { Wallet, Store, Bot, Settings, ArrowRightLeft, Sparkles, ShieldCheck, HelpCircle } from 'lucide-react';
+import { Wallet, Store, Bot, Settings, ArrowRightLeft, Sparkles, PiggyBank, ShieldCheck, HelpCircle } from 'lucide-react';
 
 interface QuickActionsSheetProps {
   isOpen: boolean;
@@ -51,14 +51,14 @@ const HOME_QUICK_ACTIONS = [
       {
         title: "Neural AI Arbitrage",
         desc: "Painel de arbitragem cruzada de IA",
-        href: "#neural-arbitrage",
+        href: "/eCoinShareHolder/ecnTradingDEXBot",
         icon: Sparkles,
       },
       {
-        title: "Segurança & Contratos",
-        desc: "Auditoria e transparência On-Chain",
-        href: "#seguranca-ecoin",
-        icon: ShieldCheck,
+        title: "Acionistas & Suportadores da eCoin",
+        desc: "Compre eCoin na baixa, invista e ganhe dividendos como acionista",
+        href: "/eCoinShareHolder",
+        icon: PiggyBank,
       },
     ]
   }

@@ -52,7 +52,7 @@ export default function HomePageMobileBar() {
           <BottomItem 
             icon={Bot} 
             title="Bot" 
-            href="/eCoinShareHolder/Mobile" 
+            href="/eCoinShareHolder/ecnTradingDEXBot" 
             badge={<span className="h-full w-full rounded-full bg-[#00FF9C] animate-pulse" />}
           />
           
