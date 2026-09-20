@@ -279,7 +279,7 @@ export default function MiningPortal() {
                     {selectedPool === "BNB" && <CheckCircle2 size={18} className="text-[#D4AF37]" />}
                   </div>
                   <div>
-                    <span className="text-[9px] text-amber-400 font-bold tracking-widest uppercase block mb-1">eCoin Cloud Wallet</span>
+                    <span className="text-[9px] text-amber-400 font-bold tracking-widest uppercase block mb-1">eCoin Cloud Wallet (ECCW)</span>
                     <h4 className="text-lg font-black text-white">Pool BNB</h4>
                     <p className="text-[11px] text-gray-400 mt-1">Staking & Renda Passiva em BNB</p>
                   </div>
@@ -301,7 +301,7 @@ export default function MiningPortal() {
                     {selectedPool === "ECOIN" && <CheckCircle2 size={18} className="text-[#D4AF37]" />}
                   </div>
                   <div>
-                    <span className="text-[9px] text-emerald-400 font-bold tracking-widest uppercase block mb-1">eCoin Cloud Wallet</span>
+                    <span className="text-[9px] text-emerald-400 font-bold tracking-widest uppercase block mb-1">eCoin Cloud Wallet (ECCW)</span>
                     <h4 className="text-lg font-black text-white">Pool eCoin</h4>
                     <p className="text-[11px] text-gray-400 mt-1">Pool Nativo eCoin Protocol</p>
                   </div>

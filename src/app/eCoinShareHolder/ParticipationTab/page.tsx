@@ -5,17 +5,17 @@ import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { ArrowLeft, Pickaxe } from "lucide-react";
 
-import MiningTab from "@/components/mining/MiningTab";
+import MiningTab from "@/components/mining/eDollar/MiningTab";
 
 export default function ParticipationTabPage() {
   const router = useRouter();
 
   const handleSetActiveTab = (tab: string) => {
-    if (tab === "analytics") router.push("/eCoin-ShareHolder/AnalyticsTab");
-    else if (tab === "commitment") router.push("/eCoin-ShareHolder/CommitmentSealTab");
-    else if (tab === "history") router.push("/eCoin-ShareHolder/HistoryTab");
-    else if (tab === "participation" || tab === "mining") router.push("/eCoin-ShareHolder/ParticipationTab");
-    else router.push("/eCoin-ShareHolder");
+    if (tab === "analytics") router.push("/eCoinShareHolder/AnalyticsTab");
+    else if (tab === "commitment") router.push("/eCoinShareHolder/CommitmentSealTab");
+    else if (tab === "history") router.push("/eCoinShareHolder/HistoryTab");
+    else if (tab === "participation" || tab === "mining") router.push("/eCoinShareHolder/ParticipationTab");
+    else router.push("/eCoinShareHolder");
   };
 
   return (
@@ -27,7 +27,7 @@ export default function ParticipationTabPage() {
         className="flex items-center justify-between border-b border-white/10 pb-4"
       >
         <button
-          onClick={() => router.push("/eCoin-ShareHolder")}
+          onClick={() => router.push("/eCoinShareHolder")}
           className="group flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-white/80 hover:text-white hover:bg-white/10 hover:border-[#D4AF37]/50 transition-all duration-300 active:scale-95"
         >
           <ArrowLeft size={18} className="text-[#D4AF37] group-hover:-translate-x-1 transition-transform" />

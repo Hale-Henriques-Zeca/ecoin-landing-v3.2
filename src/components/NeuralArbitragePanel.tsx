@@ -245,7 +245,7 @@ export default function NeuralArbitragePanel() {
           <div className="space-y-3">
 
             <a
-              href="/ecoin-hub"
+              href="/Market"
               className="w-full bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-3 px-4 rounded-lg flex items-center justify-between transition"
             >
               <span>Open eCoin Hub</span>
@@ -253,10 +253,10 @@ export default function NeuralArbitragePanel() {
             </a>
 
             <a
-              href="/Mining"
+              href="/eCoinShareHolder"
               className="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 px-4 rounded-lg flex items-center justify-between transition"
             >
-              <span>Open Mining Pools</span>
+              <span>Open Holders Pools</span>
               <RefreshCw className="w-4 h-4" />
             </a>
 
@@ -376,10 +376,10 @@ export default function NeuralArbitragePanel() {
                 Node A: eCoin / USDT
               </div>
               <div className="absolute bottom-6 left-6 bg-gray-900 border border-gray-800 px-3 py-1.5 rounded text-xs font-mono text-gray-300">
-                Node B: eCoin / ETH
+                Node B: eCoin / BNB
               </div>
               <div className="absolute bottom-6 right-6 bg-gray-900 border border-gray-800 px-3 py-1.5 rounded text-xs font-mono text-gray-300">
-                Node C: ETH / USDT
+                Node C: BNB / USDT
               </div>
               
               {/* Centro de IA */}
