@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import MobileBar from '../components/MobileBar';
+import MobileBar from '../components/Mobile/MobileBar';
 import { RunningBotItem } from '../types/ecnTrading';
 import CSInfoModal from '../components/CSInfoModal';
 
@@ -126,7 +126,6 @@ export default function RunningBotPage() {
       </div>
 
       <CSInfoModal isOpen={showAddCapacityModal} onClose={() => setShowAddCapacityModal(false)} />
-      <MobileBar />
     </div>
   );
 }

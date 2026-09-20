@@ -1,6 +1,6 @@
 'use client';
 
-import MobileBar from '../components/MobileBar';
+import MobileBar from '../components/Mobile/MobileBar';
 
 export default function ProfitPage() {
   return (
@@ -32,7 +32,7 @@ export default function ProfitPage() {
         </div>
       </div>
 
-      <MobileBar />
+      
     </div>
   );
 }

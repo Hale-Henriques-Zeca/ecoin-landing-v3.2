@@ -7,7 +7,7 @@ interface MobileHeaderProps {
   subtitle?: string;
 }
 
-export default function MobileHeader({ title = 'EcnTrading DEX Markets', subtitle = 'ShareHolder Platform' }: MobileHeaderProps) {
+export default function MobileHeader({ title = 'EcnTrading DEX Markets', subtitle = 'ShareHolder Platform (Mobile)' }: MobileHeaderProps) {
   return (
     <header className="flex items-center justify-between pb-4 pt-2 border-b border-gray-800/80 mb-4">
       <div className="flex items-center gap-2.5">

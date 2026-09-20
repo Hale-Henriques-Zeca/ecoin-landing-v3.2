@@ -28,7 +28,7 @@ const HOME_QUICK_ACTIONS = [
       {
         title: "Trading Bot & ShareHolder",
         desc: "Painel de automação e robôs de staking",
-        href: "/eCoinShareHolder/Mobile",
+        href: "/eCoinShareHolder/ecnTradingDEXBot",
         icon: Bot,
       },
       {

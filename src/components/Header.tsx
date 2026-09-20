@@ -39,7 +39,7 @@ const navLinks = [
   { name: "ShareHolder", href: "/eCoinShareHolder", icon: PiggyBank },
   { name: "Converter", href: "/ecoin-converter", icon: ArrowLeftRight },
   { name: "Market", href: "/Market", icon: CandlestickChart },
-  { name: "Trading AI", href: "/eCoinShareHolder/Mobile", icon: Bot },
+  { name: "Trading AI", href: "/eCoinShareHolder/ecnTradingDEXBot", icon: Bot },
   { name: "Investir", href: "/ecoin-rewards", icon: TrendingUp },
   { name: "Acionistas", href: "https://eshare.edenkingdom.org", external: true, icon: Users },
   { name: "Lei", href: "https://elaw.edenkingdom.org", external: true, icon: Scale },

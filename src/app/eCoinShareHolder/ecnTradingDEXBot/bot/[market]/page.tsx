@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { HelpCircle, ArrowLeft } from 'lucide-react';
-import MobileBar from '../../components/MobileBar';
+import MobileBar from '../../components/Mobile/MobileBar';
 import PPPInfoModal from '../../components/PPPInfoModal';
 import CSInfoModal from '../../components/CSInfoModal';
 
@@ -16,7 +16,7 @@ export default function MarketConfigPage({ params }: { params: { market: string 
 
   const handleCreateBot = () => {
     // Redireciona diretamente para a área de bots rodando em tempo real
-    router.push('/eCoinShareHolder/Mobile/running-bot');
+    router.push('/eCoinShareHolder/ecnTradingDEXBot/runningBot');
   };
 
   return (
@@ -49,7 +49,7 @@ export default function MarketConfigPage({ params }: { params: { market: string 
             onChange={(e) => setStakeAmount(e.target.value)}
             className="w-full bg-[#0B0E14] border border-gray-700 rounded-xl px-3 py-2 text-sm font-bold text-yellow-400 focus:outline-none focus:border-yellow-500"
           />
-          <span className="absolute right-3 top-2.5 text-xs font-bold text-gray-400">ECOIN</span>
+          <span className="absolute right-3 top-2.5 text-xs font-bold text-gray-400">eCoin</span>
         </div>
 
         <div className="flex justify-between gap-2 mb-4">
@@ -67,7 +67,7 @@ export default function MarketConfigPage({ params }: { params: { market: string 
           </div>
           <div className="text-right">
             <span className="text-gray-400 block">Total do Pool</span>
-            <span className="text-white font-semibold">425 000 ECOIN</span>
+            <span className="text-white font-semibold">425 000 eCoin</span>
           </div>
         </div>
       </div>
@@ -118,7 +118,7 @@ export default function MarketConfigPage({ params }: { params: { market: string 
 
       <PPPInfoModal isOpen={showPPPInfo} onClose={() => setShowPPPInfo(false)} />
       <CSInfoModal isOpen={showCSInfo} onClose={() => setShowCSInfo(false)} />
-      <MobileBar />
+    
     </div>
   );
 }

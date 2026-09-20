@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import MobileBar from '../components/MobileBar';
+import MobileBar from '../components/Mobile/MobileBar';
 
 const markets = [
   { id: 'ecoin-bnb', pair: 'E-Coin / BNB', desc: 'Trade BNB com IA & Staking', icon: '⚡' },
@@ -34,7 +34,7 @@ export default function BotPage() {
               <div className="text-[11px] text-gray-400 mt-1 leading-tight">{m.desc}</div>
             </div>
             <Link
-              href={`/eCoinShareHolder/Mobile/bot/${m.id}`}
+              href={`/eCoinShareHolder/ecnTradingDEXBot/bot/${m.id}`}
               className="mt-4 block text-center py-1.5 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded-lg text-xs font-semibold"
             >
               Acessar &gt;
@@ -43,7 +43,7 @@ export default function BotPage() {
         ))}
       </div>
 
-      <MobileBar />
+      
     </div>
   );
 }
