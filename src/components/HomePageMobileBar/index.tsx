@@ -24,8 +24,8 @@ export default function HomePageMobileBar() {
         .animate-fade-in { animation: fadeIn 0.2s ease-out forwards; }
       `}} />
 
-      {/* Container Fixo na base para dispositivos móveis */}
-      <div className="fixed bottom-0 left-0 right-0 z-40 bg-[#080808]/90 backdrop-blur-xl border-t border-[#D4AF37]/20 shadow-[0_-4px_30px_rgba(0,0,0,0.8)]">
+      {/* Container Fixo 100% Transparente na base */}
+      <div className="fixed bottom-0 left-0 right-0 z-40 bg-transparent backdrop-blur-none border-t border-[#D4AF37]/20 shadow-none">
         <div className="h-[72px] max-w-md mx-auto flex items-center justify-between px-2 pb-[calc(env(safe-area-inset-bottom))]">
           
           {/* 1. Wallet */}
