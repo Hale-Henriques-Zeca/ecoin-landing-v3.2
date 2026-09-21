@@ -59,7 +59,7 @@ export default function ECoinSmartPoolsExplanation() {
           A infraestrutura inteligente da eCoin foi construída para distribuir
           liquidez, estabilidade e recompensas através de <span className="text-amber-400 font-medium">Smart Pools</span>,
           <span className="text-cyan-400 font-medium"> Reward Streams</span> e mecanismos automáticos alimentados pelas taxas
-          internas do ecossistema, <span className="text-yellow-400 font-medium">ecGas</span> e roteamento dinâmico de liquidez.
+          internas do ecossistema, <span className="text-yellow-400 font-medium">Profit Capacity (PC) </span> e roteamento dinâmico de liquidez.
         </p>
 
         {/* ================= EXPLANATION SECTION ================= */}
@@ -87,7 +87,7 @@ export default function ECoinSmartPoolsExplanation() {
               Os AI Smart Reward Pools são pools inteligentes de distribuição
               de liquidez e recompensas contínuas alimentados automaticamente
               por taxas do ecossistema, reciclagem de claims, treasury routing,
-              ecGas e streams de liquidez protocolar.
+              Profit Capacity (PC) e streams de liquidez protocolar.
             </p>
 
             {/* GRÁFICO ILUSTRATIVO EXPLANATIVO 1: Fontes de Alimentação do Pool */}
@@ -102,7 +102,7 @@ export default function ECoinSmartPoolsExplanation() {
               </div>
               <div className="p-3 rounded-xl bg-zinc-900/80 border border-amber-500/10 text-center">
                 <Zap className="mx-auto text-yellow-400 mb-2" size={20} />
-                <span className="text-xs text-gray-300 font-medium block">ecGas Engine</span>
+                <span className="text-xs text-gray-300 font-medium block">Profit Capacity (PC) Engine</span>
               </div>
               <div className="p-3 rounded-xl bg-zinc-900/80 border border-amber-500/10 text-center">
                 <Activity className="mx-auto text-emerald-400 mb-2" size={20} />
@@ -225,11 +225,11 @@ export default function ECoinSmartPoolsExplanation() {
                   <Zap size={24} />
                 </div>
                 <h3 className="text-yellow-400 font-bold text-lg">
-                  ⛽ ecGas & Liquidity Engine
+                  ⛽ Profit Capacity (PC) & Liquidity Engine
                 </h3>
               </div>
               <p className="leading-relaxed text-gray-300 text-sm sm:text-base font-light">
-                As compras de ecGas alimentam diretamente a infraestrutura
+                As compras de Profit Capacity (PC) alimentam diretamente a infraestrutura
                 de capacidade de mineração e os Smart Reward Pools.
                 <br /><br />
                 Isso transforma atividade econômica real do ecossistema
@@ -259,7 +259,7 @@ export default function ECoinSmartPoolsExplanation() {
                 "Reciclagem inteligente de taxas e claims.",
                 "Infraestrutura sustentável de staking.",
                 "Buffers de liquidez inteligentes com distribuição gradual.",
-                "Integração automática com Treasury e ecGas.",
+                "Integração automática com Treasury e Profit Capacity (PC).",
                 "Participação em pools inteligentes de recompensas.",
                 "Maior estabilidade protocolar e eficiência de liquidez."
               ].map((benefit, i) => (
@@ -279,18 +279,7 @@ export default function ECoinSmartPoolsExplanation() {
             para investidores em ativos digitais.”
           </p>
 
-          {/* INÍCIO DO BOTÃO SAIBA MAIS */}
-          <div className="mt-8 flex justify-center w-full">
-            <Link 
-              href="eCoinShareHolderSeat" 
-              className="inline-flex items-center gap-2 px-8 py-4 text-sm font-bold text-yellow-400 border border-yellow-500/40 rounded-2xl bg-amber-500/10 hover:bg-amber-500 hover:text-black transition-all duration-300 shadow-[0_0_20px_rgba(245,158,11,0.2)] hover:shadow-[0_0_30px_rgba(245,158,11,0.5)] group"
-            >
-              <span>Saiba como acionistas que apoiam a moeda eCoin ganham</span>
-              <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
-            </Link>
-          </div>
-          {/* FIM DO BOTÃO SAIBA MAIS */}
-
+          
         </div>
 
         {/* SEPARATOR */}
@@ -328,8 +317,8 @@ export default function ECoinSmartPoolsExplanation() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {[
                 "O utilizador conecta sua carteira Web3.",
-                "Participa do ecossistema através de staking ou ecGas.",
-                "As taxas do protocolo alimentam os Reward Buffers.",
+                "Participa do ecossistema através de staking e Profit Capacity (PC).",
+                "As taxas do protocolo, eCoin Cloud wallet (ECCW) system e Profits do ecnTrading DEX Bot, alimentam os Rewards do ecossistema.",
                 "O sistema distribui streams contínuos de liquidez.",
                 "Claims reciclados reforçam a sustentabilidade do pool.",
                 "Treasury e referral systems recebem distribuição automática.",
@@ -356,10 +345,10 @@ export default function ECoinSmartPoolsExplanation() {
           {/* BOTÕES DE AÇÃO FINAL */}
           <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link
-              href="/ecoin-hub"
+              href="/eCoinShareHolder/ecnTradingDEXBot"
               className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-gradient-to-r from-amber-500 to-yellow-600 hover:from-amber-400 hover:to-yellow-500 text-black font-extrabold transition-all duration-300 shadow-lg shadow-amber-950/50 text-center tracking-wide"
             >
-              Open eCoin Hub
+              Open ecnTrading AI Hub
             </Link>
 
             <Link

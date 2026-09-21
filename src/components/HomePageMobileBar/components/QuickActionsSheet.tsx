@@ -2,7 +2,16 @@
 
 import React, { useEffect } from 'react';
 import Link from 'next/link';
-import { Wallet, Store, Bot, Settings, ArrowRightLeft, Sparkles, PiggyBank, ShieldCheck, HelpCircle } from 'lucide-react';
+import { 
+  Wallet, 
+  Store, 
+  Bot, 
+  Settings, 
+  ArrowRightLeft, 
+  Sparkles, 
+  PiggyBank, 
+  Cpu 
+} from 'lucide-react';
 
 interface QuickActionsSheetProps {
   isOpen: boolean;
@@ -14,7 +23,7 @@ const HOME_QUICK_ACTIONS = [
     title: "Acesso Rápido às Aplicações",
     items: [
       {
-        title: "eCoin Cloud Wallet",
+        title: "eCoin Cloud Wallet (ECCW)",
         desc: "Acessar sua carteira Web3 corporativa",
         href: "/eCoinCloudWallet",
         icon: Wallet,
@@ -30,6 +39,12 @@ const HOME_QUICK_ACTIONS = [
         desc: "Painel de automação e robôs de staking",
         href: "/eCoinShareHolder/ecnTradingDEXBot",
         icon: Bot,
+      },
+      {
+        title: "Smart AI Rewards Pools",
+        desc: "Saiba como acionistas ganham e tudo sobre Smart AI Reward pools",
+        href: "/eCoinSmartAIRewardsPools",
+        icon: Cpu,
       },
       {
         title: "Configurações de Perfil",

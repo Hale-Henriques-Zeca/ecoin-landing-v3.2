@@ -13,7 +13,7 @@ export const SmartPoolsCTA: React.FC = () => {
       className="mt-8 flex justify-center w-full"
     >
       <Link 
-        href="ecoin-buyback-engine"
+        href="eCoinSmartAIRewardsPools"
         className="group relative inline-flex items-center gap-3 px-8 py-4 rounded-2xl bg-gradient-to-r from-zinc-900 via-black to-zinc-950 border border-cyan-500/40 text-cyan-400 font-black uppercase tracking-widest text-xs shadow-[0_0_30px_rgba(6,182,212,0.15)] hover:shadow-[0_0_40px_rgba(6,182,212,0.35)] hover:border-cyan-400 hover:text-white transition-all duration-300 backdrop-blur-xl overflow-hidden"
       >
         {/* Linha de luz superior cinematográfica */}

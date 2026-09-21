@@ -22,12 +22,12 @@ const seatAllocation = [
 
 // Dados do Profit Pool (Lucros Realizados do ECNTrading - $1.000 Exemplo)
 const profitPoolAllocation = [
-  { label: "Mining Reward Pool", value: 20, amount: "$200", color: "text-[#D4AF37]" },
-  { label: "EUSD Reward Pool", value: 10, amount: "$100", color: "text-blue-400" },
+  { label: "Mining / Shareholders Reward Pool", value: 20, amount: "$200", color: "text-[#D4AF37]" },
+  { label: "Salary Reserve Pool", value: 20, amount: "$200", color: "text-blue-400" },
   { label: "Treasury", value: 10, amount: "$100", color: "text-slate-400" },
-  { label: "Liquidity", value: 20, amount: "$200", color: "text-yellow-500" },
+  { label: "Liquidity Pool", value: 20, amount: "$200", color: "text-yellow-500" },
   { label: "Buy-Back / Market Support", value: 10, amount: "$100", color: "text-purple-400" },
-  { label: "Trading Capital", value: 20, amount: "$200", color: "text-emerald-400" },
+  { label: "Trading Capital Pool", value: 10, amount: "$100", color: "text-emerald-400" },
   { label: "Ecosystem Development", value: 10, amount: "$100", color: "text-pink-400" },
 ];
 
@@ -101,7 +101,7 @@ export default function HowAiMiningWorksPage() {
               Compre os seus E-Coin no mercado → e tornar-se o E-Coin ShareHolder adquirindo um Holder Seat ao Reter os seus eCoins adquiridos no mercado pelo botão <span className="text-[#D4AF37] font-bold">Reter Ativos eCoin</span>.
             </p>
             <p className="text-sm md:text-base text-gray-400 font-light print-text">
-              E de seguida compre o <strong className="text-white">eCoin ShareHolder Temporal Commitment Seal</strong>.
+              E de seguida compre o <strong className="text-white">eCoin ShareHolder Temporal Commitment Seal (Profit Capacity)</strong>.
             </p>
           </div>
         </motion.div>
@@ -265,7 +265,7 @@ export default function HowAiMiningWorksPage() {
             <div className="flex items-center gap-3">
               <PieChart className="text-[#D4AF37]" size={30} />
               <div>
-                <h2 className="text-2xl font-bold text-white print-text">Distribuição dos 100% da Compra do Selo de Compromisso</h2>
+                <h2 className="text-2xl font-bold text-white print-text">Distribuição dos 100% da Compra do Selo de Compromisso (Profit Capacity) </h2>
                 <p className="text-xs text-gray-400 print-text">Destinação transparente do fluxo financeiro gerado na aquisição de Selos de Compromisso pelos acionistas do ecossistema eCoin.</p>
               </div>
             </div>
