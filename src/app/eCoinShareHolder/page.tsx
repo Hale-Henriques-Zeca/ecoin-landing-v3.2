@@ -385,7 +385,7 @@ export default function MiningPortal() {
 
                 {/* 🚀 BOTÃO DE ACESSO AO GUIA COMPLETO */}
                 <div className="w-full max-w-xl mx-auto">
-                  <Link href="/ecoin-buyback-engine" className="group block">
+                  <Link href="/eCoinSmartAIRewardsPools" className="group block">
                     <motion.div 
                       whileHover={{ x: 5 }}
                       className="flex items-center justify-between bg-gradient-to-r from-black/40 to-black/20 border border-white/5 p-4 rounded-2xl hover:border-[#D4AF37]/30 transition-all cursor-pointer"

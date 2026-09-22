@@ -24,7 +24,6 @@ import LiquidityPanel from "@/components/LiquidityPanel";
 import Chart from "@/components/eCoinChart/Chart";
 import EFTEBuySellPanel from "@/components/EFTEBuySellPanel";
 import EKDSmartFinanceTool from "@/components/EKDSmartFinanceTool";
-import NeuralArbitragePanel from "@/components/NeuralArbitragePanel";
 import BuyBackSmartPoolDashboard from "@/components/BuyBackSmartPoolDashboard";
 import CryptoGrowthSimulator from "@/components/CryptoGrowthSimulator";
 import CompoundCalculatorPanel from "@/components/CompoundCalculatorPanel";
@@ -77,7 +76,6 @@ export default function Home() {
       <div id="percentage-calculator" className="scroll-mt-28"><SectionDivider label="Percentage calculator" /><CompoundCalculatorPanel /></div>
       <div id="buyback-engine" className="scroll-mt-28"><SectionDivider label="E-Coin (EdenKingDom Coin) Chart" /><BuyBackEngineChart /></div>
       <div id="control-board" className="scroll-mt-28"><BuyBackSmartPoolDashboard /></div>
-      <div id="neural-arbitrage" className="scroll-mt-28"><SectionDivider label="eCoin Neural Arbitrage Panel" /><NeuralArbitragePanel /></div>
       <div id="now-section" className="scroll-mt-28"><SectionDivider label="What’s happening now" /><NowSection /></div>
       <div id="stay-loop" className="scroll-mt-28"><SectionDivider label="Stay in the loop" /><StayInLoopSection /></div>
       <div id="global-events" className="scroll-mt-28"><SectionDivider label="Global Events & Conferences" /><EventsShowcase /></div>
@@ -104,7 +102,6 @@ function FloatingDashboardMenu() {
   const menuItems = [
     { label: "Home", target: "Hero" },
     { label: "AI", target: "ecoin-ai-section" },
-    { label: "eCoin Neural AI Arbitrage Panel", target: "neural-arbitrage" },
     { label: "Converter eCoin para dinheiro físico", target: "cashout-gateway" },
     { label: "Converter & Calculator e Market", target: "Converter" },
     { label: "Vantagens da eCoin", target: "advantages" },

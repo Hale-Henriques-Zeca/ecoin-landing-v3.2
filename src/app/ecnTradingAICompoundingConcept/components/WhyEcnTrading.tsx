@@ -65,7 +65,7 @@ export default function WhyEcnTrading() {
               Diferente de projetos como o <strong>SHIBA INU</strong> (que possui mais de 1 Quadrilhão de tokens emitidos), a moeda <strong>eCoin</strong> não foi criada com funções de emissão descontrolada ou queimas automáticas sem lastro para manipular o mercado. A entidade responsável não pode simplesmente emitir novos tokens e despejá-los no mercado para derrubar o preço.
             </p>
             <p className="text-sm text-slate-300 leading-relaxed">
-              Sua infraestrutura própria de retenção protege os holders contra vendas massivas e volatilidade desenfreada.
+              Sua infraestrutura própria de retenção e Staking dos eCoin ShareHolders, protege os holders contra vendas massivas e volatilidade desenfreada.
             </p>
           </div>
           
@@ -150,7 +150,7 @@ export default function WhyEcnTrading() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="bg-black/60 p-5 rounded-2xl border border-slate-800 space-y-2">
             <span className="text-xs font-bold text-[#D4AF37] uppercase tracking-wider">Passo 1</span>
-            <h4 className="font-bold text-white text-base">Profit Pool Position(PPP) ou Simplesmente Profit Margin (PM)</h4>
+            <h4 className="font-bold text-white text-base">Profit Pool Position (PPP) ou Simplesmente Profit Margin (PM)</h4>
             <p className="text-xs text-slate-400">
               O usuário compra eCoin no mercado e retém no Profit Pool para obter sua **Margem de Lucro (ML / PM)**.
             </p>
@@ -171,9 +171,9 @@ export default function WhyEcnTrading() {
 
           <div className="bg-black/60 p-5 rounded-2xl border border-slate-800 space-y-2">
             <span className="text-xs font-bold text-[#D4AF37] uppercase tracking-wider">Passo 3</span>
-            <h4 className="font-bold text-white text-base">Divisão dos 100% do PC</h4>
+            <h4 className="font-bold text-white text-base">Divisão dos 100% da Compra do PC</h4>
             <p className="text-xs text-slate-400">
-              De todo valor adquirido em Profit Capacity (PC):
+              De todo valor que entra no ecossistem pelas compra ou emissão de Profit Capacity (PC):
             </p>
             <ul className="text-xs text-slate-300 font-mono space-y-1 pt-1">
               <li>• <strong className="text-amber-400">20%</strong> ➔ Pool de Referência (comunidade em 3 Níveis)</li>
