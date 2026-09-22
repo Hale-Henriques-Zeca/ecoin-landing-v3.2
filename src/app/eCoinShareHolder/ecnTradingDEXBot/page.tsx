@@ -15,10 +15,14 @@ import {
 } from 'lucide-react';
 
 import { BOT_MARKETS } from './lib/ecnTrading/markets';
+import EcnTradingAICompoundingConceptCTA from '@/components/CTA/EcnTradingAICompoundingConceptCTA/EcnTradingAICompoundingConceptCTA';
 
 export default function EcnTradingDEXPage() {
   return (
     <div className="space-y-6">
+      {/* CTA no Topo */}
+      <EcnTradingAICompoundingConceptCTA />
+
       {/* Card de Visão Geral do Patrimônio e Lucros */}
       <div className="bg-gradient-to-br from-[#12181F] to-[#0D1219] border border-[#D4AF37]/30 rounded-2xl p-4 md:p-6 shadow-xl relative overflow-hidden">
         <div className="absolute top-0 right-0 w-32 h-32 bg-[#D4AF37]/5 rounded-full blur-2xl pointer-events-none" />
@@ -173,6 +177,9 @@ export default function EcnTradingDEXPage() {
           </div>
         </Link>
       </div>
+
+      {/* CTA no Rodapé */}
+      <EcnTradingAICompoundingConceptCTA />
     </div>
   );
 }

@@ -35,20 +35,20 @@ export const MiningpageCTA: React.FC = () => {
           <div className="relative z-10 flex flex-col sm:flex-row items-center justify-center gap-4">
             
             <Link
-              href="/ecoin-hub"
+              href="/eCoinShareHolder/ecnTradingDEXBot"
               className="group w-full sm:w-auto inline-flex items-center justify-center gap-3 px-8 py-4 rounded-2xl bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-600 hover:from-amber-400 hover:to-yellow-400 text-black font-black uppercase tracking-wider text-xs transition-all duration-300 shadow-[0_0_25px_rgba(245,158,11,0.3)] hover:shadow-none"
             >
               <Wallet size={16} />
-              <span>Open eCoin Hub</span>
+              <span>Open ecnTrading AI Hub</span>
               <ArrowRight size={16} className="transform group-hover:translate-x-1 transition-transform" />
             </Link>
 
             <Link
-              href="/Mining"
+              href="/eCoinShareHolder"
               className="group w-full sm:w-auto inline-flex items-center justify-center gap-3 px-8 py-4 rounded-2xl bg-gradient-to-r from-cyan-600 via-teal-600 to-cyan-700 hover:from-cyan-500 hover:to-teal-500 text-white font-black uppercase tracking-wider text-xs transition-all duration-300 shadow-[0_0_25px_rgba(6,182,212,0.3)] hover:shadow-none border border-cyan-500/30"
             >
               <Cpu size={16} className="text-cyan-300" />
-              <span>Open eCoin Mining Smart Pools</span>
+              <span>Open eCoin ShareHolder Smart Pools</span>
               <Sparkles size={16} className="text-cyan-300 animate-pulse" />
             </Link>
 
