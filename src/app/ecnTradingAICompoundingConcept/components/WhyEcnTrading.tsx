@@ -89,10 +89,10 @@ export default function WhyEcnTrading() {
               <h3 className="text-lg font-bold text-white">Tesouraria, BuyBack & SellBack Gradual</h3>
             </div>
             <p className="text-sm text-slate-300 leading-relaxed">
-              Quando o preço da eCoin cai, a **Tesouraria da eCoin** utiliza seus fundos de reserva para realizar compras massivas do próprio token como forma de <strong>BuyBack (Queima com saída de circulação)</strong>.
+              Quando o preço da eCoin cai, a **Tesouraria da eCoin** utiliza seus fundos de reserva para realizar compras massivas do próprio token como forma de <strong>BuyBack (Queima com saída de circulação)</strong> e com isso evitamos liquidação de contas de trading dos nossos apoiadores do preço da eCoin e traders, etc .
             </p>
             <p className="text-sm text-slate-300 leading-relaxed">
-              Estes tokens comprados saem de circulação e **só retornam ao mercado de forma gradual através de SellBack (venda controlada)** quando o mercado estiver em extrema alta, garantindo liquidez sem prejudicar o ecossistema.
+              Estes tokens comprados saem de circulação e **só retornam ao mercado de forma gradual através de SellBack (venda controlada)** quando o mercado estiver em extrema alta, garantindo liquidez sem prejudicar o ecossistema e a precificação da eCoin.
             </p>
           </div>
 
@@ -183,14 +183,14 @@ export default function WhyEcnTrading() {
         </div>
 
         <div className="bg-emerald-950/40 border border-emerald-500/30 rounded-2xl p-4 text-xs sm:text-sm text-emerald-200">
-          💡 <strong>Segurança Garantida:</strong> Você não precisa se preocupar com as oscilações do mercado. O Capital Pool é dimensionado para que o <strong>ecnTrading DEX Bot</strong> opere nas DEXs e entregue os lucros a todos de acordo com sua ML e PC.
+          💡 <strong>Segurança e lucros já Garantida:</strong> Você não precisa se preocupar com as oscilações do mercado. O Capital Pool é dimensionado para que o <strong>ecnTrading DEX Bot</strong> opere nas DEXs e entregue os lucros a todos de acordo com sua ML e PC.
         </div>
 
         <div className="pt-4 flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-slate-800">
           <div className="flex items-center gap-3">
             <Coins className="w-6 h-6 text-[#D4AF37]" />
             <div className="text-xs text-slate-300">
-              <span>Ativos suportados nas operações do Robot: </span>
+              <span>Ativos suportados nas operações do Robot de modo a evitar quedas influenciada por Bitcoin (BTC) e pois que tudo será entorno da eCoin como uma e unica moeda central nos pares de trading com o nosso ecnTrading Bot- assegurada com o sistema BuyBack & SellBack: </span>
               <strong className="text-white">eCoin, BNB, USDT e eDollar ($eDollar)</strong>
             </div>
           </div>
