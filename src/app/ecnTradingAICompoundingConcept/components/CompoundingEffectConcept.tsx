@@ -41,7 +41,7 @@ export default function CompoundingEffectConcept() {
             </h4>
         </div>
           <p className="text-xs text-gray-400 max-w-xl">
-            Apenas <span className="text-white font-bold">5 USDT</span> iniciais em 10 sessões de mineração com recompra de Profit Capacity (PC)
+          Com apenas <span className="text-white font-bold">5 USDT</span> iniciais em 10 sessões de mineração com recompra de Profit Capacity (PC)
           </p>
         </div>
 

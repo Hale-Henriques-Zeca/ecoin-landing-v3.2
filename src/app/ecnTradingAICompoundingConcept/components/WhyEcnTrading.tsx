@@ -150,7 +150,7 @@ export default function WhyEcnTrading() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="bg-black/60 p-5 rounded-2xl border border-slate-800 space-y-2">
             <span className="text-xs font-bold text-[#D4AF37] uppercase tracking-wider">Passo 1</span>
-            <h4 className="font-bold text-white text-base">Profit Pool (PPP)</h4>
+            <h4 className="font-bold text-white text-base">Profit Pool Position(PPP) ou Simplesmente Profit Margin (PM)</h4>
             <p className="text-xs text-slate-400">
               O usuário compra eCoin no mercado e retém no Profit Pool para obter sua **Margem de Lucro (ML / PM)**.
             </p>
@@ -191,7 +191,7 @@ export default function WhyEcnTrading() {
             <Coins className="w-6 h-6 text-[#D4AF37]" />
             <div className="text-xs text-slate-300">
               <span>Ativos suportados nas operações do Robot: </span>
-              <strong className="text-white">eCoin, BNB, USDT e eDollar ($eUSD)</strong>
+              <strong className="text-white">eCoin, BNB, USDT e eDollar ($eDollar)</strong>
             </div>
           </div>
           

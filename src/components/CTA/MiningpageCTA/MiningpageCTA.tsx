@@ -27,7 +27,7 @@ export const MiningpageCTA: React.FC = () => {
               Pronto para maximizar os seus rendimentos?
             </h3>
             <p className="text-gray-400 text-sm md:text-base font-light mt-2 max-w-lg mx-auto">
-              Navegue pelo Hub principal ou explore as Smart Pools de mineração em tempo real.
+              Navegue pelo Hub principal ou explore as Smart Pools de Acionistas da eCoin e ecnTrading Bot em tempo real.
             </p>
           </div>
 

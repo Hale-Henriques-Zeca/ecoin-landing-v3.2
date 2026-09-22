@@ -1,6 +1,7 @@
 'use client';
 
 import MobileBar from '../components/Mobile/MobileBar';
+import EcnTradingAICompoundingConceptCTA from '@/components/CTA/EcnTradingAICompoundingConceptCTA/EcnTradingAICompoundingConceptCTA';
 
 export default function ProfitPage() {
   return (
@@ -31,6 +32,10 @@ export default function ProfitPage() {
           <button className="py-2 bg-gray-800 text-gray-300 rounded-lg hover:bg-gray-700">Converter</button>
         </div>
       </div>
+
+      {/* CTA no Topo */}
+            <EcnTradingAICompoundingConceptCTA />
+      
 
       
     </div>
