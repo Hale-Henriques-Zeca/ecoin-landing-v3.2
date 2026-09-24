@@ -25,13 +25,15 @@ import {
   PiggyBank,
   Wallet,
   Download,
-  RefreshCw
+  RefreshCw,
+  Coins
 } from "lucide-react";
 
 const navLinks = [
   { name: "Home", href: "/", icon: Home },
   { name: "Bot", href: "/eCoinShareHolder/ecnTradingDEXBot", icon: Bot },
   { name: "Câmbio", href: "/eCoinCloudWallet/buy", icon: RefreshCw },
+  { name: "ePay Agent", href: "/ecoin-offramp", icon: Coins},
   {
     name: "Wallet",
     href: "/eCoinCloudWallet",
