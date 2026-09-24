@@ -25,16 +25,22 @@ const HOME_QUICK_ACTIONS = [
     title: "Acesso Rápido às Aplicações",
     items: [
       {
+        title: "Câmbio",
+        desc: "Trocar eCoin para dinheiro físico",
+        href: "/eCoinCloudWallet/buy",
+        icon: RefreshCw,
+      },
+      {
+        title: "ePay Agent",
+        desc: "Faça saques e depósitos de dinheiro físico e Crypto instantâneos",
+        href: "/ecoin-offramp",
+        icon: Coins,
+      },
+      {
         title: "eCoin Cloud Wallet (ECCW)",
         desc: "Acessar sua carteira Web3 corporativa",
         href: "/eCoinCloudWallet",
         icon: Wallet,
-      },
-      {
-        title: "Marketplace & Conversor",
-        desc: "Trocas e mercado de liquidez eCoin",
-        href: "/Market",
-        icon: Store,
       },
       {
         title: "Trading Bot & ShareHolder",
@@ -59,17 +65,12 @@ const HOME_QUICK_ACTIONS = [
   {
     title: "Recursos do Ecossistema",
     items: [
+      
       {
-        title: "Câmbio",
-        desc: "Trocar eCoin para dinheiro físico",
-        href: "/eCoinCloudWallet/buy",
-        icon: RefreshCw,
-      },
-      {
-        title: "ePay Agent",
-        desc: "Faça saques e depósitos de dinheiro físico e Crypto instantâneos",
-        href: "/ecoin-offramp",
-        icon: Coins,
+        title: "Marketplace & Conversor",
+        desc: "Trocas e mercado de liquidez eCoin",
+        href: "/Market",
+        icon: Store,
       },
       {
         title: "Acionistas & Suportadores da eCoin",
