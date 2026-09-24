@@ -12,6 +12,7 @@ import {
   PiggyBank, 
   Cpu,
   RefreshCw,
+  Coins
 } from 'lucide-react';
 
 interface QuickActionsSheetProps {
@@ -65,10 +66,10 @@ const HOME_QUICK_ACTIONS = [
         icon: RefreshCw,
       },
       {
-        title: "Neural AI Arbitrage",
-        desc: "Painel de arbitragem cruzada de IA",
-        href: "/eCoinShareHolder/ecnTradingDEXBot",
-        icon: Sparkles,
+        title: "ePay Agent",
+        desc: "Faça saques e depósitos de dinheiro físico e Crypto instantâneos",
+        href: "/ecoin-offramp",
+        icon: Coins,
       },
       {
         title: "Acionistas & Suportadores da eCoin",
