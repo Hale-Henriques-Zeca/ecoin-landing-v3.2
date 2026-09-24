@@ -25,7 +25,7 @@ const HOME_QUICK_ACTIONS = [
     title: "Acesso Rápido às Aplicações",
     items: [
       {
-        title: "Câmbio",
+        title: "Cambiar",
         desc: "Trocar eCoin para dinheiro físico",
         href: "/eCoinCloudWallet/buy",
         icon: RefreshCw,
