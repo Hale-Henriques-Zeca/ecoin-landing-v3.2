@@ -65,7 +65,7 @@ export default function BuySellPage() {
                     : 'text-neutral-400 hover:text-white bg-transparent border border-transparent'
                 }`}
               >
-                Comprar Crypto
+                Trocar de fiat para Crypto (Comprar)
               </button>
               <button
                 onClick={() => setActiveTab('sell')}
@@ -75,7 +75,7 @@ export default function BuySellPage() {
                     : 'text-neutral-400 hover:text-white bg-transparent border border-transparent'
                 }`}
               >
-                Vender Crypto
+                Trocar de Crypto para fiat (Vender)
               </button>
             </div>
 
@@ -131,6 +131,7 @@ export default function BuySellPage() {
                   <option value="ECOIN">ECOIN</option>
                   <option value="EUSD">EUSD</option>
                   <option value="USDT">USDT</option>
+                  <option value="USDT">BNB</option>
                 </select>
               </div>
             </div>

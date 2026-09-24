@@ -10,7 +10,8 @@ import {
   ArrowRightLeft, 
   Sparkles, 
   PiggyBank, 
-  Cpu 
+  Cpu,
+  RefreshCw,
 } from 'lucide-react';
 
 interface QuickActionsSheetProps {
@@ -58,10 +59,10 @@ const HOME_QUICK_ACTIONS = [
     title: "Recursos do Ecossistema",
     items: [
       {
-        title: "Cash Out Gateway",
-        desc: "Converter eCoin para dinheiro físico",
-        href: "#cashout-gateway",
-        icon: ArrowRightLeft,
+        title: "Câmbio",
+        desc: "Trocar eCoin para dinheiro físico",
+        href: "/eCoinCloudWallet/buy",
+        icon: RefreshCw,
       },
       {
         title: "Neural AI Arbitrage",

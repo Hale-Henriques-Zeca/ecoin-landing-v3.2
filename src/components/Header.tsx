@@ -25,11 +25,13 @@ import {
   PiggyBank,
   Wallet,
   Download,
+  RefreshCw
 } from "lucide-react";
 
 const navLinks = [
   { name: "Home", href: "/", icon: Home },
   { name: "Bot", href: "/eCoinShareHolder/ecnTradingDEXBot", icon: Bot },
+  { name: "Câmbio", href: "/eCoinCloudWallet/buy", icon: RefreshCw },
   {
     name: "Wallet",
     href: "/eCoinCloudWallet",
@@ -38,7 +40,7 @@ const navLinks = [
   },
   { name: "Importar E-Coin", href: "/import-guide", icon: Download },
   { name: "ShareHolder", href: "/eCoinShareHolder", icon: PiggyBank },
-  { name: "Converter", href: "/ecoin-converter", icon: ArrowLeftRight },
+  { name: "Trade", href: "/ecoin-converter", icon: ArrowLeftRight },
   { name: "Market", href: "/Market", icon: CandlestickChart },
   
   { name: "Investir", href: "/ecoin-rewards", icon: TrendingUp },
