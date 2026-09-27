@@ -57,7 +57,7 @@ const HOME_QUICK_ACTIONS = [
       {
         title: "Configurações de Perfil",
         desc: "Ajuste e perfil do eCoin ShareHolder",
-        href: "/eCoinShareHolder/ProfileTab",
+        href: "/eCoinShareHolder/ecnTradingDEXBot/BotProfileTab",
         icon: Settings,
       },
     ]

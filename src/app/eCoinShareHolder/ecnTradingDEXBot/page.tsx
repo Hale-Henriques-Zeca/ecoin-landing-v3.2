@@ -14,6 +14,8 @@ import {
 import { BOT_MARKETS } from './lib/ecnTrading/markets';
 import EcnTradingAICompoundingConceptCTA from '@/components/CTA/EcnTradingAICompoundingConceptCTA/EcnTradingAICompoundingConceptCTA';
 import Metrics from './components/Metrics';
+import SocialFooter from "@/components/mining/eDollar/SocialFooter";
+import ReferralModal from "@/components/mining/eDollar/ReferralModal";
 
 export default function EcnTradingDEXPage() {
   return (
@@ -138,6 +140,9 @@ export default function EcnTradingDEXPage() {
 
       {/* CTA no Rodapé */}
       <EcnTradingAICompoundingConceptCTA />
+      
+      <SocialFooter  />
+      <ReferralModal />
     </div>
   );
 }

@@ -60,7 +60,7 @@ export default function HomePageMobileBar() {
           <BottomItem 
             icon={Settings} 
             title="Settings" 
-            href="/eCoinShareHolder/ProfileTab" 
+            href="/eCoinShareHolder/ecnTradingDEXBot/BotProfileTab" 
           />
           
         </div>
