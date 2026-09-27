@@ -53,8 +53,8 @@ export default function EDollarProfit() {
 
   const formatEUSD = (val: number) => {
     const formatted = val.toLocaleString('pt-PT', {
-      minimumFractionDigits: 15,
-      maximumFractionDigits: 15,
+      minimumFractionDigits: 9,
+      maximumFractionDigits: 9,
     });
     return `${formatted} EUSD`;
   };
