@@ -61,11 +61,11 @@ export default function Metrics({
       {/* Valor do Patrimônio Alocado & % de Rendimento */}
       <div className="flex items-baseline gap-2 mb-4">
         <span className="text-2xl md:text-4xl font-black tracking-tight text-white">
-          ${actualAllocated.toLocaleString('en-US', { minimumFractionDigits: 15, maximumFractionDigits: 15 })}
+          ${actualAllocated.toLocaleString('en-US', { minimumFractionDigits: 11, maximumFractionDigits: 11 })}
         </span>
         <span className="text-xs md:text-sm font-bold text-[#00FF9C] flex items-center">
           <TrendingUp className="w-3.5 h-3.5 mr-0.5" />
-          +{growthPercentage.toFixed(7)}%
+          +{growthPercentage.toFixed(5)}%
         </span>
       </div>
 
@@ -78,7 +78,7 @@ export default function Metrics({
             <span>Participação Pool (PPP)</span>
           </div>
           <span className="text-sm md:text-lg font-extrabold text-[#D4AF37]">
-            {actualPPP.toFixed(15)}%
+            {actualPPP.toFixed(11)}%
           </span>
         </div>
 
@@ -89,7 +89,7 @@ export default function Metrics({
             <span>Capacidade CS Restante</span>
           </div>
           <span className="text-sm md:text-lg font-extrabold text-[#00FF9C]">
-            {remainingCsPercent.toFixed(15)}%
+            {remainingCsPercent.toFixed(11)}%
           </span>
         </div>
       </div>
