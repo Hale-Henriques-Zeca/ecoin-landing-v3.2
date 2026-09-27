@@ -1,15 +1,20 @@
 'use client';
 
+import React from 'react';
 import { Bell, ShieldCheck, Wallet } from 'lucide-react';
+import { ConnectButton } from '@rainbow-me/rainbowkit';
 
 interface MobileHeaderProps {
   title?: string;
   subtitle?: string;
 }
 
-export default function MobileHeader({ title = 'EcnTrading DEX Markets', subtitle = 'ShareHolder Platform (Mobile)' }: MobileHeaderProps) {
+export default function MobileHeader({ 
+  title = 'EcnTrading DEX Markets', 
+  subtitle = 'ShareHolder Platform (Mobile)' 
+}: MobileHeaderProps) {
   return (
-    <header className="flex items-center justify-between pb-4 pt-2 border-b border-gray-800/80 mb-4">
+    <header className="flex items-center justify-between pb-4 pt-2 border-b border-gray-800/80 mb-4 bg-[#0B0E14]">
       <div className="flex items-center gap-2.5">
         <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-yellow-500 to-amber-300 p-0.5 flex items-center justify-center shadow-lg shadow-yellow-500/10">
           <div className="w-full h-full bg-[#0B0E14] rounded-[10px] flex items-center justify-center">
@@ -26,10 +31,77 @@ export default function MobileHeader({ title = 'EcnTrading DEX Markets', subtitl
         <button className="p-2 bg-[#12181F] border border-gray-800 rounded-xl text-gray-400 hover:text-white transition">
           <Bell className="w-4 h-4" />
         </button>
-        <div className="flex items-center gap-1.5 px-2.5 py-1.5 bg-[#12181F] border border-yellow-500/20 rounded-xl text-xs font-bold text-yellow-400">
-          <Wallet className="w-3.5 h-3.5 text-yellow-400" />
-          <span>0x7a...4E92</span>
-        </div>
+
+        {/* INTEGRATION: RAINBOWKIT CONNECT BUTTON (MOBILE) */}
+        <ConnectButton.Custom>
+          {({
+            account,
+            chain,
+            openAccountModal,
+            openChainModal,
+            openConnectModal,
+            authenticationStatus,
+            mounted,
+          }) => {
+            const ready = mounted && authenticationStatus !== 'loading';
+            const connected =
+              ready &&
+              account &&
+              chain &&
+              (!authenticationStatus || authenticationStatus === 'authenticated');
+
+            return (
+              <div
+                {...(!ready && {
+                  'aria-hidden': true,
+                  style: {
+                    opacity: 0,
+                    pointerEvents: 'none',
+                    userSelect: 'none',
+                  },
+                })}
+              >
+                {(() => {
+                  if (!connected) {
+                    return (
+                      <button
+                        onClick={openConnectModal}
+                        type="button"
+                        className="flex items-center gap-1.5 px-2.5 py-1.5 bg-[#12181F] border border-yellow-500/30 hover:border-yellow-500/80 rounded-xl text-xs font-bold text-yellow-400 transition"
+                      >
+                        <Wallet className="w-3.5 h-3.5 text-yellow-400" />
+                        <span>Conectar</span>
+                      </button>
+                    );
+                  }
+
+                  if (chain.unsupported) {
+                    return (
+                      <button
+                        onClick={openChainModal}
+                        type="button"
+                        className="flex items-center gap-1.5 px-2.5 py-1.5 bg-red-500/10 border border-red-500/40 hover:border-red-500 rounded-xl text-xs font-bold text-red-400 transition"
+                      >
+                        Rede Incorreta
+                      </button>
+                    );
+                  }
+
+                  return (
+                    <button
+                      onClick={openAccountModal}
+                      type="button"
+                      className="flex items-center gap-1.5 px-2.5 py-1.5 bg-[#12181F] border border-yellow-500/20 hover:border-yellow-500/60 rounded-xl text-xs font-bold text-yellow-400 transition"
+                    >
+                      <Wallet className="w-3.5 h-3.5 text-yellow-400" />
+                      <span>{account.displayName}</span>
+                    </button>
+                  );
+                })()}
+              </div>
+            );
+          }}
+        </ConnectButton.Custom>
       </div>
     </header>
   );

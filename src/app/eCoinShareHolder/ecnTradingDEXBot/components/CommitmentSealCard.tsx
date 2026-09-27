@@ -1,11 +1,14 @@
 'use client';
 
 import { ShieldCheck, Info, ShoppingBag } from 'lucide-react';
+import { useAccount } from 'wagmi';
+import { useEcGas } from '@/hooks/useEcGas';
+import { useMiningStaking } from '@/hooks/useMiningStaking';
 
 interface CommitmentSealCardProps {
-  csUsdtAmount: number;
-  maxCapacityUsdt: number;
-  usedCapacityUsdt: number;
+  csUsdtAmount?: number;
+  maxCapacityUsdt?: number;
+  usedCapacityUsdt?: number;
   onBuyCS?: () => void;
   onInfoClick?: () => void;
 }
@@ -17,7 +20,23 @@ export default function CommitmentSealCard({
   onBuyCS,
   onInfoClick,
 }: CommitmentSealCardProps) {
-  const usagePercent = maxCapacityUsdt > 0 ? Math.min(100, (usedCapacityUsdt / maxCapacityUsdt) * 100) : 0;
+  const { address } = useAccount();
+  const gas = useEcGas(address);
+  const mining = useMiningStaking();
+
+  // Resolução de valores reativos: Props explícitas > Dados em tempo real dos Hooks
+  const actualCsUsdt = csUsdtAmount ?? Number(gas.userGasFormatted || 0);
+  
+  // Teto Operacional de 130% baseado no Selo Adquirido (se não especificado nas props)
+  const actualMaxCapacity = maxCapacityUsdt ?? (actualCsUsdt * 1.3);
+  
+  // Capacidade de mineração utilizada/reclamada
+  const actualUsedCapacity = usedCapacityUsdt ?? Number(mining.userStakeFormatted || 0);
+
+  // Cálculo percentual de utilização com limite de 100%
+  const usagePercent = actualMaxCapacity > 0 
+    ? Math.min(100, (actualUsedCapacity / actualMaxCapacity) * 100) 
+    : 0;
 
   return (
     <div className="bg-[#12181F] border border-emerald-500/30 rounded-2xl p-4 shadow-lg">
@@ -31,7 +50,7 @@ export default function CommitmentSealCard({
         {onInfoClick && (
           <button
             onClick={onInfoClick}
-            className="text-gray-400 hover:text-emerald-400 transition-colors"
+            className="text-gray-400 hover:text-emerald-400 transition-colors cursor-pointer"
             type="button"
           >
             <Info className="w-4 h-4" />
@@ -43,13 +62,13 @@ export default function CommitmentSealCard({
         <div>
           <span className="text-[10px] text-gray-400 block">Selo Adquirido</span>
           <span className="text-sm font-extrabold text-white">
-            ${csUsdtAmount.toLocaleString('en-US', { minimumFractionDigits: 2 })} USDT
+            ${actualCsUsdt.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} USDT
           </span>
         </div>
         <div className="text-right">
           <span className="text-[10px] text-gray-400 block">Teto de Mineração (130%)</span>
           <span className="text-sm font-extrabold text-emerald-400">
-            ${maxCapacityUsdt.toLocaleString('en-US', { minimumFractionDigits: 2 })} USDT
+            ${actualMaxCapacity.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} USDT
           </span>
         </div>
       </div>
@@ -71,7 +90,7 @@ export default function CommitmentSealCard({
         {onBuyCS && (
           <button
             onClick={onBuyCS}
-            className="flex items-center gap-1 text-[11px] bg-emerald-500 hover:bg-emerald-400 text-black font-extrabold px-3 py-1.5 rounded-lg transition-colors shadow-sm shrink-0 ml-2"
+            className="flex items-center gap-1 text-[11px] bg-emerald-500 hover:bg-emerald-400 text-black font-extrabold px-3 py-1.5 rounded-lg transition-colors shadow-sm shrink-0 ml-2 cursor-pointer"
             type="button"
           >
             <ShoppingBag className="w-3.5 h-3.5" />

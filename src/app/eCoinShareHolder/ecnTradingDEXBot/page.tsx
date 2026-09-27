@@ -6,16 +6,14 @@ import {
   Bot, 
   Zap, 
   DollarSign, 
-  Wallet, 
-  TrendingUp, 
-  ArrowUpRight, 
-  PieChart, 
   ChevronRight,
-  Sparkles
+  Sparkles,
+  ArrowUpRight
 } from 'lucide-react';
 
 import { BOT_MARKETS } from './lib/ecnTrading/markets';
 import EcnTradingAICompoundingConceptCTA from '@/components/CTA/EcnTradingAICompoundingConceptCTA/EcnTradingAICompoundingConceptCTA';
+import Metrics from './components/Metrics';
 
 export default function EcnTradingDEXPage() {
   return (
@@ -23,48 +21,8 @@ export default function EcnTradingDEXPage() {
       {/* CTA no Topo */}
       <EcnTradingAICompoundingConceptCTA />
 
-      {/* Card de Visão Geral do Patrimônio e Lucros */}
-      <div className="bg-gradient-to-br from-[#12181F] to-[#0D1219] border border-[#D4AF37]/30 rounded-2xl p-4 md:p-6 shadow-xl relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-32 h-32 bg-[#D4AF37]/5 rounded-full blur-2xl pointer-events-none" />
-        
-        <div className="flex justify-between items-center mb-2">
-          <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider flex items-center gap-1.5">
-            <Wallet className="w-3.5 h-3.5 text-[#D4AF37]" />
-            Patrimônio Alocado
-          </span>
-          <span className="px-2 py-0.5 text-[10px] font-bold bg-[#00FF9C]/10 text-[#00FF9C] border border-[#00FF9C]/20 rounded-full flex items-center gap-1">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#00FF9C] animate-pulse" />
-            LIVE
-          </span>
-        </div>
-
-        <div className="flex items-baseline gap-2 mb-4">
-          <span className="text-2xl md:text-4xl font-black tracking-tight text-white">$158,240.00</span>
-          <span className="text-xs md:text-sm font-bold text-[#00FF9C] flex items-center">
-            <TrendingUp className="w-3.5 h-3.5 mr-0.5" />
-            +6.26%
-          </span>
-        </div>
-
-        {/* Métrica Dividida */}
-        <div className="grid grid-cols-2 gap-2.5 md:gap-4 pt-3 border-t border-gray-800/80">
-          <div className="bg-[#0B0E14]/80 p-2.5 md:p-4 rounded-xl border border-gray-800">
-            <div className="flex items-center gap-1.5 text-[10px] md:text-xs text-gray-400 mb-1">
-              <PieChart className="w-3.5 h-3.5 text-[#D4AF37]" />
-              <span>Participação Pool (PPP)</span>
-            </div>
-            <span className="text-sm md:text-lg font-extrabold text-[#D4AF37]">5.47%</span>
-          </div>
-
-          <div className="bg-[#0B0E14]/80 p-2.5 md:p-4 rounded-xl border border-gray-800">
-            <div className="flex items-center gap-1.5 text-[10px] md:text-xs text-gray-400 mb-1">
-              <Zap className="w-3.5 h-3.5 text-[#00FF9C]" />
-              <span>Capacidade CS Restante</span>
-            </div>
-            <span className="text-sm md:text-lg font-extrabold text-[#00FF9C]">62.5%</span>
-          </div>
-        </div>
-      </div>
+      {/* Card de Visão Geral Reativo (Patrimônio, PPP & CS Capacity) */}
+      <Metrics />
 
       {/* Mercados de Trading Bot */}
       <div>

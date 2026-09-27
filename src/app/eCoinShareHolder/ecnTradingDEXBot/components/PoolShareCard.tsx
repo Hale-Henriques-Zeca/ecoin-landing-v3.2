@@ -1,14 +1,26 @@
 'use client';
 
 import { PieChart, Info } from 'lucide-react';
+import { useMiningStaking } from '@/hooks/useMiningStaking';
 
 interface PoolShareCardProps {
-  userShare: string;
-  totalStaked: string;
+  userShare?: string;
+  totalStaked?: string;
   onInfoClick?: () => void;
 }
 
-export default function PoolShareCard({ userShare, totalStaked, onInfoClick }: PoolShareCardProps) {
+export default function PoolShareCard({ 
+  userShare, 
+  totalStaked, 
+  onInfoClick 
+}: PoolShareCardProps) {
+  // Consumo direto do hook para dados em tempo real na blockchain
+  const mining = useMiningStaking();
+
+  // Resolução dos valores: Props explícitas > Valores reativos do Hook
+  const displayUserShare = userShare ?? `${mining.share ? mining.share.toFixed(4) : "0.00"}%`;
+  const displayTotalStaked = totalStaked ?? `${mining.total ?? "0"} eCoin`;
+
   return (
     <div className="bg-[#12181F] border border-yellow-500/20 rounded-2xl p-4 shadow-lg">
       <div className="flex justify-between items-center mb-3">
@@ -19,7 +31,11 @@ export default function PoolShareCard({ userShare, totalStaked, onInfoClick }: P
           <span className="text-xs font-bold text-gray-200">Participação no Pool (PPP)</span>
         </div>
         {onInfoClick && (
-          <button onClick={onInfoClick} className="text-gray-400 hover:text-yellow-400">
+          <button 
+            type="button" 
+            onClick={onInfoClick} 
+            className="text-gray-400 hover:text-yellow-400 transition-colors cursor-pointer"
+          >
             <Info className="w-4 h-4" />
           </button>
         )}
@@ -28,11 +44,11 @@ export default function PoolShareCard({ userShare, totalStaked, onInfoClick }: P
       <div className="grid grid-cols-2 gap-3 bg-[#0B0E14] p-3 rounded-xl border border-gray-800">
         <div>
           <span className="text-[10px] text-gray-400 block">Sua Cota</span>
-          <span className="text-base font-extrabold text-emerald-400">{userShare}</span>
+          <span className="text-base font-extrabold text-emerald-400">{displayUserShare}</span>
         </div>
         <div className="text-right">
           <span className="text-[10px] text-gray-400 block">Total do Pool</span>
-          <span className="text-xs font-semibold text-white mt-1 block">{totalStaked}</span>
+          <span className="text-xs font-semibold text-white mt-1 block">{displayTotalStaked}</span>
         </div>
       </div>
     </div>

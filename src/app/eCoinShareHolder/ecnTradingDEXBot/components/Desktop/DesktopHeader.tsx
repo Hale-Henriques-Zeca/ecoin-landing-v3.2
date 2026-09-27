@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { Bell, ShieldCheck, Wallet, Search } from 'lucide-react';
+import { ConnectButton } from '@rainbow-me/rainbowkit';
 
 interface DesktopHeaderProps {
   title?: string;
@@ -40,10 +41,76 @@ export default function DesktopHeader({
           <Bell className="w-4 h-4" />
         </button>
 
-        <div className="flex items-center gap-2 px-3 py-2 bg-[#12181F] border border-yellow-500/20 rounded-xl text-xs font-bold text-yellow-400">
-          <Wallet className="w-4 h-4 text-yellow-400" />
-          <span>0x7a...4E92</span>
-        </div>
+        {/* INTEGRATION: RAINBOWKIT CONNECT BUTTON */}
+        <ConnectButton.Custom>
+          {({
+            account,
+            chain,
+            openAccountModal,
+            openChainModal,
+            openConnectModal,
+            authenticationStatus,
+            mounted,
+          }) => {
+            const ready = mounted && authenticationStatus !== 'loading';
+            const connected =
+              ready &&
+              account &&
+              chain &&
+              (!authenticationStatus || authenticationStatus === 'authenticated');
+
+            return (
+              <div
+                {...(!ready && {
+                  'aria-hidden': true,
+                  style: {
+                    opacity: 0,
+                    pointerEvents: 'none',
+                    userSelect: 'none',
+                  },
+                })}
+              >
+                {(() => {
+                  if (!connected) {
+                    return (
+                      <button
+                        onClick={openConnectModal}
+                        type="button"
+                        className="flex items-center gap-2 px-3 py-2 bg-[#12181F] border border-yellow-500/30 hover:border-yellow-500/80 rounded-xl text-xs font-bold text-yellow-400 transition"
+                      >
+                        <Wallet className="w-4 h-4 text-yellow-400" />
+                        <span>Conectar Carteira</span>
+                      </button>
+                    );
+                  }
+
+                  if (chain.unsupported) {
+                    return (
+                      <button
+                        onClick={openChainModal}
+                        type="button"
+                        className="flex items-center gap-2 px-3 py-2 bg-red-500/10 border border-red-500/40 hover:border-red-500 rounded-xl text-xs font-bold text-red-400 transition"
+                      >
+                        Rede Incorreta
+                      </button>
+                    );
+                  }
+
+                  return (
+                    <button
+                      onClick={openAccountModal}
+                      type="button"
+                      className="flex items-center gap-2 px-3 py-2 bg-[#12181F] border border-yellow-500/20 hover:border-yellow-500/60 rounded-xl text-xs font-bold text-yellow-400 transition"
+                    >
+                      <Wallet className="w-4 h-4 text-yellow-400" />
+                      <span>{account.displayName}</span>
+                    </button>
+                  );
+                })()}
+              </div>
+            );
+          }}
+        </ConnectButton.Custom>
       </div>
     </header>
   );
