@@ -57,7 +57,7 @@ export default function ProfitSimulatorCard() {
               </h3>
               
               <p className="text-xs text-slate-400 max-w-xl leading-relaxed font-sans">
-                Execute simulações matemáticas avançadas de staking e queima de <span className="text-emerald-400 font-semibold tracking-wide">ecGas</span>. Descubra a sua quota-parte do <span className="text-slate-200 font-medium">Smart AI Reward Pool</span> através do nosso modelo preditivo determinístico puro.
+                Execute simulações matemáticas avançadas de staking e queima de <span className="text-emerald-400 font-semibold tracking-wide">Profit Capacity (PC) ou Commitment Seal (CS)</span>. Descubra a sua quota-parte do <span className="text-slate-200 font-medium">Smart AI Reward Pool</span> através do nosso modelo preditivo determinístico puro.
               </p>
             </div>
           </div>

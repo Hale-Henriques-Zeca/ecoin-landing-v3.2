@@ -22,6 +22,8 @@ import SimulatorRedirectCard from "@/components/Cards/SimulatorRedirectCard";
 import ProfitSimulatorCard from "@/components/Cards/ProfitSimulatorCard";
 import ReferralCodePanel from "@/components/mining/eDollar/MiningMainPage/Components/ReferralCodePanel";
 import AdminPage from "@/components/mining/eDollar/MiningMainPage/Components/AdminPage";
+import SocialFooter from "@/components/mining/eDollar/SocialFooter";
+import ReferralModal from "@/components/mining/eDollar/ReferralModal";
 
 type TabType =
   | "lideranca"
@@ -30,7 +32,7 @@ type TabType =
   | "hub-simuladores"
   | "admin";
 
-export default function ProfileTabPage() {
+export default function eCoinProfilePage() {
   const router = useRouter();
   const { isConnected, address } = useAccount();
   const [mounted, setMounted] = useState(false);
@@ -270,6 +272,9 @@ export default function ProfileTabPage() {
               )}
 
             </AnimatePresence>
+
+                  <SocialFooter  />
+                  <ReferralModal />
 
             {/* RODAPÉ MÓDULO */}
             <div className="text-center text-zinc-600 text-[10px] pt-8 border-t border-white/5 uppercase tracking-widest flex items-center justify-center gap-2 font-mono">
