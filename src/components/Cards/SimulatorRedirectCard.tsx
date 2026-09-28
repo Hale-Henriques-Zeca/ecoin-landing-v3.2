@@ -41,7 +41,7 @@ export default function SimulatorRedirectCard() {
                 Simulador de Comissões de Referências
               </h3>
               <p className="text-xs text-white/50 max-w-md leading-relaxed font-sans">
-                Projete ganhos geométricos em tempo real. Compare de forma analítica os impactos macroeconômicos e de rendimento entre os motores <span className="text-[#D4AF37] font-medium">ecGas</span> e <span className="text-[#D4AF37] font-medium">Withdrawal Fee</span>.
+                Projete ganhos geométricos em tempo real. Compare de forma analítica os impactos macroeconômicos e de rendimento entre os motores <span className="text-[#D4AF37] font-medium">Profit Capacity (PC) ou Commitment Seal (CS)</span> e <span className="text-[#D4AF37] font-medium">Withdrawal Fee</span>.
               </p>
             </div>
           </div>
