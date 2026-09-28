@@ -5,19 +5,18 @@ import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowLeft,
-  Bot,
+  User,
   ShieldAlert,
   Crown,
   Share2,
   Calculator,
   SlidersHorizontal,
   ShieldCheck,
-  Sparkles,
-  Cpu
+  Sparkles
 } from "lucide-react";
 import { useAccount } from "wagmi";
 
-// Componentes do Ecossistema
+// Componentes
 import { TeamLeaderCTA } from "@/components/CTA/TeamLeaderCTA/TeamLeaderCTA";
 import SimulatorRedirectCard from "@/components/Cards/SimulatorRedirectCard";
 import ProfitSimulatorCard from "@/components/Cards/ProfitSimulatorCard";
@@ -31,7 +30,7 @@ type TabType =
   | "hub-simuladores"
   | "admin";
 
-export default function BotProfileTabPage() {
+export default function ProfileTabPage() {
   const router = useRouter();
   const { isConnected, address } = useAccount();
   const [mounted, setMounted] = useState(false);
@@ -49,7 +48,7 @@ export default function BotProfileTabPage() {
 
   if (!mounted) return null;
 
-  // Lista de Abas Dinâmicas adaptadas ao universo do Trading Bot
+  // Lista de Abas Dinâmicas (inclui Admin apenas se for Owner)
   const menuItems: {
     id: TabType;
     label: string;
@@ -60,32 +59,32 @@ export default function BotProfileTabPage() {
   }[] = [
     {
       id: "lideranca",
-      label: "Liderança Bot",
-      subtitle: "Programa de Líderes de Equipe & Volume",
+      label: "Liderança",
+      subtitle: "Programa de Líderes de Equipe",
       icon: Crown,
       activeStyle: "bg-[#D4AF37] text-black shadow-[0_4px_20px_rgba(212,175,55,0.3)] font-bold",
       mobileColor: "text-[#D4AF37]"
     },
     {
       id: "indicacao",
-      label: "Indicação Bot",
-      subtitle: "Código de convite e rede de afiliados",
+      label: "Indicação",
+      subtitle: "Gestão do código de convite",
       icon: Share2,
       activeStyle: "bg-amber-600 text-white shadow-[0_4px_20px_rgba(217,119,6,0.3)] font-bold",
       mobileColor: "text-amber-500"
     },
     {
       id: "simulador-lucro",
-      label: "Simulador de Bot",
-      subtitle: "Projeção de rendimento individual do Bot",
+      label: "Simulador Lucro",
+      subtitle: "Projeção individual de ganhos",
       icon: Calculator,
-      activeStyle: "bg-[#00FF9C] text-black shadow-[0_4px_20px_rgba(0,255,156,0.3)] font-bold",
-      mobileColor: "text-[#00FF9C]"
+      activeStyle: "bg-emerald-600 text-white shadow-[0_4px_20px_rgba(16,185,129,0.3)] font-bold",
+      mobileColor: "text-emerald-400"
     },
     {
       id: "hub-simuladores",
       label: "Hub Simuladores",
-      subtitle: "Motores de cálculo & estratégias DEX",
+      subtitle: "Atalhos para motores de cálculo",
       icon: SlidersHorizontal,
       activeStyle: "bg-blue-600 text-white shadow-[0_4px_20px_rgba(37,99,235,0.3)] font-bold",
       mobileColor: "text-blue-400"
@@ -94,8 +93,8 @@ export default function BotProfileTabPage() {
       ? [
           {
             id: "admin" as TabType,
-            label: "Painel Admin Bot",
-            subtitle: "Gestão do ecossistema Bot & Contratos",
+            label: "Painel Admin",
+            subtitle: "Gestão do ecossistema e contratos",
             icon: ShieldAlert,
             activeStyle: "bg-purple-600 text-white shadow-[0_4px_20px_rgba(147,51,234,0.3)] font-bold",
             mobileColor: "text-purple-400"
@@ -106,28 +105,27 @@ export default function BotProfileTabPage() {
 
   return (
     <div className="min-h-screen bg-[#020617] text-white font-sans pt-6 pb-28 lg:pb-12 px-2 lg:px-6 selection:bg-[#D4AF37]/20 selection:text-[#D4AF37]">
-      {/* Background Radial Glow */}
-      <div className="fixed inset-0 bg-[radial-gradient(circle_at_50%_-20%,#0f172a_0%,transparent_50%)] pointer-events-none" />
+      <div className="fixed inset-0 bg-[radial-gradient(circle_at_50%_-20%,#1e1b4b_0%,transparent_50%)] pointer-events-none" />
 
       <div className="max-w-[1600px] mx-auto space-y-6 relative z-10">
         
-        {/* 🧭 CABEÇALHO SUPERIOR COM BOTÃO DE VOLTAR AO BOT HUB */}
+        {/* 🧭 CABEÇALHO SUPERIOR COM BOTÃO DE VOLTAR AO HUB */}
         <motion.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           className="flex items-center justify-between border-b border-white/10 pb-4 px-2"
         >
           <button
-            onClick={() => router.push("/eCoinShareHolder/ecnTradingDEXBot")}
+            onClick={() => router.push("/")}
             className="group flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-white/80 hover:text-white hover:bg-white/10 hover:border-[#D4AF37]/50 transition-all duration-300 active:scale-95 cursor-pointer"
           >
             <ArrowLeft size={18} className="text-[#D4AF37] group-hover:-translate-x-1 transition-transform" />
-            <span className="text-xs font-bold uppercase tracking-wider">Voltar ao Bot Hub</span>
+            <span className="text-xs font-bold uppercase tracking-wider">Voltar ao Hub</span>
           </button>
 
           <div className="flex items-center gap-2 bg-[#D4AF37]/10 px-3 py-1.5 rounded-full border border-[#D4AF37]/20">
-            <Bot size={16} className="text-[#D4AF37]" />
-            <span className="text-[11px] font-bold text-[#D4AF37] uppercase tracking-widest">Bot Profile</span>
+            <User size={16} className="text-[#D4AF37]" />
+            <span className="text-[11px] font-bold text-[#D4AF37] uppercase tracking-widest">Perfil</span>
           </div>
         </motion.div>
 
@@ -138,11 +136,11 @@ export default function BotProfileTabPage() {
           transition={{ delay: 0.05 }}
           className="space-y-1 px-2"
         >
-          <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-white flex items-center gap-2">
-            Perfil & <span className="text-[#D4AF37]">Configurações do Bot</span>
+          <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-white">
+            Configurações & <span className="text-[#D4AF37]">Perfil</span>
           </h1>
           <p className="text-xs sm:text-sm text-gray-400">
-            Gerencie seu código de indicação, simuladores de rendimento e ferramentas avançadas do ecossistema Trading Bot.
+            Gerencie seu código de indicação, simuladores de ganhos e ferramentas avançadas da sua conta.
           </p>
         </motion.div>
 
@@ -154,9 +152,9 @@ export default function BotProfileTabPage() {
           {/* 1. NAVEGAÇÃO LATERAL (DESKTOP & LAPTOP) */}
           <aside className="hidden lg:flex flex-col w-72 bg-[#090a14] border border-white/10 rounded-3xl p-3.5 h-fit sticky top-28 gap-1.5 shadow-2xl">
             <div className="px-3 py-2 mb-1 border-b border-white/10 flex items-center gap-2">
-              <Cpu size={16} className="text-[#D4AF37]" />
+              <User size={16} className="text-[#D4AF37]" />
               <span className="font-black tracking-wider text-xs text-white/90 uppercase font-mono">
-                BOT ACCOUNT ENGINE
+                PAINEL DO USUÁRIO
               </span>
             </div>
 
@@ -181,7 +179,7 @@ export default function BotProfileTabPage() {
                   <span
                     className={`text-[10px] mt-0.5 font-sans font-normal ${
                       isActive
-                        ? item.id === "lideranca" || item.id === "simulador-lucro"
+                        ? item.id === "lideranca"
                           ? "text-[#020205]/90"
                           : "text-white/90"
                         : "text-slate-500"
@@ -198,7 +196,7 @@ export default function BotProfileTabPage() {
           <section className="flex-1 min-w-0 w-full space-y-8">
             <AnimatePresence mode="wait">
               
-              {/* ABA 1: LIDERANÇA DE EQUIPE BOT */}
+              {/* ABA 1: LIDERANÇA DE EQUIPE */}
               {activeTab === "lideranca" && (
                 <motion.div
                   key="tab-lideranca"
@@ -211,7 +209,7 @@ export default function BotProfileTabPage() {
                 </motion.div>
               )}
 
-              {/* ABA 2: CÓDIGO DE INDICAÇÃO BOT */}
+              {/* ABA 2: CÓDIGO DE INDICAÇÃO */}
               {activeTab === "indicacao" && (
                 <motion.div
                   key="tab-indicacao"
@@ -220,11 +218,12 @@ export default function BotProfileTabPage() {
                   exit={{ opacity: 0, y: -12 }}
                   transition={{ duration: 0.2, ease: "easeInOut" }}
                 >
+                  
                   <ReferralCodePanel />
                 </motion.div>
               )}
 
-              {/* ABA 3: SIMULADOR DE LUCRO BOT */}
+              {/* ABA 3: SIMULADOR DE LUCRO */}
               {activeTab === "simulador-lucro" && (
                 <motion.div
                   key="tab-simulador-lucro"
@@ -237,7 +236,7 @@ export default function BotProfileTabPage() {
                 </motion.div>
               )}
 
-              {/* ABA 4: HUB DE SIMULADORES DEX */}
+              {/* ABA 4: HUB DE SIMULADORES */}
               {activeTab === "hub-simuladores" && (
                 <motion.div
                   key="tab-hub-simuladores"
@@ -262,7 +261,7 @@ export default function BotProfileTabPage() {
                 >
                   <div className="flex items-center gap-2 text-[#D4AF37]">
                     <ShieldAlert size={18} />
-                    <h2 className="text-sm font-bold uppercase tracking-wider">Painel do Administrador DEX Bot</h2>
+                    <h2 className="text-sm font-bold uppercase tracking-wider">Painel do Administrador</h2>
                   </div>
                   <div className="bg-[#0d0d0f] border border-[#D4AF37]/30 rounded-3xl p-6 shadow-2xl shadow-[#D4AF37]/5">
                     <AdminPage />
@@ -274,8 +273,8 @@ export default function BotProfileTabPage() {
 
             {/* RODAPÉ MÓDULO */}
             <div className="text-center text-zinc-600 text-[10px] pt-8 border-t border-white/5 uppercase tracking-widest flex items-center justify-center gap-2 font-mono">
-              <ShieldCheck size={12} className="text-[#00FF9C]" />
-              <span>ECN Trading DEX Bot & Account Engine</span>
+              <ShieldCheck size={12} className="text-emerald-500" />
+              <span>EdenKingDom User Account Engine</span>
               <Sparkles size={12} className="text-[#D4AF37] animate-pulse" />
             </div>
           </section>

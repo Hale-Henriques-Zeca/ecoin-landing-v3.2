@@ -40,6 +40,7 @@ const navLinks = [
     external: false,
     icon: Wallet,
   },
+  { name: "Profile", href: "/eCoinProfilePage", icon: Crown},
   { name: "Importar E-Coin", href: "/import-guide", icon: Download },
   { name: "ShareHolder", href: "/eCoinShareHolder", icon: PiggyBank },
   { name: "Trade", href: "/ecoin-converter", icon: ArrowLeftRight },

@@ -95,11 +95,11 @@ export default function ReferralCodePanel() {
             <div className="truncate flex-1 text-left">
               <p className="text-[10px] text-zinc-500 uppercase font-bold tracking-wider">Seu Link de Indicação</p>
               <p className="text-xs font-mono text-[#D4AF37] truncate mt-0.5">
-                https://ecoin.edenkingdom.org/Mining
+                https://ecoin.edenkingdom.org
               </p>
             </div>
             <button
-              onClick={() => copyToClipboard(`https://ecoin.edenkingdom.org/Mining`, setCopiedLink)}
+              onClick={() => copyToClipboard(`https://ecoin.edenkingdom.org`, setCopiedLink)}
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#D4AF37]/10 border border-[#D4AF37]/30 text-[#D4AF37] text-xs font-bold hover:bg-[#D4AF37] hover:text-black transition-all shadow-sm"
             >
               {copiedLink ? (
