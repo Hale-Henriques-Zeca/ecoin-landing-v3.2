@@ -25,7 +25,6 @@ export default function UserProfitCapacity(props: UserProfitCapacityProps) {
   const mining = useMiningStaking();
   const gas = useEcGas(address);
 
-  // 📊 Mapeamento idêntico ao da PortfolioTabPage via gas.preview (formatUnits do smart contract)
   const preview = gas.preview;
 
   const contractRemaining =
@@ -48,7 +47,6 @@ export default function UserProfitCapacity(props: UserProfitCapacityProps) {
 
   const contractWillMine = contractRemaining > 0 && contractStakeActive;
 
-  // 🔄 Mapeamento final (prioriza props enviadas pelo componente pai; faz fallback autônomo para a Web3 caso ausentes)
   const maxCapacity = props.maxCapacity ?? contractMax;
   const usedCapacity =
     props.usedCapacity ?? props.usedCapacityUsdt ?? contractUsed;
@@ -56,7 +54,6 @@ export default function UserProfitCapacity(props: UserProfitCapacityProps) {
   const stakeActive = props.stakeActive ?? contractStakeActive;
   const willMine = props.willMine ?? contractWillMine;
 
-  // PROGRESSO DO TETO DE DIVIDENDOS (ROI 130%)
   const roiProgress =
     maxCapacity > 0 ? (usedCapacity / maxCapacity) * 100 : 0;
 
@@ -68,9 +65,9 @@ export default function UserProfitCapacity(props: UserProfitCapacityProps) {
         <span className="font-semibold">Capacidade de Lucros (PC) Restante</span>
       </div>
 
-      {/* EXIBIÇÃO DA CAPACIDADE RESTANTE (FORMATO OFICIAL DO CONTRATO) */}
+      {/* EXIBIÇÃO DA CAPACIDADE RESTANTE */}
       <div className="mt-1 mb-4">
-        <span className="text-xl md:text-2xl font-black text-[#00FF9C]">
+        <span className="text-xl md:text-2xl font-black text-[#00FF9C] break-all">
           {remainingCapacity.toFixed(9)}
         </span>
       </div>
@@ -139,7 +136,7 @@ export default function UserProfitCapacity(props: UserProfitCapacityProps) {
                 : willMine
                   ? "Capacidade de Lucro (PC) disponível para crédito regular dos lucros do bot ativo."
                   : stakeActive
-                    ? "Adquira mais Capacidadede Lucro (PC) para retomar o recebimento dos rendimentos."
+                    ? "Adquira mais Capacidade de Lucro (PC) para retomar o recebimento dos rendimentos."
                     : "Ative sua posição de Shareholder e ou ecnTrader para liberar o recebimento."}
             </p>
           </div>
