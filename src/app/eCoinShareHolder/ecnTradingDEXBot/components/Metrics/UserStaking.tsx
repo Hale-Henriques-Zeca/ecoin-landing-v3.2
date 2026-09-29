@@ -57,9 +57,9 @@ export default function UserStaking({
 
       {/* Cabeçalho do Card */}
       <div className="relative z-10 flex justify-between items-center mb-3">
-        <span className="text-xs font-bold text-gray-400 uppercase tracking-wider flex items-center gap-1.5 font-mono">
+        <span className="text-xs font-bold text-gray-400  tracking-wider flex items-center gap-1.5 font-mono">
           <Wallet className="w-4 h-4 text-[#D4AF37]" />
-          Fundos Alocados em E-Coin
+          Fundos Alocados em eCoin
         </span>
     
       </div>
