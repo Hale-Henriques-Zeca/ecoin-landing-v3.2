@@ -89,7 +89,7 @@ export default function UserShare({ pppShare }: UserShareProps) {
       <div className="relative z-10 flex items-center justify-between pb-3 mb-4 border-b border-gray-800/80">
         <div className="flex items-center gap-2 text-xs md:text-sm font-bold uppercase tracking-wider text-gray-300 font-mono">
           <PieChart className="w-4 h-4 text-[#D4AF37]" />
-          <span>Participação Pool - Margin Position (MP)</span>
+          <span>Participação No Pool - Margin Position (MP)</span>
         </div>
         <button
           type="button"

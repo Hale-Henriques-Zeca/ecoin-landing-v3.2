@@ -59,7 +59,7 @@ export default function UserStaking({
       <div className="relative z-10 flex justify-between items-center mb-3">
         <span className="text-xs font-bold text-gray-400 uppercase tracking-wider flex items-center gap-1.5 font-mono">
           <Wallet className="w-4 h-4 text-[#D4AF37]" />
-          Patrimônio Alocado
+          Fundos Alocados em E-Coin
         </span>
         <span className="px-2.5 py-0.5 text-[10px] font-extrabold bg-[#00FF9C]/10 text-[#00FF9C] border border-[#00FF9C]/20 rounded-full flex items-center gap-1.5 tracking-wider font-mono">
           <span className="w-1.5 h-1.5 rounded-full bg-[#00FF9C] animate-pulse" />
@@ -71,7 +71,7 @@ export default function UserStaking({
       <div className="relative z-10 flex items-baseline justify-between flex-wrap gap-2 mb-2">
         <div className="flex items-baseline gap-2">
           <span className="text-2xl md:text-4xl font-black tracking-tight text-white font-mono break-all">
-            ${actualAllocated.toLocaleString('en-US', {
+            {actualAllocated.toLocaleString('en-US', {
               minimumFractionDigits: 2,
               maximumFractionDigits: 6,
             })}

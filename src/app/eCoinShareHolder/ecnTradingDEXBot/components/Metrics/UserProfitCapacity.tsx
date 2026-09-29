@@ -68,7 +68,7 @@ export default function UserProfitCapacity(props: UserProfitCapacityProps) {
       {/* EXIBIÇÃO DA CAPACIDADE RESTANTE */}
       <div className="mt-1 mb-4">
         <span className="text-xl md:text-2xl font-black text-[#00FF9C] break-all">
-          {remainingCapacity.toFixed(9)}
+          ${remainingCapacity.toFixed(9)}
         </span>
       </div>
 
