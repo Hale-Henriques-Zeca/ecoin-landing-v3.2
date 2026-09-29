@@ -413,7 +413,7 @@ export default function HowAiMiningWorksPage() {
         {/* 🔗 SEÇÃO: LINKS DE NAVEGAÇÃO RÁPIDA */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 no-print">
           <a 
-            href="https://ecoin.edenkingdom.org/ecoin-ai-trading" 
+            href="/eCoinShareHolder/ecnTradingDEXBot" 
             target="_blank" 
             rel="noopener noreferrer"
             className="group flex flex-col items-center justify-center gap-3 p-6 rounded-2xl bg-white/[0.02] border border-white/10 hover:bg-[#D4AF37]/10 hover:border-[#D4AF37]/30 transition-all duration-300"
@@ -424,7 +424,7 @@ export default function HowAiMiningWorksPage() {
           </a>
 
           <a 
-            href="https://ecoin.edenkingdom.org/Mining" 
+            href="/eCoinShareHolder" 
             target="_blank" 
             rel="noopener noreferrer"
             className="group flex flex-col items-center justify-center gap-3 p-6 rounded-2xl bg-white/[0.02] border border-white/10 hover:bg-[#D4AF37]/10 hover:border-[#D4AF37]/30 transition-all duration-300"

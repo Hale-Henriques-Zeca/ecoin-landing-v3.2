@@ -1,10 +1,9 @@
 'use client';
 
 import Link from 'next/link';
-import MobileBar from '../components/Mobile/MobileBar';
+
 
 const markets = [
-  { id: 'ecoin-bnb', pair: 'E-Coin / BNB', desc: 'Trade BNB com IA & Staking', icon: '⚡' },
   { id: 'ecoin-usdt', pair: 'E-Coin / USDT', desc: 'Trade USDT com IA & DEX/CEX', icon: '₮' },
   { id: 'ecoin-edollar', pair: 'E-Coin / eDollar', desc: 'Trade eDollar & Stablecoin Liquidity', icon: '$' },
   { id: 'ecoin-ecoin', pair: 'E-Coin / E-Coin', desc: 'Pool de Recompensa Nativa E-Coin', icon: '🪙' },
@@ -20,7 +19,7 @@ export default function BotPage() {
 
       <div className="bg-gradient-to-r from-emerald-900/40 to-yellow-900/20 border border-emerald-500/20 rounded-2xl p-4 mb-6">
         <h2 className="text-base font-semibold text-emerald-400">Stake. Trade. Earn. Grow.</h2>
-        <p className="text-xs text-gray-300 mt-1">Selecione o mercado desejado para alocar PPP e adquirir Profit Capacity (CS).</p>
+        <p className="text-xs text-gray-300 mt-1">Selecione o mercado desejado para alocar Margin Position (MP) e adquirir Profit Capacity (PC).</p>
       </div>
 
       <h3 className="text-sm font-semibold text-gray-300 mb-3">Select Your Trading Market</h3>
