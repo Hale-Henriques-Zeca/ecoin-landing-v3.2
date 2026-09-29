@@ -75,10 +75,7 @@ export default function UserStaking({
           </span>
         </div>
 
-        <div className="flex items-center gap-1 px-2 py-1 rounded-lg bg-[#00FF9C]/10 border border-[#00FF9C]/20 text-[#00FF9C] text-xs font-bold font-mono">
-          <TrendingUp className="w-3.5 h-3.5" />
-          +{growthPercentage.toFixed(2)}%
-        </div>
+        
       </div>
 
       {/* Detalhes Adicionais Conectados à Blockchain */}
