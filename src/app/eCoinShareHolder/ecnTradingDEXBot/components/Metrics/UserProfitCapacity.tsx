@@ -132,7 +132,7 @@ export default function UserProfitCapacity(props: UserProfitCapacityProps) {
 
             <p className="text-[11px] text-white/40 mt-1 leading-relaxed">
               {remainingCapacity <= 0
-                ? "Os Lucros do Bot ecnTrading excederam a sua capacidade de Lucros. Recarregue a sua capacidade de lucros para continuar a receber."
+                ? "Os Lucros do Bot ecnTrading excederam a sua capacidade de Lucros. Recarregue a sua capacidade de lucros para continuar a receber lucros ou conecte a sua carteira."
                 : willMine
                   ? "Capacidade de Lucro (PC) disponível para crédito regular dos lucros do bot ativo."
                   : stakeActive
