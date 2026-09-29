@@ -61,10 +61,7 @@ export default function UserStaking({
           <Wallet className="w-4 h-4 text-[#D4AF37]" />
           Fundos Alocados em E-Coin
         </span>
-        <span className="px-2.5 py-0.5 text-[10px] font-extrabold bg-[#00FF9C]/10 text-[#00FF9C] border border-[#00FF9C]/20 rounded-full flex items-center gap-1.5 tracking-wider font-mono">
-          <span className="w-1.5 h-1.5 rounded-full bg-[#00FF9C] animate-pulse" />
-          LIVE BSC
-        </span>
+    
       </div>
 
       {/* Valor do Patrimônio Alocado & % de Rendimento */}
