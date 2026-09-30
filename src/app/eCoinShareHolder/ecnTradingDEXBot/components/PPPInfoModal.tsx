@@ -16,12 +16,12 @@ export default function PPPInfoModal({ isOpen, onClose }: Props) {
         <button onClick={onClose} className="absolute top-4 right-4 text-gray-400 hover:text-white">
           <X className="w-5 h-5" />
         </button>
-        <h3 className="text-lg font-bold text-yellow-400 mb-2">PPP (Profit Participation Position)</h3>
+        <h3 className="text-lg font-bold text-yellow-400 mb-2">PM (Profit Margin)</h3>
         <p className="text-sm text-gray-300 leading-relaxed mb-4">
-          A **Posição de Participação nos Lucros (PPP)** define a quantidade de **E-Coin em Staking** que você aloca neste Bot de Trading.
+          A **Margem de Lucros (PM)** - define a quantidade de **eCoin em Staking** que você aloca neste Bot de Trading.
         </p>
         <p className="text-xs text-gray-400 leading-relaxed">
-          Quanto maior for a quantia alocada em relação ao total do pool, maior será a sua porcentagem de participação (**Pool Share %**) no rateio diário dos lucros do ecossistema E-Coin.
+          Quanto maior for a quantia alocada no (PM) em relação ao total do pool, maior será a sua porcentagem de recebimento dos lucros gerados pelo Bot no pool comum ate atingir o seu teto de 130% universais (**Pool Share %**) no rateio diário dos lucros gerados pelo ecnTrading bot no mercado, no ecossistema eCoin.
         </p>
         <button
           onClick={onClose}

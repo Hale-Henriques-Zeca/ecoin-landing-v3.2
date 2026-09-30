@@ -69,8 +69,8 @@ export default function UserStaking({
         <div className="flex items-baseline gap-2">
           <span className="text-2xl md:text-4xl font-black tracking-tight text-white font-mono break-all">
             {actualAllocated.toLocaleString('en-US', {
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 6,
+              minimumFractionDigits: 15,
+              maximumFractionDigits: 15,
             })}
           </span>
         </div>

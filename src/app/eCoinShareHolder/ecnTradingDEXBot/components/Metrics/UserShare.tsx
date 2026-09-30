@@ -178,7 +178,7 @@ export default function UserShare({ pppShare }: UserShareProps) {
               </div>
             </div>
             <span className="text-sm md:text-base font-extrabold text-[#D4AF37]">
-              {actualPPP.toFixed(actualPPP < 0.0001 ? 8 : 4)}%
+              {actualPPP.toFixed(actualPPP < 0.0001 ? 5 : 5)}%
             </span>
           </div>
 

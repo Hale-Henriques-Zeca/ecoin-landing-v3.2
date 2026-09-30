@@ -16,9 +16,9 @@ export default function CSInfoModal({ isOpen, onClose }: Props) {
         <button onClick={onClose} className="absolute top-4 right-4 text-gray-400 hover:text-white">
           <X className="w-5 h-5" />
         </button>
-        <h3 className="text-lg font-bold text-emerald-400 mb-2">Profit Capacity / Commitment Seal (CS)</h3>
+        <h3 className="text-lg font-bold text-emerald-400 mb-2">Profit Capacity (PC) / Commitment Seal (CS)</h3>
         <p className="text-sm text-gray-300 leading-relaxed mb-3">
-          O **Commitment Seal (CS)** representa a capacidade máxima de lucro que o seu robô pode gerar neste ciclo de mineração/arbitragem.
+          O **Commitment Seal (CS) ou Profit Capacity (PC)** - representa a capacidade máxima de lucro que o seu robô pode gerar neste ciclo de mineração/arbitragem.
         </p>
         <ul className="text-xs text-gray-300 list-disc list-inside space-y-1.5 mb-4">
           <li><strong>Regra de Teto:</strong> 100 USDT = 130 USDT de Capacidade Máxima de Lucro (130%).</li>
