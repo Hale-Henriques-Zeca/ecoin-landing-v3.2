@@ -89,7 +89,7 @@ export default function UserShare({ pppShare }: UserShareProps) {
       <div className="relative z-10 flex items-center justify-between pb-3 mb-4 border-b border-gray-800/80">
         <div className="flex items-center gap-2 text-xs md:text-sm font-bold uppercase tracking-wider text-gray-300 font-mono">
           <PieChart className="w-4 h-4 text-[#D4AF37]" />
-          <span>Participação No Pool - Margin Position (MP)</span>
+          <span>Participação No Pool - Profit Margin (PM)</span>
         </div>
         <button
           type="button"
@@ -169,12 +169,12 @@ export default function UserShare({ pppShare }: UserShareProps) {
               <span className="w-3.5 h-3.5 rounded-full bg-[#D4AF37] shadow-[0_0_10px_#D4AF37] flex-shrink-0" />
               <div className="flex flex-col">
                 <span className="text-xs font-bold text-white flex items-center gap-1.5">
-                  Sua Fatia (MP) 
+                  Sua Fatia (PM) 
                   <span className="text-[9px] px-1.5 py-0.2 bg-[#D4AF37]/20 text-[#D4AF37] rounded border border-[#D4AF37]/40 uppercase tracking-tight">
                     Solta
                   </span>
                 </span>
-                <span className="text-[10px] text-gray-400">Margin Position (MP) Ativa</span>
+                <span className="text-[10px] text-gray-400">Profit Margin (PM) Ativa</span>
               </div>
             </div>
             <span className="text-sm md:text-base font-extrabold text-[#D4AF37]">
@@ -188,13 +188,13 @@ export default function UserShare({ pppShare }: UserShareProps) {
               <span className="w-3.5 h-3.5 rounded-full bg-[#00FF9C] shadow-[0_0_10px_#00FF9C] flex-shrink-0" />
               <div className="flex flex-col">
                 <span className="text-xs font-bold text-gray-200">
-                  Outros ecnTraders com (MP) do Pool 
+                  Outros ecnTraders com (PM) do Pool 
                 </span>
                 <span className="text-[10px] text-gray-400">Total Restante</span>
               </div>
             </div>
             <span className="text-sm md:text-base font-extrabold text-[#00FF9C]">
-              {(100 - actualPPP).toFixed(4)}%
+              {(100 - actualPPP).toFixed(5)}%
             </span>
           </div>
         </div>

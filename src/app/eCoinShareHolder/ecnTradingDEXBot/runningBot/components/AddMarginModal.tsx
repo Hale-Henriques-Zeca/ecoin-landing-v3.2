@@ -34,6 +34,7 @@ export default function AddMarginModal({ isOpen, onClose, pairName }: AddMarginM
   if (!isOpen) return null;
 
   const walletBal = Number(mining.walletBalance ?? 0);
+  const staked = Number(mining.userStake || 0);
 
   const handleSetPercentage = (pct: number) => {
     const val = (walletBal * pct) / 100;
@@ -77,11 +78,15 @@ export default function AddMarginModal({ isOpen, onClose, pairName }: AddMarginM
         <div className="bg-[#0B0E14] p-3 rounded-xl border border-gray-800 mb-4">
           <div className="flex justify-between text-xs text-gray-400 mb-1">
             <span>Saldo Disponível na Carteira:</span>
-            <span className="text-yellow-400 font-bold">{walletBal.toLocaleString()} eCoin</span>
+            <span className="text-yellow-400 font-bold">
+              {walletBal.toLocaleString('pt-BR')} eCoin
+            </span>
           </div>
           <div className="flex justify-between text-xs text-gray-400">
-            <span>Margem Retida Atual:</span>
-            <span className="text-emerald-400 font-bold">{Number(mining.userStake || 0).toLocaleString()} eCoin</span>
+            <span>Margem Retida No Trading Bot Atual:</span>
+            <span className="text-emerald-400 font-bold">
+              {staked.toLocaleString('pt-BR')} eCoin
+            </span>
           </div>
         </div>
 
