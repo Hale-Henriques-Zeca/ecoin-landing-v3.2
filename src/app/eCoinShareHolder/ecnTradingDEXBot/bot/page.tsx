@@ -4,10 +4,10 @@ import Link from 'next/link';
 
 
 const markets = [
-  { id: 'ecoin-ecoin', pair: 'E-Coin / E-Coin', desc: 'Trade eCoin com IA & Staking', icon: '⚡' },
-  { id: 'ecoin-usdt', pair: 'E-Coin / USDT', desc: 'Trade USDT com IA & DEX', icon: '₮' },
-  { id: 'ecoin-edollar', pair: 'E-Coin / eDollar', desc: 'Trade eDollar & Stablecoin Liquidity', icon: '$' },
-  { id: 'ecoin-ecoin', pair: 'E-Coin / E-Coin', desc: 'Pool de Recompensa Nativa E-Coin', icon: '🪙' },
+  { id: 'eCoinBot', pair: 'eCoin Bot', desc: 'Trade eCoin com IA & Staking', icon: '⚡' },
+  { id: 'usdtBot', pair: 'USDT Bot', desc: 'Trade USDT com IA & DEX', icon: '₮' },
+  { id: 'eDollarBot', pair: 'eDollar Bot', desc: 'Trade eDollar & Stablecoin Liquidity', icon: '$' },
+  { id: 'buybackBot', pair: 'BuyBack Bot', desc: 'Pool de Recompensa Nativa E-Coin', icon: '🪙' },
 ];
 
 export default function BotPage() {

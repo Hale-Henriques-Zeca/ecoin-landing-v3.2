@@ -1,4 +1,4 @@
-export type MarketPair = 'E-Coin/E-Coin' | 'E-Coin/USDT' | 'E-Coin/eDollar' | 'E-Coin/E-Coin';
+export type MarketPair = 'E-Coin Bot' | 'USDT Bot' | 'eDollar Bot' | 'BuyBack Bot';
 
 export interface BotMarket {
   id: string;

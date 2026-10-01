@@ -2,28 +2,28 @@ import { BotMarket } from '../../types/ecnTrading';
 
 export const BOT_MARKETS: BotMarket[] = [
   {
-    id: 'ecoin-bnb',
-    pair: 'E-Coin/BNB',
-    description: 'Arbitragem de alta frequência & Staking em BNB Smart Chain',
+    id: 'eCoinBot',
+    pair: 'E-Coin Bot',
+    description: 'Arbitragem de alta frequência & Staking em eCoin Smart Chain',
     icon: '⚡',
     badge: 'POPULAR',
   },
   {
-    id: 'ecoin-usdt',
-    pair: 'E-Coin/USDT',
+    id: 'usdtBot',
+    pair: 'USDT Bot',
     description: 'Pools de liquidez estável DEX com execução neural',
     icon: '₮',
     badge: 'HOT',
   },
   {
-    id: 'ecoin-edollar',
-    pair: 'E-Coin/eDollar',
+    id: 'eDollarBot',
+    pair: 'eDollar Bot',
     description: 'Operações de liquidez interna e estabilidade eDollar',
     icon: '$',
   },
   {
-    id: 'ecoin-ecoin',
-    pair: 'E-Coin/E-Coin',
+    id: 'buybackBot',
+    pair: 'BuyBack Bot',
     description: 'Pool de Recompensa Nativa (Compra na Baixa e venda na alta)',
     icon: '🪙',
   },

@@ -144,7 +144,7 @@ export default function MarketConfigPage({ params }: { params: { market: string 
 
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-lg font-bold text-yellow-400 uppercase tracking-wide">
-          {params.market ? params.market.replace('-', ' / ').toUpperCase() : 'E-Coin / USDT'} Bot
+          {params.market ? params.market.replace('-', ' / ').toUpperCase() : 'USDT Bot'} Bot
         </h1>
         <div className="flex items-center gap-2">
           <span className={`text-[10px] px-2.5 py-0.5 rounded-full font-bold border ${
@@ -259,7 +259,7 @@ export default function MarketConfigPage({ params }: { params: { market: string 
                 : 'bg-gray-800 border border-gray-700 text-gray-400 hover:text-white'
             }`}
           >
-            eDollar (EUSD)
+            eDollar (E-USD)
           </button>
         </div>
 

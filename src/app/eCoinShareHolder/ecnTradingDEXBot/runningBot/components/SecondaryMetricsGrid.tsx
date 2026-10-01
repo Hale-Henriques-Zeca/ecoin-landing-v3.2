@@ -55,7 +55,7 @@ export default function SecondaryMetricsGrid({ bot }: SecondaryMetricsGridProps)
       <div className="bg-[#0B0E14]/60 p-2 rounded-lg border border-gray-800/80 text-right">
         <span className="text-gray-400 text-[10px] block">Pool Share:</span>
         <span className="text-yellow-400 font-semibold block">
-          {mining?.share ? `${Number(mining.share).toFixed(2)}%` : bot.poolShare}
+          {mining?.share ? `${Number(mining.share).toFixed(15)}%` : bot.poolShare}
         </span>
       </div>
     </div>
