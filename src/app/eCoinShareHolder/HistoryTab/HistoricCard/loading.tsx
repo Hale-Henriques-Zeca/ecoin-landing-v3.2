@@ -2,7 +2,7 @@
 
 import React from "react";
 
-export default function Loading() {
+export default function HistoryLoading() {
   return (
     <div className="min-h-screen w-full flex flex-col items-center justify-center p-6 space-y-4 bg-[#020617] text-white">
       {/* 🌀 Container do Spinner */}
@@ -22,7 +22,7 @@ export default function Loading() {
       <div className="flex flex-col items-center space-y-1 text-center">
         <div className="flex items-center gap-2">
           <span className="text-sm font-bold tracking-wider text-slate-200 uppercase">
-            Carregando Actividades
+            Carregando Histórico
           </span>
           <span className="flex space-x-1">
             <span className="w-1.5 h-1.5 rounded-full bg-[#D4AF37] animate-bounce [animation-delay:-0.3s]" />
@@ -30,7 +30,7 @@ export default function Loading() {
             <span className="w-1.5 h-1.5 rounded-full bg-[#D4AF37] animate-bounce" />
           </span>
         </div>
-
+        
         <p className="text-[11px] text-slate-400 font-mono">
           Sincronizando registros da blockchain e movimentações...
         </p>

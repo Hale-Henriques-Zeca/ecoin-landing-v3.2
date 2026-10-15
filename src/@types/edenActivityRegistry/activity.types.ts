@@ -1,0 +1,106 @@
+import type { Address, Hash } from "viem";
+
+export type EdenActivityRecord = {
+  user: Address;
+  activityType: Hash;
+  token: Address;
+  amount: bigint;
+  source: Address;
+  referenceId: Hash;
+  timestamp: bigint;
+  blockNumber: bigint;
+  transactionHash: Hash | null;
+  logIndex: number | null;
+};
+
+export const EDEN_ACTIVITY_LABELS: Record<string, string> = {
+  DEPOSIT: "Depósito",
+  WITHDRAWAL: "Levantamento",
+  STAKING: "Staking / margem adicionada",
+  UNSTAKE: "Unstake / margem removida",
+  PROFIT: "Lucro",
+  REFERRAL: "Referência",
+  REFERRAL_CLAIM: "Recompensa de referência reclamada",
+  CS_EMISSION: "Emissão de capacidade de lucro",
+  CLAIM: "Recompensa reclamada",
+  TRADING: "Trading",
+  INVESTMENT: "Investimento",
+  REFERRAL_LINK: "Ligação de referência",
+  REFERRAL_CODE_REGISTERED: "Código de referência registado",
+  OFFICIAL_TOKEN_REGISTERED: "Token oficial registado",
+  CUSTOM_TOKEN_ADDED: "Token personalizado adicionado",
+  CUSTOM_TOKEN_REMOVED: "Token personalizado removido",
+  CUSTOM_TOKEN_DETECTED: "Token personalizado detectado",
+  CUSTOM_TOKEN_TRANSFERRED: "Token personalizado transferido",
+  CUSTOM_TOKEN_APPROVED: "Token personalizado aprovado",
+  CONVERSION: "Conversão",
+  WALLET_RECOVERY: "Recuperação da carteira",
+  SESSION_CREATED: "Sessão criada",
+  SESSION_REVOKED: "Sessão revogada",
+  SESSION_CONSUMED: "Sessão utilizada",
+  SESSIONS_INVALIDATED: "Sessões invalidadas",
+  CONTROLLER_AUTHORIZED: "Controlador autorizado",
+  CONTROLLER_PERMISSIONS_UPDATED: "Permissões do controlador actualizadas",
+  CONTROLLER_REVOKED: "Controlador revogado",
+  DEVICE_AUTHORIZED: "Dispositivo autorizado",
+  DEVICE_REVOKED: "Dispositivo revogado",
+  WALLET_FROZEN: "Carteira congelada",
+  WALLET_UNFROZEN: "Carteira descongelada",
+  GUARDIAN_STATUS_CHANGED: "Estado do guardian alterado",
+  SECURITY_OPERATOR_UPDATED: "Operador de segurança actualizado",
+  WALLET_GUARDIAN_FACTORY_UPDATED: "Fábrica de guardians actualizada",
+  GAS_SPONSORSHIP_AUTHORIZED: "Patrocínio de gas autorizado",
+  GAS_SPONSORSHIP_COMPLETED: "Patrocínio de gas concluído",
+  TRANSFER: "Transferência",
+  SERVICE_FEE: "Taxa de serviço",
+  WALLET_CREATED: "Carteira criada",
+  WALLET_EXECUTED: "Operação de carteira executada",
+  WALLET_BATCH_EXECUTED: "Operações em lote executadas",
+  WALLET_SESSION_EXECUTED: "Operação de sessão executada",
+};
+
+export const EDEN_ACTIVITY_HASH_TEXT: Record<string, string> = {
+  DEPOSIT: "DEPOSIT",
+  WITHDRAWAL: "WITHDRAWAL",
+  STAKING: "ADD_PROFIT_MARGIN",
+  UNSTAKE: "REMOVE_PROFIT_MARGIN",
+  PROFIT: "PROFIT",
+  REFERRAL: "REFERRAL",
+  REFERRAL_CLAIM: "REFERRAL_CLAIM",
+  CS_EMISSION: "ADD_PROFIT_CAPACITY",
+  CLAIM: "CLAIM",
+  TRADING: "TRADING",
+  INVESTMENT: "INVESTMENT",
+  REFERRAL_LINK: "LINK_UPLINE",
+  REFERRAL_CODE_REGISTERED: "REFERRAL_CODE_REGISTERED",
+  OFFICIAL_TOKEN_REGISTERED: "OFFICIAL_TOKEN_REGISTERED",
+  CUSTOM_TOKEN_ADDED: "CUSTOM_TOKEN_ADDED",
+  CUSTOM_TOKEN_REMOVED: "CUSTOM_TOKEN_REMOVED",
+  CUSTOM_TOKEN_DETECTED: "CUSTOM_TOKEN_DETECTED",
+  CUSTOM_TOKEN_TRANSFERRED: "CUSTOM_TOKEN_TRANSFERRED",
+  CUSTOM_TOKEN_APPROVED: "CUSTOM_TOKEN_APPROVED",
+  CONVERSION: "CONVERSION",
+  WALLET_RECOVERY: "WALLET_RECOVERY",
+  SESSION_CREATED: "SESSION_CREATED",
+  SESSION_REVOKED: "SESSION_REVOKED",
+  SESSION_CONSUMED: "SESSION_CONSUMED",
+  SESSIONS_INVALIDATED: "SESSIONS_INVALIDATED",
+  CONTROLLER_AUTHORIZED: "CONTROLLER_AUTHORIZED",
+  CONTROLLER_PERMISSIONS_UPDATED: "CONTROLLER_PERMISSIONS_UPDATED",
+  CONTROLLER_REVOKED: "CONTROLLER_REVOKED",
+  DEVICE_AUTHORIZED: "DEVICE_AUTHORIZED",
+  DEVICE_REVOKED: "DEVICE_REVOKED",
+  WALLET_FROZEN: "WALLET_FROZEN",
+  WALLET_UNFROZEN: "WALLET_UNFROZEN",
+  GUARDIAN_STATUS_CHANGED: "GUARDIAN_STATUS_CHANGED",
+  SECURITY_OPERATOR_UPDATED: "SECURITY_OPERATOR_UPDATED",
+  WALLET_GUARDIAN_FACTORY_UPDATED: "WALLET_GUARDIAN_FACTORY_UPDATED",
+  GAS_SPONSORSHIP_AUTHORIZED: "GAS_SPONSORSHIP_AUTHORIZED",
+  GAS_SPONSORSHIP_COMPLETED: "GAS_SPONSORSHIP_COMPLETED",
+  TRANSFER: "TRANSFER",
+  SERVICE_FEE: "SERVICE_FEE",
+  WALLET_CREATED: "WALLET_CREATED",
+  WALLET_EXECUTED: "WALLET_EXECUTED",
+  WALLET_BATCH_EXECUTED: "WALLET_BATCH_EXECUTED",
+  WALLET_SESSION_EXECUTED: "WALLET_SESSION_EXECUTED",
+};
