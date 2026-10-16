@@ -1,141 +1,88 @@
 "use client";
 
-import {
-  EDEN_ACTIVITY_HASH_TEXT,
-  EDEN_ACTIVITY_LABELS,
-  type EdenActivityRecord,
-} from "@/types/edenActivityRegistry/activity.types";
-import { useEdenActivityHistory } from "@/hooks/edenActivityRegistry/useEdenActivityHistory";
-import { useEdenActivityCount } from "@/hooks/edenActivityRegistry/useEdenActivityCount";
-import { keccak256, toBytes, type Address } from "viem";
+import React from "react";
+import { useEdenActivityRegistry } from "@/hooks/useEdenActivityRegistry";
+import { History, ArrowUpRight, RefreshCw, ExternalLink } from "lucide-react";
 
-function shorten(value: string) {
-  return `${value.slice(0, 6)}…${value.slice(-4)}`;
-}
-
-function activityLabel(activityType: string) {
-  const normalized = activityType.toLowerCase();
-  const key = Object.entries(EDEN_ACTIVITY_HASH_TEXT).find(
-    ([, solidityText]) =>
-      keccak256(toBytes(solidityText)).toLowerCase() === normalized,
-  )?.[0];
-
-  return key ? EDEN_ACTIVITY_LABELS[key] : "Actividade";
-}
-
-function formatDate(timestamp: bigint) {
-  return new Date(Number(timestamp) * 1000).toLocaleString();
-}
-
-type Props = {
-  userAddress?: Address;
-};
-
-export default function EdenActivityHistoryPanel({ userAddress }: Props) {
-  const history = useEdenActivityHistory({ userAddress });
-  const count = useEdenActivityCount(userAddress);
+export default function MiningHistoryPanel() {
+  const { activities, isLoading, totalCount, refetch } = useEdenActivityRegistry();
 
   return (
-    <section className="space-y-4">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <div>
-          <h2 className="text-lg font-semibold">Histórico de actividades</h2>
-          <p className="text-sm text-muted-foreground">
-            Total registado on-chain: {count.count.toString()}
-          </p>
+    <div className="space-y-4">
+      <div className="flex items-center justify-between border-b border-white/5 pb-4">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-[#D4AF37]/10 flex items-center justify-center text-[#D4AF37]">
+            <History size={20} />
+          </div>
+          <div>
+            <h3 className="font-bold text-base text-white">Histórico de Atividades no Protocolo</h3>
+            <p className="text-xs text-white/40">Total registrado: {totalCount}</p>
+          </div>
         </div>
         <button
+          onClick={() => refetch()}
           type="button"
-          onClick={() => {
-            history.refetch();
-            void count.refetch();
-          }}
-          className="rounded-lg border px-3 py-2 text-sm"
+          className="p-2 rounded-xl bg-white/5 hover:bg-white/10 text-white/60 hover:text-white transition-all active:scale-95"
         >
-          Actualizar
+          <RefreshCw size={16} className={isLoading ? "animate-spin text-[#D4AF37]" : ""} />
         </button>
       </div>
 
-      {history.error && (
-        <p role="alert" className="rounded-lg border border-red-500/40 p-3 text-sm">
-          {history.error.message}
-        </p>
-      )}
-
-      {count.error && (
-        <p role="alert" className="rounded-lg border border-red-500/40 p-3 text-sm">
-          Não foi possível consultar a contagem: {count.error.message}
-        </p>
-      )}
-
-      {history.isLoading && (
-        <p className="text-sm text-muted-foreground">A carregar actividades…</p>
-      )}
-
-      {!history.isLoading && !history.error && history.activities.length === 0 && (
-        <p className="rounded-lg border p-4 text-sm text-muted-foreground">
-          Não foram encontradas actividades para este endereço, ou a configuração
-          do bloco inicial ainda não foi concluída.
-        </p>
-      )}
-
-      <div className="space-y-3">
-        {history.activities.map((activity: EdenActivityRecord) => (
-          <article
-            key={`${activity.transactionHash ?? "tx"}-${activity.logIndex ?? 0}`}
-            className="rounded-xl border p-4"
-          >
-            <div className="flex flex-wrap items-start justify-between gap-2">
-              <div>
-                <h3 className="font-medium">
-                  {activityLabel(activity.activityType)}
-                </h3>
-                <p className="text-xs text-muted-foreground">
-                  {formatDate(activity.timestamp)}
-                </p>
+      {isLoading ? (
+        <div className="py-12 text-center text-white/40 text-sm font-mono">
+          A carregar registos on-chain...
+        </div>
+      ) : activities.length === 0 ? (
+        <div className="py-12 text-center text-white/40 text-sm">
+          Nenhuma atividade registrada para esta carteira.
+        </div>
+      ) : (
+        <div className="space-y-3 max-h-[500px] overflow-y-auto pr-1">
+          {activities.map((act, index) => (
+            <div
+              key={`${act.transactionHash}-${index}`}
+              className="flex items-center justify-between p-4 bg-white/[0.02] border border-white/5 rounded-2xl hover:border-[#D4AF37]/30 transition-all"
+            >
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-[#D4AF37]">
+                  <ArrowUpRight size={18} />
+                </div>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <p className="text-xs font-bold text-white uppercase tracking-wider">
+                      {act.activityLabel}
+                    </p>
+                    {act.transactionHash && act.transactionHash !== "0x0" && (
+                      <a
+                        href={`https://bscscan.com/tx/${act.transactionHash}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-white/30 hover:text-[#D4AF37] transition-colors"
+                      >
+                        <ExternalLink size={12} />
+                      </a>
+                    )}
+                  </div>
+                  <p className="text-[10px] text-white/40 font-mono mt-0.5">
+                    {new Date(act.timestamp).toLocaleString()}
+                  </p>
+                </div>
               </div>
-              <span className="text-xs text-muted-foreground">
-                Bloco {activity.blockNumber.toString()}
-              </span>
+
+              <div className="text-right font-mono">
+                {act.amount > 0 && (
+                  <p className="text-sm font-bold text-[#D4AF37]">
+                    +{act.amount.toFixed(4)}
+                  </p>
+                )}
+                <span className="text-[10px] text-white/30 block">
+                  Bloco #{act.blockNumber.toString()}
+                </span>
+              </div>
             </div>
-
-            <dl className="mt-3 grid gap-2 text-sm sm:grid-cols-2">
-              <div>
-                <dt className="text-muted-foreground">Token</dt>
-                <dd className="break-all">
-                  {activity.token.toLowerCase() ===
-                  "0x0000000000000000000000000000000000000000"
-                    ? "Token nativo / não especificado"
-                    : shorten(activity.token)}
-                </dd>
-              </div>
-              <div>
-                <dt className="text-muted-foreground">Montante bruto (uint256)</dt>
-                <dd className="break-all">{activity.amount.toString()}</dd>
-              </div>
-              <div>
-                <dt className="text-muted-foreground">Origem</dt>
-                <dd>{shorten(activity.source)}</dd>
-              </div>
-              <div>
-                <dt className="text-muted-foreground">Referência</dt>
-                <dd className="break-all">{shorten(activity.referenceId)}</dd>
-              </div>
-            </dl>
-
-            {activity.transactionHash && (
-              <a
-                className="mt-3 inline-block text-sm underline"
-                href={`https://bscscan.com/tx/${activity.transactionHash}`}
-                target="_blank"
-                rel="noreferrer"
-              >
-                Ver transacção no BscScan
-              </a>
-            )}
-          </article>
-        ))}
-      </div>
-    </section>
+          ))}
+        </div>
+      )}
+    </div>
   );
 }
