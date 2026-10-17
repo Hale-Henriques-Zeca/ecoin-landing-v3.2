@@ -1,17 +1,39 @@
+
 "use client";
 
+import { useState } from "react";
+import type { ReactNode } from "react";
+
 import "@rainbow-me/rainbowkit/styles.css";
-import { useState, useEffect } from "react";
-import { RainbowKitProvider, getDefaultConfig, darkTheme } from "@rainbow-me/rainbowkit";
-import { WagmiProvider, http, fallback } from "wagmi";
+
+import {
+  RainbowKitProvider,
+  getDefaultConfig,
+  darkTheme,
+} from "@rainbow-me/rainbowkit";
+
+import {
+  WagmiProvider,
+  http,
+  fallback,
+} from "wagmi";
+
+import {
+  QueryClient,
+  QueryClientProvider,
+} from "@tanstack/react-query";
+
 import { bsc } from "@/lib/chains";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { LanguageProvider } from "@/components/language/i18n/context/LanguageProvider";
 
 const config = getDefaultConfig({
   appName: "EdenKingDom Coin (E-Coin) DApp",
-  projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID!,
+
+  projectId:
+    process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID ?? "",
+
   chains: [bsc],
+
   transports: {
     [bsc.id]: fallback([
       http("https://bsc-dataseed.binance.org"),
@@ -22,36 +44,37 @@ const config = getDefaultConfig({
       http("https://1rpc.io/bnb"),
     ]),
   },
+
+  // Importante para a hidratação do Wagmi em Next.js.
+  ssr: true,
 });
 
-// Criar o queryClient fora do componente ou com useState impede recriações desnecessárias
-const queryClient = new QueryClient();
-
-export function Providers({ children }: { children: React.ReactNode }) {
-  const [mounted, setMounted] = useState(false);
-
-  // Garante que o código só corre após a hidratação completa do cliente
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+export function Providers({
+  children,
+}: {
+  children: ReactNode;
+}) {
+  // Uma instância estável por montagem do Providers.
+  const [queryClient] = useState(
+    () => new QueryClient()
+  );
 
   return (
     <LanguageProvider>
-    <WagmiProvider config={config}>
-      <QueryClientProvider client={queryClient}>
-        <RainbowKitProvider
-          theme={darkTheme({
-            accentColor: "#F9D13E",
-            accentColorForeground: "#000000",
-            borderRadius: "large",
-            fontStack: "rounded",
-          })}
-        >
-          {/* Só renderiza os filhos após o browser estar pronto */}
-          {mounted ? children : <div className="min-h-screen bg-slate-950" />}
-        </RainbowKitProvider>
-      </QueryClientProvider>
-    </WagmiProvider>
+      <WagmiProvider config={config}>
+        <QueryClientProvider client={queryClient}>
+          <RainbowKitProvider
+            theme={darkTheme({
+              accentColor: "#F9D13E",
+              accentColorForeground: "#000000",
+              borderRadius: "large",
+              fontStack: "rounded",
+            })}
+          >
+            {children}
+          </RainbowKitProvider>
+        </QueryClientProvider>
+      </WagmiProvider>
     </LanguageProvider>
   );
 }

@@ -1,25 +1,43 @@
+
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
 import { useAccount, useReadContract, usePublicClient } from "wagmi";
-import { formatUnits, hexToString, trim, keccak256, toBytes, parseAbiItem } from "viem";
+import { formatUnits, keccak256, toBytes, getAddress } from "viem";
+
 import { CONTRACTS } from "@/lib/contracts/contracts";
 import { edenActivityRegistryAbi } from "@/lib/abis/edenActivityRegistryAbi";
 
+const PAGE_SIZE = 50;
+const ZERO_ADDRESS = "0x0000000000000000000000000000000000000000";
+
+type Hex = `0x${string}`;
+
+interface StoredActivity {
+  activityType: Hex;
+  token: string;
+  amount: bigint;
+  source: string;
+  referenceId: Hex;
+  timestamp: bigint;
+}
+
 export interface ActivityRecord {
   user: string;
-  activityTypeHash: `0x${string}`;
+  activityTypeHash: Hex;
   activityLabel: string;
   token: string;
   amount: number;
   source: string;
-  referenceId: `0x${string}`;
+  referenceId: Hex;
   timestamp: number;
-  blockNumber: bigint;
-  transactionHash: `0x${string}`;
+
+  // O contrato não guarda estes dois campos.
+  // Só estarão disponíveis quando obtidos de uma fonte externa.
+  blockNumber?: bigint;
+  transactionHash?: Hex;
 }
 
-// Mapeamento de tipos de atividade para nomes legíveis
 const ACTIVITY_NAMES: Record<string, string> = {
   DEPOSIT: "Depósito",
   WITHDRAWAL: "Levantamento",
@@ -29,118 +47,212 @@ const ACTIVITY_NAMES: Record<string, string> = {
   REFERRAL: "Recompensa de Referência",
   REFERRAL_CLAIM: "Resgate de Referência",
   ADD_PROFIT_CAPACITY: "Emissão de Selo CS",
-  CLAIM: "Resgate",
+  CLAIM: "Resgate / Claim",
   TRADING: "Atividade de Trading",
   INVESTMENT: "Investimento",
   LINK_UPLINE: "Vínculo de Referência",
   REFERRAL_CODE_REGISTERED: "Registo de Código",
+  OFFICIAL_TOKEN_REGISTERED: "Registo de Token Oficial",
+  CUSTOM_TOKEN_ADDED: "Token Personalizado Adicionado",
+  CUSTOM_TOKEN_REMOVED: "Token Personalizado Removido",
+  CUSTOM_TOKEN_DETECTED: "Token Personalizado Detectado",
+  CUSTOM_TOKEN_TRANSFERRED: "Transferência de Token",
+  CUSTOM_TOKEN_APPROVED: "Aprovação de Token",
+  CONVERSION: "Conversão",
+  WALLET_RECOVERY: "Recuperação de Carteira",
+  SESSION_CREATED: "Sessão Criada",
+  SESSION_REVOKED: "Sessão Revogada",
+  SESSION_CONSUMED: "Sessão Utilizada",
+  SESSIONS_INVALIDATED: "Sessões Invalidadas",
+  CONTROLLER_AUTHORIZED: "Controlador Autorizado",
+  CONTROLLER_PERMISSIONS_UPDATED: "Permissões Atualizadas",
+  CONTROLLER_REVOKED: "Controlador Revogado",
+  DEVICE_AUTHORIZED: "Dispositivo Autorizado",
+  DEVICE_REVOKED: "Dispositivo Revogado",
+  WALLET_FROZEN: "Carteira Bloqueada",
+  WALLET_UNFROZEN: "Carteira Desbloqueada",
+  GUARDIAN_STATUS_CHANGED: "Estado do Guardian Alterado",
+  SECURITY_OPERATOR_UPDATED: "Operador de Segurança Atualizado",
+  WALLET_GUARDIAN_FACTORY_UPDATED: "Fábrica de Guardian Atualizada",
+  GAS_SPONSORSHIP_AUTHORIZED: "Patrocínio de Gas Autorizado",
+  GAS_SPONSORSHIP_COMPLETED: "Patrocínio de Gas Concluído",
   TRANSFER: "Transferência",
   SERVICE_FEE: "Taxa de Serviço",
   WALLET_CREATED: "Carteira Criada",
+  WALLET_EXECUTED: "Operação de Carteira",
+  WALLET_BATCH_EXECUTED: "Operações em Lote",
+  WALLET_SESSION_EXECUTED: "Operação por Sessão",
+  AIRDROP_CLAIM: "Reivindicação de Airdrop",
+  AIRDROP_SERVICE_FEE: "Taxa do Airdrop",
+  AIRDROP_REFERRAL: "Referência de Airdrop",
 };
 
-export function useEdenActivityRegistry() {
-  const { address } = useAccount();
-  const publicClient = usePublicClient();
+const HASH_LABEL_MAP = new Map<string, string>(
+  Object.entries(ACTIVITY_NAMES).map(([key, label]) => [
+    keccak256(toBytes(key)).toLowerCase(),
+    label,
+  ])
+);
 
-  const [activities, setActivities] = useState<ActivityRecord[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [isError, setIsError] = useState<boolean>(false);
+function parseActivityLabel(hash: string): string {
+  return (
+    HASH_LABEL_MAP.get(hash.toLowerCase()) ??
+    "Atividade no Protocolo"
+  );
+}
 
-  // Leitura da contagem total de atividades registradas
-  const { data: userActivityCount, refetch: refetchCount } = useReadContract({
-    abi: edenActivityRegistryAbi,
-    address: CONTRACTS.EDEN_ACTIVITY_REGISTRY,
-    functionName: "activityCount",
-    args: address ? [address] : undefined,
-    query: { enabled: !!address },
-  });
-
-  // Função para buscar os logs do evento ActivityRecorded diretamente da BSC
-  const fetchLogs = useCallback(async () => {
-    if (!address || !publicClient) {
-      setActivities([]);
-      return;
-    }
-
-    setIsLoading(true);
-    setIsError(false);
-
-    try {
-      const logs = await publicClient.getLogs({
-        address: CONTRACTS.EDEN_ACTIVITY_REGISTRY,
-        event: parseAbiItem(
-          "event ActivityRecorded(address indexed user, bytes32 indexed activityType, address indexed token, uint256 amount, address source, bytes32 referenceId, uint256 timestamp)"
-        ),
-        args: {
-          user: address,
-        },
-        fromBlock: "earliest",
-        toBlock: "latest",
-      });
-
-      const parsed: ActivityRecord[] = logs.map((log) => {
-        const args = log.args;
-        const rawType = (args.activityType as `0x${string}`) || "0x0";
-
-        return {
-          user: args.user || address,
-          activityTypeHash: rawType,
-          activityLabel: parseActivityLabel(rawType),
-          token: args.token || "0x0000000000000000000000000000000000000000",
-          amount: args.amount ? Number(formatUnits(args.amount, 18)) : 0,
-          source: args.source || "",
-          referenceId: (args.referenceId as `0x${string}`) || "0x0",
-          timestamp: args.timestamp ? Number(args.timestamp) * 1000 : Date.now(),
-          blockNumber: log.blockNumber ?? 0n,
-          transactionHash: log.transactionHash ?? "0x0",
-        };
-      }).reverse(); // Mais recentes primeiro
-
-      setActivities(parsed);
-    } catch (error) {
-      console.error("Erro ao procurar logs de atividade:", error);
-      setIsError(true);
-    } finally {
-      setIsLoading(false);
-    }
-  }, [address, publicClient]);
-
-  useEffect(() => {
-    void fetchLogs();
-  }, [fetchLogs]);
-
-  const refetch = () => {
-    void fetchLogs();
-    void refetchCount();
-  };
-
+function mapStoredActivity(
+  record: StoredActivity,
+  user: string
+): ActivityRecord {
   return {
-    activities,
-    totalCount: userActivityCount ? Number(userActivityCount) : activities.length,
-    isLoading,
-    isError,
-    refetch,
+    user,
+    activityTypeHash: record.activityType,
+    activityLabel: parseActivityLabel(record.activityType),
+    token: getAddress(record.token || ZERO_ADDRESS),
+    amount: Number(formatUnits(record.amount, 18)),
+    source: getAddress(record.source || ZERO_ADDRESS),
+    referenceId: record.referenceId,
+    timestamp: Number(record.timestamp) * 1000,
   };
 }
 
-// Utilitário para mapear bytes32 keccak256 para nome legível
-function parseActivityLabel(hash: string): string {
-  const normalized = hash.toLowerCase();
+export function useEdenActivityRegistry() {
+  const { address } = useAccount();
+  const publicClient = usePublicClient({ chainId: 56 });
 
-  for (const [key, label] of Object.entries(ACTIVITY_NAMES)) {
-    const calculatedHash = keccak256(toBytes(key)).toLowerCase();
-    if (calculatedHash === normalized) {
-      return label;
+  const [activities, setActivities] = useState<ActivityRecord[]>([]);
+  const [storedCount, setStoredCount] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const [isError, setIsError] = useState(false);
+
+  const formattedAddress = address
+    ? getAddress(address)
+    : undefined;
+
+  // Contador antigo mantido pelo contrato.
+  const {
+    data: userActivityCount,
+    refetch: refetchLegacyCount,
+  } = useReadContract({
+    abi: edenActivityRegistryAbi,
+    address: CONTRACTS.EDEN_ACTIVITY_REGISTRY,
+    functionName: "activityCount",
+    args: formattedAddress ? [formattedAddress] : undefined,
+    query: {
+      enabled: !!formattedAddress,
+    },
+  });
+
+  const fetchActivities = useCallback(
+    async (offset = 0, append = false) => {
+      if (!formattedAddress || !publicClient) {
+        setActivities([]);
+        setStoredCount(0);
+        setIsLoading(false);
+        setIsLoadingMore(false);
+        return;
+      }
+
+      if (append) {
+        setIsLoadingMore(true);
+      } else {
+        setIsLoading(true);
+        setActivities([]);
+      }
+
+      setIsError(false);
+
+      try {
+        const [countResult, recordsResult] = await Promise.all([
+          publicClient.readContract({
+            address: CONTRACTS.EDEN_ACTIVITY_REGISTRY,
+            abi: edenActivityRegistryAbi,
+            functionName: "getUserActivityCount",
+            args: [formattedAddress],
+          }),
+          publicClient.readContract({
+            address: CONTRACTS.EDEN_ACTIVITY_REGISTRY,
+            abi: edenActivityRegistryAbi,
+            functionName: "getUserActivities",
+            args: [
+              formattedAddress,
+              BigInt(offset),
+              BigInt(PAGE_SIZE),
+            ],
+          }),
+        ]);
+
+        const count = Number(countResult);
+        const records = recordsResult as unknown as StoredActivity[];
+
+        const parsed = records.map((record) =>
+          mapStoredActivity(record, formattedAddress)
+        );
+
+        setStoredCount(count);
+
+        setActivities((previous) =>
+          append ? [...previous, ...parsed] : parsed
+        );
+      } catch (error) {
+        console.error(
+          "Erro ao consultar o histórico on-chain do EdenActivityRegistry:",
+          error
+        );
+        setIsError(true);
+      } finally {
+        setIsLoading(false);
+        setIsLoadingMore(false);
+      }
+    },
+    [formattedAddress, publicClient]
+  );
+
+  useEffect(() => {
+    void fetchActivities(0, false);
+  }, [fetchActivities]);
+
+  const loadMore = useCallback(() => {
+    if (
+      isLoading ||
+      isLoadingMore ||
+      activities.length >= storedCount
+    ) {
+      return;
     }
-  }
 
-  try {
-    const str = hexToString(trim(hash as `0x${string}`, { dir: "right" }));
-    if (str.trim().length > 0) return str;
-  } catch {
-    // Ignorar falha ao tentar converter hex plano
-  }
+    void fetchActivities(activities.length, true);
+  }, [
+    activities.length,
+    storedCount,
+    isLoading,
+    isLoadingMore,
+    fetchActivities,
+  ]);
 
-  return "Actividade no Protocolo";
+  const refetch = useCallback(() => {
+    void fetchActivities(0, false);
+    void refetchLegacyCount();
+  }, [fetchActivities, refetchLegacyCount]);
+
+  return {
+    activities,
+
+    // Total efetivamente guardado no novo histórico.
+    totalCount: storedCount,
+
+    // Contador preexistente, que pode incluir atividades antigas.
+    legacyActivityCount: Number(userActivityCount ?? 0n),
+
+    isLoading,
+    isLoadingMore,
+    isError,
+
+    hasMore: activities.length < storedCount,
+
+    loadMore,
+    refetch,
+  };
 }
