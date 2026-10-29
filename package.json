@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@metamask/sdk": "^0.34.0",
+    "@next-auth/supabase-adapter": "^0.2.1",
     "@pancakeswap/sdk": "^5.9.1",
     "@pancakeswap/smart-router": "^7.6.0",
     "@pancakeswap/tokens": "^0.9.0",
@@ -41,6 +42,7 @@
     "lightweight-charts": "^5.1.0",
     "lucide-react": "^0.555.0",
     "next": "^16.0.10",
+    "next-auth": "^4.24.15",
     "next-sitemap": "^4.2.3",
     "openai": "^6.9.1",
     "pino-pretty": "^13.1.3",
