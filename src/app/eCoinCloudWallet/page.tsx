@@ -1,11 +1,12 @@
-"use client";
+'use client';
 
 import { useState } from "react";
 import { useSession, signIn } from "next-auth/react";
+import { ConnectButton } from "@rainbow-me/rainbowkit";
 import ResponsiveShell from "@/components/eCoinCloudWallet/components/layout/ResponsiveShell";
 import DashboardView from "@/components/eCoinCloudWallet/components/dashboard/DashboardView";
 import { EcoinCloudWalletProviders } from "./providers";
-import { ShieldCheck, Sparkles } from "lucide-react";
+import { ShieldCheck, Sparkles, Wallet } from "lucide-react";
 
 function WalletContent() {
   const { data: session, status } = useSession();
@@ -95,7 +96,7 @@ function WalletContent() {
               </span>
             </button>
 
-            {/* Apple Button (Com aviso de em desenvolvimento) */}
+            {/* Apple Button */}
             <button
               type="button"
               onClick={handleAppleLogin}
@@ -108,12 +109,28 @@ function WalletContent() {
                 Continuar com Apple
               </span>
             </button>
+
+            {/* WalletConnect / Web3 Multi-Wallet Button */}
+            <ConnectButton.Custom>
+              {({ openConnectModal }) => (
+                <button
+                  type="button"
+                  onClick={openConnectModal}
+                  className="w-full relative group overflow-hidden rounded-2xl bg-gradient-to-r from-orange-500/20 to-amber-500/20 border border-orange-500/40 px-5 py-4 font-bold text-white shadow-xl transition-all duration-300 hover:bg-orange-500/30 hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-3 cursor-pointer"
+                >
+                  <Wallet className="w-5 h-5 text-orange-400" />
+                  <span className="text-sm font-extrabold tracking-wide">
+                    Continuar com Carteira Web3
+                  </span>
+                </button>
+              )}
+            </ConnectButton.Custom>
           </div>
 
           {/* Apple Dev Notice Banner */}
           {appleNotice && (
             <div className="mt-4 p-3 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs text-center font-medium animate-pulse">
-              ⚠️ A autenticação com Apple ID encontra-se atualmente em desenvolvimento. Por favor, utilize o Google.
+              ⚠️ A autenticação com Apple ID encontra-se atualmente em desenvolvimento. Por favor, utilize o Google ou a Carteira Web3.
             </div>
           )}
 

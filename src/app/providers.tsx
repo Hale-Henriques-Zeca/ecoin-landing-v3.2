@@ -3,6 +3,7 @@
 
 import { useState } from "react";
 import type { ReactNode } from "react";
+import { SessionProvider } from "next-auth/react";
 
 import "@rainbow-me/rainbowkit/styles.css";
 
@@ -45,7 +46,6 @@ const config = getDefaultConfig({
     ]),
   },
 
-  // Importante para a hidratação do Wagmi em Next.js.
   ssr: true,
 });
 
@@ -54,27 +54,28 @@ export function Providers({
 }: {
   children: ReactNode;
 }) {
-  // Uma instância estável por montagem do Providers.
   const [queryClient] = useState(
     () => new QueryClient()
   );
 
   return (
-    <LanguageProvider>
-      <WagmiProvider config={config}>
-        <QueryClientProvider client={queryClient}>
-          <RainbowKitProvider
-            theme={darkTheme({
-              accentColor: "#F9D13E",
-              accentColorForeground: "#000000",
-              borderRadius: "large",
-              fontStack: "rounded",
-            })}
-          >
-            {children}
-          </RainbowKitProvider>
-        </QueryClientProvider>
-      </WagmiProvider>
-    </LanguageProvider>
+    <SessionProvider>
+      <LanguageProvider>
+        <WagmiProvider config={config}>
+          <QueryClientProvider client={queryClient}>
+            <RainbowKitProvider
+              theme={darkTheme({
+                accentColor: "#F9D13E",
+                accentColorForeground: "#000000",
+                borderRadius: "large",
+                fontStack: "rounded",
+              })}
+            >
+              {children}
+            </RainbowKitProvider>
+          </QueryClientProvider>
+        </WagmiProvider>
+      </LanguageProvider>
+    </SessionProvider>
   );
 }

@@ -2,9 +2,12 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { signOut, useSession } from 'next-auth/react';
+import { useAccount, useConnect, useDisconnect } from 'wagmi';
+import { injected } from 'wagmi/connectors';
 import { 
   User, Coins, Globe, Network, Bell, Link2, 
-  Shield, Terminal, Info, LogOut, Check, ArrowRight
+  Shield, Terminal, Info, LogOut, Check, ArrowRight, Wallet
 } from 'lucide-react';
 import ResponsiveShell from '@/components/eCoinCloudWallet/components/layout/ResponsiveShell';
 import PageContainer from '@/components/eCoinCloudWallet/components/common/PageContainer';
@@ -12,12 +15,28 @@ import SectionHeader from '@/components/eCoinCloudWallet/components/common/Secti
 
 export default function SettingsPage() {
   const router = useRouter();
+  const { data: session } = useSession();
   
-  // States para simular as preferências interativas do usuário
+  // Wagmi hooks para MetaMask
+  const { address, isConnected } = useAccount();
+  const { connect } = useConnect();
+  const { disconnect } = useDisconnect();
+
+  // States para preferências interativas
   const [currency, setCurrency] = useState('USD');
   const [language, setLanguage] = useState('pt');
   const [activeNetwork, setActiveNetwork] = useState('bsc');
   const [notifications, setNotifications] = useState(true);
+
+  // Handler de Logout Global
+  const handleLogout = async () => {
+    // Desconecta a MetaMask se estiver ativa
+    if (isConnected) {
+      disconnect();
+    }
+    // Faz o signOut do NextAuth e redireciona para o login
+    await signOut({ callbackUrl: '/eCoinCloudWallet' });
+  };
 
   return (
     <ResponsiveShell>
@@ -33,13 +52,21 @@ export default function SettingsPage() {
           <div className="bg-white/[0.01] border border-white/5 rounded-2xl p-4 flex items-center justify-between backdrop-blur-xl">
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 rounded-full bg-gradient-to-tr from-[#D4AF37] to-[#00FF9C] p-[1.5px]">
-                <div className="w-full h-full rounded-full bg-neutral-950 flex items-center justify-center text-white font-mono font-bold text-sm">
-                  HE
+                <div className="w-full h-full rounded-full bg-neutral-950 flex items-center justify-center text-white font-mono font-bold text-sm overflow-hidden">
+                  {session?.user?.image ? (
+                    <img src={session.user.image} alt="Avatar" className="w-full h-full object-cover" />
+                  ) : (
+                    'HE'
+                  )}
                 </div>
               </div>
               <div>
-                <h3 className="text-xs font-black text-white uppercase tracking-wider font-mono">Hale Henriques</h3>
-                <p className="text-[10px] text-neutral-500 font-mono">ID da Conta: cloud_eden_8941</p>
+                <h3 className="text-xs font-black text-white uppercase tracking-wider font-mono">
+                  {session?.user?.name || 'Hale Henriques'}
+                </h3>
+                <p className="text-[10px] text-neutral-500 font-mono">
+                  {session?.user?.email || 'cloud_eden_8941'}
+                </p>
               </div>
             </div>
             <span className="text-[9px] font-mono font-black uppercase px-2 py-0.5 rounded bg-[#00FF9C]/10 text-[#00FF9C] border border-[#00FF9C]/20">
@@ -114,7 +141,7 @@ export default function SettingsPage() {
               </div>
               <div className="flex flex-col gap-1.5">
                 {[
-                  { id: 'bsc', label: 'BNB Smart Chain (Nativa)', live: true },
+                  { id: 'bsc', label: 'BNB Smart Chain (Nativa)' },
                   { id: 'eth', label: 'Ethereum Mainnet' },
                   { id: 'polygon', label: 'Polygon PoS' },
                   { id: 'solana', label: 'Solana Network' }
@@ -135,36 +162,56 @@ export default function SettingsPage() {
               </div>
             </div>
 
-            {/* Bloco: Identidade Conectada (Cloud Login) */}
+            {/* Bloco: Identidade Conectada & MetaMask */}
             <div className="bg-black/30 border border-white/5 rounded-2xl p-4 font-mono">
               <div className="flex items-center gap-2 mb-3 text-[#00FF9C]">
                 <Link2 size={14} />
-                <span className="text-[11px] font-black uppercase tracking-wider text-white">Contas Vinculadas</span>
+                <span className="text-[11px] font-black uppercase tracking-wider text-white">Contas & Carteiras</span>
               </div>
               <div className="flex flex-col gap-2">
-                {[
-                  { provider: 'Google', info: 'hale.dev@gmail.com', linked: true },
-                  { provider: 'Apple ID', info: 'h.henriques@icloud.com', linked: true },
-                  { provider: 'GitHub', info: 'Não conectado', linked: false }
-                ].map((acc, i) => (
-                  <div key={i} className="flex justify-between items-center bg-neutral-900/40 p-2 rounded-xl border border-white/[0.02]">
-                    <div>
-                      <span className="text-[10px] font-bold text-white block">{acc.provider}</span>
-                      <span className="text-[9px] text-neutral-500">{acc.info}</span>
-                    </div>
-                    <span className={`text-[8px] uppercase font-black px-1.5 py-0.5 rounded ${
-                      acc.linked ? 'bg-[#00FF9C]/10 text-[#00FF9C]' : 'bg-neutral-800 text-neutral-500'
-                    }`}>
-                      {acc.linked ? 'Ativo' : 'Vincular'}
+                {/* Google vinculado */}
+                <div className="flex justify-between items-center bg-neutral-900/40 p-2 rounded-xl border border-white/[0.02]">
+                  <div>
+                    <span className="text-[10px] font-bold text-white block">Google Cloud</span>
+                    <span className="text-[9px] text-neutral-500">{session?.user?.email || 'Ativo'}</span>
+                  </div>
+                  <span className="text-[8px] uppercase font-black px-1.5 py-0.5 rounded bg-[#00FF9C]/10 text-[#00FF9C]">
+                    Ativo
+                  </span>
+                </div>
+
+                {/* MetaMask / Web3 Integration */}
+                <div className="flex justify-between items-center bg-neutral-900/40 p-2 rounded-xl border border-white/[0.02]">
+                  <div>
+                    <span className="text-[10px] font-bold text-white block flex items-center gap-1">
+                      <Wallet size={10} className="text-orange-400" /> MetaMask (Web3)
+                    </span>
+                    <span className="text-[9px] text-neutral-500">
+                      {isConnected ? `${address?.slice(0, 6)}...${address?.slice(-4)}` : 'Não conectado'}
                     </span>
                   </div>
-                ))}
+                  {isConnected ? (
+                    <button
+                      onClick={() => disconnect()}
+                      className="text-[8px] uppercase font-black px-2 py-1 rounded bg-red-500/10 text-red-400 border border-red-500/20 hover:bg-red-500/20 transition-all"
+                    >
+                      Desvincular
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => connect({ connector: injected() })}
+                      className="text-[8px] uppercase font-black px-2 py-1 rounded bg-[#D4AF37]/10 text-[#D4AF37] border border-[#D4AF37]/30 hover:bg-[#D4AF37]/20 transition-all"
+                    >
+                      Vincular
+                    </button>
+                  )}
+                </div>
               </div>
             </div>
 
           </div>
 
-          {/* ACESSO AO HUB DE SEGURANÇA (O GRANDE DIFERENCIAL) */}
+          {/* ACESSO AO HUB DE SEGURANÇA */}
           <div 
             onClick={() => router.push('/eCoinCloudWallet/settings/security')}
             className="w-full bg-gradient-to-r from-neutral-950 to-neutral-900 border border-white/5 rounded-2xl p-4 flex items-center justify-between cursor-pointer group hover:border-[#D4AF37]/30 transition-all font-mono"
@@ -205,14 +252,17 @@ export default function SettingsPage() {
             </div>
           </div>
 
-          {/* METADADOS ABOUT & LOGOUT */}
+          {/* METADADOS ABOUT & LOGOUT FUNCIONAL */}
           <div className="flex justify-between items-center font-mono border-t border-white/5 pt-4 mt-2">
             <div className="flex gap-4 text-[10px] text-neutral-500">
               <div className="flex items-center gap-1"><Info size={10} /> <span>v2.4.0 Cloud</span></div>
               <span className="hover:text-white cursor-pointer">Termos</span>
               <span className="hover:text-white cursor-pointer">API Docs</span>
             </div>
-            <button className="flex items-center gap-1.5 text-xs font-bold text-red-400 hover:text-red-300 transition-colors">
+            <button 
+              onClick={handleLogout}
+              className="flex items-center gap-1.5 text-xs font-bold text-red-400 hover:text-red-300 transition-colors cursor-pointer"
+            >
               <LogOut size={12} />
               <span>Sair da Conta</span>
             </button>
