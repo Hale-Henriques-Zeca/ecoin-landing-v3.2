@@ -27,7 +27,7 @@ export default function Footer() {
           transition={{ duration: 0.5 }}
         >
           <h2 className="text-[#D4AF37] font-semibold text-lg tracking-widest">
-            EDENKINGDOM & E-COIN
+            Grupo EdenKingDom & Ecossistema eCoin
           </h2>
 
           <p className="text-sm text-gray-400 mt-3 leading-relaxed">
@@ -51,8 +51,8 @@ export default function Footer() {
             <li className="hover:text-white cursor-pointer">Sobre Nós</li>
             <li className="hover:text-white cursor-pointer">Documentação</li>
             <li className="hover:text-white cursor-pointer">Sustentabilidade</li>
-            <li className="hover:text-white cursor-pointer">Website oficial da EKD Corporation</li>
-            <li className="hover:text-white cursor-pointer">Carreiras da EdenKingDom Corporation</li>
+            <li className="hover:text-white cursor-pointer">Website oficial do Grupo EdenKingDom</li>
+            <li className="hover:text-white cursor-pointer">Carreiras do Grupo EdenKingDom</li>
           </ul>
         </motion.div>
 
@@ -67,10 +67,10 @@ export default function Footer() {
             Produtos & Serviços
           </h3>
           <ul className="space-y-2 text-sm text-gray-400">
-            <li className="hover:text-white cursor-pointer">E-Coin</li>
-            <li className="hover:text-white cursor-pointer">E-Pay</li>
-            <li className="hover:text-white cursor-pointer">E-Chain</li>
-            <li className="hover:text-white cursor-pointer">E-Pay TokenPad</li>
+            <li className="hover:text-white cursor-pointer">eCoin</li>
+            <li className="hover:text-white cursor-pointer">ePay</li>
+            <li className="hover:text-white cursor-pointer">eChain</li>
+            <li className="hover:text-white cursor-pointer">eWallet</li>
             <li className="hover:text-white cursor-pointer">EFTE</li>
           </ul>
         </motion.div>
@@ -86,8 +86,6 @@ export default function Footer() {
             Escritórios Físicos
           </h3>
           <ul className="space-y-2 text-sm text-gray-400">
-            <li>📍 Moçambique - Nhamatanda</li>
-            <li>📍 Canadá - Toronto</li>
             <li>📍 USA - Nova Iorque</li>
             <li className="hover:text-white cursor-pointer">
             </li>
@@ -130,7 +128,7 @@ export default function Footer() {
       rel="noopener noreferrer"
       className="bg-[#D4AF37]/10 border border-[#D4AF37]/40 rounded-full px-4 py-2 text-sm text-[#D4AF37] hover:bg-[#D4AF37]/20 hover:shadow-[0_0_10px_#D4AF37aa] transition-all"
     >
-      💎 Central EKD — Atendimento 24/7
+      💎 Central EdenKingDom — Atendimento 24/7
     </a>
   </div>
 </motion.div>
@@ -144,7 +142,7 @@ export default function Footer() {
   viewport={{ once: true }}
   transition={{ duration: 0.6 }}
 >
-  <h3 className="text-xl font-semibold text-[#D4AF37] mb-4">Redes sociais da E-Coin</h3>
+  <h3 className="text-xl font-semibold text-[#D4AF37] mb-4">Redes sociais da eCoin</h3>
   <div className="flex gap-2 text-4xl">
                 <a href="https://t.me/ecoin2026" target="_blank" rel="noopener noreferrer">
                   <FaTelegramPlane className="text-[#D4AF37] transition" />
@@ -213,7 +211,7 @@ export default function Footer() {
       rel="noopener noreferrer"
       className="bg-[#D4AF37]/10 border border-[#D4AF37]/40 rounded-full px-4 py-2 text-sm text-[#D4AF37] hover:bg-[#D4AF37]/20 hover:shadow-[0_0_10px_#D4AF37aa] transition-all"
     >
-      📢 Canal WhatsApp EKD Oficial
+      📢 Canal WhatsApp Oficial
     </a>
 
     <div className="flex gap-2 text-2xl">
@@ -266,7 +264,7 @@ export default function Footer() {
         transition={{ duration: 1 }}
         className="text-center mt-8 text-xs text-gray-500"
       >
-        Since © 2025 to {new Date().getFullYear()} EdenKingDom Corporation — Built from Genesis, Designed for Eternity.
+        Since © 2025 to {new Date().getFullYear()} EdenKingDom Group — Built from Genesis, Designed for Eternity.
       </motion.div>
     </footer>
   );

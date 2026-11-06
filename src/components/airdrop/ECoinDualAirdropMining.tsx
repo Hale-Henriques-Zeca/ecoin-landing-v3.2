@@ -9,6 +9,7 @@ import { eCoinDualAirdropAbi } from "@/lib/abis/eCoinDualAirdropAbi";
 import { useECoinDualAirdrop, ECOIN_DUAL_AIRDROP_ADDRESS } from "@/hooks/useECoinDualAirdrop";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { Wallet, Sparkles, Flame, ShieldAlert, CheckCircle2, Clock } from "lucide-react";
+import ClaimModal from "@/components/airdrop/ClaimModal"; // Importe o modal criado acima
 
 const TOKENS = [
   {
@@ -52,10 +53,8 @@ export default function ECoinDualAirdropMining() {
     executeAction,
   } = useECoinDualAirdrop();
 
-  // Estado para controle de visualização mobile (switch entre os tokens)
   const [selectedMobileToken, setSelectedMobileToken] = useState<number>(0);
 
-  // Se a carteira não estiver conectada
   if (!isConnected) {
     return (
       <section className="rounded-3xl border border-yellow-500/30 bg-gradient-to-br from-black via-slate-950 to-[#0B0E14] p-8 text-white shadow-2xl max-w-2xl mx-auto text-center mt-12 relative overflow-hidden">
@@ -85,7 +84,6 @@ export default function ECoinDualAirdropMining() {
     );
   }
 
-  // Se a rede estiver incorreta
   if (!isCorrectChain) {
     return (
       <section className="rounded-3xl border border-red-500/30 bg-slate-950 p-8 text-white max-w-2xl mx-auto text-center mt-12">
@@ -100,7 +98,6 @@ export default function ECoinDualAirdropMining() {
 
   return (
     <section className="space-y-6 text-white w-full max-w-6xl mx-auto px-4 py-6">
-      {/* Header Institucional */}
       <header className="rounded-2xl border border-[#D4AF37]/30 bg-gradient-to-r from-black via-slate-950 to-[#111] p-6 shadow-xl relative overflow-hidden">
         <div className="absolute top-0 right-0 w-64 h-64 bg-[#D4AF37]/5 rounded-full blur-3xl pointer-events-none"></div>
         <div className="flex flex-wrap items-center justify-between gap-4 relative z-10">
@@ -120,7 +117,6 @@ export default function ECoinDualAirdropMining() {
         </div>
       </header>
 
-      {/* FEEDBACK DE TRANSAÇÃO / ERROS */}
       {(walletPending || waitingForReceipt) && (
         <div className="rounded-xl bg-blue-950/60 border border-blue-500/30 p-4 text-sm text-blue-200 flex items-center gap-3 animate-pulse">
           <Clock className="w-5 h-5 text-blue-400 animate-spin" />
@@ -141,9 +137,8 @@ export default function ECoinDualAirdropMining() {
         </div>
       )}
 
-      {/* ================= MODALIDADE MOBILE: SWITCH ENTRE TOKENS ================= */}
+      {/* MOBILE VIEW SWITCHER */}
       <div className="block md:hidden space-y-4">
-        {/* Switch Tabs */}
         <div className="grid grid-cols-2 gap-2 bg-slate-900/80 p-1.5 rounded-2xl border border-white/10">
           {TOKENS.map((tk, idx) => (
             <button
@@ -160,7 +155,6 @@ export default function ECoinDualAirdropMining() {
           ))}
         </div>
 
-        {/* Card do Token Selecionado no Mobile */}
         <MiningTokenCard
           token={TOKENS[selectedMobileToken]}
           user={address!}
@@ -169,11 +163,11 @@ export default function ECoinDualAirdropMining() {
           disabled={walletPending || waitingForReceipt}
           busy={busyToken === TOKENS[selectedMobileToken].symbol}
           onStart={() => executeAction(TOKENS[selectedMobileToken].address, TOKENS[selectedMobileToken].symbol, "startMining")}
-          onClaim={() => executeAction(TOKENS[selectedMobileToken].address, TOKENS[selectedMobileToken].symbol, "claim")}
+          onClaimExecution={() => executeAction(TOKENS[selectedMobileToken].address, TOKENS[selectedMobileToken].symbol, "claim")}
         />
       </div>
 
-      {/* ================= MODALIDADE DESKTOP: GRID LADO A LADO ================= */}
+      {/* DESKTOP SIDE-BY-SIDE GRID */}
       <div className="hidden md:grid grid-cols-1 lg:grid-cols-2 gap-6">
         {TOKENS.map((token) => (
           <MiningTokenCard
@@ -185,7 +179,7 @@ export default function ECoinDualAirdropMining() {
             disabled={walletPending || waitingForReceipt}
             busy={busyToken === token.symbol}
             onStart={() => executeAction(token.address, token.symbol, "startMining")}
-            onClaim={() => executeAction(token.address, token.symbol, "claim")}
+            onClaimExecution={() => executeAction(token.address, token.symbol, "claim")}
           />
         ))}
       </div>
@@ -201,7 +195,7 @@ function MiningTokenCard({
   disabled,
   busy,
   onStart,
-  onClaim,
+  onClaimExecution,
 }: {
   token: (typeof TOKENS)[number];
   user: `0x${string}`;
@@ -210,8 +204,9 @@ function MiningTokenCard({
   disabled: boolean;
   busy: boolean;
   onStart: () => void;
-  onClaim: () => void;
+  onClaimExecution: () => void;
 }) {
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const enabled = seasonId !== undefined;
 
   const { data: allocation } = useReadContract({
@@ -241,7 +236,6 @@ function MiningTokenCard({
     query: { enabled: enabled && Boolean(session && (session as any)[3]), refetchInterval: 3_000 },
   });
 
-  // Tick a cada segundo para simulação visual fluida
   const [now, setNow] = useState<number>(Math.floor(Date.now() / 1000));
   useEffect(() => {
     const timer = setInterval(() => setNow(Math.floor(Date.now() / 1000)), 1000);
@@ -262,7 +256,6 @@ function MiningTokenCard({
   const totalReward = sessionData ? sessionData[1] : (allocation ?? 0n);
   const claimed = sessionData ? sessionData[2] : 0n;
 
-  // Cálculo de taxas progressivas (30 dias)
   const rewardNumber = Number(formatUnits(totalReward, 18));
   const totalSeconds = 30 * 24 * 60 * 60;
   const perSecond = rewardNumber / totalSeconds;
@@ -276,110 +269,117 @@ function MiningTokenCard({
 
   const progress = totalReward > 0n ? Math.min(100, Number((accrued * 10000n) / totalReward) / 100) : 0;
   const canClaim = Boolean(available && available > 0n);
-  
-  // Condição de exaustão: quando o acumulado atingiu ou ultrapassou a recompensa total da temporada
   const isExhausted = totalReward > 0n && (accrued >= totalReward || (isMining && now - startTime >= totalSeconds && remaining === 0n));
 
   return (
-    <article className="rounded-3xl border border-white/10 bg-gradient-to-br from-slate-950 via-black to-slate-900 p-6 space-y-5 shadow-2xl relative overflow-hidden">
-      <div className="absolute -top-12 -right-12 w-36 h-36 bg-yellow-500/5 rounded-full blur-2xl pointer-events-none"></div>
+    <>
+      <article className="rounded-3xl border border-white/10 bg-gradient-to-br from-slate-950 via-black to-slate-900 p-6 space-y-5 shadow-2xl relative overflow-hidden">
+        <div className="absolute -top-12 -right-12 w-36 h-36 bg-yellow-500/5 rounded-full blur-2xl pointer-events-none"></div>
 
-      <div className="flex flex-wrap items-start justify-between gap-3 relative z-10">
-        <div>
-          <h3 className="text-xl font-bold text-white">{token.name}</h3>
-          <p className="text-xs text-slate-400 mt-0.5">Temporada {seasonId?.toString() ?? "1"} · {isExhausted ? "Exausto" : isMining ? "Mineração Ativa" : "Pronto para Iniciar"}</p>
-        </div>
-        <span className={`rounded-full px-3 py-1 text-xs font-semibold ${isExhausted ? "bg-amber-500/20 text-amber-300 border border-amber-500/30" : isMining ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/30" : "bg-white/5 text-slate-300 border border-white/10"}`}>
-          {isExhausted ? "Exhausted" : isMining ? "Active" : "Ready"}
-        </span>
-      </div>
-
-      {/* Bloco Principal: Mining Realised Balance */}
-      <div className="rounded-2xl border border-[#D4AF37]/20 bg-[#D4AF37]/5 p-5 text-center relative z-10">
-        <p className="text-xs font-medium uppercase tracking-wider text-[#D4AF37]">Mining Realised Balance</p>
-        <p className="mt-2 text-3xl font-black text-white">
-          {amount(accrued, 6)} <span className="text-[#D4AF37]">{token.symbol}</span>
-        </p>
-        <p className="mt-1 text-xs text-slate-400">Montante acumulado nesta temporada</p>
-      </div>
-
-      {/* Blocos Secundários: Available & Remaining */}
-      <div className="grid grid-cols-2 gap-4 relative z-10">
-        <div className="rounded-xl border border-white/5 bg-white/[0.02] p-4 text-center">
-          <p className="text-[11px] text-slate-400">Available for Claim</p>
-          <p className="mt-1 text-lg font-extrabold text-white">{amount(available, 6)}</p>
-          <p className="text-[10px] text-slate-500 mt-0.5">{token.symbol}</p>
-        </div>
-        <div className="rounded-xl border border-white/5 bg-white/[0.02] p-4 text-center">
-          <p className="text-[11px] text-slate-400">Remaining Mining</p>
-          <p className="mt-1 text-lg font-extrabold text-white">{amount(remaining, 6)}</p>
-          <p className="text-[10px] text-slate-500 mt-0.5">{token.symbol}</p>
-        </div>
-      </div>
-
-      {/* Taxas de Mineração */}
-      <div className="rounded-xl border border-white/5 bg-black/40 p-4 relative z-10">
-        <p className="text-xs font-medium text-slate-400 mb-3">Taxa de Mineração (30 dias / {rewardNumber} {token.symbol})</p>
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center">
-          <div className="rounded-lg bg-black/60 p-2 border border-white/5">
-            <p className="text-[10px] text-slate-400">Por dia</p>
-            <p className="text-xs font-bold text-emerald-300 mt-0.5">{perDay.toFixed(3)}</p>
+        <div className="flex flex-wrap items-start justify-between gap-3 relative z-10">
+          <div>
+            <h3 className="text-xl font-bold text-white">{token.name}</h3>
+            <p className="text-xs text-slate-400 mt-0.5">Temporada {seasonId?.toString() ?? "1"} · {isExhausted && !canClaim ? "Exausto" : isMining ? "Mineração Ativa" : "Pronto para Iniciar"}</p>
           </div>
-          <div className="rounded-lg bg-black/60 p-2 border border-white/5">
-            <p className="text-[10px] text-slate-400">Por hora</p>
-            <p className="text-xs font-bold text-emerald-300 mt-0.5">{perHour.toFixed(3)}</p>
+          <span className={`rounded-full px-3 py-1 text-xs font-semibold ${isExhausted && !canClaim ? "bg-amber-500/20 text-amber-300 border border-amber-500/30" : isMining ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/30" : "bg-white/5 text-slate-300 border border-white/10"}`}>
+            {isExhausted && !canClaim ? "Exhausted" : isMining ? "Active" : "Ready"}
+          </span>
+        </div>
+
+        {/* Bloco Principal: Mining Realised Balance */}
+        <div className="rounded-2xl border border-[#D4AF37]/20 bg-[#D4AF37]/5 p-5 text-center relative z-10">
+          <p className="text-xs font-medium uppercase tracking-wider text-[#D4AF37]">Mining Realised Balance</p>
+          <p className="mt-2 text-3xl font-black text-white">
+            {amount(accrued, 6)} <span className="text-[#D4AF37]">{token.symbol}</span>
+          </p>
+          <p className="mt-1 text-xs text-slate-400">Montante acumulado nesta temporada</p>
+        </div>
+
+        {/* Blocos Secundários: Available & Remaining */}
+        <div className="grid grid-cols-2 gap-4 relative z-10">
+          <div className="rounded-xl border border-white/5 bg-white/[0.02] p-4 text-center">
+            <p className="text-[11px] text-slate-400">Available for Claim</p>
+            <p className="mt-1 text-lg font-extrabold text-white">{amount(available, 6)}</p>
+            <p className="text-[10px] text-slate-500 mt-0.5">{token.symbol}</p>
           </div>
-          <div className="rounded-lg bg-black/60 p-2 border border-white/5">
-            <p className="text-[10px] text-slate-400">Por minuto</p>
-            <p className="text-xs font-bold text-emerald-300 mt-0.5">{perMinute.toFixed(4)}</p>
-          </div>
-          <div className="rounded-lg bg-black/60 p-2 border border-white/5">
-            <p className="text-[10px] text-slate-400">Por segundo</p>
-            <p className="text-xs font-bold text-emerald-300 mt-0.5">{perSecond.toFixed(5)}</p>
+          <div className="rounded-xl border border-white/5 bg-white/[0.02] p-4 text-center">
+            <p className="text-[11px] text-slate-400">Remaining Mining</p>
+            <p className="mt-1 text-lg font-extrabold text-white">{amount(remaining, 6)}</p>
+            <p className="text-[10px] text-slate-500 mt-0.5">{token.symbol}</p>
           </div>
         </div>
-      </div>
 
-      {/* Barra de Progresso */}
-      <div className="relative z-10">
-        <div className="mb-2 flex justify-between text-xs">
-          <span className="text-slate-400">Progresso da temporada</span>
-          <span className="font-bold text-[#D4AF37]">{progress.toFixed(2)}%</span>
-        </div>
-        <div className="h-2.5 overflow-hidden rounded-full bg-white/10">
-          <div className="h-full rounded-full bg-gradient-to-r from-yellow-600 to-amber-400 transition-all duration-500" style={{ width: `${progress}%` }} />
-        </div>
-      </div>
-
-      {/* Botões de Ação com Arquitetura de Temporada Única e Exausto */}
-      <div className="relative z-10 pt-2">
-        {isExhausted ? (
-          <div className="w-full rounded-xl bg-amber-500/10 border border-amber-500/30 py-3.5 text-center text-amber-400 font-bold text-sm tracking-wider uppercase">
-            Exhausted (Temporada Concluída)
+        {/* Taxas de Mineração */}
+        <div className="rounded-xl border border-white/5 bg-black/40 p-4 relative z-10">
+          <p className="text-xs font-medium text-slate-400 mb-3">Taxa de Mineração (30 dias / {rewardNumber} {token.symbol})</p>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center">
+            <div className="rounded-lg bg-black/60 p-2 border border-white/5">
+              <p className="text-[10px] text-slate-400">Por dia</p>
+              <p className="text-xs font-bold text-emerald-300 mt-0.5">{perDay.toFixed(3)}</p>
+            </div>
+            <div className="rounded-lg bg-black/60 p-2 border border-white/5">
+              <p className="text-[10px] text-slate-400">Por hora</p>
+              <p className="text-xs font-bold text-emerald-300 mt-0.5">{perHour.toFixed(3)}</p>
+            </div>
+            <div className="rounded-lg bg-black/60 p-2 border border-white/5">
+              <p className="text-[10px] text-slate-400">Por minuto</p>
+              <p className="text-xs font-bold text-emerald-300 mt-0.5">{perMinute.toFixed(4)}</p>
+            </div>
+            <div className="rounded-lg bg-black/60 p-2 border border-white/5">
+              <p className="text-[10px] text-slate-400">Por segundo</p>
+              <p className="text-xs font-bold text-emerald-300 mt-0.5">{perSecond.toFixed(5)}</p>
+            </div>
           </div>
-        ) : !isMining ? (
-          <button
-            type="button"
-            onClick={onStart}
-            disabled={disabled || !seasonActive || !allocation || allocation === 0n}
-            className="w-full rounded-xl bg-gradient-to-r from-yellow-500 to-amber-400 hover:from-yellow-400 hover:to-amber-300 px-4 py-3.5 font-extrabold text-black transition disabled:cursor-not-allowed disabled:opacity-40 shadow-lg shadow-yellow-500/20 flex items-center justify-center gap-2"
-          >
-            <Flame className="w-4 h-4 fill-black" />
-            <span>{busy ? "A iniciar..." : "Start Mining"}</span>
-          </button>
-        ) : (
-          <div className="flex gap-3">
+        </div>
+
+        {/* Barra de Progresso */}
+        <div className="relative z-10">
+          <div className="mb-2 flex justify-between text-xs">
+            <span className="text-slate-400">Progresso da temporada</span>
+            <span className="font-bold text-[#D4AF37]">{progress.toFixed(2)}%</span>
+          </div>
+          <div className="h-2.5 overflow-hidden rounded-full bg-white/10">
+            <div className="h-full rounded-full bg-gradient-to-r from-yellow-600 to-amber-400 transition-all duration-500" style={{ width: `${progress}%` }} />
+          </div>
+        </div>
+
+        {/* Botões de Ação */}
+        <div className="relative z-10 pt-2">
+          {!isMining ? (
             <button
               type="button"
-              onClick={onClaim}
-              disabled={disabled || !canClaim}
-              className="flex-1 rounded-xl bg-emerald-500 hover:bg-emerald-400 px-4 py-3.5 font-bold text-slate-950 transition disabled:cursor-not-allowed disabled:opacity-40 shadow-lg shadow-emerald-500/20"
+              onClick={onStart}
+              disabled={disabled || !seasonActive || !allocation || allocation === 0n}
+              className="w-full rounded-xl bg-gradient-to-r from-yellow-500 to-amber-400 hover:from-yellow-400 hover:to-amber-300 px-4 py-3.5 font-extrabold text-black transition disabled:cursor-not-allowed disabled:opacity-40 shadow-lg shadow-yellow-500/20 flex items-center justify-center gap-2"
             >
-              {busy ? "A processar..." : canClaim ? `Claim ${amount(available, 4)}` : "Claim Indisponível"}
+              <Flame className="w-4 h-4 fill-black" />
+              <span>{busy ? "A iniciar..." : "Start Mining"}</span>
             </button>
-          </div>
-        )}
-      </div>
-    </article>
+          ) : (
+            <button
+              type="button"
+              onClick={() => setIsModalOpen(true)}
+              disabled={disabled || !canClaim}
+              className="w-full rounded-xl bg-emerald-500 hover:bg-emerald-400 px-4 py-3.5 font-bold text-slate-950 transition disabled:cursor-not-allowed disabled:opacity-40 shadow-lg shadow-emerald-500/20 flex items-center justify-center gap-2"
+            >
+              <span>{busy ? "A processar..." : canClaim ? `Claim ${amount(available, 4)} ${token.symbol}` : "Claim Indisponível (Sem Saldo)"}</span>
+            </button>
+          )}
+        </div>
+      </article>
+
+      {/* Modal de Preview do Claim */}
+      <ClaimModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onConfirm={() => {
+          setIsModalOpen(false);
+          onClaimExecution();
+        }}
+        token={token}
+        availableAmount={available}
+        isProcessing={disabled || busy}
+      />
+    </>
   );
 }

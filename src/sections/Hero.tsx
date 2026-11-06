@@ -293,7 +293,7 @@ export default function Hero() {
         <div className="flex sm:hidden gap-4 mt-6">
           <Link href="/airDropMining">
             <div className="flex items-center gap-1.5 bg-emerald-600 text-white font-bold px-3 py-2 rounded-full text-xs shadow-md">
-              <Gift size={14} /> Airdrop
+              <Gift size={14} /> Airdrop Grátis
             </div>
           </Link>
           <Link href="/buyeCoin">
