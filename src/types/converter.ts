@@ -8,9 +8,9 @@ import type { Address, Hex } from "viem";
  */
 
 export type ConverterAssetSymbol =
-  | "ECOIN"
+  | "eCoin"
   | "USDT"
-  | "EUSD"
+  | "eDollar"
   | "BNB";
 
 export interface ConverterAsset {

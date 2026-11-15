@@ -46,18 +46,26 @@ interface DesktopConverterFormProps {
   netAmountIn?: string;
   expectedAmountOut?: string;
   minimumAmountOut?: string;
-  priceImpact?: number;
+  priceImpact?: number | null;
 
   slippage: number;
   onSlippageChange: (value: number) => void;
 
   loading?: boolean;
+  quoteLoading?: boolean;
+  quoteError?: string;
+  hasKyberSwapQuote?: boolean;
+  onRefreshQuote?: () => void;
+
   isPairSupported: boolean;
   hasProvider: boolean;
   hasQuote: boolean;
   feeValid: boolean;
-  requiresApproval?: boolean;
-  isApproved?: boolean;
+
+  requiresFeeApproval?: boolean;
+  isFeeApproved?: boolean;
+  requiresSwapApproval?: boolean;
+  isSwapApproved?: boolean;
 
   onContinue: () => void;
 }
@@ -86,21 +94,35 @@ export default function DesktopConverterForm({
   slippage,
   onSlippageChange,
   loading = false,
+  quoteLoading = false,
+  quoteError,
+  hasKyberSwapQuote = false,
+  onRefreshQuote,
   isPairSupported,
   hasProvider,
   hasQuote,
   feeValid,
-  requiresApproval = false,
-  isApproved = false,
+  requiresFeeApproval = false,
+  isFeeApproved = false,
+  requiresSwapApproval = false,
+  isSwapApproved = false,
   onContinue,
 }: DesktopConverterFormProps) {
+  const needsFeeApproval =
+    requiresFeeApproval && !isFeeApproved;
+
+  const needsSwapApproval =
+    requiresSwapApproval && !isSwapApproved;
+
   const canContinue =
     Number(amount) > 0 &&
     isPairSupported &&
     hasProvider &&
     hasQuote &&
     feeValid &&
-    !loading;
+    !loading &&
+    !needsFeeApproval &&
+    !needsSwapApproval;
 
   return (
     <div className="grid grid-cols-1 gap-6 xl:grid-cols-[1.1fr_0.9fr]">
@@ -238,8 +260,33 @@ export default function DesktopConverterForm({
             tokenOut={tokenOut}
             priceImpact={priceImpact}
             slippage={slippage}
-            loading={loading}
+            loading={quoteLoading}
           />
+
+          {quoteError && (
+            <div className="rounded-xl border border-red-500/20 bg-red-500/5 p-3 text-xs text-red-400">
+              {quoteError}
+            </div>
+          )}
+
+          {hasKyberSwapQuote && (
+            <div className="flex items-center justify-between rounded-xl border border-emerald-500/20 bg-emerald-500/5 p-3">
+              <div className="flex items-center gap-2 text-xs text-emerald-400">
+                <span className="h-2 w-2 rounded-full bg-emerald-400" />
+                Cotação KyberSwap disponível
+              </div>
+
+              {onRefreshQuote && (
+                <button
+                  type="button"
+                  onClick={onRefreshQuote}
+                  className="text-xs font-semibold text-emerald-400 hover:text-emerald-300"
+                >
+                  Actualizar
+                </button>
+              )}
+            </div>
+          )}
 
           {!isPairSupported && (
             <div className="flex items-center gap-2 rounded-xl border border-amber-500/20 bg-amber-500/5 p-3 text-xs text-amber-400">
@@ -248,17 +295,24 @@ export default function DesktopConverterForm({
             </div>
           )}
 
-          {requiresApproval && (
+          {needsFeeApproval && (
             <div className="flex items-center gap-2 rounded-xl bg-amber-500/5 p-3 text-xs text-amber-400 border border-amber-500/20">
-              <LockKeyhole size={15} />
-              Será necessária autorização ERC-20.
+              <LockKeyhole size={15} className="shrink-0" />
+              <span>É necessária autorização ERC-20 para cobrar a taxa de serviço.</span>
             </div>
           )}
 
-          {isApproved && (
+          {needsSwapApproval && (
+            <div className="flex items-center gap-2 rounded-xl bg-amber-500/5 p-3 text-xs text-amber-400 border border-amber-500/20">
+              <LockKeyhole size={15} className="shrink-0" />
+              <span>É necessária autorização ERC-20 para executar a conversão.</span>
+            </div>
+          )}
+
+          {!needsFeeApproval && !needsSwapApproval && (
             <div className="text-xs text-emerald-400 font-medium">
               <LockKeyhole size={13} className="mr-1 inline" />
-              Autorização suficiente.
+              Autorizações necessárias confirmadas.
             </div>
           )}
 
@@ -282,7 +336,7 @@ export default function DesktopConverterForm({
           </button>
 
           <p className="text-center text-[10px] text-gray-500">
-            A execução depende da aprovação do Adapter e da
+            A execução depende da aprovação do Router e da
             confirmação segura na sua carteira Web3.
           </p>
         </div>
@@ -299,18 +353,20 @@ export default function DesktopConverterForm({
           </h3>
 
           <p className="mt-3 text-sm leading-7 text-gray-400">
-            O EdenKingDom Converter consulta fornecedores
-            aprovados on-chain, calcula taxas de forma transparente e prepara rotas
-            de alta segurança antes de qualquer execução.
+            O EdenKingDom Converter consulta rotas de liquidez
+            através da KyberSwap, calcula a taxa de serviço
+            separadamente e apresenta a quantidade líquida
+            utilizada na conversão.
           </p>
         </div>
 
         <div className="space-y-4 border-t border-gray-800 pt-6">
           {[
-            "Fornecedores aprovados on-chain",
-            "Taxas consultadas no Fee Collector",
-            "Proteção através do valor mínimo de saída",
-            "Transações verificáveis na BNB Smart Chain",
+            "Cotação de liquidez através da KyberSwap",
+            "Taxa de serviço de 3% apresentada separadamente",
+            "Conversão apenas do montante líquido",
+            "Protecção através do valor mínimo de saída",
+            "Transacções verificáveis na BNB Smart Chain",
           ].map((item) => (
             <div
               key={item}

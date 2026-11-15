@@ -1,3 +1,4 @@
+
 "use client";
 
 import {
@@ -16,7 +17,7 @@ interface DesktopConversionSummaryProps {
   minimumAmountOut?: string;
   tokenIn: string;
   tokenOut: string;
-  priceImpact?: number;
+  priceImpact?: number | null;
   slippage: number;
   loading?: boolean;
 }
@@ -53,6 +54,9 @@ export default function DesktopConversionSummary({
 }: DesktopConversionSummaryProps) {
   const hasQuote = expectedAmountOut !== undefined;
 
+  const showServiceFee =
+    fee !== undefined || netAmountIn !== undefined;
+
   return (
     <section className="rounded-2xl border border-gray-800 bg-[#12181F] p-5 shadow-xl">
       <div className="mb-5 flex items-center justify-between">
@@ -83,27 +87,31 @@ export default function DesktopConversionSummary({
             }
           />
 
-          <Row
-            label={`Taxa de serviço ${
-              feePercentage !== undefined
-                ? `(${feePercentage}%)`
-                : ""
-            }`}
-            value={
-              fee !== undefined
-                ? `${fee} ${tokenIn}`
-                : "—"
-            }
-          />
+          {showServiceFee && (
+            <>
+              <Row
+                label={`Taxa de serviço ${
+                  feePercentage !== undefined
+                    ? `(${feePercentage}%)`
+                    : ""
+                }`}
+                value={
+                  fee !== undefined
+                    ? `${fee} ${tokenIn}`
+                    : "—"
+                }
+              />
 
-          <Row
-            label="Entrada líquida"
-            value={
-              netAmountIn
-                ? `${netAmountIn} ${tokenIn}`
-                : "—"
-            }
-          />
+              <Row
+                label="Entrada líquida"
+                value={
+                  netAmountIn
+                    ? `${netAmountIn} ${tokenIn}`
+                    : "—"
+                }
+              />
+            </>
+          )}
 
           <div className="flex justify-center">
             <ArrowDown
@@ -125,7 +133,10 @@ export default function DesktopConversionSummary({
 
             {minimumAmountOut && (
               <p className="mt-2 text-[11px] text-gray-400">
-                Mínimo garantido: <span className="text-white font-semibold">{minimumAmountOut} {tokenOut}</span>
+                Mínimo estimado:{" "}
+                <span className="text-white font-semibold">
+                  {minimumAmountOut} {tokenOut}
+                </span>
               </p>
             )}
           </div>
@@ -139,7 +150,9 @@ export default function DesktopConversionSummary({
             <Row
               label="Impacto no preço"
               value={
-                priceImpact !== undefined
+                priceImpact !== undefined &&
+                priceImpact !== null &&
+                Number.isFinite(priceImpact)
                   ? `${priceImpact.toFixed(3)}%`
                   : "Não disponível"
               }
@@ -148,13 +161,18 @@ export default function DesktopConversionSummary({
 
           <div className="space-y-1.5 pt-2 border-t border-gray-800/40">
             <div className="flex items-center gap-2 text-[11px] text-gray-400">
-              <Clock3 size={13} className="text-gray-400 shrink-0" />
-              <span>A cotação é estimada e varia conforme o mercado.</span>
+              <Clock3 size={13} className="shrink-0" />
+              <span>
+                Cotação estimada. Os valores podem mudar conforme o mercado.
+              </span>
             </div>
 
             <div className="flex items-center gap-2 text-[11px] text-gray-400">
-              <Percent size={13} className="text-gray-400 shrink-0" />
-              <span>A taxa efetiva é determinada pelo Fee Collector.</span>
+              <Percent size={13} className="shrink-0" />
+              <span>
+                A taxa de serviço EdenKingDom será apresentada separadamente
+                quando estiver disponível.
+              </span>
             </div>
           </div>
         </div>

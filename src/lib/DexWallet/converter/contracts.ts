@@ -36,13 +36,13 @@ export const CONVERTER_CONTRACTS = {
   nativeBnb: NATIVE_BNB,
 
   tokens: {
-    ECOIN:
+    eCoin:
       "0xDf69235019cc416dd5Be75dfc0eDc922aB4b5964" as Address,
 
     USDT:
       "0x55d398326f99059fF775485246999027B3197955" as Address,
 
-    EUSD:
+    eDollar:
       "0xF7543E5B4735C58a176269202847360aaDfA83C1" as Address,
   },
 } as const;
@@ -57,8 +57,8 @@ export const CONVERTER_CONTRACTS = {
  */
 
 export const CONVERTER_TOKENS = {
-  ECOIN: {
-    address: CONVERTER_CONTRACTS.tokens.ECOIN,
+  eCoin: {
+    address: CONVERTER_CONTRACTS.tokens.eCoin,
     decimals: 18,
   },
 
@@ -67,8 +67,8 @@ export const CONVERTER_TOKENS = {
     decimals: 18,
   },
 
-  EUSD: {
-    address: CONVERTER_CONTRACTS.tokens.EUSD,
+  eDollar: {
+    address: CONVERTER_CONTRACTS.tokens.eDollar,
     decimals: 18,
   },
 

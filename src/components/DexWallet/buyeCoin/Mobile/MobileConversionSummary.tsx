@@ -1,10 +1,10 @@
-
 "use client";
 
 import {
   ArrowDown,
   Clock3,
-  Info,
+  Percent,
+  TrendingUp,
 } from "lucide-react";
 
 interface MobileConversionSummaryProps {
@@ -17,8 +17,25 @@ interface MobileConversionSummaryProps {
   tokenIn: string;
   tokenOut: string;
   slippage: number;
-  priceImpact?: number;
+  priceImpact?: number | null;
   loading?: boolean;
+}
+
+function Row({
+  label,
+  value,
+}: {
+  label: string;
+  value: string;
+}) {
+  return (
+    <div className="flex items-center justify-between gap-3">
+      <span className="text-[11px] text-gray-400">{label}</span>
+      <span className="text-right text-xs font-semibold text-gray-200">
+        {value}
+      </span>
+    </div>
+  );
 }
 
 export default function MobileConversionSummary({
@@ -34,29 +51,20 @@ export default function MobileConversionSummary({
   priceImpact,
   loading = false,
 }: MobileConversionSummaryProps) {
-  const Row = ({
-    label,
-    value,
-  }: {
-    label: string;
-    value: string;
-  }) => (
-    <div className="flex items-center justify-between gap-3">
-      <span className="text-[11px] text-gray-400">
-        {label}
-      </span>
+  const hasQuote = expectedAmountOut !== undefined;
 
-      <span className="text-right text-xs font-medium text-gray-200">
-        {value}
-      </span>
-    </div>
-  );
+  const showServiceFee =
+    fee !== undefined || netAmountIn !== undefined;
 
   return (
-    <section className="rounded-2xl border border-white/10 bg-white/[0.025] p-4">
-      <h3 className="mb-4 text-sm font-semibold text-white">
-        Resumo da conversão
-      </h3>
+    <section className="rounded-2xl border border-white/10 bg-[#11161c] p-4 shadow-xl">
+      <div className="mb-4 flex items-center justify-between">
+        <h3 className="text-sm font-bold text-white tracking-wide">
+          Resumo da Conversão
+        </h3>
+
+        <TrendingUp size={16} className="text-amber-400" />
+      </div>
 
       {loading ? (
         <div className="space-y-3">
@@ -78,74 +86,93 @@ export default function MobileConversionSummary({
             }
           />
 
-          <Row
-            label={`Taxa de serviço ${
-              feePercentage !== undefined
-                ? `(${feePercentage}%)`
-                : ""
-            }`}
-            value={fee ? `${fee} ${tokenIn}` : "—"}
-          />
+          {showServiceFee && (
+            <>
+              <Row
+                label={`Taxa de serviço ${
+                  feePercentage !== undefined
+                    ? `(${feePercentage}%)`
+                    : ""
+                }`}
+                value={
+                  fee !== undefined
+                    ? `${fee} ${tokenIn}`
+                    : "—"
+                }
+              />
 
-          <Row
-            label="Entrada líquida"
-            value={
-              netAmountIn
-                ? `${netAmountIn} ${tokenIn}`
-                : "—"
-            }
-          />
+              <Row
+                label="Entrada líquida"
+                value={
+                  netAmountIn
+                    ? `${netAmountIn} ${tokenIn}`
+                    : "—"
+                }
+              />
+            </>
+          )}
 
           <div className="flex justify-center">
             <ArrowDown
               size={16}
-              className="text-emerald-400"
+              className="text-amber-400"
             />
           </div>
 
-          <div className="rounded-xl border border-emerald-500/20 bg-emerald-500/[0.06] p-4">
-            <p className="text-[11px] text-gray-400">
+          <div className="rounded-xl border border-amber-500/20 bg-amber-500/[0.06] p-4">
+            <p className="text-[11px] font-medium text-gray-400">
               Receberá aproximadamente
             </p>
 
-            <p className="mt-2 break-all text-2xl font-bold text-emerald-400">
-              {expectedAmountOut ?? "—"}
-              <span className="ml-2 text-sm">
-                {tokenOut}
-              </span>
+            <p className="mt-1 break-all text-2xl font-extrabold text-amber-400">
+              {hasQuote
+                ? `${expectedAmountOut} ${tokenOut}`
+                : "—"}
             </p>
 
             {minimumAmountOut && (
-              <p className="mt-2 text-[10px] text-gray-500">
-                Mínimo recebido: {minimumAmountOut} {tokenOut}
+              <p className="mt-2 text-[10px] text-gray-400">
+                Mínimo estimado:{" "}
+                <span className="font-semibold text-white">
+                  {minimumAmountOut} {tokenOut}
+                </span>
               </p>
             )}
           </div>
 
-          <div className="space-y-3 border-t border-white/10 pt-4">
+          <div className="space-y-2.5 border-t border-white/10 pt-4">
             <Row
-              label="Slippage"
+              label="Slippage tolerado"
               value={`${slippage}%`}
             />
 
             <Row
               label="Impacto no preço"
               value={
-                priceImpact !== undefined
+                priceImpact !== undefined &&
+                priceImpact !== null &&
+                Number.isFinite(priceImpact)
                   ? `${priceImpact.toFixed(3)}%`
                   : "Não disponível"
               }
             />
           </div>
 
-          <div className="flex items-start gap-2 text-[10px] leading-5 text-gray-500">
-            <Info size={13} className="mt-0.5 shrink-0" />
-            A cotação é estimada e pode variar antes da execução.
-          </div>
+          <div className="space-y-1.5 border-t border-white/10 pt-3">
+            <div className="flex items-center gap-2 text-[10px] text-gray-400">
+              <Clock3 size={13} className="shrink-0" />
+              <span>
+                Cotação estimada. Os valores podem mudar conforme o mercado.
+              </span>
+            </div>
 
-          <div className="flex items-center gap-2 text-[10px] text-gray-500">
-            <Clock3 size={13} />
-            Taxa efetiva consultada on-chain.
+            <div className="flex items-center gap-2 text-[10px] text-gray-400">
+              <Percent size={13} className="shrink-0" />
+              <span>
+                A taxa de serviço EdenKingDom será apresentada separadamente
+                quando estiver disponível.
+              </span>
+            </div>
           </div>
         </div>
       )}

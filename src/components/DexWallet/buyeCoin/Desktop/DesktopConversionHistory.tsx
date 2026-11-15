@@ -9,7 +9,7 @@ import {
 
 import type {
   ConverterHistoryItem,
-} from "@/hooks/DexWallet/converter/useConverterHistory";
+} from "@/hooks/DexWallet/converter/Execução-e-acompanhamento/useConverterHistory";
 
 interface DesktopConversionHistoryProps {
   history: ConverterHistoryItem[];

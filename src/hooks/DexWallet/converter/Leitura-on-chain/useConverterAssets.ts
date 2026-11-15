@@ -41,17 +41,17 @@ export function useConverterAssets({
 }: UseConverterAssetsParams = {}) {
   const tokens = useMemo(() => {
     return [
-      CONVERTER_TOKENS.ECOIN.address,
+      CONVERTER_TOKENS.eCoin.address,
       CONVERTER_TOKENS.USDT.address,
-      CONVERTER_TOKENS.EUSD.address,
+      CONVERTER_TOKENS.eDollar.address,
     ].filter((address) => address !== ZERO_ADDRESS);
   }, []);
 
   const assets = useMemo(() => {
     return [
       {
-        symbol: "ECOIN",
-        address: CONVERTER_TOKENS.ECOIN.address,
+        symbol: "eCoin",
+        address: CONVERTER_TOKENS.eCoin.address,
         isNative: false,
       },
       {
@@ -60,8 +60,8 @@ export function useConverterAssets({
         isNative: false,
       },
       {
-        symbol: "EUSD",
-        address: CONVERTER_TOKENS.EUSD.address,
+        symbol: "eDollar",
+        address: CONVERTER_TOKENS.eDollar.address,
         isNative: false,
       },
       {

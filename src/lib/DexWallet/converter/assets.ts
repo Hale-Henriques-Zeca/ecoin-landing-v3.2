@@ -1,4 +1,3 @@
-
 import { isAddress, type Address } from "viem";
 
 import {
@@ -25,11 +24,11 @@ export const CONVERTER_ASSETS: Record<
   ConverterAssetSymbol,
   ConverterAsset
 > = {
-  ECOIN: {
-    symbol: "ECOIN",
+  eCoin: {
+    symbol: "eCoin",
     name: "EdenKingDom Coin",
-    address: CONVERTER_TOKENS.ECOIN.address,
-    decimals: CONVERTER_TOKENS.ECOIN.decimals,
+    address: CONVERTER_TOKENS.eCoin.address,
+    decimals: CONVERTER_TOKENS.eCoin.decimals,
     isNative: false,
   },
 
@@ -41,17 +40,17 @@ export const CONVERTER_ASSETS: Record<
     isNative: false,
   },
 
-  EUSD: {
-    symbol: "EUSD",
-    name: "EdenKingDom eDollar",
-    address: CONVERTER_TOKENS.EUSD.address,
-    decimals: CONVERTER_TOKENS.EUSD.decimals,
+  eDollar: {
+    symbol: "eDollar",
+    name: "EdenKingDom USD",
+    address: CONVERTER_TOKENS.eDollar.address,
+    decimals: CONVERTER_TOKENS.eDollar.decimals,
     isNative: false,
   },
 
   BNB: {
     symbol: "BNB",
-    name: "BNB",
+    name: "Binance Coin",
     address: NATIVE_BNB,
     decimals: CONVERTER_TOKENS.BNB.decimals,
     isNative: true,
@@ -106,6 +105,10 @@ export const isConverterAssetConfigured = (
   symbol: ConverterAssetSymbol
 ): boolean => {
   const asset = getConverterAsset(symbol);
+
+  if (!asset) {
+    return false;
+  }
 
   if (!asset.address || asset.address === ZERO_ADDRESS) {
     return false;

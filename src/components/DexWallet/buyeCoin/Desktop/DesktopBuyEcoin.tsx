@@ -1,91 +1,61 @@
 "use client";
 
-import {
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
-
-import {
-  formatUnits,
-  parseUnits,
-  type Hex,
-} from "viem";
-
+import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeftRight, History, Wallet, ShieldCheck, Cpu } from "lucide-react";
-
-import type {
-  ConversionDirection,
-  ConversionStatus,
-  ConverterAssetSymbol,
-} from "@/types/converter";
-
-import {
-  CONVERTER_ASSETS,
-} from "@/lib/DexWallet/converter/assets";
-
-import {
-  CONVERTER_SETTINGS,
-} from "@/lib/DexWallet/converter/contracts";
-
-import {
-  useConverterAssets,
-} from "@/hooks/DexWallet/converter/Leitura-on-chain/useConverterAssets";
-
-import {
-  useConverterProvider,
-} from "@/hooks/DexWallet/converter/Leitura-on-chain/useConverterProvider";
-
-import {
-  useConverterFee,
-} from "@/hooks/DexWallet/converter/Leitura-on-chain/useConverterFee";
-
-import {
-  useConverterQuote,
-} from "@/hooks/DexWallet/converter/Cotação-e-autorização/useConverterQuote";
-
-import {
-  useConverterApproval,
-} from "@/hooks/DexWallet/converter/Cotação-e-autorização/useConverterApproval";
-
-import {
-  useConverter,
-} from "@/hooks/DexWallet/converter/Execução-e-acompanhamento/useConverter";
-
-import {
-  useConverterStatus,
-} from "@/hooks/DexWallet/converter/Execução-e-acompanhamento/useConverterStatus";
-
-import {
-  useConverterHistory,
-} from "@/hooks/DexWallet/converter/Execução-e-acompanhamento/useConverterHistory";
-
-import DesktopHeader from "./DesktopHeader";
-import DesktopConverterForm from "./DesktopConverterForm";
-import DesktopTransactionModal from "./DesktopTransactionModal";
-import DesktopTransactionStatus from "./DesktopTransactionStatus";
-import DesktopConversionHistory from "./DesktopConversionHistory";
+import { 
+  Zap, 
+  RefreshCw, 
+  ArrowUpDown, 
+  Wallet, 
+  History,
+  ArrowLeftRight 
+} from "lucide-react";
+import { ConnectButton } from "@rainbow-me/rainbowkit";
+import ConverterAdminPanel from "@/components/ConverterAdminPanel";
 import EcoinWalletDashboard from "@/components/EcoinWalletDashboard";
+import DesktopConversionHistory from "./DesktopConversionHistory";
 
-function displayAmount(
-  value: bigint | undefined,
-  decimals: number
-): string {
-  if (value === undefined) return "—";
-
-  return Number(
-    formatUnits(value, decimals)
-  ).toLocaleString("en-US", {
-    maximumFractionDigits: 8,
-  });
+interface DesktopBuyEcoinProps {
+  isConnected: boolean;
+  address?: string;
+  disconnect: () => void;
+  isOwner: boolean;
+  fromToken: string;
+  toToken: string;
+  amount: string;
+  setAmount: (val: string) => void;
+  setFromToken: (token: any) => void;
+  setToToken: (token: any) => void;
+  invertPair: () => void;
+  price: number;
+  previewAmountOut: bigint;
+  previewLoading: boolean;
+  previewAllowed: boolean;
+  calculation: { gross: number; feePercent: number; fee: number; net: number; output: number };
+  handleSwap: () => void;
+  txMining: boolean;
+  status: string;
 }
 
-export default function DesktopBuyEcoin() {
-  // ------------------------------------------------
-  // 1. NAVIGATION & TAB STATE
-  // ------------------------------------------------
+export default function DesktopBuyEcoin({
+  isConnected,
+  address,
+  disconnect,
+  isOwner,
+  fromToken,
+  toToken,
+  amount,
+  setAmount,
+  invertPair,
+  price,
+  previewAmountOut,
+  previewLoading,
+  previewAllowed,
+  calculation,
+  handleSwap,
+  txMining,
+  status,
+}: DesktopBuyEcoinProps) {
   const [activeTab, setActiveTab] = useState<string>("converter");
 
   const menuItems = [
@@ -94,411 +64,25 @@ export default function DesktopBuyEcoin() {
     { id: "carteira", label: "Portfolio & Ativos", icon: Wallet },
   ];
 
-  // ------------------------------------------------
-  // 2. FORM STATE
-  // ------------------------------------------------
-  const [direction, setDirection] =
-    useState<ConversionDirection>("CONVERT");
-
-  const [tokenIn, setTokenIn] =
-    useState<ConverterAssetSymbol>("USDT");
-
-  const [tokenOut, setTokenOut] =
-    useState<ConverterAssetSymbol>("ECOIN");
-
-  const [amount, setAmount] = useState("");
-
-  const [slippage, setSlippage] = useState(
-    CONVERTER_SETTINGS.defaultSlippage
-  );
-
-  const [providerId, setProviderId] =
-    useState<string>("");
-
-  const [modalOpen, setModalOpen] =
-    useState(false);
-
-  const [conversionStatus, setConversionStatus] =
-    useState<ConversionStatus>("idle");
-
-  const [executionError, setExecutionError] =
-    useState<string | undefined>();
-
-  // ------------------------------------------------
-  // 3. ASSET CONFIGURATION
-  // ------------------------------------------------
-  const inputAsset = CONVERTER_ASSETS[tokenIn];
-  const outputAsset = CONVERTER_ASSETS[tokenOut];
-
-  const amountIn = useMemo(() => {
-    try {
-      if (
-        !amount ||
-        !/^\d+(\.\d+)?$/.test(amount)
-      ) {
-        return 0n;
-      }
-
-      return parseUnits(
-        amount,
-        inputAsset.decimals
-      );
-    } catch {
-      return 0n;
-    }
-  }, [amount, inputAsset.decimals]);
-
-  // ------------------------------------------------
-  // 4. WEB3 ASSETS AND PAIRS
-  // ------------------------------------------------
-  const assetHook = useConverterAssets({
-    tokenIn,
-    tokenOut,
-  });
-
-  const selectableAssets = useMemo(() => {
-    return Object.values(CONVERTER_ASSETS).filter(
-      (asset) =>
-        assetHook.supportedAssets[
-          asset.address.toLowerCase()
-        ] === true
-    );
-  }, [assetHook.supportedAssets]);
-
-  // ------------------------------------------------
-  // 5. APPROVED PROVIDERS
-  // ------------------------------------------------
-  const providerHook = useConverterProvider();
-  const activeProviders = providerHook.activeProviders;
-
-  useEffect(() => {
-    const exists = activeProviders.some(
-      (provider) => provider.id === providerId
-    );
-
-    if (!exists) {
-      setProviderId(
-        activeProviders[0]?.id ?? ""
-      );
-    }
-  }, [activeProviders, providerId]);
-
-  const selectedProvider = activeProviders.find(
-    (provider) => provider.id === providerId
-  );
-
-  // ------------------------------------------------
-  // 6. OFFICIAL ON-CHAIN FEE
-  // ------------------------------------------------
-  const feeHook = useConverterFee({
-    amountIn,
-    enabled: amountIn > 0n,
-  });
-
-  // ------------------------------------------------
-  // 7. REAL DEX QUOTE
-  // ------------------------------------------------
-  const quoteHook = useConverterQuote({
-    tokenIn,
-    tokenOut,
-    amount,
-    slippage,
-    providerId: providerId
-      ? (providerId as Hex)
-      : undefined,
-    enabled:
-      assetHook.isPairSupported &&
-      !!selectedProvider,
-  });
-
-  const quote = quoteHook.quote;
-
-  const quoteMatchesFee =
-    !!quote &&
-    feeHook.isValid &&
-    feeHook.feeAmount === quote.feeAmount;
-
-  // ------------------------------------------------
-  // 8. ERC20 APPROVAL
-  // ------------------------------------------------
-  const approvalHook = useConverterApproval({
-    token: tokenIn,
-    amount: quote?.amountIn ?? amountIn,
-  });
-
-  // ------------------------------------------------
-  // 9. TRANSACTION EXECUTION
-  // ------------------------------------------------
-  const converterHook = useConverter();
-  const transactionHook = useConverterStatus({
-    hash: converterHook.lastSubmittedHash,
-  });
-
-  // ------------------------------------------------
-  // 10. CONVERSION HISTORY
-  // ------------------------------------------------
-  const historyHook = useConverterHistory({
-    page: 1,
-    limit: 10,
-  });
-
-  // ------------------------------------------------
-  // 11. FORMATTED QUOTE VALUES
-  // ------------------------------------------------
-  const feeDisplay = displayAmount(
-    quote?.feeAmount,
-    inputAsset.decimals
-  );
-
-  const netInputDisplay = displayAmount(
-    quote?.netAmountIn,
-    inputAsset.decimals
-  );
-
-  const expectedOutputDisplay = displayAmount(
-    quote?.expectedAmountOut,
-    outputAsset.decimals
-  );
-
-  const minimumOutputDisplay = displayAmount(
-    quote?.minimumAmountOut,
-    outputAsset.decimals
-  );
-
-  const feePercentage =
-    quote && quote.amountIn > 0n
-      ? Number(
-          (quote.feeAmount * 10_000n) /
-            quote.amountIn
-        ) / 100
-      : undefined;
-
-  // ------------------------------------------------
-  // 12. FORM ACTIONS
-  // ------------------------------------------------
-  const handleTokenInChange = useCallback(
-    (symbol: ConverterAssetSymbol) => {
-      setTokenIn(symbol);
-
-      if (symbol === tokenOut) {
-        const replacement = selectableAssets.find(
-          (asset) => asset.symbol !== symbol
-        );
-
-        if (replacement) {
-          setTokenOut(replacement.symbol);
-        }
-      }
-
-      setAmount("");
-    },
-    [tokenOut, selectableAssets]
-  );
-
-  const handleTokenOutChange = useCallback(
-    (symbol: ConverterAssetSymbol) => {
-      setTokenOut(symbol);
-    },
-    []
-  );
-
-  const handleReverse = useCallback(() => {
-    setTokenIn(tokenOut);
-    setTokenOut(tokenIn);
-    setAmount("");
-  }, [tokenIn, tokenOut]);
-
-  const handleDirectionChange = useCallback(
-    (next: ConversionDirection) => {
-      setDirection(next);
-    },
-    []
-  );
-
-  const handleContinue = useCallback(() => {
-    if (
-      !quoteHook.hasQuote ||
-      !quote ||
-      !assetHook.isPairSupported ||
-      !selectedProvider ||
-      !quoteMatchesFee
-    ) {
-      return;
-    }
-
-    setExecutionError(undefined);
-
-    setConversionStatus(
-      approvalHook.requiresApproval
-        ? "awaiting_approval"
-        : "awaiting_confirmation"
-    );
-
-    setModalOpen(true);
-  }, [
-    quoteHook.hasQuote,
-    quote,
-    assetHook.isPairSupported,
-    selectedProvider,
-    quoteMatchesFee,
-    approvalHook.requiresApproval,
-  ]);
-
-  // ------------------------------------------------
-  // 13. APPROVAL OR EXECUTION
-  // ------------------------------------------------
-  const handleConfirm = useCallback(async () => {
-    if (!quote || !quoteHook.isFresh) {
-      setExecutionError(
-        "A cotação expirou. Solicita uma nova cotação."
-      );
-      return;
-    }
-
-    if (!quoteMatchesFee) {
-      setExecutionError(
-        "A taxa da cotação não corresponde à taxa oficial on-chain."
-      );
-      return;
-    }
-
-    try {
-      setExecutionError(undefined);
-
-      if (
-        approvalHook.requiresApproval &&
-        !approvalHook.isApprovalConfirmed
-      ) {
-        setConversionStatus("approving");
-        await approvalHook.approve(false);
-        setConversionStatus("approval_confirming");
-        return;
-      }
-
-      if (
-        !approvalHook.isApproved &&
-        !approvalHook.isNative
-      ) {
-        setExecutionError(
-          "A autorização do token ainda não está confirmada."
-        );
-        return;
-      }
-
-      setConversionStatus("submitting");
-
-      await converterHook.executeConversion({
-        quote,
-      });
-
-      setConversionStatus("confirming");
-    } catch (error) {
-      setConversionStatus("failed");
-      setExecutionError(
-        error instanceof Error
-          ? error.message
-          : "Não foi possível executar a conversão."
-      );
-    }
-  }, [
-    quote,
-    quoteHook.isFresh,
-    quoteMatchesFee,
-    approvalHook,
-    converterHook,
-  ]);
-
-  // ------------------------------------------------
-  // 14. APPROVAL & CONVERSION RECEIPTS
-  // ------------------------------------------------
-  useEffect(() => {
-    if (approvalHook.isApprovalConfirmed) {
-      approvalHook.refetchAllowance();
-      setConversionStatus("awaiting_confirmation");
-    }
-  }, [
-    approvalHook.isApprovalConfirmed,
-    approvalHook.refetchAllowance,
-  ]);
-
-  useEffect(() => {
-    if (approvalHook.isApprovalReceiptError) {
-      setConversionStatus("failed");
-      setExecutionError("A transação de autorização falhou.");
-    }
-  }, [approvalHook.isApprovalReceiptError]);
-
-  useEffect(() => {
-    if (transactionHook.isSuccess) {
-      setConversionStatus("success");
-      setModalOpen(false);
-      historyHook.refreshHistory();
-    }
-
-    if (transactionHook.isFailed) {
-      setConversionStatus("failed");
-      setExecutionError("A conversão falhou na blockchain.");
-    }
-  }, [
-    transactionHook.isSuccess,
-    transactionHook.isFailed,
-    historyHook.refreshHistory,
-  ]);
-
-  // ------------------------------------------------
-  // 15. REFRESH ALL DATA
-  // ------------------------------------------------
-  const refreshAll = useCallback(async () => {
-    await Promise.all([
-      assetHook.refetch(),
-      providerHook.refetch(),
-      feeHook.refetch(),
-      approvalHook.refetchAllowance(),
-      quoteHook.refreshQuote(),
-      historyHook.refreshHistory(),
-    ]);
-  }, [
-    assetHook.refetch,
-    providerHook.refetch,
-    feeHook.refetch,
-    approvalHook.refetchAllowance,
-    quoteHook.refreshQuote,
-    historyHook.refreshHistory,
-  ]);
-
-  const isLoading =
-    quoteHook.isLoading ||
-    feeHook.isLoading ||
-    assetHook.isLoading ||
-    providerHook.isLoading;
-
-  const transactionLoading =
-    converterHook.isPending ||
-    approvalHook.isApprovalPending ||
-    approvalHook.isApprovalConfirming ||
-    transactionHook.isConfirming;
-
-  const displayedStatus: ConversionStatus =
-    conversionStatus === "confirming" &&
-    transactionHook.isSuccess
-      ? "success"
-      : conversionStatus;
-
-  // ------------------------------------------------
-  // 16. RENDER
-  // ------------------------------------------------
   return (
-    <main className="min-h-screen bg-[#070708] text-white pt-20 pb-28 lg:pb-12 px-4 md:px-8 relative overflow-x-hidden">
-      <div className="fixed inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(212,175,55,0.08),transparent_50%)] pointer-events-none" />
+    <div translate="no" className="notranslate min-h-screen bg-[#020617] text-white pt-24 lg:pt-32 p-6 lg:p-12 font-sans selection:bg-yellow-500/30 relative overflow-x-hidden">
+      <div className="fixed inset-0 bg-[radial-gradient(circle_at_50%_-20%,#1e1a0a,transparent)] pointer-events-none" />
+      <div className="fixed inset-0 bg-[radial-gradient(circle_at_80%_80%,#0a1628,transparent)] pointer-events-none" />
 
       <div className="max-w-[1600px] mx-auto flex flex-col lg:flex-row gap-8 relative z-10">
         
-        {/* 💻 NAVEGAÇÃO LATERAL (EXCLUSIVA DESKTOP) */}
-        <aside className="hidden lg:flex flex-col w-64 bg-[#0d0d0f] border border-white/5 rounded-3xl p-4 h-fit sticky top-24 gap-2">
-          <div className="px-3 py-2 mb-4 border-b border-white/5 flex items-center gap-2">
-            <div className="w-6 h-6 rounded-full bg-[#D4AF37]/20 flex items-center justify-center text-[#D4AF37] font-bold text-xs">CS</div>
-            <span className="font-black tracking-wider text-sm">DEX CONVERTER</span>
+        {/* SIDEBAR DESKTOP */}
+        <aside className="hidden lg:flex flex-col w-64 bg-[#0d0d0f]/80 backdrop-blur-xl border border-white/5 rounded-3xl p-4 h-fit sticky top-28 gap-2">
+          <div className="px-3 py-3 mb-4 border-b border-white/5 flex items-center gap-3">
+            <div className="w-8 h-8 rounded-xl bg-yellow-500/20 flex items-center justify-center text-yellow-400 font-bold text-xs shadow-inner">
+              <Zap size={16} />
+            </div>
+            <div>
+              <span className="font-black tracking-wider text-xs block">CORPORATE SWAP</span>
+              <span className="text-[9px] text-gray-500 font-mono">E-COIN PROTOCOL</span>
+            </div>
           </div>
+
           {menuItems.map((item) => {
             const Icon = item.icon;
             const isActive = activeTab === item.id;
@@ -506,9 +90,9 @@ export default function DesktopBuyEcoin() {
               <button
                 key={item.id}
                 onClick={() => setActiveTab(item.id)}
-                className={`flex items-center gap-3 w-full px-4 py-3.5 rounded-xl text-xs font-bold tracking-wide uppercase transition-all duration-200 cursor-pointer ${
+                className={`flex items-center gap-3 w-full px-4 py-3.5 rounded-2xl text-xs font-bold tracking-wide uppercase transition-all duration-200 cursor-pointer ${
                   isActive 
-                    ? "bg-[#D4AF37] text-black shadow-[0_4px_20px_rgba(212,175,55,0.25)]" 
+                    ? "bg-gradient-to-r from-yellow-500 to-amber-600 text-black shadow-[0_4px_20px_rgba(234,179,8,0.25)] font-black" 
                     : "text-white/60 hover:bg-white/5 hover:text-white"
                 }`}
               >
@@ -519,149 +103,128 @@ export default function DesktopBuyEcoin() {
           })}
         </aside>
 
-        {/* CONTAINER PRINCIPAL DE CONTEÚDO */}
-        <section className="flex-1 min-w-0 space-y-6">
+        {/* CONTEÚDO PRINCIPAL */}
+        <div className="flex-1 min-w-0 space-y-6">
           
-          {/* HEADER PRINCIPAL */}
-          <DesktopHeader
-            onRefresh={refreshAll}
-            isRefreshing={isLoading}
-          />
+          <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white/[0.02] border border-white/5 p-6 rounded-[28px] backdrop-blur-xl">
+            <div>
+              <h1 className="text-2xl lg:text-3xl font-black tracking-tighter italic flex items-center gap-3">
+                <Zap className="text-yellow-500" size={26} /> E-COIN CORPORATE SWAP TERMINAL
+              </h1>
+              <p className="text-gray-500 text-xs font-mono uppercase tracking-widest mt-1">
+                On-Chain Direct Liquidity Acquisition · Infinity CL Spot Price
+              </p>
+            </div>
+            <div className="flex items-center gap-3">
+              <div className="bg-yellow-500/10 border border-yellow-500/30 px-5 py-3 rounded-2xl backdrop-blur-xl">
+                <p className="text-[10px] text-yellow-500/60 uppercase tracking-widest font-mono">Live Price</p>
+                <p className="text-lg font-mono font-black text-yellow-400">
+                  1 E-Coin = <span className="text-white">{price > 0 ? price.toFixed(6) : "—"}</span> USDT
+                </p>
+              </div>
+            </div>
+          </motion.div>
 
-          {/* 💻 RENDERING CONDICIONAL DAS ABAS (MANTIDO EM DESKTOP) */}
-          <div className="block">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={activeTab}
-                initial={{ opacity: 0, y: 15 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -15 }}
-                transition={{ duration: 0.25 }}
-                className="space-y-6"
-              >
-                {/* ABA 1: CONVERTER / FORMULÁRIO */}
-                {activeTab === "converter" && (
-                  <div className="space-y-6">
-                    <DesktopConverterForm
-                      direction={direction}
-                      onDirectionChange={handleDirectionChange}
-                      tokenIn={tokenIn}
-                      tokenOut={tokenOut}
-                      onTokenInChange={handleTokenInChange}
-                      onTokenOutChange={handleTokenOutChange}
-                      onReverse={handleReverse}
-                      amount={amount}
-                      onAmountChange={setAmount}
-                      assets={selectableAssets}
-                      providers={providerHook.providers}
-                      providerId={providerId}
-                      onProviderChange={setProviderId}
-                      amountIn={
-                        quote
-                          ? displayAmount(
-                              quote.amountIn,
-                              inputAsset.decimals
-                            )
-                          : amount || undefined
-                      }
-                      fee={quote ? feeDisplay : undefined}
-                      feePercentage={feePercentage}
-                      netAmountIn={
-                        quote ? netInputDisplay : undefined
-                      }
-                      expectedAmountOut={
-                        quote ? expectedOutputDisplay : undefined
-                      }
-                      minimumAmountOut={
-                        quote ? minimumOutputDisplay : undefined
-                      }
-                      priceImpact={quote?.priceImpact}
-                      slippage={slippage}
-                      onSlippageChange={setSlippage}
-                      loading={
-                        quoteHook.isLoading ||
-                        quoteHook.isValidating ||
-                        feeHook.isLoading
-                      }
-                      isPairSupported={assetHook.isPairSupported}
-                      hasProvider={!!selectedProvider}
-                      hasQuote={quoteHook.hasQuote}
-                      feeValid={quoteMatchesFee}
-                      requiresApproval={approvalHook.requiresApproval}
-                      isApproved={approvalHook.isApproved}
-                      onContinue={handleContinue}
-                    />
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={activeTab}
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -12 }}
+              transition={{ duration: 0.2 }}
+            >
+              {activeTab === "converter" && (
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                  <div className="lg:col-span-2 space-y-6">
+                    <div className="bg-white/[0.03] border border-white/10 p-8 rounded-[32px] backdrop-blur-xl relative">
+                      <div className="flex items-center justify-between mb-8">
+                        <h3 className="text-sm font-black uppercase tracking-widest flex items-center gap-2 text-yellow-400">
+                          <RefreshCw size={16} /> Comprar E-Coin com USDT
+                        </h3>
+                      </div>
 
-                    {conversionStatus !== "idle" && (
-                      <DesktopTransactionStatus
-                        status={displayedStatus}
-                        hash={converterHook.lastSubmittedHash}
-                        explorerUrl={
-                          converterHook.lastSubmittedHash
-                            ? `https://bscscan.com/tx/${converterHook.lastSubmittedHash}`
-                            : undefined
-                        }
-                        message={executionError}
-                      />
+                      <div className="bg-black/40 border border-yellow-500/20 rounded-2xl p-5 mb-3">
+                        <label className="text-[10px] text-white/40 uppercase tracking-widest font-mono">Pay with (USDT)</label>
+                        <input
+                          type="text"
+                          value={amount}
+                          onChange={(e) => setAmount(e.target.value.replace(",", "."))}
+                          placeholder="0.000000"
+                          className="w-full bg-transparent outline-none text-4xl font-mono font-black text-white placeholder:text-white/10 mt-2"
+                        />
+                      </div>
+
+                      <div className="flex justify-center my-2">
+                        <button onClick={invertPair} className="w-11 h-11 flex items-center justify-center rounded-2xl bg-yellow-500/10 border border-yellow-500/30 text-yellow-400 hover:bg-yellow-500/20">
+                          <ArrowUpDown size={18} />
+                        </button>
+                      </div>
+
+                      <div className="bg-black/20 border border-white/5 rounded-2xl p-5">
+                        <label className="text-[10px] text-white/40 uppercase tracking-widest font-mono">Receive (Estimated E-Coin)</label>
+                        <div className="text-4xl font-mono font-black text-green-400 mt-2">
+                          {previewAmountOut > 0n ? Number(previewAmountOut) / 1e18 : "0.000000"}
+                        </div>
+                      </div>
+                    </div>
+
+                    {!isConnected ? (
+                      <div className="flex justify-center bg-white/5 p-4 rounded-2xl border border-white/10">
+                        <ConnectButton />
+                      </div>
+                    ) : (
+                      <button
+                        onClick={handleSwap}
+                        disabled={!amount || txMining}
+                        className="w-full py-5 rounded-2xl font-black text-sm uppercase tracking-widest bg-gradient-to-r from-yellow-500 to-amber-600 text-black shadow-lg shadow-yellow-500/20 disabled:opacity-30 cursor-pointer hover:brightness-110 transition-all"
+                      >
+                        {txMining ? "⛏️ A processar..." : "Comprar E-Coin Agora →"}
+                      </button>
                     )}
+                    {status && <p className="text-center text-xs font-mono text-yellow-400 animate-pulse">{status}</p>}
                   </div>
-                )}
 
-                {/* ABA 2: HISTÓRICO */}
-                {activeTab === "historico" && (
-                  <div className="bg-[#0d0d0f] border border-white/5 rounded-3xl p-6">
-                    <DesktopConversionHistory
-                      history={historyHook.history}
-                      loading={historyHook.isLoading}
-                      onRefresh={historyHook.refreshHistory}
-                    />
+                  <div className="space-y-6">
+                    <div className="bg-gradient-to-b from-yellow-500/10 to-transparent border border-yellow-500/20 p-7 rounded-[32px]">
+                      <h3 className="text-yellow-500 text-[10px] font-black uppercase tracking-[0.25em] mb-6 flex items-center gap-2">
+                        <Wallet size={12} /> Wallet Node
+                      </h3>
+                      {isConnected ? (
+                        <div className="space-y-4">
+                          <p className="text-sm font-mono text-yellow-400">{address?.slice(0, 8)}…{address?.slice(-6)}</p>
+                          <button onClick={disconnect} className="w-full py-2 bg-red-500/10 text-red-400 rounded-xl text-xs uppercase font-bold hover:bg-red-500/20 transition-all">Disconnect</button>
+                        </div>
+                      ) : (
+                        <ConnectButton />
+                      )}
+                    </div>
+                    {isConnected && isOwner && <ConverterAdminPanel />}
                   </div>
-                )}
+                </div>
+              )}
 
-                {/* ABA 3: PORTFOLIO / CARTEIRA */}
-                {activeTab === "carteira" && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 12 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -12 }}
-                    transition={{ duration: 0.2, ease: "easeInOut" }}
-                    className="bg-[#0d0d0f] border border-white/5 rounded-3xl p-6"
-                  >
-                    <EcoinWalletDashboard />
-                  </motion.div>
-                )}
-              </motion.div>
-            </AnimatePresence>
-          </div>
+              {activeTab === "historico" && (
+                <div className="bg-[#0d0d0f] border border-white/5 rounded-3xl p-6 lg:p-8 backdrop-blur-xl">
+                  <h3 className="text-sm font-black uppercase tracking-widest mb-6 flex items-center gap-2 text-yellow-400">
+                    <History size={16} /> Histórico de Transações
+                  </h3>
+                  <DesktopConversionHistory history={[]} loading={false} onRefresh={() => {}} />
+                </div>
+              )}
 
-          <DesktopTransactionModal
-            open={modalOpen}
-            onClose={() => {
-              if (!transactionLoading) {
-                setModalOpen(false);
-              }
-            }}
-            onConfirm={handleConfirm}
-            tokenIn={tokenIn}
-            tokenOut={tokenOut}
-            amountIn={
-              quote
-                ? displayAmount(
-                    quote.amountIn,
-                    inputAsset.decimals
-                  )
-                : amount
-            }
-            amountOut={expectedOutputDisplay}
-            fee={feeDisplay}
-            requiresApproval={approvalHook.requiresApproval}
-            approvalConfirmed={approvalHook.isApprovalConfirmed}
-            loading={transactionLoading}
-            error={executionError}
-          />
+              {activeTab === "carteira" && (
+                <div className="bg-[#0d0d0f] border border-white/5 rounded-3xl p-6 lg:p-8 backdrop-blur-xl space-y-6">
+                  <h3 className="text-sm font-black uppercase tracking-widest mb-2 flex items-center gap-2 text-yellow-400">
+                    <Wallet size={16} /> Portfolio & Ativos On-Chain
+                  </h3>
+                  <EcoinWalletDashboard />
+                </div>
+              )}
+            </motion.div>
+          </AnimatePresence>
 
-        </section>
+        </div>
       </div>
-    </main>
+    </div>
   );
 }
