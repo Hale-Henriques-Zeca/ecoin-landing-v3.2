@@ -60,7 +60,7 @@ export default function MobileBuyEcoin({
           </div>
         </div>
         <div className="bg-yellow-500/10 border border-yellow-500/30 px-3 py-1.5 rounded-xl text-xs font-mono font-bold text-yellow-400">
-          1 E-Coin = {price > 0 ? price.toFixed(7) : "—"} USDT
+          1 E-Coin = <span className="text-white">{price > 0 ? price.toFixed(7) : "—"}</span> USDT
         </div>
       </div>
 
