@@ -119,7 +119,7 @@ export default function DesktopBuyEcoin({
               <div className="bg-yellow-500/10 border border-yellow-500/30 px-5 py-3 rounded-2xl backdrop-blur-xl">
                 <p className="text-[10px] text-yellow-500/60 uppercase tracking-widest font-mono">Live Price</p>
                 <p className="text-lg font-mono font-black text-yellow-400">
-                  1 E-Coin = <span className="text-white">{price > 0 ? price.toFixed(6) : "—"}</span> USDT
+                  1 E-Coin = <span className="text-white">{price > 0 ? price.toFixed(7) : "—"}</span> USDT
                 </p>
               </div>
             </div>
