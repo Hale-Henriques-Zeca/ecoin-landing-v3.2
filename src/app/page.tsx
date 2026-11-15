@@ -18,7 +18,6 @@ import Roadmap from "@/sections/Roadmap";
 // 2. COMPONENTS
 import BlockchainDeviceAlert from "@/components/BlockchainDeviceAlert";
 import EcoinCarousel from "@/components/EcoinCarousel";
-import AITradingCard from "@/components/AITradingCard";
 import ECoinDevelopmentNotice from "@/components/ECoinDevelopmentNotice";
 import LiquidityPanel from "@/components/LiquidityPanel";
 import Chart from "@/components/eCoinChart/Chart";
@@ -62,7 +61,6 @@ export default function Home() {
     <>
       <div id="Hero" className="scroll-mt-28"><Hero /></div>
       <div id="EcoinCarousel" className="scroll-mt-28"><EcoinCarousel /></div>
-      <div id="AITradingCard" className="scroll-mt-28"><AITradingCard /></div>
       <div id="ECoinDevelopmentNotice" className="scroll-mt-28"><ECoinDevelopmentNotice /></div>
       <div id="LiquidityPanel" className="scroll-mt-28"><LiquidityPanel /></div>
       <div id="Chart" className="scroll-mt-28"><Chart /></div> 
@@ -109,7 +107,6 @@ function FloatingDashboardMenu() {
     { label: "Gráfico & Preço da eCoin", target: "Chart" },
     { label: "Percentage calculator", target: "percentage-calculator" },
     { label: "Carousel", target: "EcoinCarousel" },
-    { label: "Trading AI", target: "AITradingCard" },
     { label: "Development Notice", target: "ECoinDevelopmentNotice" },
     { label: "EFTE (eExchange)", target: "efte" },
     { label: "Crypto Growth Simulator", target: "growth-simulator" },
