@@ -11,6 +11,7 @@ import { ExternalLink, Users, Coins, Wallet, ShieldCheck, TrendingUp } from "luc
 // Endereços dos Contratos definidos
 const EDOLLAR_ADDRESS = "0xF7543E5B4735C58a176269202847360aaDfA83C1";
 const ECOIN_ADDRESS = "0xDf69235019cc416dd5Be75dfc0eDc922aB4b5964";
+const USDT_ADDRESS = "0x55d398326f99059fF775485246999027B3197955"; // Endereço oficial USDT (BSC BEP20) ou o teu endereço configurado
 
 export default function LiquidityPanel() {
   const { address } = useAccount();
@@ -19,7 +20,7 @@ export default function LiquidityPanel() {
      1. LEITURA DE OWNER DO COFRE DE LIQUIDEZ
      ========================================================================== */
   const { data: vaultOwner } = useReadContract({
-    address: CONTRACTS.LIQUIDITY_VAULT,
+    address: CONTRACTS.LIQUIDITY_RESERVE_VAULT,
     abi: [
       {
         name: "owner",
@@ -42,19 +43,20 @@ export default function LiquidityPanel() {
   /* ==========================================================================
      2. LEITURA DE SALDOS ON-CHAIN DA LIQUIDITY VAULT
      ========================================================================== */
-  // 1. USDT Liquidity
+  // 1. USDT Balance (via tokenBalance do Vault UUPS)
   const { data: liquidityUSDT } = useReadContract({
-    address: CONTRACTS.LIQUIDITY_VAULT,
+    address: CONTRACTS.LIQUIDITY_RESERVE_VAULT,
     abi: [
       {
-        name: "liquidityUSDT",
+        name: "tokenBalance",
         type: "function",
         stateMutability: "view",
-        inputs: [],
-        outputs: [{ type: "uint256" }],
+        inputs: [{ name: "token", type: "address" }],
+        outputs: [{ name: "", type: "uint256" }],
       },
     ],
-    functionName: "liquidityUSDT",
+    functionName: "tokenBalance",
+    args: [USDT_ADDRESS],
     query: { refetchInterval: 5000 },
   });
 
@@ -63,7 +65,7 @@ export default function LiquidityPanel() {
     address: EDOLLAR_ADDRESS,
     abi: erc20Abi,
     functionName: "balanceOf",
-    args: [CONTRACTS.LIQUIDITY_VAULT],
+    args: [CONTRACTS.LIQUIDITY_RESERVE_VAULT],
     query: { refetchInterval: 5000 },
   });
 
@@ -72,13 +74,13 @@ export default function LiquidityPanel() {
     address: ECOIN_ADDRESS,
     abi: erc20Abi,
     functionName: "balanceOf",
-    args: [CONTRACTS.LIQUIDITY_VAULT],
+    args: [CONTRACTS.LIQUIDITY_RESERVE_VAULT],
     query: { refetchInterval: 5000 },
   });
 
   // 4. Native BNB Balance
   const { data: bnbBalance } = useBalance({
-    address: CONTRACTS.LIQUIDITY_VAULT,
+    address: CONTRACTS.LIQUIDITY_RESERVE_VAULT,
     query: { refetchInterval: 5000 },
   });
 
@@ -91,7 +93,7 @@ export default function LiquidityPanel() {
           minimumFractionDigits: 2,
           maximumFractionDigits: 2,
         })
-      : "--";
+      : "0,00";
 
   const formattedEUSD =
     eDollarBalance !== undefined
@@ -99,7 +101,7 @@ export default function LiquidityPanel() {
           minimumFractionDigits: 2,
           maximumFractionDigits: 2,
         })
-      : "--";
+      : "0,00";
 
   const formattedECoin =
     eCoinBalance !== undefined
@@ -107,7 +109,7 @@ export default function LiquidityPanel() {
           minimumFractionDigits: 2,
           maximumFractionDigits: 7,
         })
-      : "--";
+      : "0,00";
 
   const formattedBNB =
     bnbBalance !== undefined
@@ -115,7 +117,7 @@ export default function LiquidityPanel() {
           minimumFractionDigits: 2,
           maximumFractionDigits: 7,
         })
-      : "--";
+      : "0,00";
 
   /* ==========================================================================
      4. FETCH DE HOLDERS
@@ -253,7 +255,7 @@ export default function LiquidityPanel() {
         {/* BOTOES DE AÇÃO / EXPLORADOR */}
         <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto shrink-0">
           <a
-            href={`https://bscscan.com/address/${CONTRACTS.LIQUIDITY_VAULT}`}
+            href={`https://bscscan.com/address/${CONTRACTS.LIQUIDITY_RESERVE_VAULT}`}
             target="_blank"
             rel="noopener noreferrer"
             className="px-5 py-3 rounded-xl bg-gradient-to-r from-[#D4AF37] to-amber-600 hover:from-amber-500 hover:to-amber-700 text-black font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition active:scale-95 shadow-lg shadow-amber-500/10"

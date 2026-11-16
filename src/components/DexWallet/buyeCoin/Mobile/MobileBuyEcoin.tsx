@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Zap, ArrowUpDown, Wallet, History, ArrowLeftRight } from "lucide-react";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import EcoinWalletDashboard from "@/components/EcoinWalletDashboard";
+import ConverterAdminPanel from "@/components/ConverterAdminPanel";
 import MobileConversionHistory from "./MobileConversionHistory";
 
 interface MobileBuyEcoinProps {
@@ -25,6 +26,7 @@ interface MobileBuyEcoinProps {
 export default function MobileBuyEcoin({
   isConnected,
   address,
+  isOwner,
   disconnect,
   amount,
   setAmount,
@@ -148,7 +150,7 @@ export default function MobileBuyEcoin({
                 )}
               </div>
             )}
-
+{isConnected && isOwner && <ConverterAdminPanel />}
             {activeTab === "historico" && (
               <div className="bg-[#0d0d0f] border border-white/5 rounded-3xl p-5 backdrop-blur-xl">
                 <h3 className="text-xs font-black uppercase tracking-widest mb-4 flex items-center gap-2 text-yellow-400">

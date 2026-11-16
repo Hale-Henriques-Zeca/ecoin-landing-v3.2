@@ -198,10 +198,13 @@ export default function DesktopBuyEcoin({
                         <ConnectButton />
                       )}
                     </div>
-                    {isConnected && isOwner && <ConverterAdminPanel />}
+                    
                   </div>
+                 
                 </div>
               )}
+
+               {isConnected && isOwner && <ConverterAdminPanel />}
 
               {activeTab === "historico" && (
                 <div className="bg-[#0d0d0f] border border-white/5 rounded-3xl p-6 lg:p-8 backdrop-blur-xl">

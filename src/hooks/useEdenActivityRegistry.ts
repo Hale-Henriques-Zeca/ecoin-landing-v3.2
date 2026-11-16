@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
@@ -32,33 +31,44 @@ export interface ActivityRecord {
   referenceId: Hex;
   timestamp: number;
 
-  // O contrato não guarda estes dois campos.
-  // Só estarão disponíveis quando obtidos de uma fonte externa.
   blockNumber?: bigint;
   transactionHash?: Hex;
 }
 
+// Mapeamento completo sincronizado com todas as atividades do contrato inteligente
 const ACTIVITY_NAMES: Record<string, string> = {
+  // Transações básicas e staking
   DEPOSIT: "Depósito",
   WITHDRAWAL: "Levantamento",
-  ADD_PROFIT_MARGIN: "Adicionar Margem de Lucro",
-  REMOVE_PROFIT_MARGIN: "Remover Margem de Lucro",
-  PROFIT: "Lucro / Rendimento",
-  REFERRAL: "Recompensa de Referência",
-  REFERRAL_CLAIM: "Resgate de Referência",
-  ADD_PROFIT_CAPACITY: "Emissão de Selo CS",
-  CLAIM: "Resgate / Claim",
-  TRADING: "Atividade de Trading",
-  INVESTMENT: "Investimento",
+  ADD_PROFIT_MARGIN: "Staking / Margem",
+  REMOVE_PROFIT_MARGIN: "Remover Staking",
+  PROFIT: "Lucro Recebido",
+  
+  // Referências e Códigos
+  REFERRAL: "Comissão de Referral",
+  REFERRAL_CLAIM: "Resgate de Referral",
+  REFERRAL_COMMISSION_CLAIM: "Comissão de Referral",
   LINK_UPLINE: "Vínculo de Referência",
   REFERRAL_CODE_REGISTERED: "Registo de Código",
+
+  // Capacidade e Resgates
+  ADD_PROFIT_CAPACITY: "Emissão de Selo CS",
+  CLAIM: "Resgate / Claim",
+
+  // Trading e Investimento
+  TRADING: "Trading",
+  INVESTMENT: "Investimento",
+  CONVERSION: "Conversão / Swap",
+
+  // Gestão de Tokens
   OFFICIAL_TOKEN_REGISTERED: "Registo de Token Oficial",
   CUSTOM_TOKEN_ADDED: "Token Personalizado Adicionado",
   CUSTOM_TOKEN_REMOVED: "Token Personalizado Removido",
   CUSTOM_TOKEN_DETECTED: "Token Personalizado Detectado",
   CUSTOM_TOKEN_TRANSFERRED: "Transferência de Token",
   CUSTOM_TOKEN_APPROVED: "Aprovação de Token",
-  CONVERSION: "Conversão",
+
+  // Segurança e Sessões da Carteira
   WALLET_RECOVERY: "Recuperação de Carteira",
   SESSION_CREATED: "Sessão Criada",
   SESSION_REVOKED: "Sessão Revogada",
@@ -69,22 +79,32 @@ const ACTIVITY_NAMES: Record<string, string> = {
   CONTROLLER_REVOKED: "Controlador Revogado",
   DEVICE_AUTHORIZED: "Dispositivo Autorizado",
   DEVICE_REVOKED: "Dispositivo Revogado",
-  WALLET_FROZEN: "Carteira Bloqueada",
-  WALLET_UNFROZEN: "Carteira Desbloqueada",
+  WALLET_FROZEN: "Carteira Congelada",
+  WALLET_UNFROZEN: "Carteira Descongelada",
   GUARDIAN_STATUS_CHANGED: "Estado do Guardian Alterado",
   SECURITY_OPERATOR_UPDATED: "Operador de Segurança Atualizado",
   WALLET_GUARDIAN_FACTORY_UPDATED: "Fábrica de Guardian Atualizada",
+
+  // Patrocínio de Gás e Transferências
   GAS_SPONSORSHIP_AUTHORIZED: "Patrocínio de Gas Autorizado",
   GAS_SPONSORSHIP_COMPLETED: "Patrocínio de Gas Concluído",
   TRANSFER: "Transferência",
   SERVICE_FEE: "Taxa de Serviço",
+
+  // Operações de Wallet & Batch
   WALLET_CREATED: "Carteira Criada",
   WALLET_EXECUTED: "Operação de Carteira",
   WALLET_BATCH_EXECUTED: "Operações em Lote",
   WALLET_SESSION_EXECUTED: "Operação por Sessão",
-  AIRDROP_CLAIM: "Reivindicação de Airdrop",
-  AIRDROP_SERVICE_FEE: "Taxa do Airdrop",
+
+  // Airdrop
+  AIRDROP_CLAIM: "Airdrop Claim",
+  AIRDROP_SERVICE_FEE: "Taxa de Serviço",
   AIRDROP_REFERRAL: "Referência de Airdrop",
+
+  // Purchase / Corporate Swap (Alinhado com keccak256("BUY_E-COIN"))
+  "BUY_E-COIN": "Buy E-Coin",
+  PURCHASE: "Buy E-Coin",
 };
 
 const HASH_LABEL_MAP = new Map<string, string>(
@@ -131,7 +151,6 @@ export function useEdenActivityRegistry() {
     ? getAddress(address)
     : undefined;
 
-  // Contador antigo mantido pelo contrato.
   const {
     data: userActivityCount,
     refetch: refetchLegacyCount,
@@ -239,19 +258,12 @@ export function useEdenActivityRegistry() {
 
   return {
     activities,
-
-    // Total efetivamente guardado no novo histórico.
     totalCount: storedCount,
-
-    // Contador preexistente, que pode incluir atividades antigas.
     legacyActivityCount: Number(userActivityCount ?? 0n),
-
     isLoading,
     isLoadingMore,
     isError,
-
     hasMore: activities.length < storedCount,
-
     loadMore,
     refetch,
   };
