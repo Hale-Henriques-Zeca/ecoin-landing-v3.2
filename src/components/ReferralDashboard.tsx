@@ -12,6 +12,9 @@ import {
 import { useDexWallet } from "@/contexts/DexWalletContext";
 import { CONTRACTS } from "@/lib/contracts/contracts";
 
+const CLAIM_FEE_BP = 1000n; // 10% (ReferralFeeCollector.CLAIM_FEE_BP)
+const BP_DIVISOR = 10000n;
+
 const EMPTY_LEVELS: MultiAssetRewardsByLevel = {
   ecoin: { l1Reward: 0n, l2Reward: 0n, l3Reward: 0n, totalEarned: 0n },
   eusd: { l1Reward: 0n, l2Reward: 0n, l3Reward: 0n, totalEarned: 0n },
@@ -111,6 +114,13 @@ export default function ReferralDashboard() {
     });
   };
 
+  // Cálculo exato idêntico ao ReferralFeeCollector.sol
+  const calculateClaimBreakdown = (grossAmount: bigint) => {
+    const fee = (grossAmount * CLAIM_FEE_BP) / BP_DIVISOR;
+    const net = grossAmount - fee;
+    return { gross: grossAmount, fee, net };
+  };
+
   // Totais globais acumulados por ativo (L1 + L2 + L3) — cada ativo mantém o seu próprio total
   const globalTotals = {
     ecoin:
@@ -193,6 +203,33 @@ export default function ReferralDashboard() {
         usdt: rewardsByLevel.usdt.l3Reward,
         bnb: rewardsByLevel.bnb.l3Reward,
       },
+    },
+  ];
+
+  const claimableCards = [
+    {
+      symbol: "E-Coin",
+      borderClass: "border-[#D4AF37]/30",
+      textClass: "text-[#D4AF37]",
+      ...calculateClaimBreakdown(pending.ecoin),
+    },
+    {
+      symbol: "eDollar",
+      borderClass: "border-blue-500/30",
+      textClass: "text-blue-400",
+      ...calculateClaimBreakdown(pending.eusd),
+    },
+    {
+      symbol: "USDT",
+      borderClass: "border-emerald-500/30",
+      textClass: "text-emerald-400",
+      ...calculateClaimBreakdown(pending.usdt),
+    },
+    {
+      symbol: "BNB",
+      borderClass: "border-yellow-500/30",
+      textClass: "text-yellow-400",
+      ...calculateClaimBreakdown(pending.bnb),
     },
   ];
 
@@ -350,49 +387,55 @@ export default function ReferralDashboard() {
         </div>
       </div>
 
-      {/* SECÇÃO C: RECOMPENSAS DISPONÍVEIS PARA RESGATE */}
+      {/* SECÇÃO C: RECOMPENSAS DISPONÍVEIS PARA RESGATE (COM DETALHE DE TAXA 10% E LÍQUIDO) */}
       <div className="space-y-2.5 pt-1 border-t border-white/10">
-        <div className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-white/70">
-          <Coins size={12} className="text-[#00FF9C]" />
-          <span>C. Recompensas Disponíveis para Resgate</span>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-white/70">
+            <Coins size={12} className="text-[#00FF9C]" />
+            <span>C. Recompensas Disponíveis para Resgate</span>
+          </div>
+          <span className="text-[9px] font-mono text-rose-400/90 bg-rose-500/10 border border-rose-500/20 px-2 py-0.5 rounded">
+            Taxa de Claim: 10%
+          </span>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center">
-          <div className="rounded-lg border border-[#D4AF37]/30 bg-black/50 p-2.5">
-            <p translate="no" className="notranslate text-[9px] uppercase text-white/40 font-semibold">
-              E-Coin
-            </p>
-            <p translate="no" className="notranslate text-sm font-black text-[#D4AF37] mt-0.5 font-mono">
-              {formatWei(pending.ecoin)}
-            </p>
-          </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2">
+          {claimableCards.map((asset) => (
+            <div
+              key={asset.symbol}
+              className={`rounded-lg border ${asset.borderClass} bg-black/50 p-2.5 space-y-1.5`}
+            >
+              <div className="flex items-center justify-between border-b border-white/10 pb-1">
+                <p translate="no" className="notranslate text-[10px] uppercase text-white/80 font-bold">
+                  {asset.symbol}
+                </p>
+                <span className="text-[8px] uppercase text-white/40 font-mono">90% Líquido</span>
+              </div>
 
-          <div className="rounded-lg border border-blue-500/30 bg-black/50 p-2.5">
-            <p translate="no" className="notranslate text-[9px] uppercase text-white/40 font-semibold">
-              eDollar
-            </p>
-            <p translate="no" className="notranslate text-sm font-black text-blue-400 mt-0.5 font-mono">
-              {formatWei(pending.eusd)}
-            </p>
-          </div>
+              <div className="space-y-1 text-[10px] font-mono">
+                <div className="flex items-center justify-between">
+                  <span className="text-white/45">Bruto:</span>
+                  <span translate="no" className="notranslate text-white/80">
+                    {formatWei(asset.gross)}
+                  </span>
+                </div>
 
-          <div className="rounded-lg border border-emerald-500/30 bg-black/50 p-2.5">
-            <p translate="no" className="notranslate text-[9px] uppercase text-white/40 font-semibold">
-              USDT
-            </p>
-            <p translate="no" className="notranslate text-sm font-black text-emerald-400 mt-0.5 font-mono">
-              {formatWei(pending.usdt)}
-            </p>
-          </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-rose-400/80">Taxa (10%):</span>
+                  <span translate="no" className="notranslate text-rose-400">
+                    -{formatWei(asset.fee)}
+                  </span>
+                </div>
 
-          <div className="rounded-lg border border-yellow-500/30 bg-black/50 p-2.5">
-            <p translate="no" className="notranslate text-[9px] uppercase text-white/40 font-semibold">
-              BNB
-            </p>
-            <p translate="no" className="notranslate text-sm font-black text-yellow-400 mt-0.5 font-mono">
-              {formatWei(pending.bnb)}
-            </p>
-          </div>
+                <div className="flex items-center justify-between pt-1 border-t border-white/10">
+                  <span className="text-white/60 font-semibold">A Receber:</span>
+                  <span translate="no" className={`notranslate text-xs font-black ${asset.textClass}`}>
+                    {formatWei(asset.net)}
+                  </span>
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
 
         {/* BOTÃO CLAIM ALL */}
@@ -406,7 +449,7 @@ export default function ReferralDashboard() {
           }`}
         >
           <ArrowDownRight size={16} />
-          {loading ? "A Processar Claim..." : "Claim All Rewards"}
+          {loading ? "A Processar Claim..." : "Claim All Rewards (Valor Líquido)"}
         </button>
       </div>
     </div>
