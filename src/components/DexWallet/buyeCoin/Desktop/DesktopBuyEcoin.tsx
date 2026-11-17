@@ -145,7 +145,7 @@ export default function DesktopBuyEcoin({
           >
             <div>
               <h1 className="text-2xl lg:text-3xl font-black tracking-tighter italic flex items-center gap-3">
-                <Zap className="text-yellow-500" size={26} /> ecnSWAP - eCoin Swap Terminal
+                <Zap className="text-yellow-500" size={26} /> ecnSWAP - eCoin Neural Swap Terminal
               </h1>
               <p className="text-gray-500 text-xs font-mono uppercase tracking-widest mt-1">
                 On-Chain Direct Liquidity Acquisition · Infinity CL Spot Price
