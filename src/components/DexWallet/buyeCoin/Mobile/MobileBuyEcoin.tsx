@@ -2,7 +2,19 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Zap, ArrowUpDown, Wallet, History, ArrowLeftRight } from "lucide-react";
+import {
+  Zap,
+  Wallet,
+  History,
+  ArrowLeftRight,
+  ExternalLink,
+  Wrench,
+  ShieldCheck,
+  TrendingUp,
+  TrendingDown,
+  Coins,
+  DollarSign,
+} from "lucide-react";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import EcoinWalletDashboard from "@/components/EcoinWalletDashboard";
 import ConverterAdminPanel from "@/components/ConverterAdminPanel";
@@ -23,6 +35,9 @@ interface MobileBuyEcoinProps {
   invertPair?: () => void;
 }
 
+const PANCAKESWAP_SELL_URL =
+  "https://pancakeswap.finance/swap?chain=bsc&inputCurrency=0x55d398326f99059fF775485246999027B3197955&outputCurrency=0xDf69235019cc416dd5Be75dfc0eDc922aB4b5964";
+
 export default function MobileBuyEcoin({
   isConnected,
   address,
@@ -35,9 +50,9 @@ export default function MobileBuyEcoin({
   handleSwap,
   txMining,
   status,
-  invertPair,
 }: MobileBuyEcoinProps) {
   const [activeTab, setActiveTab] = useState<string>("converter");
+  const [tradeMode, setTradeMode] = useState<"buy" | "sell">("buy");
 
   const menuItems = [
     { id: "converter", label: "Converter", icon: ArrowLeftRight },
@@ -45,27 +60,47 @@ export default function MobileBuyEcoin({
     { id: "carteira", label: "Portfolio", icon: Wallet },
   ];
 
+  const estimatedEcoinOut =
+    previewAmountOut > 0n
+      ? (Number(previewAmountOut) / 1e18).toLocaleString("en-US", {
+          maximumFractionDigits: 4,
+        })
+      : "0.00";
+
   return (
-    <main className="min-h-[100dvh] bg-[#020617] text-white pb-28 pt-4 px-4 relative selection:bg-yellow-500/30">
-      
+    <main
+      translate="no"
+      className="notranslate min-h-[100dvh] bg-[#020617] text-white pb-28 pt-4 px-4 relative selection:bg-yellow-500/30 overflow-x-hidden"
+    >
+      {/* Ambient Background Glows */}
       <div className="fixed inset-0 bg-[radial-gradient(circle_at_50%_-20%,#1e1a0a,transparent)] pointer-events-none" />
       <div className="fixed inset-0 bg-[radial-gradient(circle_at_80%_80%,#0a1628,transparent)] pointer-events-none" />
 
-      <div className="flex justify-between items-center mb-6 pt-2 relative z-10 border-b border-white/5 pb-4">
+      {/* HEADER MOBILE */}
+      <div className="flex justify-between items-center mb-5 pt-2 relative z-10 border-b border-white/5 pb-4">
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 rounded-xl bg-yellow-500/20 flex items-center justify-center text-yellow-400 font-bold text-xs">
             <Zap size={16} />
           </div>
           <div>
-            <h1 className="text-sm font-black italic tracking-wider">E-COIN SWAP</h1>
-            <p className="text-[9px] text-gray-500 font-mono uppercase tracking-widest">BSC Mainnet</p>
+            <h1 className="text-sm font-black italic tracking-wider">
+              E-COIN SWAP
+            </h1>
+            <p className="text-[9px] text-gray-500 font-mono uppercase tracking-widest">
+              BSC Mainnet
+            </p>
           </div>
         </div>
-        <div className="bg-yellow-500/10 border border-yellow-500/30 px-3 py-1.5 rounded-xl text-xs font-mono font-bold text-yellow-400">
-          1 E-Coin = <span className="text-white">{price > 0 ? price.toFixed(7) : "—"}</span> USDT
+        <div className="bg-yellow-500/10 border border-yellow-500/30 px-3 py-1.5 rounded-xl text-[11px] font-mono font-bold text-yellow-400">
+          1 E-Coin ={" "}
+          <span className="text-white">
+            {price > 0 ? price.toFixed(7) : "—"}
+          </span>{" "}
+          USDT
         </div>
       </div>
 
+      {/* CONTEÚDO PRINCIPAL */}
       <div className="relative z-10 max-w-lg mx-auto">
         <AnimatePresence mode="wait">
           <motion.div
@@ -77,86 +112,341 @@ export default function MobileBuyEcoin({
             className="space-y-4"
           >
             {activeTab === "converter" && (
-              <div className="space-y-4">
-                
-                <div className="bg-white/[0.03] border border-white/10 p-5 rounded-3xl backdrop-blur-xl relative overflow-hidden">
-                  <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-yellow-500/50 to-transparent" />
-                  <div className="flex justify-between items-center mb-2">
-                    <label className="text-[10px] text-white/40 font-mono uppercase tracking-widest">Pagar com USDT</label>
-                    <span className="text-[10px] text-yellow-400 font-mono">Balance: —</span>
-                  </div>
-                  <input
-                    type="text"
-                    inputMode="decimal"
-                    value={amount}
-                    onChange={(e) => setAmount(e.target.value.replace(",", "."))}
-                    placeholder="0.00"
-                    className="w-full bg-transparent text-3xl font-mono font-black mt-1 outline-none text-white placeholder:text-white/20"
-                  />
+              <div className="rounded-[28px] overflow-hidden border border-white/10 bg-[#0b0e14]/90 backdrop-blur-2xl shadow-2xl">
+                {/* SWITCH SUPERIOR BUY (VERDE) / SELL (VERMELHO) */}
+                <div className="grid grid-cols-2 bg-black/50 relative border-b border-white/5">
+                  {/* TAB BUY */}
+                  <button
+                    type="button"
+                    onClick={() => setTradeMode("buy")}
+                    className={`relative py-4 px-4 flex items-center justify-center gap-2 text-sm font-black uppercase tracking-wider transition-all duration-300 ${
+                      tradeMode === "buy"
+                        ? "bg-gradient-to-b from-emerald-500/20 to-[#0b0e14] text-emerald-400 shadow-[inset_0_2px_0_0_#10b981]"
+                        : "text-white/35 bg-white/[0.01]"
+                    }`}
+                  >
+                    <TrendingUp
+                      size={16}
+                      className={
+                        tradeMode === "buy"
+                          ? "text-emerald-400"
+                          : "text-white/30"
+                      }
+                    />
+                    <span>Buy</span>
+                    {tradeMode === "buy" && (
+                      <motion.div
+                        layoutId="mobileActiveTradeIndicator"
+                        className="absolute bottom-0 left-5 right-5 h-[2px] bg-emerald-400 rounded-full shadow-[0_0_10px_#10b981]"
+                      />
+                    )}
+                  </button>
+
+                  {/* TAB SELL */}
+                  <button
+                    type="button"
+                    onClick={() => setTradeMode("sell")}
+                    className={`relative py-4 px-4 flex items-center justify-center gap-2 text-sm font-black uppercase tracking-wider transition-all duration-300 border-l border-white/5 ${
+                      tradeMode === "sell"
+                        ? "bg-gradient-to-b from-rose-500/20 to-[#0b0e14] text-rose-400 shadow-[inset_0_2px_0_0_#f43f5e]"
+                        : "text-white/35 bg-white/[0.01]"
+                    }`}
+                  >
+                    <TrendingDown
+                      size={16}
+                      className={
+                        tradeMode === "sell"
+                          ? "text-rose-400"
+                          : "text-white/30"
+                      }
+                    />
+                    <span>Sell</span>
+                    {tradeMode === "sell" && (
+                      <motion.div
+                        layoutId="mobileActiveTradeIndicator"
+                        className="absolute bottom-0 left-5 right-5 h-[2px] bg-rose-500 rounded-full shadow-[0_0_10px_#f43f5e]"
+                      />
+                    )}
+                  </button>
                 </div>
 
-                {invertPair && (
-                  <div className="flex justify-center -my-2 relative z-20">
-                    <button
-                      onClick={invertPair}
-                      className="w-9 h-9 flex items-center justify-center rounded-xl bg-yellow-500/10 border border-yellow-500/30 text-yellow-400 active:scale-95 transition-all shadow-md"
-                    >
-                      <ArrowUpDown size={16} />
-                    </button>
-                  </div>
-                )}
+                {/* CORPO DO CONVERSOR MOBILE */}
+                <div className="p-5">
+                  <AnimatePresence mode="wait">
+                    {tradeMode === "buy" ? (
+                      /* ==================== INTERFACE BUY (USDT -> E-COIN) ==================== */
+                      <motion.div
+                        key="mobile-buy-panel"
+                        initial={{ opacity: 0, x: -10 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: 10 }}
+                        transition={{ duration: 0.2 }}
+                        className="space-y-4"
+                      >
+                        {/* BOX 1: SPEND (USDT) */}
+                        <div className="bg-black/40 border border-white/10 focus-within:border-emerald-500/50 rounded-2xl p-4 transition-colors">
+                          <div className="flex items-center justify-between mb-2.5">
+                            <span className="text-[10px] font-mono uppercase tracking-widest text-white/50">
+                              Spend · Pagar com
+                            </span>
+                            <div className="flex items-center gap-1.5">
+                              {[10, 50, 100].map((preset) => (
+                                <button
+                                  key={preset}
+                                  type="button"
+                                  onClick={() => setAmount(String(preset))}
+                                  className="px-2 py-0.5 rounded-md bg-white/5 active:bg-emerald-500/25 text-[10px] font-mono text-white/60 active:text-emerald-300 transition-colors"
+                                >
+                                  ${preset}
+                                </button>
+                              ))}
+                            </div>
+                          </div>
 
-                <div className="bg-black/40 border border-white/5 p-5 rounded-3xl backdrop-blur-xl">
-                  <label className="text-[10px] text-white/40 font-mono uppercase tracking-widest">Receber E-Coin (Estimado)</label>
-                  <div className="text-3xl font-mono font-black text-green-400 mt-2 truncate">
-                    {previewAmountOut > 0n ? Number(previewAmountOut) / 1e18 : "0.000000"}
-                  </div>
+                          <div className="flex items-center justify-between gap-3">
+                            <input
+                              type="text"
+                              inputMode="decimal"
+                              value={amount}
+                              onChange={(e) =>
+                                setAmount(e.target.value.replace(",", "."))
+                              }
+                              placeholder="0.00"
+                              className="w-full min-w-0 bg-transparent outline-none text-2xl font-mono font-black text-white placeholder:text-white/20"
+                            />
+
+                            {/* BADGE MOEDA USDT */}
+                            <div className="shrink-0 flex items-center gap-2 bg-white/[0.06] border border-white/10 px-3 py-2 rounded-xl">
+                              <div className="w-6 h-6 rounded-full bg-[#26A17B] flex items-center justify-center text-white">
+                                <DollarSign size={14} strokeWidth={2.5} />
+                              </div>
+                              <div className="text-left">
+                                <span className="block text-xs font-black tracking-wide text-white leading-none">
+                                  USDT
+                                </span>
+                                <span className="block text-[8px] font-mono text-white/40 mt-0.5">
+                                  BEP-20
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* BOX 2: RECEIVE (E-COIN) */}
+                        <div className="bg-black/30 border border-white/5 rounded-2xl p-4">
+                          <div className="flex items-center justify-between mb-2.5">
+                            <span className="text-[10px] font-mono uppercase tracking-widest text-white/50">
+                              Receive ≈ · Você recebe
+                            </span>
+                          </div>
+
+                          <div className="flex items-center justify-between gap-3">
+                            <div className="text-2xl font-mono font-black text-emerald-400 truncate">
+                              {estimatedEcoinOut}
+                            </div>
+
+                            {/* BADGE MOEDA E-COIN */}
+                            <div className="shrink-0 flex items-center gap-2 bg-yellow-500/10 border border-yellow-500/30 px-3 py-2 rounded-xl">
+                              <div className="w-6 h-6 rounded-full bg-gradient-to-br from-yellow-400 to-amber-600 flex items-center justify-center text-black">
+                                <Coins size={13} strokeWidth={2.5} />
+                              </div>
+                              <div className="text-left">
+                                <span className="block text-xs font-black tracking-wide text-yellow-400 leading-none">
+                                  E-Coin
+                                </span>
+                                <span className="block text-[8px] font-mono text-yellow-500/60 mt-0.5">
+                                  BSC
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* COTAÇÃO RESUMIDA */}
+                        <div className="flex items-center justify-between px-1 text-[11px] font-mono text-white/45">
+                          <span>
+                            1 E-Coin ≈ {price > 0 ? price.toFixed(7) : "—"} USDT
+                          </span>
+                          {address && (
+                            <span className="text-yellow-400/80">
+                              {address.slice(0, 6)}…{address.slice(-4)}
+                            </span>
+                          )}
+                        </div>
+
+                        {/* BOTÕES DE AÇÃO COMPRA */}
+                        {!isConnected ? (
+                          <div className="pt-1">
+                            <ConnectButton.Custom>
+                              {({ openConnectModal }) => (
+                                <button
+                                  type="button"
+                                  onClick={openConnectModal}
+                                  className="w-full py-4 rounded-2xl font-black text-xs uppercase tracking-widest bg-gradient-to-r from-emerald-500 to-teal-600 text-black shadow-lg shadow-emerald-500/20 active:scale-[0.98] transition-all flex items-center justify-center gap-2"
+                                >
+                                  <Wallet size={16} /> Connect Wallet
+                                </button>
+                              )}
+                            </ConnectButton.Custom>
+                          </div>
+                        ) : (
+                          <div className="space-y-2.5 pt-1">
+                            <button
+                              type="button"
+                              onClick={handleSwap}
+                              disabled={
+                                !amount || Number(amount) <= 0 || txMining
+                              }
+                              className="w-full py-4 rounded-2xl font-black text-xs uppercase tracking-widest bg-gradient-to-r from-emerald-500 to-teal-600 text-black shadow-lg shadow-emerald-500/20 disabled:opacity-30 active:scale-[0.98] transition-all"
+                            >
+                              {txMining
+                                ? "⛏️ A processar..."
+                                : "Comprar E-Coin com USDT →"}
+                            </button>
+
+                            <button
+                              type="button"
+                              onClick={disconnect}
+                              className="w-full py-2.5 rounded-xl text-[10px] font-bold uppercase tracking-widest bg-red-500/10 border border-red-500/20 text-red-400 active:bg-red-500/20 transition-all"
+                            >
+                              Disconnect Wallet
+                            </button>
+                          </div>
+                        )}
+
+                        {status && (
+                          <p className="text-center text-xs font-mono text-yellow-400 animate-pulse pt-1">
+                            {status}
+                          </p>
+                        )}
+                      </motion.div>
+                    ) : (
+                      /* ==================== INTERFACE SELL (E-COIN -> USDT) ==================== */
+                      <motion.div
+                        key="mobile-sell-panel"
+                        initial={{ opacity: 0, x: 10 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: -10 }}
+                        transition={{ duration: 0.2 }}
+                        className="space-y-4"
+                      >
+                        {/* BANNER EM DESENVOLVIMENTO */}
+                        <div className="bg-rose-500/10 border border-rose-500/30 rounded-2xl p-3.5 flex items-start gap-3">
+                          <div className="w-8 h-8 rounded-xl bg-rose-500/20 flex items-center justify-center text-rose-400 shrink-0 mt-0.5">
+                            <Wrench size={16} />
+                          </div>
+                          <div className="space-y-1">
+                            <div className="flex flex-wrap items-center gap-1.5">
+                              <span className="text-[11px] font-black uppercase tracking-wider text-rose-400">
+                                Venda Direta em Desenvolvimento
+                              </span>
+                              <span className="px-2 py-0.5 text-[8px] font-mono uppercase rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/30">
+                                Em Breve
+                              </span>
+                            </div>
+                            <p className="text-[11px] text-white/75 leading-relaxed">
+                              Por questões de rapidez, você pode vender os seus{" "}
+                              <strong className="text-white">E-Coins</strong>{" "}
+                              dentro da sua própria carteira ou diretamente no
+                              mercado DEX via{" "}
+                              <strong className="text-rose-300">
+                                PancakeSwap
+                              </strong>{" "}
+                              — conecte a sua carteira e já está.
+                            </p>
+                          </div>
+                        </div>
+
+                        {/* PREVIEW INVERSO: E-COIN -> USDT */}
+                        <div className="space-y-2.5 opacity-90">
+                          <div className="bg-black/40 border border-white/10 rounded-2xl p-4">
+                            <span className="text-[10px] font-mono uppercase tracking-widest text-white/40 block mb-2">
+                              Spend · Vender
+                            </span>
+                            <div className="flex items-center justify-between gap-3">
+                              <span className="text-lg font-mono font-black text-white/45">
+                                E-Coin → USDT
+                              </span>
+                              <div className="shrink-0 flex items-center gap-2 bg-yellow-500/10 border border-yellow-500/30 px-3 py-2 rounded-xl">
+                                <div className="w-6 h-6 rounded-full bg-gradient-to-br from-yellow-400 to-amber-600 flex items-center justify-center text-black">
+                                  <Coins size={13} strokeWidth={2.5} />
+                                </div>
+                                <div className="text-left">
+                                  <span className="block text-xs font-black tracking-wide text-yellow-400 leading-none">
+                                    E-Coin
+                                  </span>
+                                  <span className="block text-[8px] font-mono text-yellow-500/60 mt-0.5">
+                                    BSC
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className="bg-black/30 border border-white/5 rounded-2xl p-4">
+                            <span className="text-[10px] font-mono uppercase tracking-widest text-white/40 block mb-2">
+                              Receive ≈ · Receber em
+                            </span>
+                            <div className="flex items-center justify-between gap-3">
+                              <span className="text-lg font-mono font-black text-rose-400/85">
+                                Liquidez DEX
+                              </span>
+                              <div className="shrink-0 flex items-center gap-2 bg-white/[0.06] border border-white/10 px-3 py-2 rounded-xl">
+                                <div className="w-6 h-6 rounded-full bg-[#26A17B] flex items-center justify-center text-white">
+                                  <DollarSign size={14} strokeWidth={2.5} />
+                                </div>
+                                <div className="text-left">
+                                  <span className="block text-xs font-black tracking-wide text-white leading-none">
+                                    USDT
+                                  </span>
+                                  <span className="block text-[8px] font-mono text-white/40 mt-0.5">
+                                    BEP-20
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* CTA PANCAKESWAP */}
+                        <div className="pt-1 space-y-2.5">
+                          <a
+                            href={PANCAKESWAP_SELL_URL}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="w-full py-4 px-4 rounded-2xl font-black text-xs uppercase tracking-widest bg-gradient-to-r from-rose-500 via-red-500 to-rose-600 text-white shadow-lg shadow-rose-500/25 active:scale-[0.98] transition-all flex items-center justify-center gap-2"
+                          >
+                            <span>Vender na PancakeSwap DEX</span>
+                            <ExternalLink size={16} />
+                          </a>
+
+                          <p className="text-center text-[10px] font-mono text-white/40 flex items-center justify-center gap-1">
+                            <ShieldCheck
+                              size={13}
+                              className="text-rose-400 shrink-0"
+                            />
+                            Par pré-configurado: E-Coin / USDT (BSC)
+                          </p>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </div>
-
-                {!isConnected ? (
-                  <div className="pt-2">
-                    <ConnectButton.Custom>
-                      {({ openConnectModal }) => (
-                        <button
-                          onClick={openConnectModal}
-                          className="w-full py-4 rounded-2xl font-black text-xs uppercase tracking-widest bg-gradient-to-r from-yellow-500 to-amber-600 text-black shadow-lg shadow-yellow-500/20 active:scale-[0.98] transition-all flex items-center justify-center gap-2"
-                        >
-                          <Wallet size={16} /> Connect Wallet
-                        </button>
-                      )}
-                    </ConnectButton.Custom>
-                  </div>
-                ) : (
-                  <div className="space-y-3 pt-2">
-                    <button
-                      onClick={handleSwap}
-                      disabled={!amount || txMining}
-                      className="w-full py-4 rounded-2xl font-black text-xs uppercase tracking-widest bg-gradient-to-r from-yellow-500 to-amber-600 text-black shadow-lg shadow-yellow-500/20 disabled:opacity-30 active:scale-[0.98] transition-all"
-                    >
-                      {txMining ? "⛏️ A processar..." : "Comprar E-Coin Agora →"}
-                    </button>
-                    
-                    <button
-                      onClick={disconnect}
-                      className="w-full py-2.5 rounded-xl text-[10px] font-bold uppercase tracking-widest bg-red-500/10 border border-red-500/20 text-red-400 active:bg-red-500/20 transition-all"
-                    >
-                      Disconnect Wallet
-                    </button>
-                  </div>
-                )}
-
-                {status && (
-                  <p className="text-center text-xs font-mono text-yellow-400 animate-pulse pt-2">{status}</p>
-                )}
               </div>
             )}
-{isConnected && isOwner && <ConverterAdminPanel />}
+
+            {isConnected && isOwner && <ConverterAdminPanel />}
+
             {activeTab === "historico" && (
               <div className="bg-[#0d0d0f] border border-white/5 rounded-3xl p-5 backdrop-blur-xl">
                 <h3 className="text-xs font-black uppercase tracking-widest mb-4 flex items-center gap-2 text-yellow-400">
                   <History size={14} /> Histórico de Transações
                 </h3>
-                <MobileConversionHistory history={[]} loading={false} onRefresh={() => {}} />
+                <MobileConversionHistory
+                  history={[]}
+                  loading={false}
+                  onRefresh={() => {}}
+                />
               </div>
             )}
 
@@ -172,7 +462,11 @@ export default function MobileBuyEcoin({
         </AnimatePresence>
       </div>
 
-      <nav aria-label="Navegação móvel" className="fixed bottom-0 left-0 right-0 z-50 bg-[#0d0d0f]/95 backdrop-blur-xl border-t border-white/10 px-6 py-3 flex items-center justify-around shadow-2xl">
+      {/* NAVEGAÇÃO INFERIOR MOBILE */}
+      <nav
+        aria-label="Navegação móvel"
+        className="fixed bottom-0 left-0 right-0 z-50 bg-[#0d0d0f]/95 backdrop-blur-xl border-t border-white/10 px-6 py-3 flex items-center justify-around shadow-2xl"
+      >
         {menuItems.map((item) => {
           const Icon = item.icon;
           const isActive = activeTab === item.id;
@@ -185,7 +479,13 @@ export default function MobileBuyEcoin({
                 isActive ? "text-[#D4AF37]" : "text-white/40 hover:text-white"
               }`}
             >
-              <div className={`p-2 rounded-xl transition-all ${isActive ? "bg-[#D4AF37]/15 shadow-sm shadow-[#D4AF37]/30" : ""}`}>
+              <div
+                className={`p-2 rounded-xl transition-all ${
+                  isActive
+                    ? "bg-[#D4AF37]/15 shadow-sm shadow-[#D4AF37]/30"
+                    : ""
+                }`}
+              >
                 <Icon size={18} />
               </div>
               <span className="text-[9px] font-bold tracking-wider uppercase">
@@ -195,7 +495,6 @@ export default function MobileBuyEcoin({
           );
         })}
       </nav>
-
     </main>
   );
 }
