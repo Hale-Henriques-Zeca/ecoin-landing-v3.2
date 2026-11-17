@@ -12,8 +12,6 @@ import {
   ShieldCheck,
   TrendingUp,
   TrendingDown,
-  Coins,
-  DollarSign,
 } from "lucide-react";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import EcoinWalletDashboard from "@/components/EcoinWalletDashboard";
@@ -25,18 +23,36 @@ interface MobileBuyEcoinProps {
   address?: string;
   disconnect: () => void;
   isOwner?: boolean;
+  fromToken?: string;
+  toToken?: string;
   amount: string;
   setAmount: (val: string) => void;
+  setFromToken?: (token: any) => void;
+  setToToken?: (token: any) => void;
+  invertPair?: () => void;
   price: number;
   previewAmountOut: bigint;
+  previewLoading?: boolean;
+  previewAllowed?: boolean;
+  calculation: {
+    gross: number;
+    feePercent: number;
+    fee: number;
+    net: number;
+    output: number;
+  };
   handleSwap: () => void;
   txMining: boolean;
   status: string;
-  invertPair?: () => void;
 }
 
 const PANCAKESWAP_SELL_URL =
   "https://pancakeswap.finance/swap?chain=bsc&inputCurrency=0x55d398326f99059fF775485246999027B3197955&outputCurrency=0xDf69235019cc416dd5Be75dfc0eDc922aB4b5964";
+
+const TOKEN_ICONS = {
+  usdt: "/crypto/usdt2.png",
+  ecoin: "/crypto/ecoin1.png",
+};
 
 export default function MobileBuyEcoin({
   isConnected,
@@ -47,6 +63,8 @@ export default function MobileBuyEcoin({
   setAmount,
   price,
   previewAmountOut,
+  previewLoading,
+  calculation,
   handleSwap,
   txMining,
   status,
@@ -63,6 +81,10 @@ export default function MobileBuyEcoin({
   const estimatedEcoinOut =
     previewAmountOut > 0n
       ? (Number(previewAmountOut) / 1e18).toLocaleString("en-US", {
+          maximumFractionDigits: 4,
+        })
+      : calculation.output > 0
+      ? calculation.output.toLocaleString("en-US", {
           maximumFractionDigits: 4,
         })
       : "0.00";
@@ -84,10 +106,10 @@ export default function MobileBuyEcoin({
           </div>
           <div>
             <h1 className="text-sm font-black italic tracking-wider">
-              E-COIN SWAP
+              ecnSWAP
             </h1>
             <p className="text-[9px] text-gray-500 font-mono uppercase tracking-widest">
-              BSC Mainnet
+              BSC - Binance Smart Chain
             </p>
           </div>
         </div>
@@ -217,9 +239,11 @@ export default function MobileBuyEcoin({
 
                             {/* BADGE MOEDA USDT */}
                             <div className="shrink-0 flex items-center gap-2 bg-white/[0.06] border border-white/10 px-3 py-2 rounded-xl">
-                              <div className="w-6 h-6 rounded-full bg-[#26A17B] flex items-center justify-center text-white">
-                                <DollarSign size={14} strokeWidth={2.5} />
-                              </div>
+                              <img
+                                src={TOKEN_ICONS.usdt}
+                                alt="USDT"
+                                className="w-6 h-6 rounded-full object-cover shadow-md"
+                              />
                               <div className="text-left">
                                 <span className="block text-xs font-black tracking-wide text-white leading-none">
                                   USDT
@@ -238,6 +262,11 @@ export default function MobileBuyEcoin({
                             <span className="text-[10px] font-mono uppercase tracking-widest text-white/50">
                               Receive ≈ · Você recebe
                             </span>
+                            {previewLoading && (
+                              <span className="text-[9px] font-mono text-emerald-400 animate-pulse">
+                                Cotando pool...
+                              </span>
+                            )}
                           </div>
 
                           <div className="flex items-center justify-between gap-3">
@@ -247,15 +276,17 @@ export default function MobileBuyEcoin({
 
                             {/* BADGE MOEDA E-COIN */}
                             <div className="shrink-0 flex items-center gap-2 bg-yellow-500/10 border border-yellow-500/30 px-3 py-2 rounded-xl">
-                              <div className="w-6 h-6 rounded-full bg-gradient-to-br from-yellow-400 to-amber-600 flex items-center justify-center text-black">
-                                <Coins size={13} strokeWidth={2.5} />
-                              </div>
+                              <img
+                                src={TOKEN_ICONS.ecoin}
+                                alt="E-Coin"
+                                className="w-6 h-6 rounded-full object-cover shadow-md"
+                              />
                               <div className="text-left">
                                 <span className="block text-xs font-black tracking-wide text-yellow-400 leading-none">
                                   E-Coin
                                 </span>
                                 <span className="block text-[8px] font-mono text-yellow-500/60 mt-0.5">
-                                  BSC
+                                  BEP-20
                                 </span>
                               </div>
                             </div>
@@ -265,11 +296,12 @@ export default function MobileBuyEcoin({
                         {/* COTAÇÃO RESUMIDA */}
                         <div className="flex items-center justify-between px-1 text-[11px] font-mono text-white/45">
                           <span>
-                            1 E-Coin ≈ {price > 0 ? price.toFixed(7) : "—"} USDT
+                            1 E-Coin ≈{" "}
+                            {price > 0 ? price.toFixed(7) : "—"} USDT
                           </span>
-                          {address && (
-                            <span className="text-yellow-400/80">
-                              {address.slice(0, 6)}…{address.slice(-4)}
+                          {calculation.feePercent <= 0 && (
+                            <span>
+                              Taxa do Protocolo: {calculation.feePercent}%
                             </span>
                           )}
                         </div>
@@ -304,13 +336,20 @@ export default function MobileBuyEcoin({
                                 : "Comprar E-Coin com USDT →"}
                             </button>
 
-                            <button
-                              type="button"
-                              onClick={disconnect}
-                              className="w-full py-2.5 rounded-xl text-[10px] font-bold uppercase tracking-widest bg-red-500/10 border border-red-500/20 text-red-400 active:bg-red-500/20 transition-all"
-                            >
-                              Disconnect Wallet
-                            </button>
+                            <div className="flex items-center justify-between gap-2 pt-0.5">
+                              {address && (
+                                <span className="text-[10px] font-mono text-yellow-400/80 px-2.5 py-2 rounded-xl bg-black/40 border border-white/5">
+                                  {address.slice(0, 6)}…{address.slice(-4)}
+                                </span>
+                              )}
+                              <button
+                                type="button"
+                                onClick={disconnect}
+                                className="flex-1 py-2 rounded-xl text-[10px] font-bold uppercase tracking-widest bg-red-500/10 border border-red-500/20 text-red-400 active:bg-red-500/20 transition-all"
+                              >
+                                Disconnect Wallet
+                              </button>
+                            </div>
                           </div>
                         )}
 
@@ -338,21 +377,23 @@ export default function MobileBuyEcoin({
                           <div className="space-y-1">
                             <div className="flex flex-wrap items-center gap-1.5">
                               <span className="text-[11px] font-black uppercase tracking-wider text-rose-400">
-                                Venda Direta em Desenvolvimento
+                                Módulo de Venda Direta em Desenvolvimento
                               </span>
                               <span className="px-2 py-0.5 text-[8px] font-mono uppercase rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/30">
                                 Em Breve
                               </span>
                             </div>
                             <p className="text-[11px] text-white/75 leading-relaxed">
-                              Por questões de rapidez, você pode vender os seus{" "}
+                              Por questões de rapidez e liquidez imediata,
+                              você pode vender os seus{" "}
                               <strong className="text-white">E-Coins</strong>{" "}
-                              dentro da sua própria carteira ou diretamente no
-                              mercado DEX via{" "}
+                              agora mesmo dentro da sua própria carteira Web3 ou
+                              diretamente no mercado DEX via{" "}
                               <strong className="text-rose-300">
                                 PancakeSwap
                               </strong>{" "}
-                              — conecte a sua carteira e já está.
+                              — basta conectar a sua carteira e confirmar o
+                              swap.
                             </p>
                           </div>
                         </div>
@@ -360,23 +401,30 @@ export default function MobileBuyEcoin({
                         {/* PREVIEW INVERSO: E-COIN -> USDT */}
                         <div className="space-y-2.5 opacity-90">
                           <div className="bg-black/40 border border-white/10 rounded-2xl p-4">
-                            <span className="text-[10px] font-mono uppercase tracking-widest text-white/40 block mb-2">
-                              Spend · Vender
-                            </span>
+                            <div className="flex items-center justify-between mb-2">
+                              <span className="text-[10px] font-mono uppercase tracking-widest text-white/40">
+                                Spend · Vender
+                              </span>
+                              <span className="text-[9px] font-mono text-rose-400/80">
+                                Via DEX / Carteira
+                              </span>
+                            </div>
                             <div className="flex items-center justify-between gap-3">
                               <span className="text-lg font-mono font-black text-white/45">
                                 E-Coin → USDT
                               </span>
                               <div className="shrink-0 flex items-center gap-2 bg-yellow-500/10 border border-yellow-500/30 px-3 py-2 rounded-xl">
-                                <div className="w-6 h-6 rounded-full bg-gradient-to-br from-yellow-400 to-amber-600 flex items-center justify-center text-black">
-                                  <Coins size={13} strokeWidth={2.5} />
-                                </div>
+                                <img
+                                  src={TOKEN_ICONS.ecoin}
+                                  alt="E-Coin"
+                                  className="w-6 h-6 rounded-full object-cover shadow-md"
+                                />
                                 <div className="text-left">
                                   <span className="block text-xs font-black tracking-wide text-yellow-400 leading-none">
                                     E-Coin
                                   </span>
                                   <span className="block text-[8px] font-mono text-yellow-500/60 mt-0.5">
-                                    BSC
+                                    BEP-20
                                   </span>
                                 </div>
                               </div>
@@ -389,12 +437,14 @@ export default function MobileBuyEcoin({
                             </span>
                             <div className="flex items-center justify-between gap-3">
                               <span className="text-lg font-mono font-black text-rose-400/85">
-                                Liquidez DEX
+                                Liquidez Instantânea
                               </span>
                               <div className="shrink-0 flex items-center gap-2 bg-white/[0.06] border border-white/10 px-3 py-2 rounded-xl">
-                                <div className="w-6 h-6 rounded-full bg-[#26A17B] flex items-center justify-center text-white">
-                                  <DollarSign size={14} strokeWidth={2.5} />
-                                </div>
+                                <img
+                                  src={TOKEN_ICONS.usdt}
+                                  alt="USDT"
+                                  className="w-6 h-6 rounded-full object-cover shadow-md"
+                                />
                                 <div className="text-left">
                                   <span className="block text-xs font-black tracking-wide text-white leading-none">
                                     USDT
@@ -416,7 +466,7 @@ export default function MobileBuyEcoin({
                             rel="noopener noreferrer"
                             className="w-full py-4 px-4 rounded-2xl font-black text-xs uppercase tracking-widest bg-gradient-to-r from-rose-500 via-red-500 to-rose-600 text-white shadow-lg shadow-rose-500/25 active:scale-[0.98] transition-all flex items-center justify-center gap-2"
                           >
-                            <span>Vender na PancakeSwap DEX</span>
+                            <span>Vender Agora na PancakeSwap DEX</span>
                             <ExternalLink size={16} />
                           </a>
 
@@ -425,7 +475,7 @@ export default function MobileBuyEcoin({
                               size={13}
                               className="text-rose-400 shrink-0"
                             />
-                            Par pré-configurado: E-Coin / USDT (BSC)
+                            Par pré-configurado: E-Coin / USDT (BNB Smart Chain)
                           </p>
                         </div>
                       </motion.div>

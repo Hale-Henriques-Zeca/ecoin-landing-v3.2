@@ -12,8 +12,6 @@ import {
   ShieldCheck,
   TrendingUp,
   TrendingDown,
-  Coins,
-  DollarSign,
 } from "lucide-react";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import ConverterAdminPanel from "@/components/ConverterAdminPanel";
@@ -50,6 +48,11 @@ interface DesktopBuyEcoinProps {
 
 const PANCAKESWAP_SELL_URL =
   "https://pancakeswap.finance/swap?chain=bsc&inputCurrency=0x55d398326f99059fF775485246999027B3197955&outputCurrency=0xDf69235019cc416dd5Be75dfc0eDc922aB4b5964";
+
+const TOKEN_ICONS = {
+  usdt: "/crypto/usdt2.png",
+  ecoin: "/crypto/ecoin1.png",
+};
 
 export default function DesktopBuyEcoin({
   isConnected,
@@ -142,8 +145,7 @@ export default function DesktopBuyEcoin({
           >
             <div>
               <h1 className="text-2xl lg:text-3xl font-black tracking-tighter italic flex items-center gap-3">
-                <Zap className="text-yellow-500" size={26} /> E-COIN CORPORATE
-                SWAP TERMINAL
+                <Zap className="text-yellow-500" size={26} /> ecnSWAP - eCoin Swap Terminal
               </h1>
               <p className="text-gray-500 text-xs font-mono uppercase tracking-widest mt-1">
                 On-Chain Direct Liquidity Acquisition · Infinity CL Spot Price
@@ -285,9 +287,11 @@ export default function DesktopBuyEcoin({
 
                                   {/* BADGE MOEDA USDT */}
                                   <div className="shrink-0 flex items-center gap-2.5 bg-white/[0.06] border border-white/10 px-4 py-2.5 rounded-2xl">
-                                    <div className="w-7 h-7 rounded-full bg-[#26A17B] flex items-center justify-center text-white shadow-md">
-                                      <DollarSign size={16} strokeWidth={2.5} />
-                                    </div>
+                                    <img
+                                      src={TOKEN_ICONS.usdt}
+                                      alt="USDT"
+                                      className="w-7 h-7 rounded-full object-cover shadow-md"
+                                    />
                                     <div className="text-left">
                                       <span className="block text-sm font-black tracking-wide text-white leading-none">
                                         USDT
@@ -320,15 +324,17 @@ export default function DesktopBuyEcoin({
 
                                   {/* BADGE MOEDA E-COIN */}
                                   <div className="shrink-0 flex items-center gap-2.5 bg-yellow-500/10 border border-yellow-500/30 px-4 py-2.5 rounded-2xl">
-                                    <div className="w-7 h-7 rounded-full bg-gradient-to-br from-yellow-400 to-amber-600 flex items-center justify-center text-black shadow-md">
-                                      <Coins size={15} strokeWidth={2.5} />
-                                    </div>
+                                    <img
+                                      src={TOKEN_ICONS.ecoin}
+                                      alt="E-Coin"
+                                      className="w-7 h-7 rounded-full object-cover shadow-md"
+                                    />
                                     <div className="text-left">
                                       <span className="block text-sm font-black tracking-wide text-yellow-400 leading-none">
                                         E-Coin
                                       </span>
                                       <span className="block text-[9px] font-mono text-yellow-500/60 mt-0.5">
-                                        BSC
+                                        BEP-20
                                       </span>
                                     </div>
                                   </div>
@@ -434,15 +440,17 @@ export default function DesktopBuyEcoin({
                                     </span>
 
                                     <div className="shrink-0 flex items-center gap-2.5 bg-yellow-500/10 border border-yellow-500/30 px-4 py-2.5 rounded-2xl">
-                                      <div className="w-7 h-7 rounded-full bg-gradient-to-br from-yellow-400 to-amber-600 flex items-center justify-center text-black">
-                                        <Coins size={15} strokeWidth={2.5} />
-                                      </div>
+                                      <img
+                                        src={TOKEN_ICONS.ecoin}
+                                        alt="E-Coin"
+                                        className="w-7 h-7 rounded-full object-cover shadow-md"
+                                      />
                                       <div className="text-left">
                                         <span className="block text-sm font-black tracking-wide text-yellow-400 leading-none">
                                           E-Coin
                                         </span>
                                         <span className="block text-[9px] font-mono text-yellow-500/60 mt-0.5">
-                                          BSC
+                                          BEP-20
                                         </span>
                                       </div>
                                     </div>
@@ -462,12 +470,11 @@ export default function DesktopBuyEcoin({
                                     </span>
 
                                     <div className="shrink-0 flex items-center gap-2.5 bg-white/[0.06] border border-white/10 px-4 py-2.5 rounded-2xl">
-                                      <div className="w-7 h-7 rounded-full bg-[#26A17B] flex items-center justify-center text-white">
-                                        <DollarSign
-                                          size={16}
-                                          strokeWidth={2.5}
-                                        />
-                                      </div>
+                                      <img
+                                        src={TOKEN_ICONS.usdt}
+                                        alt="USDT"
+                                        className="w-7 h-7 rounded-full object-cover shadow-md"
+                                      />
                                       <div className="text-left">
                                         <span className="block text-sm font-black tracking-wide text-white leading-none">
                                           USDT

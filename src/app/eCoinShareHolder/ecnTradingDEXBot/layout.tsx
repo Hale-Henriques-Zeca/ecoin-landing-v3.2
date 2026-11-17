@@ -1,12 +1,31 @@
-'use client';
+import type { Metadata } from "next";
+import React from "react";
+import MobileHeader from "./components/Mobile/MobileHeader";
+import MobileBar from "./components/Mobile/MobileBar";
+import DesktopHeader from "./components/Desktop/DesktopHeader";
+import DesktopSidebar from "./components/Desktop/DesktopSidebar";
 
-import React from 'react';
-import MobileHeader from './components/Mobile/MobileHeader';
-import MobileBar from './components/Mobile/MobileBar';
-import DesktopHeader from './components/Desktop/DesktopHeader';
-import DesktopSidebar from './components/Desktop/DesktopSidebar';
+export const metadata: Metadata = {
+  title: {
+    default: "EcnTrading | EdenKingDom",
+    template: "%s | EdenKingDom Trading",
+  },
+  description:
+    "Negocie, converta e acompanhe a liquidez on-chain de E-Coin e E-Dollar no terminal corporativo EdenKingDom Protocol.",
+  openGraph: {
+    title: "EcnTrading | EdenKingDom",
+    description:
+      "Terminal descentralizado de trading e liquidez instantânea no ecossistema EdenKingDom Protocol.",
+    siteName: "EdenKingDom Protocol",
+    type: "website",
+  },
+};
 
-export default function EcnTradingLayout({ children }: { children: React.ReactNode }) {
+export default function EcnTradingLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
   return (
     <div className="min-h-screen bg-[#0B0E14] text-white flex flex-col md:flex-row">
       {/* Sidebar Desktop (exibida apenas em md e superiores) */}
