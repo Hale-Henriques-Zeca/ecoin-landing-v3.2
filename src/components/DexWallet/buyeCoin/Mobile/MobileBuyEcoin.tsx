@@ -54,6 +54,15 @@ const TOKEN_ICONS = {
   ecoin: "/crypto/ecoin1.png",
 };
 
+function getDynamicNumberSize(valueStr: string): string {
+  const len = valueStr.length;
+  if (len <= 9) return "text-2xl";
+  if (len <= 12) return "text-xl";
+  if (len <= 15) return "text-lg";
+  if (len <= 19) return "text-base";
+  return "text-sm";
+}
+
 export default function MobileBuyEcoin({
   isConnected,
   address,
@@ -88,6 +97,9 @@ export default function MobileBuyEcoin({
           maximumFractionDigits: 4,
         })
       : "0.00";
+
+  const inputFontSize = getDynamicNumberSize(amount || "0.00");
+  const outputFontSize = getDynamicNumberSize(estimatedEcoinOut);
 
   return (
     <main
@@ -234,7 +246,7 @@ export default function MobileBuyEcoin({
                                 setAmount(e.target.value.replace(",", "."))
                               }
                               placeholder="0.00"
-                              className="w-full min-w-0 bg-transparent outline-none text-2xl font-mono font-black text-white placeholder:text-white/20"
+                              className={`flex-1 min-w-0 bg-transparent outline-none ${inputFontSize} leading-tight font-mono font-black text-white placeholder:text-white/20 transition-all duration-150`}
                             />
 
                             {/* BADGE MOEDA USDT */}
@@ -270,7 +282,9 @@ export default function MobileBuyEcoin({
                           </div>
 
                           <div className="flex items-center justify-between gap-3">
-                            <div className="text-2xl font-mono font-black text-emerald-400 truncate">
+                            <div
+                              className={`flex-1 min-w-0 ${outputFontSize} leading-tight font-mono font-black text-emerald-400 break-all transition-all duration-150`}
+                            >
                               {estimatedEcoinOut}
                             </div>
 
