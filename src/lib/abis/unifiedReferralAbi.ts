@@ -1,35 +1,59 @@
 export const unifiedReferralAbi = [
-  /* ================= PROFILE ================= */
-
+  /* ================= INITIALIZER & UUPS ================= */
   {
     type: "function",
-    name: "setProfile",
+    name: "initialize",
     stateMutability: "nonpayable",
+    inputs: [{ name: "owner_", type: "address" }],
+    outputs: [],
+  },
+  {
+    type: "function",
+    name: "owner",
+    stateMutability: "view",
+    inputs: [],
+    outputs: [{ name: "", type: "address" }],
+  },
+  {
+    type: "function",
+    name: "transferOwnership",
+    stateMutability: "nonpayable",
+    inputs: [{ name: "newOwner", type: "address" }],
+    outputs: [],
+  },
+  {
+    type: "function",
+    name: "renounceOwnership",
+    stateMutability: "nonpayable",
+    inputs: [],
+    outputs: [],
+  },
+  {
+    type: "function",
+    name: "upgradeTo",
+    stateMutability: "nonpayable",
+    inputs: [{ name: "newImplementation", type: "address" }],
+    outputs: [],
+  },
+  {
+    type: "function",
+    name: "upgradeToAndCall",
+    stateMutability: "payable",
     inputs: [
-      { name: "username", type: "string" },
-      { name: "country", type: "bytes32" },
-      { name: "region", type: "bytes32" },
-      { name: "metadataURI", type: "string" },
+      { name: "newImplementation", type: "address" },
+      { name: "data", type: "bytes" },
     ],
     outputs: [],
   },
-
   {
     type: "function",
-    name: "profiles",
+    name: "proxiableUUID",
     stateMutability: "view",
-    inputs: [{ name: "", type: "address" }],
-    outputs: [
-      { name: "username", type: "string" },
-      { name: "country", type: "bytes32" },
-      { name: "region", type: "bytes32" },
-      { name: "metadataURI", type: "string" },
-      { name: "createdAt", type: "uint256" },
-    ],
+    inputs: [],
+    outputs: [{ name: "", type: "bytes32" }],
   },
 
-  /* ================= REFERRAL ================= */
-
+  /* ================= REFERRAL BINDING ================= */
   {
     type: "function",
     name: "bindInviter",
@@ -37,15 +61,20 @@ export const unifiedReferralAbi = [
     inputs: [{ name: "inviter", type: "address" }],
     outputs: [],
   },
-
+  {
+    type: "function",
+    name: "bindInviterByCode",
+    stateMutability: "nonpayable",
+    inputs: [{ name: "code", type: "string" }],
+    outputs: [],
+  },
   {
     type: "function",
     name: "inviterOf",
     stateMutability: "view",
-    inputs: [{ name: "invitee", type: "address" }],
+    inputs: [{ name: "", type: "address" }],
     outputs: [{ name: "", type: "address" }],
   },
-
   {
     type: "function",
     name: "directReferrals",
@@ -53,28 +82,18 @@ export const unifiedReferralAbi = [
     inputs: [{ name: "", type: "address" }],
     outputs: [{ name: "", type: "uint256" }],
   },
-
-  /* ================= REWARDS ================= */
-
   {
     type: "function",
-    name: "pendingRewards",
+    name: "referralCountByLevel",
     stateMutability: "view",
     inputs: [
-      { name: "user", type: "address" },
-      { name: "token", type: "address" },
+      { name: "", type: "address" },
+      { name: "", type: "uint8" },
     ],
     outputs: [{ name: "", type: "uint256" }],
   },
 
-  {
-    type: "function",
-    name: "totalRewards",
-    stateMutability: "view",
-    inputs: [{ name: "", type: "address" }],
-    outputs: [{ name: "", type: "uint256" }],
-  },
-
+  /* ================= REWARDS & CLAIM ================= */
   {
     type: "function",
     name: "claim",
@@ -82,19 +101,146 @@ export const unifiedReferralAbi = [
     inputs: [{ name: "token", type: "address" }],
     outputs: [],
   },
-
-  /* ================= SCORE ================= */
-
   {
     type: "function",
-    name: "getScore",
+    name: "recordReward",
+    stateMutability: "payable",
+    inputs: [
+      { name: "user", type: "address" },
+      { name: "token", type: "address" },
+      { name: "amount", type: "uint256" },
+      { name: "source", type: "bytes32" },
+    ],
+    outputs: [],
+  },
+  {
+    type: "function",
+    name: "recordRewardBNB",
+    stateMutability: "payable",
+    inputs: [
+      { name: "user", type: "address" },
+      { name: "amount", type: "uint256" },
+      { name: "source", type: "bytes32" },
+    ],
+    outputs: [],
+  },
+  {
+    type: "function",
+    name: "recordRewardLevel",
+    stateMutability: "payable",
+    inputs: [
+      { name: "user", type: "address" },
+      { name: "token", type: "address" },
+      { name: "amount", type: "uint256" },
+      { name: "source", type: "bytes32" },
+      { name: "level", type: "uint8" },
+    ],
+    outputs: [],
+  },
+  {
+    type: "function",
+    name: "pendingRewards",
     stateMutability: "view",
-    inputs: [{ name: "user", type: "address" }],
+    inputs: [
+      { name: "", type: "address" },
+      { name: "", type: "address" },
+    ],
+    outputs: [{ name: "", type: "uint256" }],
+  },
+  {
+    type: "function",
+    name: "getPendingReward",
+    stateMutability: "view",
+    inputs: [
+      { name: "user", type: "address" },
+      { name: "token", type: "address" },
+    ],
+    outputs: [{ name: "", type: "uint256" }],
+  },
+  {
+    type: "function",
+    name: "totalRewards",
+    stateMutability: "view",
+    inputs: [{ name: "", type: "address" }],
+    outputs: [{ name: "", type: "uint256" }],
+  },
+  {
+    type: "function",
+    name: "totalRewardsByToken",
+    stateMutability: "view",
+    inputs: [
+      { name: "", type: "address" },
+      { name: "", type: "address" },
+    ],
+    outputs: [{ name: "", type: "uint256" }],
+  },
+  {
+    type: "function",
+    name: "totalPendingRewardsPerToken",
+    stateMutability: "view",
+    inputs: [{ name: "", type: "address" }],
+    outputs: [{ name: "", type: "uint256" }],
+  },
+  {
+    type: "function",
+    name: "rewardsBySource",
+    stateMutability: "view",
+    inputs: [
+      { name: "", type: "address" },
+      { name: "", type: "address" },
+      { name: "", type: "bytes32" },
+    ],
+    outputs: [{ name: "", type: "uint256" }],
+  },
+  {
+    type: "function",
+    name: "rewardsByLevel",
+    stateMutability: "view",
+    inputs: [
+      { name: "", type: "address" },
+      { name: "", type: "address" },
+      { name: "", type: "uint8" },
+    ],
     outputs: [{ name: "", type: "uint256" }],
   },
 
-  /* ================= SOURCES ================= */
+  /* ================= VIEW HELPERS ================= */
+  {
+    type: "function",
+    name: "getNetworkStats",
+    stateMutability: "view",
+    inputs: [{ name: "user", type: "address" }],
+    outputs: [
+      { name: "l1Count", type: "uint256" },
+      { name: "l2Count", type: "uint256" },
+      { name: "l3Count", type: "uint256" },
+      { name: "totalMembers", type: "uint256" },
+    ],
+  },
+  {
+    type: "function",
+    name: "getRewardsByLevel",
+    stateMutability: "view",
+    inputs: [
+      { name: "user", type: "address" },
+      { name: "token", type: "address" },
+    ],
+    outputs: [
+      { name: "l1Reward", type: "uint256" },
+      { name: "l2Reward", type: "uint256" },
+      { name: "l3Reward", type: "uint256" },
+      { name: "totalEarned", type: "uint256" },
+    ],
+  },
 
+  /* ================= CONSTANTS & CONFIG GETTERS ================= */
+  {
+    type: "function",
+    name: "NATIVE_BNB",
+    stateMutability: "view",
+    inputs: [],
+    outputs: [{ name: "", type: "address" }],
+  },
   {
     type: "function",
     name: "SOURCE_MINING",
@@ -102,7 +248,6 @@ export const unifiedReferralAbi = [
     inputs: [],
     outputs: [{ name: "", type: "bytes32" }],
   },
-
   {
     type: "function",
     name: "SOURCE_TRADING",
@@ -110,22 +255,219 @@ export const unifiedReferralAbi = [
     inputs: [],
     outputs: [{ name: "", type: "bytes32" }],
   },
-
-  /* ================= ANALYTICS ================= */
-
   {
     type: "function",
-    name: "usersPerCountry",
+    name: "SOURCE_ECGAS",
+    stateMutability: "view",
+    inputs: [],
+    outputs: [{ name: "", type: "bytes32" }],
+  },
+  {
+    type: "function",
+    name: "SOURCE_REFERRAL",
+    stateMutability: "view",
+    inputs: [],
+    outputs: [{ name: "", type: "bytes32" }],
+  },
+  {
+    type: "function",
+    name: "SOURCE_AIRDROP",
+    stateMutability: "view",
+    inputs: [],
+    outputs: [{ name: "", type: "bytes32" }],
+  },
+  {
+    type: "function",
+    name: "validSources",
     stateMutability: "view",
     inputs: [{ name: "", type: "bytes32" }],
-    outputs: [{ name: "", type: "uint256" }],
+    outputs: [{ name: "", type: "bool" }],
+  },
+  {
+    type: "function",
+    name: "authorizedRecorders",
+    stateMutability: "view",
+    inputs: [{ name: "", type: "address" }],
+    outputs: [{ name: "", type: "bool" }],
+  },
+  {
+    type: "function",
+    name: "leaderboard",
+    stateMutability: "view",
+    inputs: [],
+    outputs: [{ name: "", type: "address" }],
+  },
+  {
+    type: "function",
+    name: "reputation",
+    stateMutability: "view",
+    inputs: [],
+    outputs: [{ name: "", type: "address" }],
+  },
+  {
+    type: "function",
+    name: "referralFeeCollector",
+    stateMutability: "view",
+    inputs: [],
+    outputs: [{ name: "", type: "address" }],
+  },
+  {
+    type: "function",
+    name: "treasury",
+    stateMutability: "view",
+    inputs: [],
+    outputs: [{ name: "", type: "address" }],
+  },
+  {
+    type: "function",
+    name: "activityRegistry",
+    stateMutability: "view",
+    inputs: [],
+    outputs: [{ name: "", type: "address" }],
+  },
+  {
+    type: "function",
+    name: "referralCodeRegistry",
+    stateMutability: "view",
+    inputs: [],
+    outputs: [{ name: "", type: "address" }],
   },
 
+  /* ================= ADMIN ================= */
   {
     type: "function",
-    name: "rewardsPerCountry",
-    stateMutability: "view",
-    inputs: [{ name: "", type: "bytes32" }],
-    outputs: [{ name: "", type: "uint256" }],
+    name: "setAuthorizedRecorder",
+    stateMutability: "nonpayable",
+    inputs: [
+      { name: "recorder", type: "address" },
+      { name: "allowed", type: "bool" },
+    ],
+    outputs: [],
+  },
+  {
+    type: "function",
+    name: "setExternalContracts",
+    stateMutability: "nonpayable",
+    inputs: [
+      { name: "_leaderboard", type: "address" },
+      { name: "_reputation", type: "address" },
+    ],
+    outputs: [],
+  },
+  {
+    type: "function",
+    name: "setReferralFeeCollector",
+    stateMutability: "nonpayable",
+    inputs: [{ name: "_collector", type: "address" }],
+    outputs: [],
+  },
+  {
+    type: "function",
+    name: "setTreasury",
+    stateMutability: "nonpayable",
+    inputs: [{ name: "_treasury", type: "address" }],
+    outputs: [],
+  },
+  {
+    type: "function",
+    name: "setSource",
+    stateMutability: "nonpayable",
+    inputs: [
+      { name: "source", type: "bytes32" },
+      { name: "allowed", type: "bool" },
+    ],
+    outputs: [],
+  },
+  {
+    type: "function",
+    name: "setActivityRegistry",
+    stateMutability: "nonpayable",
+    inputs: [{ name: "_activityRegistry", type: "address" }],
+    outputs: [],
+  },
+  {
+    type: "function",
+    name: "setReferralCodeRegistry",
+    stateMutability: "nonpayable",
+    inputs: [{ name: "_referralCodeRegistry", type: "address" }],
+    outputs: [],
+  },
+
+  /* ================= EVENTS ================= */
+  {
+    type: "event",
+    name: "ReferralBound",
+    inputs: [
+      { name: "inviter", type: "address", indexed: true },
+      { name: "invitee", type: "address", indexed: true },
+    ],
+  },
+  {
+    type: "event",
+    name: "RewardRecorded",
+    inputs: [
+      { name: "inviter", type: "address", indexed: true },
+      { name: "token", type: "address", indexed: true },
+      { name: "amount", type: "uint256", indexed: false },
+      { name: "source", type: "bytes32", indexed: false },
+      { name: "level", type: "uint8", indexed: false },
+    ],
+  },
+  {
+    type: "event",
+    name: "RewardClaimed",
+    inputs: [
+      { name: "user", type: "address", indexed: true },
+      { name: "token", type: "address", indexed: true },
+      { name: "amount", type: "uint256", indexed: false },
+    ],
+  },
+  {
+    type: "event",
+    name: "ReferralFeeCollectorUpdated",
+    inputs: [{ name: "collector", type: "address", indexed: true }],
+  },
+  {
+    type: "event",
+    name: "TreasuryUpdated",
+    inputs: [{ name: "newTreasury", type: "address", indexed: true }],
+  },
+  {
+    type: "event",
+    name: "RewardRedirectedToTreasury",
+    inputs: [
+      { name: "user", type: "address", indexed: true },
+      { name: "token", type: "address", indexed: true },
+      { name: "amount", type: "uint256", indexed: false },
+      { name: "level", type: "uint8", indexed: false },
+    ],
+  },
+  {
+    type: "event",
+    name: "ActivityRegistryUpdated",
+    inputs: [{ name: "registry", type: "address", indexed: true }],
+  },
+  {
+    type: "event",
+    name: "ReferralCodeRegistryUpdated",
+    inputs: [{ name: "registry", type: "address", indexed: true }],
+  },
+  {
+    type: "event",
+    name: "Initialized",
+    inputs: [{ name: "version", type: "uint8", indexed: false }],
+  },
+  {
+    type: "event",
+    name: "OwnershipTransferred",
+    inputs: [
+      { name: "previousOwner", type: "address", indexed: true },
+      { name: "newOwner", type: "address", indexed: true },
+    ],
+  },
+  {
+    type: "event",
+    name: "Upgraded",
+    inputs: [{ name: "implementation", type: "address", indexed: true }],
   },
 ] as const;
