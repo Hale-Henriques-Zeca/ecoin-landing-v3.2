@@ -120,8 +120,8 @@ export default function MobileBuyEcoin({
             <h1 className="text-[clamp(12px,3.6vw,14px)] font-black italic tracking-wider leading-none whitespace-nowrap">
               ecnSWAP
             </h1>
-            <p className="text-[clamp(8px,2.2vw,9px)] text-gray-500 font-mono uppercase tracking-wider mt-1 truncate">
-              BSC · Binance Smart Chain
+            <p className="text-[clamp(12px,3.6vw,14px)] text-gray-500 font-mono uppercase tracking-wider mt-1 truncate">
+              (BSC) Binance Smart Chain
             </p>
           </div>
         </div>
