@@ -148,7 +148,7 @@ export default function DesktopBuyEcoin({
                 <Zap className="text-yellow-500" size={26} /> ecnSWAP - eCoin Neural Swap Terminal
               </h1>
               <p className="text-gray-500 text-xs font-mono uppercase tracking-widest mt-1">
-                On-Chain Direct Liquidity Acquisition · Infinity CL Spot Price
+                On-Chain Direct Liquidity Acquisition · Infinity CL Spot Price | BSC · Binance Smart Chain
               </p>
             </div>
             <div className="flex items-center gap-3">

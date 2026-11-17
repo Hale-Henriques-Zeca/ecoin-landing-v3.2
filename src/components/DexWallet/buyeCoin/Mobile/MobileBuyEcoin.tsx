@@ -111,21 +111,22 @@ export default function MobileBuyEcoin({
       <div className="fixed inset-0 bg-[radial-gradient(circle_at_80%_80%,#0a1628,transparent)] pointer-events-none" />
 
       {/* HEADER MOBILE */}
-      <div className="flex justify-between items-center mb-5 pt-2 relative z-10 border-b border-white/5 pb-4">
-        <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-xl bg-yellow-500/20 flex items-center justify-center text-yellow-400 font-bold text-xs">
-            <Zap size={16} />
+      <div className="flex justify-between items-center gap-2 mb-5 pt-2 relative z-10 border-b border-white/5 pb-4">
+        <div className="flex items-center gap-2 min-w-0">
+          <div className="w-7 h-7 sm:w-8 sm:h-8 shrink-0 rounded-xl bg-yellow-500/20 flex items-center justify-center text-yellow-400 font-bold text-xs">
+            <Zap size={15} />
           </div>
-          <div>
-            <h1 className="text-sm font-black italic tracking-wider">
+          <div className="min-w-0">
+            <h1 className="text-[clamp(12px,3.6vw,14px)] font-black italic tracking-wider leading-none whitespace-nowrap">
               ecnSWAP
             </h1>
-            <p className="text-[9px] text-gray-500 font-mono uppercase tracking-widest">
-              BSC - Binance Smart Chain
+            <p className="text-[clamp(8px,2.2vw,9px)] text-gray-500 font-mono uppercase tracking-wider mt-1 truncate">
+              BSC · Binance Smart Chain
             </p>
           </div>
         </div>
-        <div className="bg-yellow-500/10 border border-yellow-500/30 px-3 py-1.5 rounded-xl text-[11px] font-mono font-bold text-yellow-400">
+
+        <div className="shrink-0 whitespace-nowrap bg-yellow-500/10 border border-yellow-500/30 px-2.5 py-1.5 rounded-xl text-[clamp(9px,2.7vw,11px)] font-mono font-bold text-yellow-400 leading-none">
           1 E-Coin ={" "}
           <span className="text-white">
             {price > 0 ? price.toFixed(7) : "—"}
