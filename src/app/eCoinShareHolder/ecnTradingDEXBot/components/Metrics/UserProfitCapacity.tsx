@@ -6,8 +6,8 @@ import { Zap, TrendingUp } from 'lucide-react';
 import { useAccount } from 'wagmi';
 import { formatUnits } from 'viem';
 
-import { useMiningStaking } from '@/hooks/useMiningStaking';
-import { useEcGas } from '@/hooks/useEcGas';
+import { useMiningStakingeDollar } from '@/hooks/eDollarMining/useMiningStakingeDollar';
+import { useEcGas } from '@/hooks/eDollarMining/useEcGas';
 
 interface UserProfitCapacityProps {
   gasBalance?: number;
@@ -22,7 +22,7 @@ interface UserProfitCapacityProps {
 
 export default function UserProfitCapacity(props: UserProfitCapacityProps) {
   const { address } = useAccount();
-  const mining = useMiningStaking();
+  const mining = useMiningStakingeDollar();
   const gas = useEcGas(address);
 
   const preview = gas.preview;

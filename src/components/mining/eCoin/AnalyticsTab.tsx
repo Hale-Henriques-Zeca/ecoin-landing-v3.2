@@ -12,11 +12,16 @@ import {
   Wallet,
   LayoutDashboard,
   ArrowLeft,
-  Sparkles
+  Sparkles,
+  Flame,
 } from "lucide-react";
+import { formatUnits } from "viem";
+import { useAccount, useReadContracts } from "wagmi";
+import { CONTRACTS } from "@/lib/contracts/contracts";
+import { eCoinMiningStakingAbi } from "@/lib/abis/eCoinMining/eCoinMiningStakingAbi";
 
-import StatCard from "@/components/mining/eDollar/StatCard";
-import MiningAnalyticsPanel from "@/components/mining/eDollar/MiningMainPage/Components/MiningAnalyticsPanel";
+import StatCard from "@/components/mining/eCoin/StatCard";
+import MiningAnalyticsPanel from "@/components/mining/eCoin/MiningMainPage/Components/MiningAnalyticsPanel";
 import EcoinWalletDashboard from "@/components/EcoinWalletDashboard";
 
 interface AnalyticsTabProps {
@@ -26,29 +31,98 @@ interface AnalyticsTabProps {
     totalStaked?: string | number;
     totalStakers?: string | number;
   };
-  pendingUSDT?: number;
-  pendingEUSD?: number;
+  pendingECoin?: number;
   usedCapacity?: number;
   maxCapacity?: number;
-  overflow?: {
-    totalUSDT?: number;
-    totalEUSD?: number;
-  };
+  overflowECoin?: number;
+  sessions?: number;
+  apr?: number;
 }
 
 type TabType = "metricas" | "analytics" | "carteira";
 
 export default function AnalyticsTab({
   stats = {},
-  pendingUSDT = 0,
-  pendingEUSD = 0,
-  usedCapacity = 0,
-  maxCapacity = 0,
-  overflow = { totalUSDT: 0, totalEUSD: 0 },
+  pendingECoin: propPendingECoin,
+  usedCapacity: propUsedCapacity,
+  maxCapacity: propMaxCapacity,
+  overflowECoin: propOverflowECoin,
+  sessions: propSessions,
+  apr: propApr,
 }: AnalyticsTabProps) {
   const router = useRouter();
+  const { address } = useAccount();
   const [mounted, setMounted] = useState(false);
   const [activeTab, setActiveTab] = useState<TabType>("metricas");
+
+  const contractConfig = {
+    abi: eCoinMiningStakingAbi,
+    address: CONTRACTS.eCoin_Mining_Staking_eCoin,
+    chainId: 56,
+  } as const;
+
+  const baseContracts = [
+    {
+      ...contractConfig,
+      functionName: "totalStaked",
+    },
+    {
+      ...contractConfig,
+      functionName: "totalStakers",
+    },
+    {
+      ...contractConfig,
+      functionName: "totalEligibleStaked",
+    },
+  ] as const;
+
+  const userContracts = address
+    ? ([
+        {
+          ...contractConfig,
+          functionName: "users",
+          args: [address],
+        },
+        {
+          ...contractConfig,
+          functionName: "userShareBP",
+          args: [address],
+        },
+        {
+          ...contractConfig,
+          functionName: "pendingRewards",
+          args: [address],
+        },
+        {
+          ...contractConfig,
+          functionName: "preview",
+          args: [address],
+        },
+        {
+          ...contractConfig,
+          functionName: "rewardRates",
+          args: [address],
+        },
+        {
+          ...contractConfig,
+          functionName: "miningSession",
+          args: [address],
+        },
+        {
+          ...contractConfig,
+          functionName: "isMiningActive",
+          args: [address],
+        },
+      ] as const)
+    : ([] as const);
+
+  // Leitura multicall direta do ECoinMiningStakingECoin como fonte primária/fallback
+  const { data: contractReads } = useReadContracts({
+    contracts: [...baseContracts, ...userContracts],
+    query: {
+      refetchInterval: 10000,
+    },
+  });
 
   useEffect(() => {
     setMounted(true);
@@ -56,10 +130,119 @@ export default function AnalyticsTab({
 
   if (!mounted) return null;
 
-  // Cálculos das Métricas
-  const totalRewards = pendingUSDT + pendingEUSD;
-  const efficiency = maxCapacity > 0 ? (usedCapacity / maxCapacity) * 100 : 0;
-  const recycled = (overflow.totalUSDT || 0) + (overflow.totalEUSD || 0);
+  // Leituras Globais
+  const fetchedTotalStaked =
+    contractReads?.[0]?.status === "success"
+      ? Number(formatUnits(contractReads[0].result as bigint, 18))
+      : 0;
+  const fetchedTotalStakers =
+    contractReads?.[1]?.status === "success"
+      ? Number(contractReads[1].result)
+      : 0;
+  const fetchedTotalEligibleStaked =
+    contractReads?.[2]?.status === "success"
+      ? Number(formatUnits(contractReads[2].result as bigint, 18))
+      : 0;
+
+  // Leituras do Usuário
+  const rawUserInfo =
+    address && contractReads?.[3]?.status === "success"
+      ? (contractReads[3].result as readonly [bigint, bigint, bigint])
+      : undefined;
+  const fetchedUserStake = rawUserInfo
+    ? Number(formatUnits(rawUserInfo[0], 18))
+    : 0;
+
+  const fetchedShareBP =
+    address && contractReads?.[4]?.status === "success"
+      ? Number(contractReads[4].result)
+      : 0;
+
+  const fetchedPendingECoin =
+    address && contractReads?.[5]?.status === "success"
+      ? Number(formatUnits(contractReads[5].result as bigint, 18))
+      : 0;
+
+  // preview(address) -> (pendingECoin, remainingCapacity, usedCapacity, maxCapacity, willAccumulate)
+  const rawPreview =
+    address && contractReads?.[6]?.status === "success"
+      ? (contractReads[6].result as readonly [
+          bigint,
+          bigint,
+          bigint,
+          bigint,
+          boolean
+        ])
+      : undefined;
+  const fetchedUsedCapacity = rawPreview
+    ? Number(formatUnits(rawPreview[2], 18))
+    : 0;
+  const fetchedMaxCapacity = rawPreview
+    ? Number(formatUnits(rawPreview[3], 18))
+    : 0;
+
+  // rewardRates(address) -> (ecoinPerSecond, ecoinPerMinute, ecoinPerHour, ecoinPerDay)
+  const rawRates =
+    address && contractReads?.[7]?.status === "success"
+      ? (contractReads[7].result as readonly [bigint, bigint, bigint, bigint])
+      : undefined;
+  const fetchedEcoinPerDay = rawRates
+    ? Number(formatUnits(rawRates[3], 18))
+    : 0;
+
+  const fetchedMiningSession =
+    address && contractReads?.[8]?.status === "success"
+      ? Number(contractReads[8].result)
+      : 0;
+
+  const isMiningActive =
+    address && contractReads?.[9]?.status === "success"
+      ? Boolean(contractReads[9].result)
+      : false;
+
+  // Consolidação (Props com Fallback para o Contrato)
+  const currentPendingECoin = propPendingECoin ?? fetchedPendingECoin;
+  const currentUsedCapacity = propUsedCapacity ?? fetchedUsedCapacity;
+  const currentMaxCapacity = propMaxCapacity ?? fetchedMaxCapacity;
+  const recycledECoin = propOverflowECoin ?? 0;
+
+  const efficiency =
+    currentMaxCapacity > 0
+      ? Math.min(100, (currentUsedCapacity / currentMaxCapacity) * 100)
+      : 0;
+
+  const calculatedApr =
+    fetchedUserStake > 0 && fetchedEcoinPerDay > 0
+      ? ((fetchedEcoinPerDay * 365) / fetchedUserStake) * 100
+      : 0;
+  const currentApr = propApr ?? calculatedApr;
+
+  const currentSessions =
+    propSessions ??
+    (fetchedMiningSession > 0
+      ? fetchedMiningSession
+      : currentMaxCapacity > 0
+      ? 1
+      : 0);
+
+  // Valores formatados para os StatCards
+  const displayMyStake =
+    stats.myStake ??
+    `${fetchedUserStake.toLocaleString("en-US", {
+      maximumFractionDigits: 4,
+    })} eCoin`;
+
+  const displayShare =
+    stats.share ?? `${(fetchedShareBP / 100).toFixed(2)}%`;
+
+  const displayTotalStaked =
+    stats.totalStaked ??
+    `${fetchedTotalStaked.toLocaleString("en-US", {
+      maximumFractionDigits: 2,
+    })} eCoin`;
+
+  const displayTotalStakers =
+    stats.totalStakers ?? fetchedTotalStakers.toString();
 
   // Mapeamento das Abas de Navegação
   const menuItems: {
@@ -73,27 +256,30 @@ export default function AnalyticsTab({
     {
       id: "metricas",
       label: "Métricas & Quotas",
-      subtitle: "Visão geral de retenção e cotas",
+      subtitle: "Visão geral do stake e participação BP",
       icon: LayoutDashboard,
-      activeStyle: "bg-[#D4AF37] text-black shadow-[0_4px_20px_rgba(212,175,55,0.3)] font-bold",
-      mobileColor: "text-[#D4AF37]"
+      activeStyle:
+        "bg-[#D4AF37] text-black shadow-[0_4px_20px_rgba(212,175,55,0.3)] font-bold",
+      mobileColor: "text-[#D4AF37]",
     },
     {
       id: "analytics",
       label: "Painel Analytics",
-      subtitle: "Rendimentos, APR e eficiência",
+      subtitle: "Rendimentos eCoin, APR e consumo de gás",
       icon: BarChart3,
-      activeStyle: "bg-blue-600 text-white shadow-[0_4px_20px_rgba(37,99,235,0.3)] font-bold",
-      mobileColor: "text-blue-400"
+      activeStyle:
+        "bg-blue-600 text-white shadow-[0_4px_20px_rgba(37,99,235,0.3)] font-bold",
+      mobileColor: "text-blue-400",
     },
     {
       id: "carteira",
       label: "Carteira eCoin",
       subtitle: "Saldo e gestão financeira",
       icon: Wallet,
-      activeStyle: "bg-emerald-600 text-white shadow-[0_4px_20px_rgba(16,185,129,0.3)] font-bold",
-      mobileColor: "text-emerald-400"
-    }
+      activeStyle:
+        "bg-emerald-600 text-white shadow-[0_4px_20px_rgba(16,185,129,0.3)] font-bold",
+      mobileColor: "text-emerald-400",
+    },
   ];
 
   return (
@@ -101,24 +287,45 @@ export default function AnalyticsTab({
       <div className="fixed inset-0 bg-[radial-gradient(circle_at_50%_-20%,#0f172a_0%,transparent_50%)] pointer-events-none" />
 
       <div className="max-w-[1600px] mx-auto space-y-6 relative z-10">
-        
         {/* 🧭 CABEÇALHO SUPERIOR COM BOTÃO DE VOLTAR AO HUB */}
         <motion.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="flex items-center justify-between border-b border-white/10 pb-4 px-2"
+          className="flex flex-wrap items-center justify-between gap-3 border-b border-white/10 pb-4 px-2"
         >
           <button
             onClick={() => router.push("/eCoin-ShareHolder")}
             className="group flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-white/80 hover:text-white hover:bg-white/10 hover:border-[#D4AF37]/50 transition-all duration-300 active:scale-95 cursor-pointer"
           >
-            <ArrowLeft size={18} className="text-[#D4AF37] group-hover:-translate-x-1 transition-transform" />
-            <span className="text-xs font-bold uppercase tracking-wider">Voltar ao Hub</span>
+            <ArrowLeft
+              size={18}
+              className="text-[#D4AF37] group-hover:-translate-x-1 transition-transform"
+            />
+            <span className="text-xs font-bold uppercase tracking-wider">
+              Voltar ao Hub
+            </span>
           </button>
 
-          <div className="flex items-center gap-2 bg-[#D4AF37]/10 px-3 py-1.5 rounded-full border border-[#D4AF37]/20">
-            <BarChart3 size={16} className="text-[#D4AF37]" />
-            <span className="text-[11px] font-bold text-[#D4AF37] uppercase tracking-widest">Analytics</span>
+          <div className="flex items-center gap-2">
+            <div
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full border text-[11px] font-bold uppercase tracking-wider ${
+                isMiningActive
+                  ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-400"
+                  : "bg-amber-500/10 border-amber-500/30 text-amber-400"
+              }`}
+            >
+              <Flame size={14} />
+              <span>
+                {isMiningActive ? "Mineração Ativa" : "Mineração Pausada"}
+              </span>
+            </div>
+
+            <div className="flex items-center gap-2 bg-[#D4AF37]/10 px-3 py-1.5 rounded-full border border-[#D4AF37]/20">
+              <BarChart3 size={16} className="text-[#D4AF37]" />
+              <span className="text-[11px] font-bold text-[#D4AF37] uppercase tracking-widest">
+                Analytics eCoin
+              </span>
+            </div>
           </div>
         </motion.div>
 
@@ -130,10 +337,11 @@ export default function AnalyticsTab({
           className="space-y-1 px-2"
         >
           <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-white">
-            Analytics & <span className="text-[#D4AF37]">Rendimentos</span>
+            Analytics & <span className="text-[#D4AF37]">Rendimentos eCoin</span>
           </h1>
           <p className="text-xs sm:text-sm text-gray-400">
-            Acompanhe o desempenho de retenção, cálculo de APR e métricas da sua carteira eCoin.
+            Acompanhe o desempenho do seu stake em eCoin, consumo da capacidade
+            de gás (1.3x), APR on-chain e métricas da sua carteira.
           </p>
         </motion.div>
 
@@ -141,7 +349,6 @@ export default function AnalyticsTab({
             LAYOUT PRINCIPAL: SIDEBAR + CONTEÚDO DAS ABAS
            ========================================================================= */}
         <div className="flex flex-col lg:flex-row gap-8 items-start">
-          
           {/* 1. NAVEGAÇÃO LATERAL (DESKTOP & LAPTOP) */}
           <aside className="hidden lg:flex flex-col w-72 bg-[#090a14] border border-white/10 rounded-3xl p-3.5 h-fit sticky top-28 gap-1.5 shadow-2xl">
             <div className="px-3 py-2 mb-1 border-b border-white/10 flex items-center gap-2">
@@ -188,7 +395,6 @@ export default function AnalyticsTab({
           {/* 2. CONTEÚDO DINÂMICO DA ABA SELECIONADA */}
           <section className="flex-1 min-w-0 w-full space-y-8">
             <AnimatePresence mode="wait">
-              
               {/* ABA 1: MÉTRICAS E STAT CARDS */}
               {activeTab === "metricas" && (
                 <motion.div
@@ -197,32 +403,60 @@ export default function AnalyticsTab({
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -12 }}
                   transition={{ duration: 0.2, ease: "easeInOut" }}
-                  className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4"
+                  className="space-y-4"
                 >
-                  <StatCard
-                    label="Minha Retenção"
-                    value={stats.myStake ?? "0 eCoin"}
-                    icon={Coins}
-                    color="gold"
-                  />
-                  <StatCard
-                    label="Quota de Dividendos"
-                    value={stats.share ?? "0.00%"}
-                    icon={Award}
-                    color="purple"
-                  />
-                  <StatCard
-                    label="Retenção Global"
-                    value={stats.totalStaked ?? "0 eCoin"}
-                    icon={ShieldCheck}
-                    color="green"
-                  />
-                  <StatCard
-                    label="Acionistas Ativos"
-                    value={stats.totalStakers ?? "0"}
-                    icon={Users}
-                    color="blue"
-                  />
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <StatCard
+                      label="Meu Stake eCoin"
+                      value={displayMyStake}
+                      icon={Coins}
+                      color="gold"
+                    />
+                    <StatCard
+                      label="Quota Elegível (BP)"
+                      value={displayShare}
+                      icon={Award}
+                      color="purple"
+                    />
+                    <StatCard
+                      label="Stake Total Global"
+                      value={displayTotalStaked}
+                      icon={ShieldCheck}
+                      color="green"
+                    />
+                    <StatCard
+                      label="Stakers Ativos"
+                      value={displayTotalStakers}
+                      icon={Users}
+                      color="blue"
+                    />
+                  </div>
+
+                  {/* Telemetria adicional do ECoinMiningStakingECoin */}
+                  <div className="bg-[#0d0d0f] border border-white/5 rounded-2xl p-4 flex flex-wrap items-center justify-between gap-4 text-xs font-mono">
+                    <span className="text-zinc-400">
+                      Stake Elegível com Gás Ativo:{" "}
+                      <strong className="text-emerald-400">
+                        {fetchedTotalEligibleStaked.toLocaleString("en-US", {
+                          maximumFractionDigits: 2,
+                        })}{" "}
+                        eCoin
+                      </strong>
+                    </span>
+                    <span className="text-zinc-400">
+                      Sessão Atual:{" "}
+                      <strong className="text-[#D4AF37]">
+                        #{fetchedMiningSession}
+                      </strong>
+                    </span>
+                    <span className="text-zinc-400">
+                      Gás Consumido:{" "}
+                      <strong className="text-white">
+                        {currentUsedCapacity.toFixed(4)} /{" "}
+                        {currentMaxCapacity.toFixed(4)} eCoin
+                      </strong>
+                    </span>
+                  </div>
                 </motion.div>
               )}
 
@@ -236,12 +470,12 @@ export default function AnalyticsTab({
                   transition={{ duration: 0.2, ease: "easeInOut" }}
                 >
                   <MiningAnalyticsPanel
-                    totalRewards={totalRewards}
-                    totalGasUsed={usedCapacity}
+                    totalRewards={currentPendingECoin}
+                    totalGasUsed={currentUsedCapacity}
                     efficiency={efficiency}
-                    sessions={5}
-                    recycled={recycled}
-                    apr={148.22}
+                    sessions={currentSessions}
+                    recycled={recycledECoin}
+                    apr={Number(currentApr.toFixed(2))}
                   />
                 </motion.div>
               )}
@@ -259,18 +493,16 @@ export default function AnalyticsTab({
                   <EcoinWalletDashboard />
                 </motion.div>
               )}
-
             </AnimatePresence>
 
             {/* RODAPÉ MÓDULO */}
             <div className="text-center text-zinc-600 text-[10px] pt-8 border-t border-white/5 uppercase tracking-widest flex items-center justify-center gap-2 font-mono">
               <ShieldCheck size={12} className="text-emerald-500" />
-              <span>EdenKingDom Analytics & Wallet Engine</span>
+              <span>EdenKingDom eCoin Analytics & Wallet Engine</span>
               <Sparkles size={12} className="text-[#D4AF37] animate-pulse" />
             </div>
           </section>
         </div>
-
       </div>
 
       {/* =========================================================================
@@ -289,7 +521,10 @@ export default function AnalyticsTab({
                 isActive ? `${item.mobileColor} bg-white/5` : "text-white/40"
               }`}
             >
-              <Icon size={18} className={isActive ? "scale-110 transition-transform" : ""} />
+              <Icon
+                size={18}
+                className={isActive ? "scale-110 transition-transform" : ""}
+              />
               <span className="text-[9px] font-bold tracking-tight font-mono uppercase whitespace-nowrap">
                 {item.label}
               </span>
@@ -297,7 +532,6 @@ export default function AnalyticsTab({
           );
         })}
       </nav>
-
     </div>
   );
 }

@@ -13,10 +13,10 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import { useAccount } from "wagmi";
-import { useMiningStaking } from "@/hooks/useMiningStaking";
+import { useMiningStakingeCoin } from "@/hooks/eCoinMining/useMiningStakingeCoin";
 
 export default function MiningHistoryPanel() {
-  const { getMiningSessions } = useMiningStaking();
+  const { getMiningSessions } = useMiningStakingeCoin();
   const { address } = useAccount();
   const [sessions, setSessions] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);

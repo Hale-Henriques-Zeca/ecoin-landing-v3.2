@@ -1,0 +1,49 @@
+'use client';
+
+import Link from 'next/link';
+
+
+const markets = [
+  { id: 'eCoinBot', pair: 'eCoin Bot', desc: 'Trade eCoin com IA & Staking', icon: '⚡' },
+  { id: 'usdtBot', pair: 'USDT Bot', desc: 'Trade USDT com IA & DEX', icon: '₮' },
+  { id: 'eDollarBot', pair: 'eDollar Bot', desc: 'Trade eDollar & Stablecoin Liquidity', icon: '$' },
+  { id: 'buybackBot', pair: 'BuyBack Bot', desc: 'Pool de Recompensa Nativa E-Coin', icon: '🪙' },
+];
+
+export default function BotPage() {
+  return (
+    <div className="min-h-screen bg-[#0B0E14] text-white pb-24 px-4 pt-6">
+      <div className="mb-6">
+        <h1 className="text-xl font-bold text-yellow-400">E-Coin Profit Position</h1>
+        <p className="text-xs text-gray-400 mt-1">Activate your profit position with AI trading robots and share real results.</p>
+      </div>
+
+      <div className="bg-gradient-to-r from-emerald-900/40 to-yellow-900/20 border border-emerald-500/20 rounded-2xl p-4 mb-6">
+        <h2 className="text-base font-semibold text-emerald-400">Stake. Trade. Earn. Grow.</h2>
+        <p className="text-xs text-gray-300 mt-1">Selecione o mercado desejado para alocar a sua Margem de lucros (PM) e adquirir Capacidade de Lucros (PC).</p>
+      </div>
+
+      <h3 className="text-sm font-semibold text-gray-300 mb-3">Select Your Trading Market</h3>
+
+      <div className="grid grid-cols-2 gap-3">
+        {markets.map((m) => (
+          <div key={m.id} className="bg-[#12181F] border border-gray-800 rounded-xl p-3 flex flex-col justify-between">
+            <div>
+              <div className="text-2xl mb-1">{m.icon}</div>
+              <div className="text-sm font-bold text-white">{m.pair}</div>
+              <div className="text-[11px] text-gray-400 mt-1 leading-tight">{m.desc}</div>
+            </div>
+            <Link
+              href={`/eCoinShareHolder/ecnTradingDEXBot/bot/${m.id}`}
+              className="mt-4 block text-center py-1.5 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded-lg text-xs font-semibold"
+            >
+              Acessar &gt;
+            </Link>
+          </div>
+        ))}
+      </div>
+
+      
+    </div>
+  );
+}

@@ -1,0 +1,58 @@
+"use client";
+
+type Props = {
+ pending:number;
+ totalStaked:number;
+};
+
+export default function RewardVelocity({
+ pending,
+ totalStaked
+}:Props){
+
+let level="Low";
+let color="text-gray-400";
+
+const ratio =
+totalStaked > 0
+? pending / totalStaked
+: 0;
+
+if(ratio > 0.01){
+
+ level="High";
+ color="text-green-400";
+
+}
+else if(ratio > 0.002){
+
+ level="Medium";
+ color="text-yellow-400";
+
+}
+
+return(
+
+<div className="bg-black/50 border border-gray-700 rounded-xl p-4">
+
+<p className="text-xs text-gray-400 mb-2">
+Velocidade de Lucratividade
+</p>
+
+<div className="flex justify-between text-sm">
+
+<span className="text-gray-400">
+Geração de Lucros
+</span>
+
+<span className={`font-semibold ${color}`}>
+{level}
+</span>
+
+</div>
+
+</div>
+
+);
+
+}

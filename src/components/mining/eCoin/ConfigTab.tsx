@@ -1,9 +1,9 @@
 "use client";
 
 import { Users2, ArrowUpRight } from "lucide-react";
-import ReferralCodePanel from "@/components/ReferralCodePanel";
+import ReferralCodePanel from "@/components/ReferralCodePanel/ReferralCodePanel";
 import SimulatorRedirectCard from "@/components/Cards/SimulatorRedirectCard";
-import AdminPage from "@/components/AdminPage";
+import AdminPage from "@/components/mining/eCoin/MiningMainPage/Components/AdminPage";
 
 interface ConfigTabProps {
   isRedirecting: boolean;

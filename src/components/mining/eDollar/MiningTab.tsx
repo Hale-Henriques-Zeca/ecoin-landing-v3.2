@@ -7,16 +7,16 @@ import { LucideIcon, ArrowLeft, Pickaxe, TrendingUp, Gauge, Zap, BarChart2, Shie
 import { formatUnits } from "viem";
 import { useAccount, useReadContract } from "wagmi";
 import { CONTRACTS } from "@/lib/contracts/contracts";
-import { miningStakingAbi } from "@/lib/abis/miningStakingAbi";
-import { useMiningStaking } from "@/hooks/useMiningStaking";
+import { eDollarMiningStakingAbi } from "@/lib/abis/eDollarMining/eDollarMiningStakingAbi";
+import { useMiningStakingeDollar } from "@/hooks/eDollarMining/useMiningStakingeDollar";
 
 // Sub-componentes
-import RewardVelocityGraph from "@/components/RewardVelocityGraph";
-import LiveRewardCounter from "@/app/eCoinShareHolder/components/LiveRewardCounter";
-import RewardStreamIndicator from "@/app/eCoinShareHolder/components/RewardStreamIndicator";
-import APRPanel from "@/components/APRPanel";
-import RewardVelocityPanel from "@/components/RewardVelocityPanel";
-import ProjectedRewardsPanel from "@/components/ProjectedRewardsPanel";
+import RewardVelocityGraph from "@/components/mining/eDollar/RewardVelocityGraph";
+import LiveRewardCounter from "@/app/eCoinShareHolder/eDollar/components/LiveRewardCounter";
+import RewardStreamIndicator from "@/app/eCoinShareHolder/eDollar/components/RewardStreamIndicator";
+import APRPanel from "@/components/mining/eDollar/APRPanel";
+import RewardVelocityPanel from "@/components/mining/eDollar/RewardVelocityPanel";
+import ProjectedRewardsPanel from "@/components/mining/eDollar/ProjectedRewardsPanel";
 
 // Tipo sincronizado com as 5 janelas temporais do APRPanel
 type WindowType = "1m" | "1h" | "24h" | "7d" | "30d";
@@ -42,7 +42,7 @@ export default function MiningTab({
 }: MiningTabProps) {
   const router = useRouter();
   const { address } = useAccount();
-  const mining = useMiningStaking();
+  const mining = useMiningStakingeDollar();
 
   const [mounted, setMounted] = useState(false);
   const [internalTab, setInternalTab] = useState<SubTabType>("velocidade");
@@ -52,7 +52,7 @@ export default function MiningTab({
 
   // Busca autônoma de pendências no contrato caso não venham via Props
   const { data: pending } = useReadContract({
-    abi: miningStakingAbi,
+    abi: eDollarMiningStakingAbi,
     address: CONTRACTS.MINING_STAKING,
     functionName: "pendingRewards",
     chainId: 56,

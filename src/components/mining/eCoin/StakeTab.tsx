@@ -3,8 +3,8 @@
 import { useState, useEffect } from "react";
 import { ShieldCheck } from "lucide-react";
 import TxButton from "@/components/TxButton";
-import { useMiningStaking } from "@/hooks/useMiningStaking";
-import { useTransactionState } from "@/hooks/useTransactionState";
+import { useMiningStakingeCoin } from "@/hooks/eCoinMining/useMiningStakingeCoin";
+import { useTransactionStateeCoin } from "@/hooks/eCoinMining/useTransactionStateeCoin";
 
 function useInternalNumberInput(initial = "") {
   const [value, setValue] = useState(initial);
@@ -28,8 +28,8 @@ export default function StakeTab({
   customWalletBalance,
   customUserStake,
 }: StakeTabProps) {
-  const mining = useMiningStaking();
-  const depositTx = useTransactionState();
+  const mining = useMiningStakingeCoin();
+  const depositTx = useTransactionStateeCoin();
   const amountInput = useInternalNumberInput();
 
   // Sincronização do estado visual do botão com o contrato

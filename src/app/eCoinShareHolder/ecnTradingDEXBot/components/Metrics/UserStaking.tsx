@@ -5,11 +5,11 @@ import { Wallet, TrendingUp, Coins, ShieldCheck, Sparkles } from 'lucide-react';
 import { useAccount, useReadContract } from 'wagmi';
 import { formatUnits } from 'viem';
 
-import { useMiningStaking } from '@/hooks/useMiningStaking';
-import { useOverflowAnalytics } from '@/hooks/useOverflowAnalytics';
-import { useEcGas } from '@/hooks/useEcGas';
+import { useMiningStakingeDollar } from '@/hooks/eDollarMining/useMiningStakingeDollar';
+import { useOverflowAnalyticseDollar } from '@/hooks/eDollarMining/useOverflowAnalyticseDollar';
+import { useEcGas } from '@/hooks/eDollarMining/useEcGas';
 import { CONTRACTS } from '@/lib/contracts/contracts';
-import { miningStakingAbi } from '@/lib/abis/miningStakingAbi';
+import { eDollarMiningStakingAbi } from '@/lib/abis/eDollarMining/eDollarMiningStakingAbi';
 
 interface UserStakingProps {
   allocatedAssets?: number;
@@ -25,13 +25,13 @@ export default function UserStaking({
   const { address } = useAccount();
 
   // 📊 1. Leitura autônoma de Hooks de Mineração e Staking
-  const mining = useMiningStaking();
-  const overflow = useOverflowAnalytics();
+  const mining = useMiningStakingeDollar();
+  const overflow = useOverflowAnalyticseDollar();
   const gas = useEcGas(address);
 
   // 🔗 2. Leitura direta do Contrato de Dividendos/Staking na BSC (Chain 56)
   const { data: pending } = useReadContract({
-    abi: miningStakingAbi,
+    abi: eDollarMiningStakingAbi,
     address: CONTRACTS.MINING_STAKING,
     functionName: 'pendingRewards',
     chainId: 56,

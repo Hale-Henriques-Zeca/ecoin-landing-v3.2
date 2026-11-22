@@ -7,12 +7,12 @@ import { useAccount, useReadContract } from "wagmi";
 
 // Contratos e ABIs
 import { CONTRACTS } from "@/lib/contracts/contracts";
-import { ecGasSaleAbi } from "@/lib/abis/ecGasSaleAbi";
+import { eDollarEcGasSaleAbi } from "@/lib/abis/eDollarMining/eDollarEcGasSaleAbi";
 
 // Hooks e Componentes Internos
-import { useEcGas } from "@/hooks/useEcGas";
-import { useMiningStaking } from "@/hooks/useMiningStaking";
-import { useTransactionState } from "@/hooks/useTransactionState";
+import { useEcGas } from "@/hooks/eDollarMining/useEcGas";
+import { useMiningStakingeDollar } from '@/hooks/eDollarMining/useMiningStakingeDollar';
+import { useTransactionStateeDollar } from "@/hooks/eDollarMining/useTransactionStateeDollar";
 import TxButton from "@/components/TxButton";
 
 function useSafeNumberInput(initial = "") {
@@ -31,8 +31,8 @@ function useSafeNumberInput(initial = "") {
 export default function CommitmentSealTab() {
   const { address } = useAccount();
   const gas = useEcGas(address);
-  const mining = useMiningStaking();
-  const csTx = useTransactionState();
+  const mining = useMiningStakingeDollar();
+  const csTx = useTransactionStateeDollar();
   const amountInput = useSafeNumberInput();
 
   const [csToken, setCsToken] = useState<"USDT" | "EUSD">("USDT");
@@ -43,13 +43,13 @@ export default function CommitmentSealTab() {
   // Leitura de disponibilidade de emissão de Selos via Contrato
   const { data: usdtEnabled } = useReadContract({
     address: CONTRACTS.ECGAS_SALE,
-    abi: ecGasSaleAbi,
+    abi: eDollarEcGasSaleAbi,
     functionName: "usdtEnabled",
   });
 
   const { data: eusdEnabled } = useReadContract({
     address: CONTRACTS.ECGAS_SALE,
-    abi: ecGasSaleAbi,
+    abi: eDollarEcGasSaleAbi,
     functionName: "eusdEnabled",
   });
 

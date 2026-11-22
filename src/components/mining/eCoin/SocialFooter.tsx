@@ -17,7 +17,7 @@ export default function SocialFooter() {
         <a href="https://discord.com" target="_blank" rel="noreferrer" className="hover:opacity-80 transition-opacity">
           <FaDiscord />
         </a>
-        <a href="https://chat.whatsapp.com/G1F6USX5NrrLKikm7yiXXQ" target="_blank" rel="noreferrer" className="hover:opacity-80 transition-opacity">
+        <a href="https://chat.whatsapp.com/G9FtXJ0h222AHMSlyZexP6" target="_blank" rel="noreferrer" className="hover:opacity-80 transition-opacity">
           <FaWhatsapp />
         </a>
       </div>

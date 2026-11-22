@@ -26,8 +26,8 @@ import { CONTRACTS } from "@/lib/contracts/contracts";
 
 import { erc20Abi } from "viem";
 
-import { miningStakingAdminAbi } from "@/lib/abis/miningStakingAdminAbi";
-import { ecGasSaleAbi } from "@/lib/abis/ecGasSaleAbi";
+import { miningStakingAdminAbi } from "@/lib/abis/eDollarMining/miningStakingAdminAbi";
+import { eDollarEcGasSaleAbi } from "@/lib/abis/eDollarMining/eDollarEcGasSaleAbi";
 import { usePublicClient } from "wagmi";
 
 
@@ -223,7 +223,7 @@ export default function AdminPage() {
 
   const { data: gasRate } = useReadContract({
     address: CONTRACTS.ECGAS_SALE,
-    abi: ecGasSaleAbi,
+    abi: eDollarEcGasSaleAbi,
     functionName: "rate",
   });
 
@@ -374,7 +374,7 @@ export default function AdminPage() {
 
     await writeContractAsync({
       address: CONTRACTS.ECGAS_SALE,
-      abi: ecGasSaleAbi,
+      abi: eDollarEcGasSaleAbi,
       functionName: "setRate",
       args: [parseUnits(rate, 18)]
     });
@@ -384,7 +384,7 @@ export default function AdminPage() {
 
   await writeContractAsync({
     address: CONTRACTS.ECGAS_SALE,
-    abi: ecGasSaleAbi,
+    abi: eDollarEcGasSaleAbi,
     functionName: "setUSDTEnabled",
     args: [enabled]
   });
@@ -394,7 +394,7 @@ async function setEUSDEnabled(enabled: boolean) {
 
   await writeContractAsync({
     address: CONTRACTS.ECGAS_SALE,
-    abi: ecGasSaleAbi,
+    abi: eDollarEcGasSaleAbi,
     functionName: "setEUSDEnabled",
     args: [enabled]
   });

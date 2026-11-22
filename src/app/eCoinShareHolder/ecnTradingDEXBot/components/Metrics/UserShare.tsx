@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { PieChart, Share2, Sparkles } from 'lucide-react';
-import { useMiningStaking } from '@/hooks/useMiningStaking';
+import { useMiningStakingeDollar } from '@/hooks/eDollarMining/useMiningStakingeDollar';
 
 interface UserShareProps {
   pppShare?: number;
@@ -51,7 +51,7 @@ function getDonutSlicePath(
 }
 
 export default function UserShare({ pppShare }: UserShareProps) {
-  const mining = useMiningStaking();
+  const mining = useMiningStakingeDollar();
 
   // Participação real do usuário no Pool (PPP) %
   const actualPPP = pppShare ?? (mining?.share ?? 0);

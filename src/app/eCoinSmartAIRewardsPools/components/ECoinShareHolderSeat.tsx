@@ -470,7 +470,7 @@ export default function HowAiMiningWorksPage() {
             <a href="https://discord.com/users/1443996675638300834" target="_blank" rel="noopener noreferrer" className="p-4 rounded-full bg-white/5 border border-white/10 hover:bg-[#D4AF37] hover:text-black hover:scale-110 transition-all duration-300 text-[#D4AF37]">
               <FaDiscord size={22} />
             </a>
-            <a href="https://chat.whatsapp.com/G1F6USX5NrrLKikm7yiXXQ" target="_blank" rel="noopener noreferrer" className="p-4 rounded-full bg-white/5 border border-white/10 hover:bg-[#D4AF37] hover:text-black hover:scale-110 transition-all duration-300 text-[#D4AF37]">
+            <a href="https://chat.whatsapp.com/G9FtXJ0h222AHMSlyZexP6" target="_blank" rel="noopener noreferrer" className="p-4 rounded-full bg-white/5 border border-white/10 hover:bg-[#D4AF37] hover:text-black hover:scale-110 transition-all duration-300 text-[#D4AF37]">
               <FaWhatsapp size={22} />
             </a>
           </div>

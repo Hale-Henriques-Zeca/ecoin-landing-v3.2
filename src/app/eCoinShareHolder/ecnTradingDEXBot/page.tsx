@@ -74,40 +74,6 @@ export default function EcnTradingDEXPage() {
         </div>
       </div>
 
-      {/* Bots em Execução */}
-      <div className="bg-[#12181F] border border-gray-800 rounded-2xl p-4">
-        <div className="flex justify-between items-center mb-3">
-          <div className="flex items-center gap-2">
-            <div className="p-1.5 bg-[#00FF9C]/10 border border-[#00FF9C]/30 rounded-lg text-[#00FF9C]">
-              <Zap className="w-4 h-4" />
-            </div>
-            <div>
-              <h3 className="text-xs font-bold text-white">Robôs Ativos (2)</h3>
-              <p className="text-[10px] text-gray-400">Lucro Acumulado Hoje: +$6,773.00</p>
-            </div>
-          </div>
-          <Link
-            href="/eCoinShareHolder/ecnTradingDEXBot/runningBot"
-            className="px-3 py-1.5 bg-[#00FF9C]/10 border border-[#00FF9C]/30 text-[#00FF9C] text-[11px] font-bold rounded-xl hover:bg-[#00FF9C]/20 transition"
-          >
-            Monitorar
-          </Link>
-        </div>
-
-        <div className="bg-[#0B0E14] p-3 rounded-xl border border-gray-800 flex justify-between items-center">
-          <div>
-            <div className="flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-[#00FF9C] animate-ping" />
-              <span className="text-xs font-extrabold text-white">E-Coin/USDT</span>
-            </div>
-            <span className="text-[10px] text-gray-400 block mt-0.5">Capital: $100,000 USDT</span>
-          </div>
-          <div className="text-right">
-            <span className="text-xs font-black text-[#00FF9C]">+$5,931.00</span>
-            <span className="text-[10px] text-gray-400 block">+5.93%</span>
-          </div>
-        </div>
-      </div>
 
       {/* Ações Financeiras Rápidas */}
       <div className="grid grid-cols-2 gap-3">

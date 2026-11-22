@@ -18,21 +18,21 @@ import {
   useChainId 
 } from "wagmi";
 import { CONTRACTS } from "@/lib/contracts/contracts";
-import { miningStakingAbi } from "@/lib/abis/miningStakingAbi";
+import { eDollarMiningStakingAbi } from "@/lib/abis/eDollarMining/eDollarMiningStakingAbi";
 
 // Contexts & Hooks
-import { useTransactionState } from "@/hooks/useTransactionState";
-import { useMiningStaking } from "@/hooks/useMiningStaking";
-import { useEcGas } from "@/hooks/useEcGas";
-import { useRewardStreaming } from "@/hooks/useRewardStreaming";
-import { useOverflowAnalytics } from "@/hooks/useOverflowAnalytics";
+import { useTransactionStateeDollar } from "@/hooks/eDollarMining/useTransactionStateeDollar";
+import { useMiningStakingeDollar } from "@/hooks/eDollarMining/useMiningStakingeDollar";
+import { useEcGas } from "@/hooks/eDollarMining/useEcGas";
+import { useRewardStreamingeDollar } from "@/hooks/eDollarMining/useRewardStreamingeDollar";
+import { useOverflowAnalyticseDollar } from "@/hooks/eDollarMining/useOverflowAnalyticseDollar";
 
 // Components
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import AdminPage from "@/components/mining/eDollar/MiningMainPage/Components/AdminPage";
 import GasCapacityPanel from "@/components/mining/eDollar/MiningMainPage/Components/GasCapacityPanel";
 import MiningHistoryPanel from "@/components/mining/eDollar/MiningMainPage/Components/MiningHistoryPanel";
-import ReferralCodePanel from "@/components/mining/eDollar/MiningMainPage/Components/ReferralCodePanel";
+import ReferralCodePanel from "@/components/ReferralCodePanel/ReferralCodePanel";
 import SimulatorRedirectCard from "@/components/Cards/SimulatorRedirectCard";
 import ProfitSimulatorCard from "@/components/Cards/ProfitSimulatorCard";
 
@@ -60,9 +60,9 @@ export default function ShareholdersPage() {
 
   // 🗂️ NAVEGAÇÃO COMPATÍVEL COM SHAREHOLDERS
   const [activeTab, setActiveTab] = useState<string>("shareholders");
-  const overflow = useOverflowAnalytics();
+  const overflow = useOverflowAnalyticseDollar();
 
-  const mining = useMiningStaking();
+  const mining = useMiningStakingeDollar();
 
   const preview = gas.preview;
   const remainingCapacity = preview ? Number(formatUnits(preview[2], 18)) : 0;
@@ -73,7 +73,7 @@ export default function ShareholdersPage() {
   const simulatedWillMine = remainingCapacity > 0 && stakeActive;
 
   const { data: pending } = useReadContract({ 
-    abi: miningStakingAbi, 
+    abi: eDollarMiningStakingAbi, 
     address: CONTRACTS.MINING_STAKING, 
     functionName: "pendingRewards", 
     chainId: 56, 
@@ -87,7 +87,7 @@ export default function ShareholdersPage() {
   const withdrawFeeUSD = totalRewardsUSD * 0.01;
   const withdrawNetUSD = totalRewardsUSD - withdrawFeeUSD;
 
-  const streaming = useRewardStreaming(address);
+  const streaming = useRewardStreamingeDollar(address);
 
   const stats = {
     totalStaked: `${mining.total} eCoin`,
@@ -105,7 +105,7 @@ export default function ShareholdersPage() {
     if (chainId !== 56) { switchChain({ chainId: 56 }); }
   }, [isConnected, chainId, switchChain]);
 
-  const claimTx = useTransactionState();
+  const claimTx = useTransactionStateeDollar();
 
   useEffect(() => { 
     if (mining.claimConfirmed) { 
