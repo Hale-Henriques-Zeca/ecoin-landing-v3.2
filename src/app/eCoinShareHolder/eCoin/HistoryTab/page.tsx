@@ -15,7 +15,7 @@ export default function ActivityPage() {
         {/* NAVEGAÇÃO DE RETORNO */}
         <div className="flex items-center justify-between">
           <Link
-            href="/"
+            href="/eCoinShareHolder"
             className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-white/50 hover:text-[#D4AF37] transition-colors"
           >
             <ArrowLeft size={16} />

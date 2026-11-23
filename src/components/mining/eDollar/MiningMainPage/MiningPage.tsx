@@ -120,49 +120,49 @@ export default function ShareholdersPage() {
       id: "shareholders", 
       label: "Participação", 
       icon: Cpu, 
-      href: "/eCoinShareHolder/ParticipationTab" 
+      href: "/eCoinShareHolder/eDollar/ParticipationTab" 
     },
     { 
       id: "recompensas", 
       label: "DIVIDENDOS", 
       icon: Gift, 
-      href: "/eCoinShareHolder/ProfitTab" 
+      href: "/eCoinShareHolder/eDollar/ProfitTab" 
     },
     { 
       id: "stake", 
       label: "AÇÕES", 
       icon: Coins, 
-      href: "/eCoinShareHolder/StakeTab" 
+      href: "/eCoinShareHolder/eDollar/StakeTab" 
     },
     { 
       id: "cs_vault", 
       label: "SELOS", 
       icon: ShieldCheck, 
-      href: "/eCoinShareHolder/CommitmentSealTab" 
+      href: "/eCoinShareHolder/eDollar/CommitmentSealTab" 
     },
     { 
       id: "analytics", 
       label: "Métricas", 
       icon: BarChart3, 
-      href: "/eCoinShareHolder/AnalyticsTab" 
+      href: "/eCoinShareHolder/eDollar/AnalyticsTab" 
     },
     { 
       id: "historico", 
       label: "HISTÓRICO", 
       icon: History, 
-      href: "/eCoinShareHolder/HistoryTab" 
+      href: "/eCoinShareHolder/eDollar/HistoryTab" 
     },
     { 
       id: "portfolio", 
       label: "PORTFOLIO", 
       icon: Wallet, 
-      href: "/eCoinShareHolder/PortfolioTab" 
+      href: "/eCoinShareHolder/eDollar/PortfolioTab" 
     },
     { 
       id: "config", 
       label: "CONFIGURAÇÕES", 
       icon: Settings, 
-      href: "/eCoinShareHolder/ProfileTab" 
+      href: "/eCoinShareHolder/eDollar/ProfileTab" 
     },
   ];
 

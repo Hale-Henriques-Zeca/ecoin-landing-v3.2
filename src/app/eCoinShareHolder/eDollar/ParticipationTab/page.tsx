@@ -11,10 +11,10 @@ export default function ParticipationTabPage() {
   const router = useRouter();
 
   const handleSetActiveTab = (tab: string) => {
-    if (tab === "analytics") router.push("/eCoinShareHolder/AnalyticsTab");
-    else if (tab === "commitment") router.push("/eCoinShareHolder/CommitmentSealTab");
-    else if (tab === "history") router.push("/eCoinShareHolder/HistoryTab");
-    else if (tab === "participation" || tab === "mining") router.push("/eCoinShareHolder/ParticipationTab");
+    if (tab === "analytics") router.push("/eCoinShareHolder/eDollar/AnalyticsTab");
+    else if (tab === "commitment") router.push("/eCoinShareHolder/eDollar/CommitmentSealTab");
+    else if (tab === "history") router.push("/eCoinShareHolder/eDollar/HistoryTab");
+    else if (tab === "participation" || tab === "mining") router.push("/eCoinShareHolder/eDollar/ParticipationTab");
     else router.push("/eCoinShareHolder");
   };
 

@@ -5,16 +5,16 @@ import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { ArrowLeft, Pickaxe } from "lucide-react";
 
-import MiningTab from "@/components/mining/eDollar/MiningTab";
+import MiningTab from "@/components/mining/eCoin/MiningTab";
 
 export default function ParticipationTabPage() {
   const router = useRouter();
 
   const handleSetActiveTab = (tab: string) => {
-    if (tab === "analytics") router.push("/eCoinShareHolder/AnalyticsTab");
-    else if (tab === "commitment") router.push("/eCoinShareHolder/CommitmentSealTab");
-    else if (tab === "history") router.push("/eCoinShareHolder/HistoryTab");
-    else if (tab === "participation" || tab === "mining") router.push("/eCoinShareHolder/ParticipationTab");
+    if (tab === "analytics") router.push("/eCoinShareHolder/eCoin/AnalyticsTab");
+    else if (tab === "commitment") router.push("/eCoinShareHolder/eCoin/CommitmentSealTab");
+    else if (tab === "history") router.push("/eCoinShareHolder/eCoin/HistoryTab");
+    else if (tab === "participation" || tab === "mining") router.push("/eCoinShareHolder/eCoin/ParticipationTab");
     else router.push("/eCoinShareHolder");
   };
 

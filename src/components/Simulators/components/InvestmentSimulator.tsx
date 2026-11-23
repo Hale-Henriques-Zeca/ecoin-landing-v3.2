@@ -16,10 +16,10 @@ import {
 } from "lucide-react";
 import { useAccount, useReadContract } from "wagmi";
 import { formatUnits } from "viem";
-import { useMiningStaking } from "@/hooks/useMiningStaking";
-import { miningStakingAbi } from "@/lib/abis/miningStakingAbi";
+import { useMiningStakingeDollar } from "@/hooks/eDollarMining/useMiningStakingeDollar";
+import { eDollarMiningStakingAbi } from "@/lib/abis/eDollarMining/eDollarMiningStakingAbi";
 import { CONTRACTS } from "@/lib/contracts/contracts";
-import APRPanel from "@/components/APRPanel";
+import APRPanel from "@/components/mining/eDollar/APRPanel";
 
 
 // ============================================================================
@@ -54,7 +54,7 @@ export default function InvestmentSimulator({
 
 
   const { address } = useAccount();
-  const mining = useMiningStaking();
+  const mining = useMiningStakingeDollar();
   
   // --------------------------------------------------------------------------
   // ESTADOS VISUAIS LOCAIS (UI APENAS)
@@ -141,7 +141,7 @@ export default function InvestmentSimulator({
 
 
   const { data: pending } = useReadContract({
-    abi: miningStakingAbi,
+    abi: eDollarMiningStakingAbi,
     address: CONTRACTS.MINING_STAKING,
     functionName: "pendingRewards",
     chainId: 56,

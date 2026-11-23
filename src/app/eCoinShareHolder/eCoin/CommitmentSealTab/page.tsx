@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { ArrowLeft, ShieldCheck } from "lucide-react";
 
-import CommitmentSealTab from "@/components/mining/eDollar/CommitmentSealTab";
+import CommitmentSealTab from "@/components/mining/eCoin/CommitmentSealTab";
 
 export default function CommitmentSealTabPage() {
   const router = useRouter();

@@ -1,60 +1,32 @@
 "use client";
 
-import React from "react";
-import { useRouter } from "next/navigation";
-import { motion } from "framer-motion";
-import { ArrowLeft, History } from "lucide-react";
+import EdenActivityHistoryPanel from "@/components/edenActivityRegistry/EdenActivityHistoryPanel";
+import { ArrowLeft } from "lucide-react";
+import Link from "next/link";
 
-import MiningHistoryPanel from "@/components/mining/eDollar/MiningMainPage/Components/MiningHistoryPanel";
-
-export default function HistoryTabPage() {
-  const router = useRouter();
-
+export default function ActivityPage() {
   return (
-    <div className="min-h-screen bg-[#020617] text-white px-4 sm:px-6 py-6 pb-24 space-y-6">
-      {/* 🧭 CABEÇALHO COM BOTÃO DE VOLTAR AO HUB */}
-      <motion.div
-        initial={{ opacity: 0, y: -10 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="flex items-center justify-between border-b border-white/10 pb-4"
-      >
-        <button
-          onClick={() => router.push("/eCoinShareHolder")}
-          className="group flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-white/80 hover:text-white hover:bg-white/10 hover:border-[#D4AF37]/50 transition-all duration-300 active:scale-95"
-        >
-          <ArrowLeft size={18} className="text-[#D4AF37] group-hover:-translate-x-1 transition-transform" />
-          <span className="text-xs font-bold uppercase tracking-wider">Voltar ao Hub</span>
-        </button>
+    <main className="min-h-screen bg-[#070708] text-white pt-20 pb-24 px-4 sm:px-6 lg:px-8 relative overflow-x-hidden">
+      {/* Iluminação de fundo estilo eCoin */}
+      <div className="fixed inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(212,175,55,0.08),transparent_50%)] pointer-events-none" />
 
-        <div className="flex items-center gap-2 bg-[#D4AF37]/10 px-3 py-1.5 rounded-full border border-[#D4AF37]/20">
-          <History size={16} className="text-[#D4AF37]" />
-          <span className="text-[11px] font-bold text-[#D4AF37] uppercase tracking-widest">Histórico</span>
+      <div className="max-w-6xl mx-auto space-y-6 relative z-10">
+        
+        {/* NAVEGAÇÃO DE RETORNO */}
+        <div className="flex items-center justify-between">
+          <Link
+            href="/"
+            className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-white/50 hover:text-[#D4AF37] transition-colors"
+          >
+            <ArrowLeft size={16} />
+            <span>Voltar ao Dashboard</span>
+          </Link>
         </div>
-      </motion.div>
 
-      {/* 📝 TÍTULO E SUBTÍTULO DA PÁGINA */}
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.1 }}
-        className="space-y-1"
-      >
-        <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-white">
-          Histórico de <span className="text-[#D4AF37]">Transações</span>
-        </h1>
-        <p className="text-xs sm:text-sm text-gray-400">
-          Consulte o registo detalhado de retenções, reivindicações de dividendos e movimentações da rede.
-        </p>
-      </motion.div>
+        {/* COMPONENTE DO HISTÓRICO */}
+        <EdenActivityHistoryPanel />
 
-      {/* 📜 COMPONENTE DE HISTÓRICO */}
-      <motion.div
-        initial={{ opacity: 0, y: 15 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.15 }}
-      >
-        <MiningHistoryPanel />
-      </motion.div>
-    </div>
+      </div>
+    </main>
   );
 }

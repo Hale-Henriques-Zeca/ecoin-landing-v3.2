@@ -7,19 +7,19 @@ import { formatUnits } from 'viem';
 import EcnTradingAICompoundingConceptCTA from '@/components/CTA/EcnTradingAICompoundingConceptCTA/EcnTradingAICompoundingConceptCTA';
 
 import { CONTRACTS } from '@/lib/contracts/contracts';
-import { miningStakingAbi } from '@/lib/abis/miningStakingAbi';
-import { useTransactionState } from '@/hooks/useTransactionState';
-import { useMiningStaking } from '@/hooks/useMiningStaking';
+import { eDollarMiningStakingAbi } from '@/lib/abis/eDollarMining/eDollarMiningStakingAbi';
+import { useMiningStakingeDollar } from '@/hooks/eDollarMining/useMiningStakingeDollar';
+import { useTransactionStateeDollar } from '@/hooks/eDollarMining/useTransactionStateeDollar';
 
 export default function EDollarProfit() {
   const { address } = useAccount();
 
-  const claimTx = useTransactionState();
-  const mining = useMiningStaking();
+  const claimTx = useTransactionStateeDollar();
+  const mining = useMiningStakingeDollar();
 
   // 📊 Leitura do saldo pendente em eUSD (index 1)
   const { data: pending } = useReadContract({
-    abi: miningStakingAbi,
+    abi: eDollarMiningStakingAbi,
     address: CONTRACTS.MINING_STAKING,
     functionName: 'pendingRewards',
     chainId: 56,

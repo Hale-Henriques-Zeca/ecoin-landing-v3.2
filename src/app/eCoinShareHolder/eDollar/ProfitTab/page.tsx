@@ -10,20 +10,20 @@ import { formatUnits } from "viem";
 import RecompensasTab from "@/components/mining/eDollar/RecompensasTab";
 
 import { CONTRACTS } from "@/lib/contracts/contracts";
-import { miningStakingAbi } from "@/lib/abis/miningStakingAbi";
-import { useTransactionState } from "@/hooks/useTransactionState";
-import { useMiningStaking } from "@/hooks/useMiningStaking";
+import { eDollarMiningStakingAbi } from '@/lib/abis/eDollarMining/eDollarMiningStakingAbi';
+import { useTransactionStateeDollar } from '@/hooks/eDollarMining/useTransactionStateeDollar';
+import { useMiningStakingeDollar } from '@/hooks/eDollarMining/useMiningStakingeDollar';
 
 export default function ProfitTabPage() {
   const router = useRouter();
   const { address } = useAccount();
 
-  const claimTx = useTransactionState();
-  const mining = useMiningStaking();
+  const claimTx = useTransactionStateeDollar();
+  const mining = useMiningStakingeDollar();
 
   // 📊 Leitura de Recompensas Pendentes via Contrato
   const { data: pending } = useReadContract({
-    abi: miningStakingAbi,
+    abi: eDollarMiningStakingAbi,
     address: CONTRACTS.MINING_STAKING,
     functionName: "pendingRewards",
     chainId: 56,

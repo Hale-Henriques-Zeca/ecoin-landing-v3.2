@@ -2,20 +2,19 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { 
-  Bot, 
-  Zap, 
-  DollarSign, 
+import {
+  Bot,
+  DollarSign,
   ChevronRight,
   Sparkles,
-  ArrowUpRight
+  ArrowUpRight,
 } from 'lucide-react';
 
-import { BOT_MARKETS } from './lib/ecnTrading/markets';
+import { BOT_MARKETS } from './lib/eDollar/ecnTrading/markets';
 import EcnTradingAICompoundingConceptCTA from '@/components/CTA/EcnTradingAICompoundingConceptCTA/EcnTradingAICompoundingConceptCTA';
-import Metrics from './components/Metrics';
-import SocialFooter from "@/components/mining/eDollar/SocialFooter";
-import ReferralModal from "@/components/mining/eDollar/ReferralModal";
+import Metrics from './components/Metrics/Metrics';
+import SocialFooter from '@/components/mining/eDollar/SocialFooter';
+import ReferralModal from '@/components/mining/eDollar/ReferralModal';
 
 export default function EcnTradingDEXPage() {
   return (
@@ -23,7 +22,7 @@ export default function EcnTradingDEXPage() {
       {/* CTA no Topo */}
       <EcnTradingAICompoundingConceptCTA />
 
-      {/* Card de Visão Geral Reativo (Patrimônio, PPP & CS Capacity) */}
+      {/* Card de Visão Geral Reativo com Switch (eCoin vs eDollar / USDT) */}
       <Metrics />
 
       {/* Mercados de Trading Bot */}
@@ -33,7 +32,7 @@ export default function EcnTradingDEXPage() {
             <Bot className="w-4 h-4 text-[#D4AF37]" />
             Mercados de Trading Bot
           </h2>
-          <Link 
+          <Link
             href="/eCoinShareHolder/ecnTradingDEXBot/bot"
             className="text-[11px] text-[#D4AF37] hover:underline font-semibold flex items-center"
           >
@@ -74,7 +73,6 @@ export default function EcnTradingDEXPage() {
         </div>
       </div>
 
-
       {/* Ações Financeiras Rápidas */}
       <div className="grid grid-cols-2 gap-3">
         <Link
@@ -99,15 +97,15 @@ export default function EcnTradingDEXPage() {
           </div>
           <div>
             <span className="text-xs font-bold text-white block">Minhas Assets</span>
-            <span className="text-[10px] text-gray-400">Saldos & Deposit</span>
+            <span className="text-[10px] text-gray-400">Saldos &amp; Deposit</span>
           </div>
         </Link>
       </div>
 
       {/* CTA no Rodapé */}
       <EcnTradingAICompoundingConceptCTA />
-      
-      <SocialFooter  />
+
+      <SocialFooter />
       <ReferralModal />
     </div>
   );

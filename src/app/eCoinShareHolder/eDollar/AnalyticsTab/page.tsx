@@ -9,23 +9,23 @@ import { formatUnits } from "viem";
 
 import AnalyticsTab from "@/components/mining/eDollar/AnalyticsTab";
 
-import { useMiningStaking } from "@/hooks/useMiningStaking";
-import { useOverflowAnalytics } from "@/hooks/useOverflowAnalytics";
-import { useEcGas } from "@/hooks/useEcGas";
+import { useMiningStakingeDollar } from "@/hooks/eDollarMining/useMiningStakingeDollar";
+import { useOverflowAnalyticseDollar } from "@/hooks/eDollarMining/useOverflowAnalyticseDollar";
+import { useEcGas } from "@/hooks/eDollarMining/useEcGas";
 import { CONTRACTS } from "@/lib/contracts/contracts";
-import { miningStakingAbi } from "@/lib/abis/miningStakingAbi";
+import { eDollarMiningStakingAbi } from "@/lib/abis/eDollarMining/eDollarMiningStakingAbi";
 
 export default function AnalyticsTabPage() {
   const router = useRouter();
   const { address } = useAccount();
 
   // 📊 Leitura autônoma dos dados na blockchain
-  const mining = useMiningStaking();
-  const overflow = useOverflowAnalytics();
+  const mining = useMiningStakingeDollar();
+  const overflow = useOverflowAnalyticseDollar();
   const gas = useEcGas(address);
 
   const { data: pending } = useReadContract({
-    abi: miningStakingAbi,
+    abi: eDollarMiningStakingAbi,
     address: CONTRACTS.MINING_STAKING,
     functionName: "pendingRewards",
     chainId: 56,

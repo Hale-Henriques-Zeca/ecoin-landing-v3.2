@@ -9,15 +9,15 @@ import { formatUnits } from "viem";
 
 import GasCapacityPanel from "@/components/mining/eDollar/MiningMainPage/Components/GasCapacityPanel";
 
-import { useMiningStaking } from "@/hooks/useMiningStaking";
-import { useEcGas } from "@/hooks/useEcGas";
+import { useMiningStakingeDollar } from "@/hooks/eDollarMining/useMiningStakingeDollar";
+import { useEcGas } from "@/hooks/eDollarMining/useEcGas";
 
 export default function PortfolioTabPage() {
   const router = useRouter();
   const { address } = useAccount();
 
   // 📊 Leitura autônoma de dados de staking e ecGas
-  const mining = useMiningStaking();
+  const mining = useMiningStakingeDollar();
   const gas = useEcGas(address);
 
   // 🔄 Mapeamento exato da versão Laptop

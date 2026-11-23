@@ -20,7 +20,7 @@ import { useAccount } from "wagmi";
 import { TeamLeaderCTA } from "@/components/CTA/TeamLeaderCTA/TeamLeaderCTA";
 import SimulatorRedirectCard from "@/components/Cards/SimulatorRedirectCard";
 import ProfitSimulatorCard from "@/components/Cards/ProfitSimulatorCard";
-import ReferralCodePanel from "@/components/mining/eDollar/MiningMainPage/Components/ReferralCodePanel";
+import ReferralCodePanel from "@/components/ReferralCodePanel/ReferralCodePanel";
 import AdminPage from "@/components/mining/eDollar/MiningMainPage/Components/AdminPage";
 
 type TabType =
