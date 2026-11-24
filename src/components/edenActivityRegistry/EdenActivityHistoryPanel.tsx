@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useMemo } from "react";
 import {
   History,
   ArrowUpRight,
@@ -22,13 +22,76 @@ import {
   Tag,
   FileText,
   Key,
-  Cpu,
-  CheckCircle,
 } from "lucide-react";
+import { erc20Abi } from "viem";
+import { useReadContracts } from "wagmi";
 
 import { useEdenActivityRegistry } from "@/hooks/useEdenActivityRegistry";
+import { CONTRACTS } from "@/lib/contracts/contracts";
 
 const BSC_SCAN_TX_URL = "https://bscscan.com/tx/";
+const ZERO_ADDRESS = "0x0000000000000000000000000000000000000000";
+
+// Mapeamento estático dos tokens principais do ecossistema EdenKingDom & BSC
+function buildKnownTokenMap(): Record<string, string> {
+  const map: Record<string, string> = {
+    [ZERO_ADDRESS]: "BNB",
+    "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee": "BNB",
+    "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c": "WBNB",
+    "0xdf69235019cc416dd5be75dfc0edc922ab4b5964": "eCoin",
+    "0x55d398326f99059ff775485246999027b3197955": "USDT",
+    "0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d": "USDC",
+    "0xe9e7cea3dedca5984780bafc599bd69add087d56": "BUSD",
+  };
+
+  const contractsRecord = CONTRACTS as Record<string, unknown>;
+
+  for (const [key, value] of Object.entries(contractsRecord)) {
+    if (typeof value !== "string" || !/^0x[a-fA-F0-9]{40}$/.test(value)) {
+      continue;
+    }
+
+    const lowerAddr = value.toLowerCase();
+    const upperKey = key.toUpperCase();
+
+    if (
+      upperKey === "ECOIN" ||
+      upperKey === "ECOIN_TOKEN" ||
+      upperKey === "ECOIN_ADDRESS"
+    ) {
+      map[lowerAddr] = "eCoin";
+    } else if (
+      upperKey === "EDOLLAR" ||
+      upperKey === "EDOLLAR_TOKEN" ||
+      upperKey === "EUSD" ||
+      upperKey === "E_USD"
+    ) {
+      map[lowerAddr] = "eDollar";
+    } else if (upperKey === "USDT" || upperKey === "USDT_TOKEN") {
+      map[lowerAddr] = "USDT";
+    } else if (upperKey === "ECGAS" || upperKey === "ECGAS_TOKEN") {
+      map[lowerAddr] = "ecGas";
+    }
+  }
+
+  return map;
+}
+
+const KNOWN_TOKENS = buildKnownTokenMap();
+
+function normalizeTokenSymbol(rawSymbol: string): string {
+  const clean = rawSymbol.trim();
+  const upper = clean.toUpperCase();
+
+  if (upper === "ECOIN" || upper === "E-COIN") return "eCoin";
+  if (upper === "EDOLLAR" || upper === "E-USD" || upper === "EUSD") {
+    return "eDollar";
+  }
+  if (upper === "BSC-USD" || upper === "USDT") return "USDT";
+  if (upper === "ECGAS" || upper === "EC-GAS") return "ecGas";
+
+  return clean;
+}
 
 // Configuração única de ícone, cores e estilos para cada tipo de atividade do contrato
 function getActivityConfig(activityLabel: string) {
@@ -179,7 +242,6 @@ function getActivityConfig(activityLabel: string) {
     };
   }
 
-  // Padrão Neutro/Dourado Elegante para atividades gerais do protocolo
   return {
     label: activityLabel || "Atividade no Protocolo",
     icon: FileText,
@@ -201,6 +263,71 @@ export default function MiningHistoryPanel() {
     refetch,
   } = useEdenActivityRegistry();
 
+  // Identifica endereços de tokens ainda não presentes no mapa estático
+  const unknownTokenAddresses = useMemo(() => {
+    const unique = new Set<`0x${string}`>();
+    for (const act of activities) {
+      if (
+        typeof act.token === "string" &&
+        /^0x[a-fA-F0-9]{40}$/.test(act.token)
+      ) {
+        const lower = act.token.toLowerCase();
+        if (!KNOWN_TOKENS[lower]) {
+          unique.add(act.token as `0x${string}`);
+        }
+      }
+    }
+    return Array.from(unique);
+  }, [activities]);
+
+  // Busca automática do symbol() on-chain para qualquer token ERC-20 extra
+  const { data: onChainSymbols } = useReadContracts({
+    contracts: unknownTokenAddresses.map((tokenAddr) => ({
+      address: tokenAddr,
+      abi: erc20Abi,
+      functionName: "symbol" as const,
+      chainId: 56,
+    })),
+    query: {
+      enabled: unknownTokenAddresses.length > 0,
+      staleTime: 60_000,
+    },
+  });
+
+  // Mapa unificado: endereço (lowercase) -> Nome próprio da moeda
+  const resolvedTokenSymbols = useMemo(() => {
+    const combined: Record<string, string> = { ...KNOWN_TOKENS };
+
+    unknownTokenAddresses.forEach((addr, idx) => {
+      const res = onChainSymbols?.[idx];
+      if (
+        res?.status === "success" &&
+        typeof res.result === "string" &&
+        res.result.trim().length > 0
+      ) {
+        combined[addr.toLowerCase()] = normalizeTokenSymbol(res.result);
+      }
+    });
+
+    return combined;
+  }, [unknownTokenAddresses, onChainSymbols]);
+
+  const getTokenDisplayName = (token?: string, amount?: number): string | null => {
+    if (!token) return null;
+    const lower = token.toLowerCase();
+
+    // Registos puramente administrativos (ex: vínculo de referral) usam address(0) com amount 0
+    if (lower === ZERO_ADDRESS && (!amount || amount <= 0)) {
+      return null;
+    }
+
+    if (resolvedTokenSymbols[lower]) {
+      return resolvedTokenSymbols[lower];
+    }
+
+    return "Token";
+  };
+
   return (
     <div className="space-y-4">
       {/* Cabeçalho */}
@@ -216,7 +343,8 @@ export default function MiningHistoryPanel() {
             </h3>
 
             <p className="text-xs text-zinc-400 font-medium">
-              Total armazenado on-chain: <span className="text-white font-bold">{totalCount}</span>
+              Total armazenado on-chain:{" "}
+              <span className="text-white font-bold">{totalCount}</span>
             </p>
           </div>
         </div>
@@ -230,11 +358,7 @@ export default function MiningHistoryPanel() {
         >
           <RefreshCw
             size={16}
-            className={
-              isLoading
-                ? "animate-spin text-[#D4AF37]"
-                : ""
-            }
+            className={isLoading ? "animate-spin text-[#D4AF37]" : ""}
           />
         </button>
       </div>
@@ -248,9 +372,7 @@ export default function MiningHistoryPanel() {
           <AlertCircle size={16} className="mt-0.5 shrink-0" />
 
           <div className="flex-1">
-            <p>
-              Não foi possível carregar os registos on-chain.
-            </p>
+            <p>Não foi possível carregar os registos on-chain.</p>
 
             <button
               type="button"
@@ -271,13 +393,11 @@ export default function MiningHistoryPanel() {
       )}
 
       {/* Lista vazia */}
-      {!isLoading &&
-        !isError &&
-        activities.length === 0 && (
-          <div className="py-12 text-center text-sm text-zinc-400">
-            Nenhuma atividade encontrada no histórico armazenado desta carteira.
-          </div>
-        )}
+      {!isLoading && !isError && activities.length === 0 && (
+        <div className="py-12 text-center text-sm text-zinc-400">
+          Nenhuma atividade encontrada no histórico armazenado desta carteira.
+        </div>
+      )}
 
       {/* Atividades */}
       {activities.length > 0 && (
@@ -285,20 +405,17 @@ export default function MiningHistoryPanel() {
           {activities.map((act, index) => {
             const config = getActivityConfig(act.activityLabel);
             const IconComponent = config.icon;
+            const tokenName = getTokenDisplayName(act.token, act.amount);
 
             const hasTransactionHash =
               typeof act.transactionHash === "string" &&
-              /^0x[a-fA-F0-9]{64}$/.test(
-                act.transactionHash
-              );
+              /^0x[a-fA-F0-9]{64}$/.test(act.transactionHash);
 
             const hasBlockNumber =
-              act.blockNumber !== undefined &&
-              act.blockNumber !== null;
+              act.blockNumber !== undefined && act.blockNumber !== null;
 
             const safeTimestamp =
-              Number.isFinite(act.timestamp) &&
-              act.timestamp > 0
+              Number.isFinite(act.timestamp) && act.timestamp > 0
                 ? act.timestamp
                 : null;
 
@@ -315,14 +432,17 @@ export default function MiningHistoryPanel() {
                 className={`flex items-center justify-between gap-3 rounded-2xl border bg-zinc-950/60 backdrop-blur-md p-4 transition-all shadow-lg ${config.border}`}
               >
                 <div className="flex min-w-0 items-center gap-3">
-                  <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${config.bg} ${config.color} border border-current/30 shadow-sm`}>
+                  <div
+                    className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${config.bg} ${config.color} border border-current/30 shadow-sm`}
+                  >
                     <IconComponent size={18} />
                   </div>
 
                   <div className="min-w-0">
                     <div className="flex flex-wrap items-center gap-2">
-                      {/* Removido o uppercase para tamanho de letras normal */}
-                      <p className={`break-words text-xs font-bold tracking-wide ${config.color}`}>
+                      <p
+                        className={`break-words text-xs font-bold tracking-wide ${config.color}`}
+                      >
                         {config.label}
                       </p>
 
@@ -361,19 +481,17 @@ export default function MiningHistoryPanel() {
                 </div>
 
                 <div className="shrink-0 text-right font-mono">
-                  {Number.isFinite(act.amount) &&
-                    act.amount > 0 && (
-                      <p className={`text-sm font-black ${config.color} tracking-tight drop-shadow-sm`}>
-                        +{act.amount.toFixed(4)}
-                      </p>
-                    )}
+                  {Number.isFinite(act.amount) && act.amount > 0 && (
+                    <p
+                      className={`text-sm font-black ${config.color} tracking-tight drop-shadow-sm`}
+                    >
+                      +{act.amount.toFixed(15)}
+                    </p>
+                  )}
 
-                  {act.token && (
-                    <p className="mt-1 max-w-28 truncate text-[10px] text-zinc-400 font-medium">
-                      {act.token ===
-                      "0x0000000000000000000000000000000000000000"
-                        ? "Token nativo"
-                        : `${act.token.slice(0, 6)}...${act.token.slice(-4)}`}
+                  {tokenName && (
+                    <p className="mt-1 text-xs text-zinc-300 font-bold tracking-wide">
+                      {tokenName}
                     </p>
                   )}
                 </div>
@@ -390,9 +508,7 @@ export default function MiningHistoryPanel() {
                 disabled={isLoading || isLoadingMore}
                 className="rounded-xl border border-[#D4AF37]/40 bg-[#D4AF37]/15 px-6 py-2.5 text-xs font-bold text-[#D4AF37] transition-all hover:bg-[#D4AF37]/25 active:scale-95 disabled:cursor-not-allowed disabled:opacity-50 shadow-md"
               >
-                {isLoadingMore
-                  ? "A carregar..."
-                  : "Carregar mais"}
+                {isLoadingMore ? "A carregar..." : "Carregar mais"}
               </button>
             </div>
           )}
