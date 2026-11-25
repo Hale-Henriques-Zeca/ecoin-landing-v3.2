@@ -1,56 +1,126 @@
-import {LanguageService} from "../services/LanguageService";
+
+// ============================================================================
+// EDENKINGDOM AI TRANSLATION FRAMEWORK
+// LanguageAPI.ts
+//
+// Layer: Frontend Language API
+// Responsibilities:
+// - Get current language
+// - Change language
+// - List available languages
+// - Detect language (backend integration pending)
+// - Reset language
+//
+// ============================================================================
+
+import { LanguageService } from "../services/LanguageService";
 
 import type { Language } from "../types/Language";
 
+// ============================================================================
+// LANGUAGE API
+// ============================================================================
+
 export default class LanguageAPI {
 
-    /**
-     * Idioma atual
-     */
+    // ------------------------------------------------------------------------
+    // Current Language
+    // ------------------------------------------------------------------------
+
     static getLanguage(): Language {
 
         return LanguageService.getCurrentLanguage();
-
     }
 
-    /**
-     * Altera o idioma
-     */
+    // ------------------------------------------------------------------------
+    // Current Language Code
+    // ------------------------------------------------------------------------
+
+    static getLanguageCode(): string {
+
+        return LanguageService.getCurrentLanguageCode();
+    }
+
+    // ------------------------------------------------------------------------
+    // Change Language
+    // ------------------------------------------------------------------------
+
     static async setLanguage(
         language: string
     ): Promise<void> {
 
         await LanguageService.setLanguage(language);
-
     }
 
-    /**
-     * Lista idiomas disponíveis
-     */
+    // ------------------------------------------------------------------------
+    // Available Languages
+    // ------------------------------------------------------------------------
+
     static availableLanguages(): Language[] {
 
         return LanguageService.getAvailableLanguages();
-
     }
 
-    /**
-     * Detecta automaticamente o idioma
-     */
+    // ------------------------------------------------------------------------
+    // Find Language
+    // ------------------------------------------------------------------------
+
+    static findLanguage(
+        code: string
+    ): Language | undefined {
+
+        return LanguageService.find(code);
+    }
+
+    // ------------------------------------------------------------------------
+    // Validate Language
+    // ------------------------------------------------------------------------
+
+    static languageExists(
+        code: string
+    ): boolean {
+
+        return LanguageService.exists(code);
+    }
+
+    // ------------------------------------------------------------------------
+    // Automatic Language Detection
+    // ------------------------------------------------------------------------
+
     static async detectLanguage(
         text: string
     ): Promise<string> {
 
-        return LanguageService.detectLanguage(text);
+        if (!text?.trim()) {
+            throw new Error(
+                "Text is required for language detection."
+            );
+        }
 
+        return LanguageService.detectLanguage(text);
     }
 
-    /**
-     * Reinicia para o idioma padrão
-     */
+    // ------------------------------------------------------------------------
+    // Reset Language
+    // ------------------------------------------------------------------------
+
     static async resetLanguage(): Promise<void> {
 
         await LanguageService.reset();
-
     }
 
+    // ------------------------------------------------------------------------
+    // Initialize Language
+    // ------------------------------------------------------------------------
+
+    static initialize(): Language {
+
+        return LanguageService.initialize();
+    }
 }
+
+// ============================================================================
+// EXPORT
+// ============================================================================
+
+export { LanguageAPI };

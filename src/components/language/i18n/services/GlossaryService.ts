@@ -1,13 +1,31 @@
+
 // ============================================================================
 // EDENKINGDOM AI TRANSLATION FRAMEWORK
 // Glossary Service
+//
+// Responsibilities:
+// - Load glossary terms
+// - Compile glossary
+// - Initialize matcher
+// - Filter terms by language
+// - Provide translation terminology
+// - Manage protection and replacements
+//
 // ============================================================================
 
 import { GlossaryLoader } from "../glossary/GlossaryLoader";
+
 import { GlossaryMatcher } from "../glossary/GlossaryMatcher";
+
 import { GlossaryCompiler } from "../glossary/GlossaryCompiler";
+
 import { GlossaryRepository } from "../repository/GlossaryRepository";
-import { GlossaryTerm } from "../types/Glossary";
+
+import type { GlossaryTerm } from "../types/Glossary";
+
+// ============================================================================
+// GLOSSARY SERVICE
+// ============================================================================
 
 export class GlossaryService {
 
@@ -19,6 +37,10 @@ export class GlossaryService {
     private readonly loader: GlossaryLoader;
 
     private readonly compiler: GlossaryCompiler;
+
+    // =========================================================================
+    // CONSTRUCTOR
+    // =========================================================================
 
     constructor(
         repository: GlossaryRepository
@@ -32,9 +54,61 @@ export class GlossaryService {
 
     }
 
-    /**
-     * Inicializa o glossário.
-     */
+    // =========================================================================
+    // LANGUAGE NORMALIZATION
+    // =========================================================================
+
+    private normalizeLanguage(
+        language: string
+    ): string {
+
+        return language
+            .trim()
+            .replace(/_/g, "-")
+            .toLowerCase();
+
+    }
+
+    // =========================================================================
+    // LANGUAGE COMPATIBILITY
+    // =========================================================================
+
+    private languageMatches(
+        termLanguage: string,
+        requestedLanguage: string
+    ): boolean {
+
+        const term =
+            this.normalizeLanguage(termLanguage);
+
+        const requested =
+            this.normalizeLanguage(requestedLanguage);
+
+        if (
+            !requested ||
+            requested === "auto"
+        ) {
+            return true;
+        }
+
+        if (term === requested) {
+            return true;
+        }
+
+        const termBase =
+            term.split("-")[0];
+
+        const requestedBase =
+            requested.split("-")[0];
+
+        return termBase === requestedBase;
+
+    }
+
+    // =========================================================================
+    // LOAD
+    // =========================================================================
+
     async load(): Promise<void> {
 
         const terms =
@@ -48,121 +122,206 @@ export class GlossaryService {
                 this.glossary
             );
 
+        console.info(
+            `[GlossaryService] Loaded ${this.glossary.size} glossary terms.`
+        );
+
     }
 
-    /**
-     * Recarrega o glossário.
-     */
+    // =========================================================================
+    // RELOAD
+    // =========================================================================
+
     async reload(): Promise<void> {
 
         await this.load();
 
     }
 
-    /**
-     * Garante que o glossário foi inicializado.
-     */
+    // =========================================================================
+    // ENSURE LOADED
+    // =========================================================================
+
     private ensureLoaded(): GlossaryMatcher {
 
         if (!this.matcher) {
+
             throw new Error(
                 "GlossaryService ainda não foi inicializado. Execute load() primeiro."
             );
+
         }
 
         return this.matcher;
 
     }
 
-    /**
-     * Encontra os termos presentes no texto.
-     */
-    match(text: string) {
+    // =========================================================================
+    // MATCH
+    // =========================================================================
 
-        return this.ensureLoaded().match(text);
+    match(
+        text: string,
+        sourceLanguage?: string,
+        targetLanguage?: string
+    ): GlossaryTerm[] {
+
+        return this.ensureLoaded().match(
+            text,
+            {
+                sourceLanguage,
+                targetLanguage,
+            }
+        );
 
     }
 
-    /**
-     * Obtém os termos relevantes para uma tradução.
-     *
-     * O source/target ficam registrados no contrato
-     * para permitir evolução futura do glossário por idioma.
-     */
+    // =========================================================================
+    // GET FOR TRANSLATION
+    // =========================================================================
+
     async getForTranslation(
         sourceLanguage: string,
         targetLanguage: string,
         text: string
     ): Promise<GlossaryTerm[]> {
 
-        void sourceLanguage;
-        void targetLanguage;
-
         if (!text.trim()) {
             return [];
         }
 
-        return this.match(text);
+        const source =
+            this.normalizeLanguage(sourceLanguage);
+
+        const target =
+            this.normalizeLanguage(targetLanguage);
+
+        const matches =
+            this.ensureLoaded().match(
+                text,
+                {
+                    sourceLanguage: source,
+                    targetLanguage: target,
+                }
+            );
+
+        // Final language validation.
+        // Prevent incompatible terms from reaching OpenAI.
+
+        return matches.filter(item => {
+
+            if (!item.enabled) {
+                return false;
+            }
+
+            if (
+                !this.languageMatches(
+                    item.sourceLanguage,
+                    source
+                )
+            ) {
+                return false;
+            }
+
+            if (
+                !this.languageMatches(
+                    item.targetLanguage,
+                    target
+                )
+            ) {
+                return false;
+            }
+
+            return true;
+
+        });
 
     }
 
-    /**
-     * Protege termos do glossário.
-     */
-    protect(text: string): string {
+    // =========================================================================
+    // PROTECT
+    // =========================================================================
 
-        return this.ensureLoaded().protect(text);
+    protect(
+        text: string,
+        sourceLanguage?: string,
+        targetLanguage?: string
+    ): string {
+
+        return this.ensureLoaded().protect(
+            text,
+            {
+                sourceLanguage,
+                targetLanguage,
+            }
+        );
 
     }
 
-    /**
-     * Remove a proteção.
-     */
+    // =========================================================================
+    // UNPROTECT
+    // =========================================================================
+
     unprotect(text: string): string {
 
         return this.ensureLoaded().unprotect(text);
 
     }
 
-    /**
-     * Aplica substituições do glossário.
-     */
-    replace(text: string): string {
+    // =========================================================================
+    // REPLACE
+    // =========================================================================
 
-        return this.ensureLoaded().replace(text);
+    replace(
+        text: string,
+        sourceLanguage?: string,
+        targetLanguage?: string
+    ): string {
+
+        return this.ensureLoaded().replace(
+            text,
+            {
+                sourceLanguage,
+                targetLanguage,
+            }
+        );
 
     }
 
-    /**
-     * Verifica se um termo existe.
-     */
+    // =========================================================================
+    // HAS
+    // =========================================================================
+
     has(term: string): boolean {
 
         return this.ensureLoaded().has(term);
 
     }
 
-    /**
-     * Verifica se um termo está protegido.
-     */
+    // =========================================================================
+    // IS PROTECTED
+    // =========================================================================
+
     isProtected(term: string): boolean {
 
         return this.ensureLoaded().isProtected(term);
 
     }
 
-    /**
-     * Procura um termo.
-     */
-    find(term: string) {
+    // =========================================================================
+    // FIND
+    // =========================================================================
+
+    find(term: string): GlossaryTerm | undefined {
 
         return this.ensureLoaded().find(term);
 
     }
 
-    /**
-     * Retorna todos os termos.
-     */
+    // =========================================================================
+    // GET ALL
+    // =========================================================================
+
     getAll(): GlossaryTerm[] {
 
         return [...this.glossary.values()];

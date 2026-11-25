@@ -1,7 +1,7 @@
 'use client';
 
-import React from 'react';
-import { useAccount, useReadContract } from 'wagmi';
+import React, { useEffect } from 'react';
+import { useAccount, useReadContracts } from 'wagmi';
 import { formatUnits } from 'viem';
 import { RunningBotItem } from '../../../../types/ecnTrading';
 import { CONTRACTS } from '@/lib/contracts/contracts';
@@ -22,19 +22,87 @@ export default function ProfitGridRightSide({
   const { address } = useAccount();
   const mining = useMiningStakingeCoin();
 
-  const { data: pending } = useReadContract({
+  const contractConfig = {
     abi: eCoinMiningStakingAbi,
     address: CONTRACTS.eCoin_Mining_Staking_eCoin,
-    functionName: 'pendingRewards',
     chainId: 56,
-    args: address ? [address] : undefined,
-    query: { enabled: Boolean(address), refetchInterval: 10000 },
+  } as const;
+
+  // 📊 Leitura multicall direta para espelhar exatamente o cálculo de _update() no contrato
+  const { data: reads, refetch } = useReadContracts({
+    contracts: address
+      ? [
+          {
+            ...contractConfig,
+            functionName: 'pendingRewards',
+            args: [address],
+          },
+          {
+            ...contractConfig,
+            functionName: 'users',
+            args: [address],
+          },
+          {
+            ...contractConfig,
+            functionName: 'gasCapacity',
+            args: [address],
+          },
+          {
+            ...contractConfig,
+            functionName: 'gasConsumed',
+            args: [address],
+          },
+          {
+            ...contractConfig,
+            functionName: 'isMiningActive',
+            args: [address],
+          },
+        ]
+      : [],
+    query: {
+      enabled: Boolean(address),
+      refetchInterval: 10000,
+    },
   });
 
-  const pendingECoin =
-    pending !== undefined
-      ? Number(formatUnits((pending as bigint) ?? 0n, 18))
-      : Number(mining.pendingECoin ?? 0);
+  // Cálculo normalizado em bigint (evita exibir overflow que o contrato devolve ao buffer)
+  const hasAllReads =
+    Boolean(address) &&
+    reads?.[0]?.status === 'success' &&
+    reads?.[1]?.status === 'success' &&
+    reads?.[2]?.status === 'success' &&
+    reads?.[3]?.status === 'success' &&
+    reads?.[4]?.status === 'success';
+
+  let pendingECoin = Number(mining.pendingECoin ?? 0);
+
+  if (hasAllReads && reads) {
+    const rawPendingBN = (reads[0].result as bigint) ?? 0n;
+    const userTuple = reads[1].result as readonly [bigint, bigint, bigint];
+    const storedPendingBN = userTuple?.[2] ?? 0n;
+    const gasCapacityBN = (reads[2].result as bigint) ?? 0n;
+    const gasConsumedBN = (reads[3].result as bigint) ?? 0n;
+    const isMiningActive = Boolean(reads[4].result);
+
+    const unclaimedBN =
+      rawPendingBN > storedPendingBN ? rawPendingBN - storedPendingBN : 0n;
+
+    const remainingGasBN =
+      isMiningActive && gasCapacityBN > gasConsumedBN
+        ? gasCapacityBN - gasConsumedBN
+        : 0n;
+
+    const acceptedBN =
+      unclaimedBN <= remainingGasBN ? unclaimedBN : remainingGasBN;
+
+    pendingECoin = Number(formatUnits(storedPendingBN + acceptedBN, 18));
+  }
+
+  useEffect(() => {
+    if (mining.claimConfirmed) {
+      refetch();
+    }
+  }, [mining.claimConfirmed, refetch]);
 
   return (
     <div className="p-3 bg-gradient-to-br from-amber-950/60 via-yellow-950/40 to-amber-900/30 border-l border-[#D4AF37]/20 flex flex-col justify-between">

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { X, Award } from 'lucide-react';
 import { useAccount, useReadContracts } from 'wagmi';
 import { formatUnits } from 'viem';
@@ -28,14 +28,13 @@ export default function WithdrawProfitModal({
   const claimTx = useTransactionStateeCoin();
   const mining = useMiningStakingeCoin();
 
-  const [visualECoin, setVisualECoin] = useState<number>(0);
-
   const contractConfig = {
     abi: eCoinMiningStakingAbi,
     address: CONTRACTS.eCoin_Mining_Staking_eCoin,
     chainId: 56,
   } as const;
 
+  // 📊 Leitura multicall estática para espelhar exatamente o cálculo de _update() no contrato
   const { data: reads, refetch } = useReadContracts({
     contracts: address
       ? [
@@ -46,7 +45,17 @@ export default function WithdrawProfitModal({
           },
           {
             ...contractConfig,
-            functionName: 'rewardRates',
+            functionName: 'users',
+            args: [address],
+          },
+          {
+            ...contractConfig,
+            functionName: 'gasCapacity',
+            args: [address],
+          },
+          {
+            ...contractConfig,
+            functionName: 'gasConsumed',
             args: [address],
           },
           {
@@ -62,40 +71,42 @@ export default function WithdrawProfitModal({
     },
   });
 
-  const pendingECoin =
-    address && reads?.[0]?.status === 'success'
-      ? Number(formatUnits((reads[0].result as bigint) ?? 0n, 18))
-      : Number(mining.pendingECoin ?? 0);
+  // Cálculo normalizado em bigint (respeita o teto de capacidade CS e ignora overflow devolvido ao buffer)
+  const hasAllReads =
+    Boolean(address) &&
+    reads?.[0]?.status === 'success' &&
+    reads?.[1]?.status === 'success' &&
+    reads?.[2]?.status === 'success' &&
+    reads?.[3]?.status === 'success' &&
+    reads?.[4]?.status === 'success';
 
-  const rawRates =
-    address && reads?.[1]?.status === 'success'
-      ? (reads[1].result as readonly [bigint, bigint, bigint, bigint])
-      : undefined;
+  let pendingECoin = Number(mining.pendingECoin ?? 0);
 
-  const ecoinPerSecond = rawRates
-    ? Number(formatUnits(rawRates[0] ?? 0n, 18))
-    : Number(mining.rates?.ecoinPerSecond ?? 0);
+  if (hasAllReads && reads) {
+    const rawPendingBN = (reads[0].result as bigint) ?? 0n;
+    const userTuple = reads[1].result as readonly [bigint, bigint, bigint];
+    const storedPendingBN = userTuple?.[2] ?? 0n;
+    const gasCapacityBN = (reads[2].result as bigint) ?? 0n;
+    const gasConsumedBN = (reads[3].result as bigint) ?? 0n;
+    const isMiningActive = Boolean(reads[4].result);
 
-  const isMiningActive =
-    address && reads?.[2]?.status === 'success'
-      ? Boolean(reads[2].result)
-      : Boolean(mining.isMiningActive);
+    const unclaimedBN =
+      rawPendingBN > storedPendingBN ? rawPendingBN - storedPendingBN : 0n;
 
-  useEffect(() => {
-    setVisualECoin(pendingECoin);
+    const remainingGasBN =
+      isMiningActive && gasCapacityBN > gasConsumedBN
+        ? gasCapacityBN - gasConsumedBN
+        : 0n;
 
-    if (!isMiningActive || ecoinPerSecond <= 0) return;
+    const acceptedBN =
+      unclaimedBN <= remainingGasBN ? unclaimedBN : remainingGasBN;
 
-    const timer = setInterval(() => {
-      setVisualECoin((prev) => prev + ecoinPerSecond);
-    }, 1000);
-
-    return () => clearInterval(timer);
-  }, [pendingECoin, ecoinPerSecond, isMiningActive]);
+    pendingECoin = Number(formatUnits(storedPendingBN + acceptedBN, 18));
+  }
 
   // Taxa de 1% do ECoinMiningFeeCollectorECoin (CLAIM_FEE_BP = 100)
-  const withdrawFeeECoin = visualECoin * 0.01;
-  const withdrawNetECoin = visualECoin - withdrawFeeECoin;
+  const withdrawFeeECoin = pendingECoin * 0.01;
+  const withdrawNetECoin = Math.max(0, pendingECoin - withdrawFeeECoin);
 
   useEffect(() => {
     if (mining.claimConfirmed) {
@@ -144,16 +155,18 @@ export default function WithdrawProfitModal({
 
           <div className="font-mono">
             <div className="text-2xl font-black text-[#D4AF37]">
-              {visualECoin.toFixed(6)} eCoin
+              {pendingECoin.toFixed(6)} eCoin
             </div>
           </div>
         </div>
 
-        {visualECoin > 0 && (
+        {pendingECoin > 0 && (
           <div className="bg-black/50 border border-white/5 rounded-2xl p-4 mb-5 space-y-2 font-mono text-xs">
             <div className="flex justify-between text-gray-300">
               <span>Total Bruto</span>
-              <span className="font-bold text-white">{visualECoin.toFixed(6)} eCoin</span>
+              <span className="font-bold text-white">
+                {pendingECoin.toFixed(6)} eCoin
+              </span>
             </div>
             <div className="flex justify-between text-red-400">
               <span>Taxa de Processamento (1%)</span>
@@ -169,7 +182,7 @@ export default function WithdrawProfitModal({
 
         <TxButton
           state={claimTx.state}
-          disabled={visualECoin <= 0}
+          disabled={pendingECoin <= 0}
           idleText="SACAR LUCROS ECOIN AGORA"
           className="w-full py-4 rounded-xl font-black uppercase text-xs tracking-widest bg-[#D4AF37] text-black hover:bg-white transition-all cursor-pointer shadow-lg shadow-[#D4AF37]/20 disabled:opacity-50"
           onClick={handleClaimRewards}

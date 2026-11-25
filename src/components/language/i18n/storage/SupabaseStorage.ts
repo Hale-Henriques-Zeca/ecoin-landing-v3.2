@@ -1,184 +1,133 @@
-// ============================================================================
-// EDENKINGDOM AI TRANSLATION FRAMEWORK
-// Supabase Storage
-// ============================================================================
 
-import { StorageAdapter } from "./StorageAdapter";
-
-import { createClient, SupabaseClient } from "@supabase/supabase-js";
+import type { SupabaseClient } from "@supabase/supabase-js";
+import type { StorageAdapter } from "./StorageAdapter";
 
 export class SupabaseStorage<T = any> implements StorageAdapter<T> {
 
-    private client: SupabaseClient;
-
-    private table: string;
+    private readonly client: SupabaseClient;
+    private readonly table: string;
 
     constructor(
-
-        table = "translation_cache",
-
-        url = process.env.NEXT_PUBLIC_SUPABASE_URL!,
-
-        key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-
+        client: SupabaseClient,
+        table = "translation_cache"
     ) {
-
+        this.client = client;
         this.table = table;
-
-        this.client = createClient(url, key);
-
     }
 
     async initialize(): Promise<void> {
+        // Supabase client is already initialized.
+    }
 
-        return;
-
+    private handleError(error: unknown): never {
+        console.error("[SupabaseStorage] Error:", error);
+        throw error;
     }
 
     async has(key: string): Promise<boolean> {
-
-        const { data } = await this.client
-
+        const { data, error } = await this.client
             .from(this.table)
-
             .select("key")
-
             .eq("key", key)
-
             .maybeSingle();
 
-        return !!data;
+        if (error) this.handleError(error);
 
+        return data !== null;
     }
 
     async get(key: string): Promise<T | null> {
-
-        const { data } = await this.client
-
+        const { data, error } = await this.client
             .from(this.table)
-
             .select("value")
-
             .eq("key", key)
-
             .maybeSingle();
 
-        if (!data) {
+        if (error) this.handleError(error);
 
-            return null;
-
-        }
-
-        return data.value as T;
-
+        return data?.value as T ?? null;
     }
 
     async set(key: string, value: T): Promise<void> {
-
-        await this.client
-
+        const { error } = await this.client
             .from(this.table)
+            .upsert(
+                {
+                    key,
+                    value,
+                    updated_at: new Date().toISOString()
+                },
+                { onConflict: "key" }
+            );
 
-            .upsert({
-
-                key,
-
-                value,
-
-                updated_at: new Date().toISOString()
-
-            });
-
+        if (error) this.handleError(error);
     }
 
     async update(key: string, value: T): Promise<void> {
-
         await this.set(key, value);
-
     }
 
     async delete(key: string): Promise<void> {
-
-        await this.client
-
+        const { error } = await this.client
             .from(this.table)
-
             .delete()
-
             .eq("key", key);
 
+        if (error) this.handleError(error);
     }
 
     async clear(): Promise<void> {
-
-        await this.client
-
+        const { error } = await this.client
             .from(this.table)
-
             .delete()
-
             .neq("key", "");
 
+        if (error) this.handleError(error);
     }
 
     async keys(): Promise<string[]> {
-
-        const { data } = await this.client
-
+        const { data, error } = await this.client
             .from(this.table)
-
             .select("key");
 
-        return (data ?? []).map(item => item.key);
+        if (error) this.handleError(error);
 
+        return (data ?? []).map(item => item.key);
     }
 
     async values(): Promise<T[]> {
-
-        const { data } = await this.client
-
+        const { data, error } = await this.client
             .from(this.table)
-
             .select("value");
 
-        return (data ?? []).map(item => item.value as T);
+        if (error) this.handleError(error);
 
+        return (data ?? []).map(item => item.value as T);
     }
 
     async entries(): Promise<[string, T][]> {
-
-        const { data } = await this.client
-
+        const { data, error } = await this.client
             .from(this.table)
+            .select("key, value");
 
-            .select("key,value");
+        if (error) this.handleError(error);
 
         return (data ?? []).map(item => [
-
             item.key,
-
             item.value as T
-
         ]);
-
     }
 
     async size(): Promise<number> {
-
-        const { count } = await this.client
-
+        const { count, error } = await this.client
             .from(this.table)
-
-            .select("*", {
-
+            .select("key", {
                 count: "exact",
-
                 head: true
-
             });
 
+        if (error) this.handleError(error);
+
         return count ?? 0;
-
     }
-
 }

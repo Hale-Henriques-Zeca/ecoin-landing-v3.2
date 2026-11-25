@@ -86,13 +86,31 @@ export function useMiningStakingeCoin() {
     functionName: "users",
     args: address ? [address] : undefined,
     chainId: 56,
-    query: { enabled: !!address },
+    query: { enabled: !!address, refetchInterval: 5000 },
   });
 
   const { data: isMiningActiveRaw } = useReadContract({
     abi: eCoinMiningStakingAbi,
     address: STAKING,
     functionName: "isMiningActive",
+    args: address ? [address] : undefined,
+    chainId: 56,
+    query: { enabled: !!address, refetchInterval: 5000 },
+  });
+
+  const { data: gasCapacityRaw } = useReadContract({
+    abi: eCoinMiningStakingAbi,
+    address: STAKING,
+    functionName: "gasCapacity",
+    args: address ? [address] : undefined,
+    chainId: 56,
+    query: { enabled: !!address, refetchInterval: 5000 },
+  });
+
+  const { data: gasConsumedRaw } = useReadContract({
+    abi: eCoinMiningStakingAbi,
+    address: STAKING,
+    functionName: "gasConsumed",
     args: address ? [address] : undefined,
     chainId: 56,
     query: { enabled: !!address, refetchInterval: 5000 },
@@ -329,7 +347,6 @@ export function useMiningStakingeCoin() {
     const rows: MiningSessionItem[] = [];
     const maxIndex = Number(totalSessions);
 
-    // Inclui i <= maxIndex pois a sessão atual pode já ter sido reivindicada parcialmente antes de zerar o gás
     for (let i = 0; i <= maxIndex; i++) {
       const rawSession = await publicClient.readContract({
         address: STAKING,
@@ -406,7 +423,7 @@ export function useMiningStakingeCoin() {
     }
   }, [pingReceipt.isSuccess, queryClient]);
 
-  /* ================= CALCULATIONS ================= */
+  /* ================= NORMALIZED CALCULATIONS (EXACT CONTRACT _update LOGIC) ================= */
 
   const total = totalStaked
     ? Number(formatUnits(totalStaked as bigint, 18))
@@ -423,10 +440,31 @@ export function useMiningStakingeCoin() {
     ? Number(formatUnits(userInfoTuple[0], 18))
     : 0;
 
-  // pendingRewards(address) retorna um único uint256 (pendingECoinAmount)
-  const pendingECoin = pendingRaw
-    ? Number(formatUnits(pendingRaw as bigint, 18))
-    : 0;
+  const isMiningActive = Boolean(isMiningActiveRaw);
+
+  // Contabilização exata idêntica ao _update() do contrato:
+  // Recompensas ainda não contabilizadas são limitadas por remaining = gasCapacity - gasConsumed
+  const storedPendingBN = userInfoTuple ? (userInfoTuple[2] ?? 0n) : 0n;
+  const rawPendingBN = (pendingRaw as bigint | undefined) ?? 0n;
+  const gasCapacityBN = (gasCapacityRaw as bigint | undefined) ?? 0n;
+  const gasConsumedBN = (gasConsumedRaw as bigint | undefined) ?? 0n;
+
+  const unclaimedAccumulatedBN =
+    rawPendingBN > storedPendingBN ? rawPendingBN - storedPendingBN : 0n;
+
+  const remainingGasBN =
+    isMiningActive && gasCapacityBN > gasConsumedBN
+      ? gasCapacityBN - gasConsumedBN
+      : 0n;
+
+  const acceptedECoinBN =
+    unclaimedAccumulatedBN <= remainingGasBN
+      ? unclaimedAccumulatedBN
+      : remainingGasBN;
+
+  const realPendingECoinBN = storedPendingBN + acceptedECoinBN;
+  const pendingECoin = Number(formatUnits(realPendingECoinBN, 18));
+  const rawUncappedPendingECoin = Number(formatUnits(rawPendingBN, 18));
 
   const walletBalance = walletBalanceRaw
     ? Number(formatUnits(walletBalanceRaw as bigint, 18))
@@ -468,12 +506,12 @@ export function useMiningStakingeCoin() {
       : 0,
   };
 
-  // Preview on-chain de preview(address)
+  // Preview normalizado (pendingECoin respeitando maxCapacity)
   const previewTuple = previewRaw as
     | readonly [bigint, bigint, bigint, bigint, boolean]
     | undefined;
   const previewData = {
-    pendingECoin: previewTuple ? Number(formatUnits(previewTuple[0], 18)) : 0,
+    pendingECoin,
     remainingCapacity: previewTuple
       ? Number(formatUnits(previewTuple[1], 18))
       : 0,
@@ -494,7 +532,6 @@ export function useMiningStakingeCoin() {
     : true;
   const canClaim = cooldownPassed && minStakeTimePassed && pendingECoin > 0;
 
-  const isMiningActive = Boolean(isMiningActiveRaw);
   const stakeActive = userStake > 0;
 
   return {
@@ -509,6 +546,7 @@ export function useMiningStakingeCoin() {
 
     pending: pendingECoin,
     pendingECoin,
+    rawUncappedPendingECoin,
     share,
 
     streamPerHour,

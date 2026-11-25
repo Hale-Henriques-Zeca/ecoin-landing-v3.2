@@ -3,8 +3,8 @@
 // Glossary Repository
 // ============================================================================
 
-import { GlossaryTerm } from "../types/Glossary";
-import { StorageAdapter } from "../storage/StorageAdapter";
+import type { GlossaryTerm } from "../types/Glossary";
+import type { StorageAdapter } from "../storage/StorageAdapter";
 
 export class GlossaryRepository {
 

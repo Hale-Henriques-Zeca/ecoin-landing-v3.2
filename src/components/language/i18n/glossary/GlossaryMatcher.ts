@@ -1,74 +1,264 @@
+
 // ============================================================================
 // EDENKINGDOM AI TRANSLATION FRAMEWORK
-// Glossary Matcher
+// Glossary Matching Engine
+//
+// Responsibilities:
+// - Match glossary terms using source
+// - Respect case sensitivity
+// - Support Unicode and accented characters
+// - Respect enabled status
+// - Respect language pairs
+// - Resolve overlapping terms by priority
+// - Apply KEEP / PROTECT / REPLACE actions
+//
 // ============================================================================
 
 import type { GlossaryTerm } from "../types/Glossary";
-import { GlossaryAction } from "../constants/actions";
+
+import {
+    GlossaryAction,
+} from "../constants/actions";
+
+// ============================================================================
+// TYPES
+// ============================================================================
+
+interface MatchOptions {
+    sourceLanguage?: string;
+    targetLanguage?: string;
+}
+
+// ============================================================================
+// GLOSSARY MATCHER
+// ============================================================================
 
 export class GlossaryMatcher {
 
     constructor(
-
-        private glossary: Map<string, GlossaryTerm>
-
+        private readonly glossary: Map<string, GlossaryTerm>
     ) {}
 
-    /**
-     * Procura um termo exato.
-     */
+    // =========================================================================
+    // NORMALIZATION
+    // =========================================================================
+
+    private normalize(value: string): string {
+        return value.trim().toLowerCase();
+    }
+
+    // =========================================================================
+    // LANGUAGE MATCHING
+    // =========================================================================
+
+    private languageMatches(
+        termLanguage: string,
+        requestedLanguage?: string
+    ): boolean {
+
+        if (
+            !requestedLanguage ||
+            requestedLanguage.toLowerCase() === "auto"
+        ) {
+            return true;
+        }
+
+        const term = this.normalize(termLanguage);
+        const requested = this.normalize(requestedLanguage);
+
+        if (term === requested) {
+            return true;
+        }
+
+        // Allow locale compatibility:
+        // en matches en-US
+        // pt matches pt-MZ
+
+        const termBase = term.split("-")[0];
+        const requestedBase = requested.split("-")[0];
+
+        return termBase === requestedBase;
+    }
+
+    // =========================================================================
+    // FILTER TERMS
+    // =========================================================================
+
+    private getEligibleTerms(
+        options: MatchOptions = {}
+    ): GlossaryTerm[] {
+
+        return [...this.glossary.values()]
+
+            .filter(item => {
+
+                if (!item.enabled) {
+                    return false;
+                }
+
+                if (!item.source.trim()) {
+                    return false;
+                }
+
+                if (
+                    !this.languageMatches(
+                        item.sourceLanguage,
+                        options.sourceLanguage
+                    )
+                ) {
+                    return false;
+                }
+
+                if (
+                    !this.languageMatches(
+                        item.targetLanguage,
+                        options.targetLanguage
+                    )
+                ) {
+                    return false;
+                }
+
+                return true;
+            })
+
+            // Higher priority first.
+            // Longer expressions win when priorities are equal.
+            .sort((a, b) => {
+
+                const priorityDifference =
+                    b.priority - a.priority;
+
+                if (priorityDifference !== 0) {
+                    return priorityDifference;
+                }
+
+                return b.source.length - a.source.length;
+            });
+    }
+
+    // =========================================================================
+    // REGEX UTILITIES
+    // =========================================================================
+
+    private escapeRegex(value: string): string {
+
+        return value.replace(
+            /[.*+?^${}()|[\]\\]/g,
+            "\\$&"
+        );
+
+    }
+
+    private createSourceRegex(
+        source: string,
+        caseSensitive = false
+    ): RegExp {
+
+        const escaped = this.escapeRegex(source);
+
+        // Unicode-aware word boundaries.
+        // Avoid matching terms inside larger words.
+
+        const startsWithWord =
+            /^[\p{L}\p{N}_]/u.test(source);
+
+        const endsWithWord =
+            /[\p{L}\p{N}_]$/u.test(source);
+
+        const pattern =
+            `${startsWithWord ? "(?<![\\p{L}\\p{N}_])" : ""}` +
+            escaped +
+            `${endsWithWord ? "(?![\\p{L}\\p{N}_])" : ""}`;
+
+        return new RegExp(
+            pattern,
+            caseSensitive ? "gu" : "giu"
+        );
+
+    }
+
+    // =========================================================================
+    // FIND
+    // =========================================================================
+
     find(term: string): GlossaryTerm | undefined {
 
-        return this.glossary.get(
+        const normalized = this.normalize(term);
 
-            term.toLowerCase()
+        return [...this.glossary.values()].find(item => {
 
-        );
+            return (
+                item.id.toLowerCase() === normalized ||
+                this.normalize(item.source) === normalized
+            );
+
+        });
 
     }
 
-    /**
-     * Verifica se existe.
-     */
+    // =========================================================================
+    // HAS
+    // =========================================================================
+
     has(term: string): boolean {
 
-        return this.glossary.has(
-
-            term.toLowerCase()
-
-        );
+        return !!this.find(term);
 
     }
 
-    /**
-     * Verifica se é protegido.
-     */
+    // =========================================================================
+    // IS PROTECTED
+    // =========================================================================
+
     isProtected(term: string): boolean {
 
         const item = this.find(term);
 
-        if (!item) return false;
+        if (!item || !item.enabled) {
+            return false;
+        }
 
-        return item.action === GlossaryAction.KEEP;
+        return (
+            item.action === GlossaryAction.KEEP ||
+            item.action === GlossaryAction.PROTECT
+        );
 
     }
 
-    /**
-     * Todos os termos encontrados.
-     */
-    match(text: string): GlossaryTerm[] {
+    // =========================================================================
+    // MATCH
+    // =========================================================================
+
+    match(
+        text: string,
+        options: MatchOptions = {}
+    ): GlossaryTerm[] {
+
+        if (!text.trim()) {
+            return [];
+        }
+
+        const eligibleTerms =
+            this.getEligibleTerms(options);
 
         const matches: GlossaryTerm[] = [];
 
-        for (const item of this.glossary.values()) {
+        for (const item of eligibleTerms) {
 
-            const regex = new RegExp(
+            // IGNORE terms must not be sent as active
+            // translation instructions.
 
-                `\\b${item.id}\\b`,
+            if (
+                item.action === GlossaryAction.IGNORE
+            ) {
+                continue;
+            }
 
-                "gi"
-
-            );
+            const regex =
+                this.createSourceRegex(
+                    item.source,
+                    item.caseSensitive ?? false
+                );
 
             if (regex.test(text)) {
 
@@ -82,33 +272,41 @@ export class GlossaryMatcher {
 
     }
 
-    /**
-     * Protege palavras KEEP.
-     */
-    protect(text: string): string {
+    // =========================================================================
+    // PROTECT
+    // =========================================================================
+
+    protect(
+        text: string,
+        options: MatchOptions = {}
+    ): string {
 
         let output = text;
 
-        for (const item of this.glossary.values()) {
+        const terms =
+            this.getEligibleTerms(options).filter(item => {
 
-            if (item.action !== GlossaryAction.KEEP)
+                return (
+                    item.action === GlossaryAction.KEEP ||
+                    item.action === GlossaryAction.PROTECT
+                );
 
-                continue;
+            });
 
-            const regex = new RegExp(
+        for (const item of terms) {
 
-                `\\b${item.id}\\b`,
+            const regex =
+                this.createSourceRegex(
+                    item.source,
+                    item.caseSensitive ?? false
+                );
 
-                "gi"
-
-            );
+            const placeholder =
+                `__EK_KEEP_${encodeURIComponent(item.id)}__`;
 
             output = output.replace(
-
                 regex,
-
-                `__KEEP__${item.id}__`
-
+                placeholder
             );
 
         }
@@ -117,52 +315,70 @@ export class GlossaryMatcher {
 
     }
 
-    /**
-     * Remove proteção.
-     */
+    // =========================================================================
+    // UNPROTECT
+    // =========================================================================
+
     unprotect(text: string): string {
 
         return text.replace(
+            /__EK_KEEP_(.*?)__/g,
+            (_match, encodedId: string) => {
 
-            /__KEEP__(.*?)__/g,
+                let id: string;
 
-            "$1"
+                try {
 
+                    id = decodeURIComponent(encodedId);
+
+                } catch {
+
+                    return _match;
+
+                }
+
+                const item =
+                    this.glossary.get(id);
+
+                return item?.source ?? _match;
+
+            }
         );
 
     }
 
-    /**
-     * Aplica REPLACE.
-     */
-    replace(text: string): string {
+    // =========================================================================
+    // REPLACE
+    // =========================================================================
+
+    replace(
+        text: string,
+        options: MatchOptions = {}
+    ): string {
 
         let output = text;
 
-        for (const item of this.glossary.values()) {
+        const terms =
+            this.getEligibleTerms(options).filter(item => {
 
-            if (
+                return (
+                    item.action === GlossaryAction.REPLACE &&
+                    item.target.trim().length > 0
+                );
 
-                item.action !== GlossaryAction.REPLACE ||
+            });
 
-                !item.replacement
+        for (const item of terms) {
 
-            ) continue;
-
-            const regex = new RegExp(
-
-                `\\b${item.id}\\b`,
-
-                "gi"
-
-            );
+            const regex =
+                this.createSourceRegex(
+                    item.source,
+                    item.caseSensitive ?? false
+                );
 
             output = output.replace(
-
                 regex,
-
-                item.replacement
-
+                () => item.target
             );
 
         }
