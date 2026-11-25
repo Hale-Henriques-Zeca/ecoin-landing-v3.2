@@ -638,7 +638,7 @@ function MiningTokenCard({
             De cada resgate (taxa de <strong className="text-white">10%</strong>
             ),{" "}
             <strong className="text-[#F9D13E]">
-              20% da taxa (2,0% do valor bruto do claim)
+              50% da taxa (5,0% do valor bruto do claim)
             </strong>{" "}
             é direcionado ao{" "}
             <strong className="text-white">Referral System</strong> e pago
@@ -654,7 +654,7 @@ function MiningTokenCard({
                 70% <span className="text-[10px] font-normal text-slate-400">do pool</span>
               </p>
               <p className="text-[10px] font-mono text-emerald-400">
-                1,40% do claim
+                35% do claim
               </p>
             </div>
 
@@ -666,7 +666,7 @@ function MiningTokenCard({
                 25% <span className="text-[10px] font-normal text-slate-400">do pool</span>
               </p>
               <p className="text-[10px] font-mono text-emerald-400">
-                0,50% do claim
+                12.5% do claim
               </p>
             </div>
 
@@ -678,7 +678,7 @@ function MiningTokenCard({
                 5% <span className="text-[10px] font-normal text-slate-400">do pool</span>
               </p>
               <p className="text-[10px] font-mono text-emerald-400">
-                0,10% do claim
+                2.5% do claim
               </p>
             </div>
           </div>
