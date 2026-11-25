@@ -62,6 +62,42 @@ function amount(value?: bigint, decimals: number = 6) {
       });
 }
 
+/**
+ * Escala tipográfica elástica para o Saldo Principal (Mining Realised Balance)
+ * Evita quebra do símbolo (E-Coin / E-USD) em telas pequenas e números extensos.
+ */
+function getHeroBalanceSize(valueStr: string): string {
+  const len = valueStr.length;
+  if (len <= 8) return "text-[clamp(1.35rem,6.2vw,1.875rem)]";
+  if (len <= 11) return "text-[clamp(1.15rem,5.2vw,1.625rem)]";
+  if (len <= 14) return "text-[clamp(1rem,4.4vw,1.375rem)]";
+  if (len <= 18) return "text-[clamp(0.875rem,3.8vw,1.125rem)]";
+  return "text-[clamp(0.75rem,3.2vw,0.95rem)]";
+}
+
+/**
+ * Escala tipográfica elástica para os blocos secundários (Available & Remaining)
+ * Mantém o número confinado dentro da coluna sem tocar ou ultrapassar as bordas.
+ */
+function getSecondaryBoxSize(valueStr: string): string {
+  const len = valueStr.length;
+  if (len <= 8) return "text-[clamp(0.95rem,4.2vw,1.125rem)]";
+  if (len <= 10) return "text-[clamp(0.82rem,3.6vw,1rem)]";
+  if (len <= 13) return "text-[clamp(0.72rem,3.1vw,0.875rem)]";
+  if (len <= 16) return "text-[clamp(0.65rem,2.7vw,0.78rem)]";
+  return "text-[clamp(0.58rem,2.4vw,0.7rem)]";
+}
+
+/**
+ * Escala tipográfica elástica para as taxas (Por dia, hora, minuto, segundo)
+ */
+function getRateBoxSize(valueStr: string): string {
+  const len = valueStr.length;
+  if (len <= 7) return "text-[clamp(0.7rem,3vw,0.75rem)]";
+  if (len <= 10) return "text-[clamp(0.62rem,2.6vw,0.7rem)]";
+  return "text-[clamp(0.55rem,2.3vw,0.65rem)]";
+}
+
 export default function ECoinDualAirdropMining() {
   const {
     address,
@@ -111,15 +147,15 @@ export default function ECoinDualAirdropMining() {
 
   if (!isConnected) {
     return (
-      <section className="rounded-3xl border border-yellow-500/30 bg-gradient-to-br from-black via-slate-950 to-[#0B0E14] p-8 text-white shadow-2xl max-w-2xl mx-auto text-center mt-12 relative overflow-hidden">
+      <section className="rounded-3xl border border-yellow-500/30 bg-gradient-to-br from-black via-slate-950 to-[#0B0E14] p-6 sm:p-8 text-white shadow-2xl max-w-2xl mx-auto text-center mt-12 relative overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(212,175,55,0.15),transparent_70%)] pointer-events-none"></div>
         <div className="w-16 h-16 bg-[#D4AF37]/10 border border-[#D4AF37]/30 rounded-2xl flex items-center justify-center mx-auto mb-6 text-[#D4AF37] shadow-[0_0_30px_rgba(212,175,55,0.3)]">
           <Wallet className="w-8 h-8" />
         </div>
-        <h2 className="text-2xl font-black text-[#D4AF37] tracking-wide">
+        <h2 className="text-[clamp(1.25rem,5vw,1.5rem)] font-black text-[#D4AF37] tracking-wide">
           E-Coin Dual Airdrop & Mineração
         </h2>
-        <p className="mt-3 text-sm text-slate-300 max-w-md mx-auto leading-relaxed">
+        <p className="mt-3 text-xs sm:text-sm text-slate-300 max-w-md mx-auto leading-relaxed">
           Conecte a sua carteira e comece a minerar o airdrop da eCoin de forma
           totalmente descentralizada e segura na Binance Smart Chain.
         </p>
@@ -129,9 +165,9 @@ export default function ECoinDualAirdropMining() {
               <button
                 onClick={openConnectModal}
                 type="button"
-                className="flex items-center gap-2.5 px-6 py-3.5 bg-gradient-to-r from-yellow-500 to-amber-400 hover:from-yellow-400 hover:to-amber-300 rounded-2xl text-sm font-extrabold text-black shadow-[0_0_35px_rgba(212,175,55,0.5)] transition transform hover:scale-105 cursor-pointer"
+                className="flex items-center gap-2.5 px-6 py-3.5 bg-gradient-to-r from-yellow-500 to-amber-400 hover:from-yellow-400 hover:to-amber-300 rounded-2xl text-xs sm:text-sm font-extrabold text-black shadow-[0_0_35px_rgba(212,175,55,0.5)] transition transform hover:scale-105 cursor-pointer"
               >
-                <Sparkles className="w-4 h-4" />
+                <Sparkles className="w-4 h-4 shrink-0" />
                 <span>Conectar Carteira & Começar Mineração</span>
               </button>
             )}
@@ -143,13 +179,13 @@ export default function ECoinDualAirdropMining() {
 
   if (!isCorrectChain) {
     return (
-      <section className="rounded-3xl border border-red-500/30 bg-slate-950 p-8 text-white max-w-2xl mx-auto text-center mt-12 space-y-5">
+      <section className="rounded-3xl border border-red-500/30 bg-slate-950 p-6 sm:p-8 text-white max-w-2xl mx-auto text-center mt-12 space-y-5">
         <ShieldAlert className="w-12 h-12 text-red-400 mx-auto animate-bounce" />
         <div>
-          <h2 className="text-xl font-bold text-red-400">
+          <h2 className="text-lg sm:text-xl font-bold text-red-400">
             Rede Incorreta Detectada
           </h2>
-          <p className="mt-2 text-sm text-slate-300">
+          <p className="mt-2 text-xs sm:text-sm text-slate-300">
             Por favor, mude a rede da sua carteira para a{" "}
             <strong className="text-yellow-400">
               BNB Smart Chain Mainnet
@@ -181,7 +217,7 @@ export default function ECoinDualAirdropMining() {
   // Renderiza o painel Admin quando o owner clicar em "Painel Admin"
   if (isOwner && showAdminPanel) {
     return (
-      <section className="space-y-6 text-white w-full max-w-7xl mx-auto px-4 py-6">
+      <section className="space-y-6 text-white w-full max-w-7xl mx-auto px-4 py-6 overflow-x-hidden">
         <div className="flex items-center justify-between">
           <button
             type="button"
@@ -199,31 +235,31 @@ export default function ECoinDualAirdropMining() {
   }
 
   return (
-    <section className="space-y-6 text-white w-full max-w-6xl mx-auto px-4 py-6">
-      <header className="rounded-2xl border border-[#D4AF37]/30 bg-gradient-to-r from-black via-slate-950 to-[#111] p-6 shadow-xl relative overflow-hidden">
+    <section className="space-y-6 text-white w-full max-w-6xl mx-auto px-3 sm:px-4 py-6 overflow-x-hidden">
+      <header className="rounded-2xl border border-[#D4AF37]/30 bg-gradient-to-r from-black via-slate-950 to-[#111] p-4 sm:p-6 shadow-xl relative overflow-hidden">
         <div className="absolute top-0 right-0 w-64 h-64 bg-[#D4AF37]/5 rounded-full blur-3xl pointer-events-none"></div>
 
-        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 relative z-10">
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-5 sm:gap-6 relative z-10">
           {/* LADO ESQUERDO: TÍTULO, SUBTÍTULO, TEMPORADA, PROFILE E LOGOUT */}
-          <div className="space-y-4">
+          <div className="space-y-4 min-w-0">
             <div>
-              <span className="text-[10px] font-mono font-bold text-[#D4AF37] uppercase tracking-widest bg-[#D4AF37]/10 px-3 py-1 rounded-full border border-[#D4AF37]/20">
+              <span className="inline-block text-[9px] sm:text-[10px] font-mono font-bold text-[#D4AF37] uppercase tracking-widest bg-[#D4AF37]/10 px-3 py-1 rounded-full border border-[#D4AF37]/20">
                 Ecossistema Web3 • Protocolo Ativo
               </span>
-              <h2 className="text-2xl md:text-3xl font-black text-white mt-2">
+              <h2 className="text-[clamp(1.25rem,5.2vw,1.875rem)] font-black text-white mt-2 leading-tight">
                 E-Coin Dual Airdrop & Mineração
               </h2>
-              <p className="mt-1 text-xs md:text-sm text-slate-400">
+              <p className="mt-1 text-xs md:text-sm text-slate-400 leading-relaxed">
                 Mineração individual progressiva e contínua durante 30 dias por
                 temporada.
               </p>
             </div>
 
-            <div className="flex flex-wrap items-center gap-2.5">
+            <div className="flex flex-wrap items-center gap-2 sm:gap-2.5">
               {/* Indicador Temporada */}
-              <div className="flex items-center gap-2 bg-black/60 border border-emerald-500/30 px-4 py-2 rounded-xl">
-                <div className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping" />
-                <span className="text-xs font-bold text-emerald-300 uppercase tracking-wider">
+              <div className="flex items-center gap-2 bg-black/60 border border-emerald-500/30 px-3.5 py-2 rounded-xl">
+                <div className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping shrink-0" />
+                <span className="text-[11px] sm:text-xs font-bold text-emerald-300 uppercase tracking-wider whitespace-nowrap">
                   Temporada {seasonId?.toString() ?? "1"} (
                   {seasonInfo?.[2] ? "Ativa" : "Inativa"})
                 </span>
@@ -234,25 +270,25 @@ export default function ECoinDualAirdropMining() {
                 <button
                   type="button"
                   onClick={() => setShowAdminPanel(true)}
-                  className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#D4AF37] hover:bg-amber-400 text-black text-xs font-black uppercase tracking-wider shadow-lg shadow-[#D4AF37]/20 transition cursor-pointer"
+                  className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#D4AF37] hover:bg-amber-400 text-black text-[11px] sm:text-xs font-black uppercase tracking-wider shadow-lg shadow-[#D4AF37]/20 transition cursor-pointer whitespace-nowrap"
                 >
-                  <ShieldCheck className="w-4 h-4" />
+                  <ShieldCheck className="w-4 h-4 shrink-0" />
                   <span>Painel Admin</span>
                 </button>
               )}
 
               {/* Carteira Conectada + Botão Profile + Botão Logout */}
-              <div className="flex flex-wrap items-center gap-2 bg-white/5 border border-white/10 pl-3 pr-1.5 py-1.5 rounded-xl">
-                <span className="text-xs font-mono text-slate-300">
+              <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 bg-white/5 border border-white/10 pl-3 pr-1.5 py-1.5 rounded-xl">
+                <span className="text-[11px] sm:text-xs font-mono text-slate-300 tabular-nums">
                   {address?.slice(0, 6)}...{address?.slice(-4)}
                 </span>
 
                 <Link
                   href="/eCoinProfilePage"
                   title="Aceder ao teu Perfil e Link de Referência"
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#D4AF37]/15 hover:bg-[#D4AF37]/25 border border-[#D4AF37]/40 text-[#F9D13E] text-xs font-bold transition cursor-pointer"
+                  className="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg bg-[#D4AF37]/15 hover:bg-[#D4AF37]/25 border border-[#D4AF37]/40 text-[#F9D13E] text-[11px] sm:text-xs font-bold transition cursor-pointer whitespace-nowrap"
                 >
-                  <Crown className="w-3.5 h-3.5 text-[#D4AF37]" />
+                  <Crown className="w-3.5 h-3.5 text-[#D4AF37] shrink-0" />
                   <span>Profile</span>
                 </Link>
 
@@ -260,9 +296,9 @@ export default function ECoinDualAirdropMining() {
                   type="button"
                   onClick={() => disconnect()}
                   title="Desconectar carteira e fechar mineração"
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-red-500/15 hover:bg-red-500/25 border border-red-500/30 text-red-300 text-xs font-bold transition cursor-pointer"
+                  className="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg bg-red-500/15 hover:bg-red-500/25 border border-red-500/30 text-red-300 text-[11px] sm:text-xs font-bold transition cursor-pointer whitespace-nowrap"
                 >
-                  <LogOut className="w-3.5 h-3.5" />
+                  <LogOut className="w-3.5 h-3.5 shrink-0" />
                   <span>Logout</span>
                 </button>
               </div>
@@ -271,7 +307,7 @@ export default function ECoinDualAirdropMining() {
 
           {/* LADO DIREITO (DENTRO DO CARD): LINK DIRETO PANCAKESWAP MARKET & BINANCE */}
           <div className="w-full lg:w-auto shrink-0 rounded-2xl border border-[#D4AF37]/25 bg-black/60 backdrop-blur-md p-4 flex flex-col items-start sm:items-center lg:items-end justify-center gap-2">
-            <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
+            <span className="text-[10px] sm:text-[11px] font-mono font-bold uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
               <span>Swap to USDT Available at:</span>
               <span aria-hidden="true">👇👇👇</span>
             </span>
@@ -280,7 +316,7 @@ export default function ECoinDualAirdropMining() {
               href={PANCAKESWAP_MARKET_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-5 py-3 rounded-xl font-black text-xs uppercase tracking-wider bg-gradient-to-r from-[#D4AF37] via-amber-400 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 text-black shadow-[0_0_25px_rgba(212,175,55,0.3)] transition transform hover:scale-[1.02] active:scale-[0.98]"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 sm:px-5 py-3 rounded-xl font-black text-[11px] sm:text-xs uppercase tracking-wider bg-gradient-to-r from-[#D4AF37] via-amber-400 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 text-black shadow-[0_0_25px_rgba(212,175,55,0.3)] transition transform hover:scale-[1.02] active:scale-[0.98] whitespace-nowrap"
             >
               <span>PancakeSwap Market 📈📈📈</span>
               <ExternalLink className="w-4 h-4 shrink-0" />
@@ -290,7 +326,7 @@ export default function ECoinDualAirdropMining() {
               Par direto: E-Coin / USDT • BNB Smart Chain
             </span>
 
-            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[#D4AF37]/10 border border-[#D4AF37]/25 text-[10px] font-mono font-bold text-[#F9D13E] tracking-wide">
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[#D4AF37]/10 border border-[#D4AF37]/25 text-[9px] sm:text-[10px] font-mono font-bold text-[#F9D13E] tracking-wide">
               <span>🎄 Soon on Binance Markets During Christmas Season</span>
             </span>
           </div>
@@ -298,8 +334,8 @@ export default function ECoinDualAirdropMining() {
       </header>
 
       {(walletPending || waitingForReceipt) && (
-        <div className="rounded-xl bg-blue-950/60 border border-blue-500/30 p-4 text-sm text-blue-200 flex items-center gap-3 animate-pulse">
-          <Clock className="w-5 h-5 text-blue-400 animate-spin" />
+        <div className="rounded-xl bg-blue-950/60 border border-blue-500/30 p-4 text-xs sm:text-sm text-blue-200 flex items-center gap-3 animate-pulse">
+          <Clock className="w-5 h-5 text-blue-400 animate-spin shrink-0" />
           <span>
             {waitingForReceipt
               ? "A aguardar confirmação da transação na blockchain..."
@@ -309,14 +345,14 @@ export default function ECoinDualAirdropMining() {
       )}
 
       {successMessage && (
-        <div className="rounded-xl bg-emerald-950/60 border border-emerald-500/30 p-4 text-sm text-emerald-300 flex items-center gap-3">
-          <CheckCircle2 className="w-5 h-5 text-emerald-400" />
+        <div className="rounded-xl bg-emerald-950/60 border border-emerald-500/30 p-4 text-xs sm:text-sm text-emerald-300 flex items-center gap-3">
+          <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0" />
           <span>{successMessage}</span>
         </div>
       )}
 
       {errorMessage && (
-        <div className="rounded-xl bg-red-950/60 border border-red-500/30 p-4 text-sm text-red-300 break-words">
+        <div className="rounded-xl bg-red-950/60 border border-red-500/30 p-4 text-xs sm:text-sm text-red-300 break-words">
           {errorMessage}
         </div>
       )}
@@ -328,7 +364,7 @@ export default function ECoinDualAirdropMining() {
             <button
               key={tk.symbol}
               onClick={() => setSelectedMobileToken(idx)}
-              className={`py-2.5 text-xs font-bold rounded-xl transition ${
+              className={`py-2.5 text-xs font-bold rounded-xl transition whitespace-nowrap ${
                 selectedMobileToken === idx
                   ? "bg-[#D4AF37] text-black shadow-lg shadow-yellow-500/20"
                   : "text-slate-400 hover:text-white"
@@ -488,6 +524,19 @@ function MiningTokenCard({
   const available = statusData ? statusData[1] : 0n;
   const remaining = statusData ? statusData[2] : 0n;
 
+  const accruedFormatted = amount(accrued, 6);
+  const availableFormatted = amount(available, 6);
+  const remainingFormatted = amount(remaining, 6);
+
+  const perDayFormatted = perDay.toFixed(3);
+  const perHourFormatted = perHour.toFixed(3);
+  const perMinuteFormatted = perMinute.toFixed(4);
+  const perSecondFormatted = perSecond.toFixed(5);
+
+  const heroSizeClass = getHeroBalanceSize(accruedFormatted);
+  const availableSizeClass = getSecondaryBoxSize(availableFormatted);
+  const remainingSizeClass = getSecondaryBoxSize(remainingFormatted);
+
   const progress =
     totalReward > 0n
       ? Math.min(100, Number((accrued * 10000n) / totalReward) / 100)
@@ -500,13 +549,15 @@ function MiningTokenCard({
 
   return (
     <>
-      <article className="rounded-3xl border border-white/10 bg-gradient-to-br from-slate-950 via-black to-slate-900 p-6 space-y-5 shadow-2xl relative overflow-hidden">
+      <article className="rounded-3xl border border-white/10 bg-gradient-to-br from-slate-950 via-black to-slate-900 p-4 sm:p-6 space-y-4 sm:space-y-5 shadow-2xl relative overflow-hidden min-w-0">
         <div className="absolute -top-12 -right-12 w-36 h-36 bg-yellow-500/5 rounded-full blur-2xl pointer-events-none"></div>
 
-        <div className="flex flex-wrap items-start justify-between gap-3 relative z-10">
-          <div>
-            <h3 className="text-xl font-bold text-white">{token.name}</h3>
-            <p className="text-xs text-slate-400 mt-0.5">
+        <div className="flex items-start justify-between gap-2 relative z-10">
+          <div className="min-w-0">
+            <h3 className="text-[clamp(1.05rem,4.5vw,1.25rem)] font-bold text-white truncate">
+              {token.name}
+            </h3>
+            <p className="text-[11px] sm:text-xs text-slate-400 mt-0.5 truncate">
               Temporada {seasonId?.toString() ?? "1"} ·{" "}
               {isExhausted && !canClaim
                 ? "Exausto"
@@ -516,7 +567,7 @@ function MiningTokenCard({
             </p>
           </div>
           <span
-            className={`rounded-full px-3 py-1 text-xs font-semibold ${
+            className={`shrink-0 rounded-full px-3 py-1 text-[11px] sm:text-xs font-semibold whitespace-nowrap ${
               isExhausted && !canClaim
                 ? "bg-amber-500/20 text-amber-300 border border-amber-500/30"
                 : isMining
@@ -532,66 +583,103 @@ function MiningTokenCard({
           </span>
         </div>
 
-        {/* Bloco Principal: Mining Realised Balance */}
-        <div className="rounded-2xl border border-[#D4AF37]/20 bg-[#D4AF37]/5 p-5 text-center relative z-10">
-          <p className="text-xs font-medium uppercase tracking-wider text-[#D4AF37]">
+        {/* Bloco Principal: Mining Realised Balance (Tipografia Elástica + Símbolo Protegido) */}
+        <div className="rounded-2xl border border-[#D4AF37]/20 bg-[#D4AF37]/5 px-3 py-4 sm:p-5 text-center relative z-10 overflow-hidden">
+          <p className="text-[10px] sm:text-xs font-medium uppercase tracking-wider text-[#D4AF37]">
             Mining Realised Balance
           </p>
-          <p className="mt-2 text-3xl font-black text-white">
-            {amount(accrued, 6)}{" "}
-            <span className="text-[#D4AF37]">{token.symbol}</span>
-          </p>
-          <p className="mt-1 text-xs text-slate-400">
+          <div
+            className={`mt-2 ${heroSizeClass} leading-tight font-black text-white tabular-nums inline-flex items-baseline justify-center gap-1.5 max-w-full flex-nowrap transition-all duration-150`}
+          >
+            <span className="truncate">{accruedFormatted}</span>
+            <span className="text-[#D4AF37] whitespace-nowrap shrink-0">
+              {token.symbol}
+            </span>
+          </div>
+          <p className="mt-1.5 text-[11px] sm:text-xs text-slate-400">
             Montante acumulado nesta temporada
           </p>
         </div>
 
-        {/* Blocos Secundários: Available & Remaining */}
-        <div className="grid grid-cols-2 gap-4 relative z-10">
-          <div className="rounded-xl border border-white/5 bg-white/[0.02] p-4 text-center">
-            <p className="text-[11px] text-slate-400">Available for Claim</p>
-            <p className="mt-1 text-lg font-extrabold text-white">
-              {amount(available, 6)}
+        {/* Blocos Secundários: Available & Remaining (Confinados com Escala Elástica) */}
+        <div className="grid grid-cols-2 gap-2.5 sm:gap-4 relative z-10">
+          <div className="min-w-0 rounded-xl border border-white/5 bg-white/[0.02] px-2.5 py-3.5 sm:p-4 text-center overflow-hidden">
+            <p className="text-[10px] sm:text-[11px] text-slate-400 truncate">
+              Available for Claim
             </p>
-            <p className="text-[10px] text-slate-500 mt-0.5">{token.symbol}</p>
+            <p
+              className={`mt-1 ${availableSizeClass} leading-tight font-extrabold text-white tabular-nums whitespace-nowrap overflow-hidden text-ellipsis transition-all duration-150`}
+            >
+              {availableFormatted}
+            </p>
+            <p className="text-[10px] text-slate-500 mt-0.5 whitespace-nowrap">
+              {token.symbol}
+            </p>
           </div>
-          <div className="rounded-xl border border-white/5 bg-white/[0.02] p-4 text-center">
-            <p className="text-[11px] text-slate-400">Remaining Mining</p>
-            <p className="mt-1 text-lg font-extrabold text-white">
-              {amount(remaining, 6)}
+
+          <div className="min-w-0 rounded-xl border border-white/5 bg-white/[0.02] px-2.5 py-3.5 sm:p-4 text-center overflow-hidden">
+            <p className="text-[10px] sm:text-[11px] text-slate-400 truncate">
+              Remaining Mining
             </p>
-            <p className="text-[10px] text-slate-500 mt-0.5">{token.symbol}</p>
+            <p
+              className={`mt-1 ${remainingSizeClass} leading-tight font-extrabold text-white tabular-nums whitespace-nowrap overflow-hidden text-ellipsis transition-all duration-150`}
+            >
+              {remainingFormatted}
+            </p>
+            <p className="text-[10px] text-slate-500 mt-0.5 whitespace-nowrap">
+              {token.symbol}
+            </p>
           </div>
         </div>
 
         {/* Taxas de Mineração */}
-        <div className="rounded-xl border border-white/5 bg-black/40 p-4 relative z-10">
-          <p className="text-xs font-medium text-slate-400 mb-3">
-            Taxa de Mineração (30 dias / {rewardNumber} {token.symbol})
+        <div className="rounded-xl border border-white/5 bg-black/40 p-3.5 sm:p-4 relative z-10">
+          <p className="text-[11px] sm:text-xs font-medium text-slate-400 mb-3">
+            Taxa de Mineração (30 dias /{" "}
+            <span className="whitespace-nowrap">
+              {rewardNumber.toLocaleString("en-US")} {token.symbol}
+            </span>
+            )
           </p>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center">
-            <div className="rounded-lg bg-black/60 p-2 border border-white/5">
+            <div className="min-w-0 rounded-lg bg-black/60 p-2 border border-white/5 overflow-hidden">
               <p className="text-[10px] text-slate-400">Por dia</p>
-              <p className="text-xs font-bold text-emerald-300 mt-0.5">
-                {perDay.toFixed(3)}
+              <p
+                className={`${getRateBoxSize(
+                  perDayFormatted
+                )} font-bold text-emerald-300 mt-0.5 tabular-nums whitespace-nowrap truncate`}
+              >
+                {perDayFormatted}
               </p>
             </div>
-            <div className="rounded-lg bg-black/60 p-2 border border-white/5">
+            <div className="min-w-0 rounded-lg bg-black/60 p-2 border border-white/5 overflow-hidden">
               <p className="text-[10px] text-slate-400">Por hora</p>
-              <p className="text-xs font-bold text-emerald-300 mt-0.5">
-                {perHour.toFixed(3)}
+              <p
+                className={`${getRateBoxSize(
+                  perHourFormatted
+                )} font-bold text-emerald-300 mt-0.5 tabular-nums whitespace-nowrap truncate`}
+              >
+                {perHourFormatted}
               </p>
             </div>
-            <div className="rounded-lg bg-black/60 p-2 border border-white/5">
+            <div className="min-w-0 rounded-lg bg-black/60 p-2 border border-white/5 overflow-hidden">
               <p className="text-[10px] text-slate-400">Por minuto</p>
-              <p className="text-xs font-bold text-emerald-300 mt-0.5">
-                {perMinute.toFixed(4)}
+              <p
+                className={`${getRateBoxSize(
+                  perMinuteFormatted
+                )} font-bold text-emerald-300 mt-0.5 tabular-nums whitespace-nowrap truncate`}
+              >
+                {perMinuteFormatted}
               </p>
             </div>
-            <div className="rounded-lg bg-black/60 p-2 border border-white/5">
+            <div className="min-w-0 rounded-lg bg-black/60 p-2 border border-white/5 overflow-hidden">
               <p className="text-[10px] text-slate-400">Por segundo</p>
-              <p className="text-xs font-bold text-emerald-300 mt-0.5">
-                {perSecond.toFixed(5)}
+              <p
+                className={`${getRateBoxSize(
+                  perSecondFormatted
+                )} font-bold text-emerald-300 mt-0.5 tabular-nums whitespace-nowrap truncate`}
+              >
+                {perSecondFormatted}
               </p>
             </div>
           </div>
@@ -601,7 +689,7 @@ function MiningTokenCard({
         <div className="relative z-10">
           <div className="mb-2 flex justify-between text-xs">
             <span className="text-slate-400">Progresso da temporada</span>
-            <span className="font-bold text-[#D4AF37]">
+            <span className="font-bold text-[#D4AF37] tabular-nums">
               {progress.toFixed(2)}%
             </span>
           </div>
@@ -614,21 +702,23 @@ function MiningTokenCard({
         </div>
 
         {/* Dizeres Motivacionais para Líderes & Comissões de Referência em 3 Níveis */}
-        <div className="rounded-2xl border border-[#D4AF37]/25 bg-gradient-to-br from-[#D4AF37]/10 via-black/70 to-slate-950/90 p-4 space-y-3 relative z-10">
+        <div className="rounded-2xl border border-[#D4AF37]/25 bg-gradient-to-br from-[#D4AF37]/10 via-black/70 to-slate-950/90 p-3.5 sm:p-4 space-y-3 relative z-10">
           <div className="flex items-start justify-between gap-2">
-            <div className="flex items-center gap-2">
-              <div className="w-7 h-7 rounded-lg bg-[#D4AF37]/20 border border-[#D4AF37]/40 flex items-center justify-center shrink-0">
+            <div className="flex items-start gap-2.5 min-w-0">
+              <div className="w-7 h-7 rounded-lg bg-[#D4AF37]/20 border border-[#D4AF37]/40 flex items-center justify-center shrink-0 mt-0.5">
                 <Users className="w-4 h-4 text-[#F9D13E]" />
               </div>
-              <div>
-                <h4 className="text-xs font-black uppercase tracking-wider text-[#F9D13E]">
+              <div className="min-w-0">
+                <h4 className="text-[11px] sm:text-xs font-black uppercase tracking-wider text-[#F9D13E]">
                   Multiplique os seus ganhos como Líder!
                 </h4>
                 <p className="text-[11px] text-slate-300 leading-relaxed mt-0.5">
                   Convide novos mineradores e receba comissões automáticas em{" "}
-                  <strong className="text-white">{token.symbol}</strong> a cada{" "}
-                  <strong className="text-[#D4AF37]">Claim</strong> efetuado
-                  pelos seus downlines!
+                  <strong className="text-white whitespace-nowrap">
+                    {token.symbol}
+                  </strong>{" "}
+                  a cada <strong className="text-[#D4AF37]">Claim</strong>{" "}
+                  efetuado pelos seus downlines!
                 </p>
               </div>
             </div>
@@ -642,54 +732,66 @@ function MiningTokenCard({
             </strong>{" "}
             é direcionado ao{" "}
             <strong className="text-white">Referral System</strong> e pago
-            instantaneamente em <strong className="text-[#D4AF37]">3 níveis</strong>:
+            instantaneamente em{" "}
+            <strong className="text-[#D4AF37]">3 níveis</strong>:
           </div>
 
-          <div className="grid grid-cols-3 gap-2 text-center">
-            <div className="rounded-xl bg-black/70 border border-[#D4AF37]/30 p-2">
-              <p className="text-[10px] font-bold uppercase text-[#D4AF37]">
+          <div className="grid grid-cols-3 gap-1.5 sm:gap-2 text-center">
+            <div className="min-w-0 rounded-xl bg-black/70 border border-[#D4AF37]/30 p-2">
+              <p className="text-[9px] sm:text-[10px] font-bold uppercase text-[#D4AF37] truncate">
                 Nível 1 (Direto)
               </p>
-              <p className="text-xs font-black text-white mt-0.5">
-                70% <span className="text-[10px] font-normal text-slate-400">do pool</span>
+              <p className="text-[11px] sm:text-xs font-black text-white mt-0.5">
+                70%{" "}
+                <span className="text-[9px] sm:text-[10px] font-normal text-slate-400">
+                  do pool
+                </span>
               </p>
-              <p className="text-[10px] font-mono text-emerald-400">
+              <p className="text-[9px] sm:text-[10px] font-mono text-emerald-400">
                 35% do claim
               </p>
             </div>
 
-            <div className="rounded-xl bg-black/70 border border-white/10 p-2">
-              <p className="text-[10px] font-bold uppercase text-slate-300">
+            <div className="min-w-0 rounded-xl bg-black/70 border border-white/10 p-2">
+              <p className="text-[9px] sm:text-[10px] font-bold uppercase text-slate-300 truncate">
                 Nível 2
               </p>
-              <p className="text-xs font-black text-white mt-0.5">
-                25% <span className="text-[10px] font-normal text-slate-400">do pool</span>
+              <p className="text-[11px] sm:text-xs font-black text-white mt-0.5">
+                25%{" "}
+                <span className="text-[9px] sm:text-[10px] font-normal text-slate-400">
+                  do pool
+                </span>
               </p>
-              <p className="text-[10px] font-mono text-emerald-400">
+              <p className="text-[9px] sm:text-[10px] font-mono text-emerald-400">
                 12.5% do claim
               </p>
             </div>
 
-            <div className="rounded-xl bg-black/70 border border-white/10 p-2">
-              <p className="text-[10px] font-bold uppercase text-slate-300">
+            <div className="min-w-0 rounded-xl bg-black/70 border border-white/10 p-2">
+              <p className="text-[9px] sm:text-[10px] font-bold uppercase text-slate-300 truncate">
                 Nível 3
               </p>
-              <p className="text-xs font-black text-white mt-0.5">
-                5% <span className="text-[10px] font-normal text-slate-400">do pool</span>
+              <p className="text-[11px] sm:text-xs font-black text-white mt-0.5">
+                5%{" "}
+                <span className="text-[9px] sm:text-[10px] font-normal text-slate-400">
+                  do pool
+                </span>
               </p>
-              <p className="text-[10px] font-mono text-emerald-400">
+              <p className="text-[9px] sm:text-[10px] font-mono text-emerald-400">
                 2.5% do claim
               </p>
             </div>
           </div>
 
-          <div className="flex items-center justify-between pt-0.5 text-[10px] text-slate-400">
-            <span>Ganhos creditados on-chain em cada resgate da rede.</span>
+          <div className="flex items-center justify-between gap-2 pt-0.5 text-[10px] text-slate-400">
+            <span className="min-w-0 truncate">
+              Ganhos creditados on-chain em cada resgate da rede.
+            </span>
             <Link
               href="/eCoinProfilePage"
-              className="inline-flex items-center gap-1 font-bold text-[#F9D13E] hover:underline"
+              className="shrink-0 inline-flex items-center gap-1 font-bold text-[#F9D13E] hover:underline whitespace-nowrap"
             >
-              <Crown className="w-3 h-3" />
+              <Crown className="w-3 h-3 shrink-0" />
               <span>Pegar Link</span>
             </Link>
           </div>
@@ -704,9 +806,9 @@ function MiningTokenCard({
               disabled={
                 disabled || !seasonActive || !allocation || allocation === 0n
               }
-              className="w-full rounded-xl bg-gradient-to-r from-yellow-500 to-amber-400 hover:from-yellow-400 hover:to-amber-300 px-4 py-3.5 font-extrabold text-black transition disabled:cursor-not-allowed disabled:opacity-40 shadow-lg shadow-yellow-500/20 flex items-center justify-center gap-2 cursor-pointer"
+              className="w-full rounded-xl bg-gradient-to-r from-yellow-500 to-amber-400 hover:from-yellow-400 hover:to-amber-300 px-4 py-3.5 font-extrabold text-xs sm:text-sm text-black transition disabled:cursor-not-allowed disabled:opacity-40 shadow-lg shadow-yellow-500/20 flex items-center justify-center gap-2 cursor-pointer"
             >
-              <Flame className="w-4 h-4 fill-black" />
+              <Flame className="w-4 h-4 fill-black shrink-0" />
               <span>{busy ? "A iniciar..." : "Start Mining"}</span>
             </button>
           ) : (
@@ -714,7 +816,7 @@ function MiningTokenCard({
               type="button"
               onClick={() => setIsModalOpen(true)}
               disabled={disabled || !canClaim}
-              className="w-full rounded-xl bg-emerald-500 hover:bg-emerald-400 px-4 py-3.5 font-bold text-slate-950 transition disabled:cursor-not-allowed disabled:opacity-40 shadow-lg shadow-emerald-500/20 flex items-center justify-center gap-2 cursor-pointer"
+              className="w-full rounded-xl bg-emerald-500 hover:bg-emerald-400 px-4 py-3.5 font-bold text-[clamp(0.75rem,3.4vw,0.9rem)] text-slate-950 transition disabled:cursor-not-allowed disabled:opacity-40 shadow-lg shadow-emerald-500/20 flex items-center justify-center gap-2 cursor-pointer whitespace-nowrap"
             >
               <span>
                 {busy
