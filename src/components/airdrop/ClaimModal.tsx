@@ -2,7 +2,7 @@
 
 import { useReadContract } from "wagmi";
 import { bsc } from "wagmi/chains";
-import { CONTRACTS } from "@/lib/contracts";
+import { CONTRACTS } from "@/lib/contracts/contracts";
 import { airdropFeeCollectorAbi } from "@/lib/abis/airdropFeeCollectorAbi";
 import { formatUnits } from "viem";
 import { X, ShieldCheck, AlertCircle, ArrowRight } from "lucide-react";
