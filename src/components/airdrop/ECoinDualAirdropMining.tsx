@@ -21,12 +21,16 @@ import {
   LogOut,
   ShieldCheck,
   ArrowLeft,
+  ExternalLink,
 } from "lucide-react";
 import ClaimModal from "@/components/airdrop/ClaimModal";
 import ECoinDualAirdropMiningAdminPage from "@/components/airdrop/airDropMiningAdmin/ECoinDualAirdropMiningAdminPage";
 
 const PRIMARY_ADMIN_WALLET =
   "0x503de6d52bcC6C329345f6Fbc77610B1F5b39283".toLowerCase();
+
+const PANCAKESWAP_MARKET_URL =
+  "https://pancake.xyz/swap?chain=bsc&inputCurrency=0xDf69235019cc416dd5Be75dfc0eDc922aB4b5964&outputCurrency=0x55d398326f99059fF775485246999027B3197955";
 
 const TOKENS = [
   {
@@ -190,57 +194,87 @@ export default function ECoinDualAirdropMining() {
     <section className="space-y-6 text-white w-full max-w-6xl mx-auto px-4 py-6">
       <header className="rounded-2xl border border-[#D4AF37]/30 bg-gradient-to-r from-black via-slate-950 to-[#111] p-6 shadow-xl relative overflow-hidden">
         <div className="absolute top-0 right-0 w-64 h-64 bg-[#D4AF37]/5 rounded-full blur-3xl pointer-events-none"></div>
-        <div className="flex flex-wrap items-center justify-between gap-4 relative z-10">
-          <div>
-            <span className="text-[10px] font-mono font-bold text-[#D4AF37] uppercase tracking-widest bg-[#D4AF37]/10 px-3 py-1 rounded-full border border-[#D4AF37]/20">
-              Ecossistema Web3 • Protocolo Ativo
-            </span>
-            <h2 className="text-2xl md:text-3xl font-black text-white mt-2">
-              E-Coin Dual Airdrop & Mineração
-            </h2>
-            <p className="mt-1 text-xs md:text-sm text-slate-400">
-              Mineração individual progressiva e contínua durante 30 dias por
-              temporada.
-            </p>
+
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 relative z-10">
+          {/* LADO ESQUERDO: TÍTULO, SUBTÍTULO, TEMPORADA E CARTEIRA */}
+          <div className="space-y-4">
+            <div>
+              <span className="text-[10px] font-mono font-bold text-[#D4AF37] uppercase tracking-widest bg-[#D4AF37]/10 px-3 py-1 rounded-full border border-[#D4AF37]/20">
+                Ecossistema Web3 • Protocolo Ativo
+              </span>
+              <h2 className="text-2xl md:text-3xl font-black text-white mt-2">
+                E-Coin Dual Airdrop & Mineração
+              </h2>
+              <p className="mt-1 text-xs md:text-sm text-slate-400">
+                Mineração individual progressiva e contínua durante 30 dias por
+                temporada.
+              </p>
+            </div>
+
+            <div className="flex flex-wrap items-center gap-2.5">
+              {/* Indicador Temporada */}
+              <div className="flex items-center gap-2 bg-black/60 border border-emerald-500/30 px-4 py-2 rounded-xl">
+                <div className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping" />
+                <span className="text-xs font-bold text-emerald-300 uppercase tracking-wider">
+                  Temporada {seasonId?.toString() ?? "1"} (
+                  {seasonInfo?.[2] ? "Ativa" : "Inativa"})
+                </span>
+              </div>
+
+              {/* Botão Exclusivo Admin (isOwner on-chain sem .env) */}
+              {isOwner && (
+                <button
+                  type="button"
+                  onClick={() => setShowAdminPanel(true)}
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#D4AF37] hover:bg-amber-400 text-black text-xs font-black uppercase tracking-wider shadow-lg shadow-[#D4AF37]/20 transition cursor-pointer"
+                >
+                  <ShieldCheck className="w-4 h-4" />
+                  <span>Painel Admin</span>
+                </button>
+              )}
+
+              {/* Carteira Conectada + Botão Logout */}
+              <div className="flex items-center gap-2 bg-white/5 border border-white/10 pl-3 pr-1.5 py-1.5 rounded-xl">
+                <span className="text-xs font-mono text-slate-300">
+                  {address?.slice(0, 6)}...{address?.slice(-4)}
+                </span>
+                <button
+                  type="button"
+                  onClick={() => disconnect()}
+                  title="Desconectar carteira e fechar mineração"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-red-500/15 hover:bg-red-500/25 border border-red-500/30 text-red-300 text-xs font-bold transition cursor-pointer"
+                >
+                  <LogOut className="w-3.5 h-3.5" />
+                  <span>Logout</span>
+                </button>
+              </div>
+            </div>
           </div>
 
-          <div className="flex flex-wrap items-center gap-2.5">
-            {/* Indicador Temporada */}
-            <div className="flex items-center gap-2 bg-black/60 border border-emerald-500/30 px-4 py-2 rounded-xl">
-              <div className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping" />
-              <span className="text-xs font-bold text-emerald-300 uppercase tracking-wider">
-                Temporada {seasonId?.toString() ?? "1"} (
-                {seasonInfo?.[2] ? "Ativa" : "Inativa"})
-              </span>
-            </div>
+          {/* LADO DIREITO (DENTRO DO CARD): LINK DIRETO PANCAKESWAP MARKET & BINANCE */}
+          <div className="w-full lg:w-auto shrink-0 rounded-2xl border border-[#D4AF37]/25 bg-black/60 backdrop-blur-md p-4 flex flex-col items-start sm:items-center lg:items-end justify-center gap-2">
+            <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
+              <span>Swap to USDT Available at:</span>
+              <span aria-hidden="true">👇👇👇</span>
+            </span>
 
-            {/* Botão Exclusivo Admin (isOwner on-chain sem .env) */}
-            {isOwner && (
-              <button
-                type="button"
-                onClick={() => setShowAdminPanel(true)}
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#D4AF37] hover:bg-amber-400 text-black text-xs font-black uppercase tracking-wider shadow-lg shadow-[#D4AF37]/20 transition cursor-pointer"
-              >
-                <ShieldCheck className="w-4 h-4" />
-                <span>Painel Admin</span>
-              </button>
-            )}
+            <a
+              href={PANCAKESWAP_MARKET_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-5 py-3 rounded-xl font-black text-xs uppercase tracking-wider bg-gradient-to-r from-[#D4AF37] via-amber-400 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 text-black shadow-[0_0_25px_rgba(212,175,55,0.3)] transition transform hover:scale-[1.02] active:scale-[0.98]"
+            >
+              <span>PancakeSwap Market 📈📈📈</span>
+              <ExternalLink className="w-4 h-4 shrink-0" />
+            </a>
 
-            {/* Carteira Conectada + Botão Logout */}
-            <div className="flex items-center gap-2 bg-white/5 border border-white/10 pl-3 pr-1.5 py-1.5 rounded-xl">
-              <span className="text-xs font-mono text-slate-300">
-                {address?.slice(0, 6)}...{address?.slice(-4)}
-              </span>
-              <button
-                type="button"
-                onClick={() => disconnect()}
-                title="Desconectar carteira e fechar mineração"
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-red-500/15 hover:bg-red-500/25 border border-red-500/30 text-red-300 text-xs font-bold transition cursor-pointer"
-              >
-                <LogOut className="w-3.5 h-3.5" />
-                <span>Logout</span>
-              </button>
-            </div>
+            <span className="text-[10px] font-mono text-white/40">
+              Par direto: E-Coin / USDT • BNB Smart Chain
+            </span>
+
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[#D4AF37]/10 border border-[#D4AF37]/25 text-[10px] font-mono font-bold text-[#F9D13E] tracking-wide">
+              <span>🎄 Soon on Binance Markets During Christmas Season</span>
+            </span>
           </div>
         </div>
       </header>
@@ -382,7 +416,11 @@ function MiningTokenCard({
     args: enabled ? [user, seasonId, token.address] : undefined,
     chainId: bsc.id,
     query: {
-      enabled: enabled && Boolean(session && (session as readonly [bigint, bigint, bigint, boolean])[3]),
+      enabled:
+        enabled &&
+        Boolean(
+          session && (session as readonly [bigint, bigint, bigint, boolean])[3]
+        ),
       refetchInterval: 3_000,
     },
   });
