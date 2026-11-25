@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { formatUnits } from "viem";
 import { useDisconnect, useReadContract, useSwitchChain } from "wagmi";
 import { bsc } from "wagmi/chains";
@@ -22,9 +23,16 @@ import {
   ShieldCheck,
   ArrowLeft,
   ExternalLink,
+  Crown,
+  Users,
 } from "lucide-react";
 import ClaimModal from "@/components/airdrop/ClaimModal";
 import ECoinDualAirdropMiningAdminPage from "@/components/airdrop/airDropMiningAdmin/ECoinDualAirdropMiningAdminPage";
+
+// CTA & Footer
+import { SmartPoolsCTA } from "@/components/CTA/SmartPoolsCTA/SmartPoolsCTA";
+import SocialFooter from "@/components/mining/eDollar/SocialFooter";
+import ReferralModal from "@/components/mining/eDollar/ReferralModal";
 
 const PRIMARY_ADMIN_WALLET =
   "0x503de6d52bcC6C329345f6Fbc77610B1F5b39283".toLowerCase();
@@ -196,7 +204,7 @@ export default function ECoinDualAirdropMining() {
         <div className="absolute top-0 right-0 w-64 h-64 bg-[#D4AF37]/5 rounded-full blur-3xl pointer-events-none"></div>
 
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 relative z-10">
-          {/* LADO ESQUERDO: TÍTULO, SUBTÍTULO, TEMPORADA E CARTEIRA */}
+          {/* LADO ESQUERDO: TÍTULO, SUBTÍTULO, TEMPORADA, PROFILE E LOGOUT */}
           <div className="space-y-4">
             <div>
               <span className="text-[10px] font-mono font-bold text-[#D4AF37] uppercase tracking-widest bg-[#D4AF37]/10 px-3 py-1 rounded-full border border-[#D4AF37]/20">
@@ -233,11 +241,21 @@ export default function ECoinDualAirdropMining() {
                 </button>
               )}
 
-              {/* Carteira Conectada + Botão Logout */}
-              <div className="flex items-center gap-2 bg-white/5 border border-white/10 pl-3 pr-1.5 py-1.5 rounded-xl">
+              {/* Carteira Conectada + Botão Profile + Botão Logout */}
+              <div className="flex flex-wrap items-center gap-2 bg-white/5 border border-white/10 pl-3 pr-1.5 py-1.5 rounded-xl">
                 <span className="text-xs font-mono text-slate-300">
                   {address?.slice(0, 6)}...{address?.slice(-4)}
                 </span>
+
+                <Link
+                  href="/eCoinProfilePage"
+                  title="Aceder ao teu Perfil e Link de Referência"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#D4AF37]/15 hover:bg-[#D4AF37]/25 border border-[#D4AF37]/40 text-[#F9D13E] text-xs font-bold transition cursor-pointer"
+                >
+                  <Crown className="w-3.5 h-3.5 text-[#D4AF37]" />
+                  <span>Profile</span>
+                </Link>
+
                 <button
                   type="button"
                   onClick={() => disconnect()}
@@ -364,6 +382,13 @@ export default function ECoinDualAirdropMining() {
             }
           />
         ))}
+      </div>
+
+      {/* CTA, RODAPÉ SOCIAL & MODAL DE REFERÊNCIA */}
+      <div className="pt-4 space-y-6">
+        <SmartPoolsCTA />
+        <SocialFooter />
+        <ReferralModal />
       </div>
     </section>
   );
@@ -588,8 +613,90 @@ function MiningTokenCard({
           </div>
         </div>
 
+        {/* Dizeres Motivacionais para Líderes & Comissões de Referência em 3 Níveis */}
+        <div className="rounded-2xl border border-[#D4AF37]/25 bg-gradient-to-br from-[#D4AF37]/10 via-black/70 to-slate-950/90 p-4 space-y-3 relative z-10">
+          <div className="flex items-start justify-between gap-2">
+            <div className="flex items-center gap-2">
+              <div className="w-7 h-7 rounded-lg bg-[#D4AF37]/20 border border-[#D4AF37]/40 flex items-center justify-center shrink-0">
+                <Users className="w-4 h-4 text-[#F9D13E]" />
+              </div>
+              <div>
+                <h4 className="text-xs font-black uppercase tracking-wider text-[#F9D13E]">
+                  Multiplique os seus ganhos como Líder!
+                </h4>
+                <p className="text-[11px] text-slate-300 leading-relaxed mt-0.5">
+                  Convide novos mineradores e receba comissões automáticas em{" "}
+                  <strong className="text-white">{token.symbol}</strong> a cada{" "}
+                  <strong className="text-[#D4AF37]">Claim</strong> efetuado
+                  pelos seus downlines!
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div className="rounded-xl bg-black/60 border border-white/10 p-2.5 text-[11px] text-slate-300 leading-relaxed">
+            De cada resgate (taxa de <strong className="text-white">10%</strong>
+            ),{" "}
+            <strong className="text-[#F9D13E]">
+              20% da taxa (2,0% do valor bruto do claim)
+            </strong>{" "}
+            é direcionado ao{" "}
+            <strong className="text-white">Referral System</strong> e pago
+            instantaneamente em <strong className="text-[#D4AF37]">3 níveis</strong>:
+          </div>
+
+          <div className="grid grid-cols-3 gap-2 text-center">
+            <div className="rounded-xl bg-black/70 border border-[#D4AF37]/30 p-2">
+              <p className="text-[10px] font-bold uppercase text-[#D4AF37]">
+                Nível 1 (Direto)
+              </p>
+              <p className="text-xs font-black text-white mt-0.5">
+                70% <span className="text-[10px] font-normal text-slate-400">do pool</span>
+              </p>
+              <p className="text-[10px] font-mono text-emerald-400">
+                1,40% do claim
+              </p>
+            </div>
+
+            <div className="rounded-xl bg-black/70 border border-white/10 p-2">
+              <p className="text-[10px] font-bold uppercase text-slate-300">
+                Nível 2
+              </p>
+              <p className="text-xs font-black text-white mt-0.5">
+                25% <span className="text-[10px] font-normal text-slate-400">do pool</span>
+              </p>
+              <p className="text-[10px] font-mono text-emerald-400">
+                0,50% do claim
+              </p>
+            </div>
+
+            <div className="rounded-xl bg-black/70 border border-white/10 p-2">
+              <p className="text-[10px] font-bold uppercase text-slate-300">
+                Nível 3
+              </p>
+              <p className="text-xs font-black text-white mt-0.5">
+                5% <span className="text-[10px] font-normal text-slate-400">do pool</span>
+              </p>
+              <p className="text-[10px] font-mono text-emerald-400">
+                0,10% do claim
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-center justify-between pt-0.5 text-[10px] text-slate-400">
+            <span>Ganhos creditados on-chain em cada resgate da rede.</span>
+            <Link
+              href="/eCoinProfilePage"
+              className="inline-flex items-center gap-1 font-bold text-[#F9D13E] hover:underline"
+            >
+              <Crown className="w-3 h-3" />
+              <span>Pegar Link</span>
+            </Link>
+          </div>
+        </div>
+
         {/* Botões de Ação */}
-        <div className="relative z-10 pt-2">
+        <div className="relative z-10 pt-1">
           {!isMining ? (
             <button
               type="button"
