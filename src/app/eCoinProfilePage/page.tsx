@@ -22,7 +22,7 @@ import SimulatorRedirectCard from "@/components/Cards/SimulatorRedirectCard";
 import ProfitSimulatorCard from "@/components/Cards/ProfitSimulatorCard";
 import ReferralCodePanel from "@/components/ReferralCodePanel/ReferralCodePanel";
 import AdminPage from "@/components/mining/eDollar/MiningMainPage/Components/AdminPage";
-import SocialFooter from "@/components/mining/eDollar/SocialFooter";
+import SocialFooter from "@/components/Footer/SocialFooter";
 import ReferralModal from "@/components/mining/eDollar/ReferralModal";
 
 type TabType =

@@ -31,7 +31,7 @@ import ECoinDualAirdropMiningAdminPage from "@/components/airdrop/airDropMiningA
 
 // CTA & Footer
 import { SmartPoolsCTA } from "@/components/CTA/SmartPoolsCTA/SmartPoolsCTA";
-import SocialFooter from "@/components/mining/eDollar/SocialFooter";
+import SocialFooter from "@/components/Footer/SocialFooter";
 import ReferralModal from "@/components/mining/eDollar/ReferralModal";
 
 const PRIMARY_ADMIN_WALLET =

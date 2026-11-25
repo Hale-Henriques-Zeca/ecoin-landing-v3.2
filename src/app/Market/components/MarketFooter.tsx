@@ -10,7 +10,7 @@ export const MarketFooter: React.FC = () => {
           <div className="flex items-center gap-2">
             <span className="text-lg">⚡</span>
             <span className="font-bold text-white text-sm tracking-wide">
-              eCoin ecnTrading Engine
+              ecnTrading Engine
             </span>
           </div>
 

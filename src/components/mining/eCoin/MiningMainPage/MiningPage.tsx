@@ -48,7 +48,7 @@ import RecompensasTab from "@/components/mining/eCoin/RecompensasTab";
 import StakeTab from "@/components/mining/eCoin/StakeTab";
 import CommitmentSealTab from "@/components/mining/eCoin/CommitmentSealTab";
 import AnalyticsTab from "@/components/mining/eCoin/AnalyticsTab";
-import SocialFooter from "@/components/mining/eCoin/SocialFooter";
+import SocialFooter from "@/components/Footer/SocialFooter";
 import ReferralModal from "@/components/mining/eCoin/ReferralModal";
 
 export default function ShareholdersPage() {

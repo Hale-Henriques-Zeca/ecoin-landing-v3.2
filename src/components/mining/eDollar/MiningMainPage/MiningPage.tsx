@@ -46,7 +46,7 @@ import RecompensasTab from "@/components/mining/eDollar/RecompensasTab";
 import StakeTab from "@/components/mining/eDollar/StakeTab";
 import CommitmentSealTab from "@/components/mining/eDollar/CommitmentSealTab";
 import AnalyticsTab from "@/components/mining/eDollar/AnalyticsTab";
-import SocialFooter from "@/components/mining/eDollar/SocialFooter";
+import SocialFooter from "@/components/Footer/SocialFooter";
 import ReferralModal from "@/components/mining/eDollar/ReferralModal";
 
 export default function ShareholdersPage() {

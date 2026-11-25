@@ -26,7 +26,7 @@ import EKDSmartFinanceTool from "@/components/EKDSmartFinanceTool";
 import BuyBackSmartPoolDashboard from "@/components/BuyBackSmartPoolDashboard";
 import CryptoGrowthSimulator from "@/components/CryptoGrowthSimulator";
 import CompoundCalculatorPanel from "@/components/CompoundCalculatorPanel";
-import Footer from "@/components/Footer";
+import Footer from "@/components/Footer/Footer";
 
 // 3. INFO COMPONENTS
 import ECoinBenefitsInfo from "@/components/ECoinBenefitsInfo";

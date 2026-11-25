@@ -13,7 +13,7 @@ import {
 import { BOT_MARKETS } from './lib/eDollar/ecnTrading/markets';
 import EcnTradingAICompoundingConceptCTA from '@/components/CTA/EcnTradingAICompoundingConceptCTA/EcnTradingAICompoundingConceptCTA';
 import Metrics from './components/Metrics/Metrics';
-import SocialFooter from '@/components/mining/eDollar/SocialFooter';
+import SocialFooter from "@/components/Footer/SocialFooter";
 import ReferralModal from '@/components/mining/eDollar/ReferralModal';
 
 export default function EcnTradingDEXPage() {
