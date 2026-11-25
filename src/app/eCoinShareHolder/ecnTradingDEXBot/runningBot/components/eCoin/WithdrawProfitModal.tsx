@@ -6,7 +6,7 @@ import { useAccount, useReadContracts } from 'wagmi';
 import { formatUnits } from 'viem';
 
 import TxButton from '@/components/TxButton';
-import ClaimCooldown from '@/components/ClaimCooldown';
+import ClaimCooldown from '@/components/mining/eCoin/ClaimCooldown';
 import { RunningBotItem } from '../../../types/ecnTrading';
 import { CONTRACTS } from '@/lib/contracts/contracts';
 import { eCoinMiningStakingAbi } from '@/lib/abis/eCoinMining/eCoinMiningStakingAbi';

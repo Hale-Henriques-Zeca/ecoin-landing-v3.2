@@ -2,7 +2,7 @@
 
 import { Award } from "lucide-react";
 import TxButton from "@/components/TxButton";
-import ClaimCooldown from "@/components/ClaimCooldown";
+import ClaimCooldown from "@/components/mining/eDollar/ClaimCooldown";
 
 interface RecompensasTabProps {
   pendingUSDT?: number;

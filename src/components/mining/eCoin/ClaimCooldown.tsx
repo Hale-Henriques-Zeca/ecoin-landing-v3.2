@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { useAccount, useReadContract } from "wagmi";
-import { CONTRACTS } from "@/lib/contracts";
-import { streamingStakingAbi } from "@/lib/abis/streamingStakingAbi";
+import { CONTRACTS } from "@/lib/contracts/contracts";
+import { eCoinMiningStakingAbi } from '@/lib/abis/eCoinMining/eCoinMiningStakingAbi';
 import { bsc } from "wagmi/chains";
 
 
@@ -13,8 +13,8 @@ const { address } = useAccount();
 
 
 const { data: lastClaim } = useReadContract({
-  address: CONTRACTS.STREAMING_STAKING,
-  abi: streamingStakingAbi,
+  address: CONTRACTS.eCoin_Mining_Staking_eCoin,
+  abi: eCoinMiningStakingAbi,
   functionName: "lastClaim",
   args: address ? [address] : undefined,
 chainId: bsc.id,
@@ -24,8 +24,8 @@ query: {
 });
 
 const { data: stakeTimestamp } = useReadContract({
-  address: CONTRACTS.STREAMING_STAKING,
-  abi: streamingStakingAbi,
+  address: CONTRACTS.eCoin_Mining_Staking_eCoin,
+  abi: eCoinMiningStakingAbi,
   functionName: "stakeTimestamp",
   args: address ? [address] : undefined,
 chainId: bsc.id,
@@ -35,26 +35,26 @@ query: {
 });
 
 const { data: lastStream } = useReadContract({
- address: CONTRACTS.STREAMING_STAKING,
- abi: streamingStakingAbi,
+ address: CONTRACTS.eCoin_Mining_Staking_eCoin,
+ abi: eCoinMiningStakingAbi,
  functionName: "lastStream",
 });
 
 const { data: claimCooldown } = useReadContract({
- address: CONTRACTS.STREAMING_STAKING,
- abi: streamingStakingAbi,
+ address: CONTRACTS.eCoin_Mining_Staking_eCoin,
+ abi: eCoinMiningStakingAbi,
  functionName: "CLAIM_COOLDOWN",
 });
 
 const { data: warmup } = useReadContract({
- address: CONTRACTS.STREAMING_STAKING,
- abi: streamingStakingAbi,
+ address: CONTRACTS.eCoin_Mining_Staking_eCoin,
+ abi: eCoinMiningStakingAbi,
  functionName: "MIN_STAKE_TIME",
 });
 
 const { data: streamRate } = useReadContract({
- address: CONTRACTS.STREAMING_STAKING,
- abi: streamingStakingAbi,
+ address: CONTRACTS.eCoin_Mining_Staking_eCoin,
+ abi: eCoinMiningStakingAbi,
  functionName: "STREAM_RATE",
 });
 
