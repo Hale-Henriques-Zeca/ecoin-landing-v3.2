@@ -217,6 +217,7 @@ export function useMiningStakingeCoin() {
 
     // 1. APPROVE (aguarda confirmação on-chain antes de executar stake)
     if (allowance < bn) {
+      setApproveHash(undefined);
       const appHash = await writeContractAsync({
         address: ECOIN,
         abi: erc20Abi,
@@ -231,6 +232,7 @@ export function useMiningStakingeCoin() {
     }
 
     // 2. STAKE
+    setStakeHash(undefined);
     const hash = await writeContractAsync({
       abi: eCoinMiningStakingAbi,
       address: STAKING,
@@ -258,6 +260,7 @@ export function useMiningStakingeCoin() {
     })) as bigint;
 
     if (allowance < bn) {
+      setApproveHash(undefined);
       const appHash = await writeContractAsync({
         address: ECOIN,
         abi: erc20Abi,
@@ -271,6 +274,7 @@ export function useMiningStakingeCoin() {
       await publicClient.waitForTransactionReceipt({ hash: appHash });
     }
 
+    setStakeHash(undefined);
     const hash = await writeContractAsync({
       abi: eCoinMiningStakingAbi,
       address: STAKING,
@@ -290,6 +294,7 @@ export function useMiningStakingeCoin() {
     const bn = parseUnits(amount, 18);
     if (bn <= 0n) return;
 
+    setUnstakeHash(undefined);
     const hash = await writeContractAsync({
       abi: eCoinMiningStakingAbi,
       address: STAKING,
@@ -306,13 +311,32 @@ export function useMiningStakingeCoin() {
   async function claim() {
     if (!address) return;
 
+    setClaimHash(undefined);
+
+    // Estimativa dinâmica com +25% de margem de segurança e piso de 1.8M gas
+    let gasLimit = 1_800_000n;
+    if (publicClient) {
+      try {
+        const estimated = await publicClient.estimateContractGas({
+          abi: eCoinMiningStakingAbi,
+          address: STAKING,
+          functionName: "claim",
+          account: address,
+        });
+        const buffered = (estimated * 125n) / 100n;
+        gasLimit = buffered > 1_800_000n ? buffered : 1_800_000n;
+      } catch {
+        gasLimit = 1_800_000n;
+      }
+    }
+
     const hash = await writeContractAsync({
       abi: eCoinMiningStakingAbi,
       address: STAKING,
       functionName: "claim",
       account: address,
       chain: bsc,
-      gas: 1200000n,
+      gas: gasLimit,
     });
 
     setClaimHash(hash);
@@ -322,6 +346,7 @@ export function useMiningStakingeCoin() {
   async function pingStream() {
     if (!address) return;
 
+    setPingHash(undefined);
     const hash = await writeContractAsync({
       abi: eCoinMiningStakingAbi,
       address: STAKING,
@@ -570,17 +595,22 @@ export function useMiningStakingeCoin() {
 
     approvePending: approveReceipt.isLoading,
     approveConfirmed: approveReceipt.isSuccess,
+    approveError: approveReceipt.isError,
 
     stakePending: stakeReceipt.isLoading,
     stakeConfirmed: stakeReceipt.isSuccess,
+    stakeError: stakeReceipt.isError,
 
     claimPending: claimReceipt.isLoading,
     claimConfirmed: claimReceipt.isSuccess,
+    claimError: claimReceipt.isError,
 
     unstakePending: unstakeReceipt.isLoading,
     unstakeConfirmed: unstakeReceipt.isSuccess,
+    unstakeError: unstakeReceipt.isError,
 
     pingPending: pingReceipt.isLoading,
     pingConfirmed: pingReceipt.isSuccess,
+    pingError: pingReceipt.isError,
   };
 }
