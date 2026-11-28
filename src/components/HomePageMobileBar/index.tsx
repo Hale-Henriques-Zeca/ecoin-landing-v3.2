@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Wallet, Store, Bot, Settings } from 'lucide-react';
+import { Wallet, Store, Crown, Bot, Settings } from 'lucide-react';
 import BottomItem from './components/BottomItem';
 import BottomAction from './components/BottomAction';
 import QuickActionsSheet from './components/QuickActionsSheet';
@@ -37,9 +37,9 @@ export default function HomePageMobileBar() {
           
           {/* 2. Market */}
           <BottomItem 
-            icon={Store} 
-            title="Market" 
-            href="/Market" 
+            icon={Crown} 
+            title="Ranking" 
+            href="/ranking" 
           />
           
           {/* 3. Botão Central HUB */}

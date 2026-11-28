@@ -32,6 +32,7 @@ import {
 const navLinks = [
   { name: "Home", href: "/", icon: Home },
   { name: "Bot", href: "/eCoinShareHolder/ecnTradingDEXBot", icon: Bot },
+  { name: "Ranking", href: "/ranking", icon: Crown},
   { name: "Cambiar", href: "/eCoinCloudWallet/buy", icon: RefreshCw },
   { name: "ePay Agent", href: "/ecoin-offramp", icon: Coins},
   {
